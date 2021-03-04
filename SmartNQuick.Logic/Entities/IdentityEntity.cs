@@ -1,8 +1,10 @@
 ﻿//@BaseCode
 
+using SmartNQuick.Contracts;
+
 namespace SmartNQuick.Logic.Entities
 {
-	abstract partial class IdentityEntity : Contracts.IIdentifiable
+	internal abstract partial class IdentityEntity : IIdentifiable
 	{
 		public int Id { get; set; }
 	}
