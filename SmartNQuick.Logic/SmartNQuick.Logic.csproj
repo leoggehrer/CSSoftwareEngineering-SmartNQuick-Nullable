@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonBase\CommonBase.csproj" />
+    <ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Client\" />
-    <Folder Include="Business\" />
+    <Folder Include="Controllers\Business\" />
+    <Folder Include="Controllers\Persistence\" />
   </ItemGroup>
 
 </Project>
