@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Business\" />
-    <Folder Include="Controllers\Persistence\" />
   </ItemGroup>
 
   <ItemGroup>
