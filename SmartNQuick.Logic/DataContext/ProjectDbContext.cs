@@ -35,7 +35,9 @@ namespace SmartNQuick.Logic.DataContext
 			where E : IdentityEntity, C
 		{
 			DbSet<E> result = null;
-			GetDbSet<C, E>(ref result);
+
+			GetDbSet<C, E>(ref result);	
+			
 			return result;
 		}
 		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class;
@@ -111,7 +113,7 @@ namespace SmartNQuick.Logic.DataContext
 
 		public Task<int> SaveChangesAsync()
 		{
-			return SaveChangesAsync();
+			return base.SaveChangesAsync();
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

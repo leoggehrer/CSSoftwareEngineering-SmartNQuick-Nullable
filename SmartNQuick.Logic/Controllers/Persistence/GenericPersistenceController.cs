@@ -11,7 +11,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 {
 	internal abstract partial class GenericPersistenceController<C, E> : GenericController<C, E>
 		where C : SmartNQuick.Contracts.IIdentifiable
-		where E : Entities.IdentityEntity, C, new()
+		where E : Entities.IdentityEntity, SmartNQuick.Contracts.ICopyable<C>, C, new()
 	{
 		protected GenericPersistenceController(IContext context) : base(context)
 		{

@@ -2,7 +2,7 @@
 
 namespace SmartNQuick.Contracts
 {
-	public partial interface IIdentifiable : ICopyable<IIdentifiable>
+	public partial interface IIdentifiable
 	{
 		int Id { get; }
 	}
