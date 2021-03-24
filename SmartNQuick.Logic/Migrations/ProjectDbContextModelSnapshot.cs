@@ -19,6 +19,36 @@ namespace SmartNQuick.Logic.Migrations
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.MusicStore.Album", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
+
+                    b.ToTable("Albums");
+                });
+
             modelBuilder.Entity("SmartNQuick.Logic.Entities.MusicStore.Artist", b =>
                 {
                     b.Property<int>("Id")
@@ -67,6 +97,17 @@ namespace SmartNQuick.Logic.Migrations
                         .IsUnique();
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.MusicStore.Album", b =>
+                {
+                    b.HasOne("SmartNQuick.Logic.Entities.MusicStore.Artist", "Artist")
+                        .WithMany()
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
                 });
 #pragma warning restore 612, 618
         }

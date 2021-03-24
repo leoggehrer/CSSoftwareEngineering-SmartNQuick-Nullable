@@ -23,6 +23,10 @@ namespace SmartNQuick.Logic
 			{
 				controller = new Controllers.Persistence.MusicStore.ArtistController(context) as IControllerAccess<C>;
 			}
+			else if (typeof(C) == typeof(SmartNQuick.Contracts.Persistence.MusicStore.IAlbum))
+			{
+				controller = new Controllers.Persistence.MusicStore.AlbumController(context) as IControllerAccess<C>;
+			}
 		}
 		static partial void CreateController<C>(ControllerObject controllerObject, ref IControllerAccess<C> controller) where C : IIdentifiable
 		{
@@ -35,6 +39,10 @@ namespace SmartNQuick.Logic
 			else if (typeof(C) == typeof(SmartNQuick.Contracts.Persistence.MusicStore.IArtist))
 			{
 				controller = new Controllers.Persistence.MusicStore.ArtistController(controllerObject) as IControllerAccess<C>;
+			}
+			else if (typeof(C) == typeof(SmartNQuick.Contracts.Persistence.MusicStore.IAlbum))
+			{
+				controller = new Controllers.Persistence.MusicStore.AlbumController(controllerObject) as IControllerAccess<C>;
 			}
 		}
 	}

@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.Contracts", "Sm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.Logic", "SmartNQuick.Logic\SmartNQuick.Logic.csproj", "{AAAD5ED7-2F0A-4346-864D-99F7DE17369D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNQuick.ConApp", "SmartNQuick.ConApp\SmartNQuick.ConApp.csproj", "{92FA6FB8-AD7F-4399-9ADF-ACE035E912C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.ConApp", "SmartNQuick.ConApp\SmartNQuick.ConApp.csproj", "{92FA6FB8-AD7F-4399-9ADF-ACE035E912C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C4BC300B-0CAF-4A53-815C-C432B6C80611}"
+	ProjectSection(SolutionItems) = preProject
+		Anwendungsentwicker Step By Step.txt = Anwendungsentwicker Step By Step.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

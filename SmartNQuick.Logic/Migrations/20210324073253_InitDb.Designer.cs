@@ -10,7 +10,7 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20210318083458_InitDb")]
+    [Migration("20210324073253_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,31 @@ namespace SmartNQuick.Logic.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.MusicStore.Artist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Artists");
+                });
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.MusicStore.Genre", b =>
                 {

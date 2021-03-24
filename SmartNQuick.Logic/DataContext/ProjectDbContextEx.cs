@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClientCorntracts = SmartNQuick.Contracts;
 
 namespace SmartNQuick.Logic.DataContext
@@ -12,6 +7,7 @@ namespace SmartNQuick.Logic.DataContext
 	{
 		public DbSet<Entities.MusicStore.Genre> Genres { get; set; }
 		public DbSet<Entities.MusicStore.Artist> Artists { get; set; }
+		public DbSet<Entities.MusicStore.Album> Albums { get; set; }
 
 
 		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class
@@ -23,6 +19,10 @@ namespace SmartNQuick.Logic.DataContext
 			else if (typeof(C) == typeof(ClientCorntracts.Persistence.MusicStore.IArtist))
 			{
 				dbset = Artists as DbSet<E>;
+			}
+			else if (typeof(C) == typeof(ClientCorntracts.Persistence.MusicStore.IAlbum))
+			{
+				dbset = Albums as DbSet<E>;
 			}
 		}
 
@@ -47,8 +47,16 @@ namespace SmartNQuick.Logic.DataContext
 						 .HasMaxLength(256);
 			artistBuilder.HasIndex(p => p.Name)
 						 .IsUnique();
+
+			var albumBuilder = modelBuilder.Entity<Entities.MusicStore.Album>();
+
+			albumBuilder.HasKey(p => p.Id);
+			albumBuilder.Property(p => p.RowVersion).IsRowVersion();
+			albumBuilder.Property(p => p.Title)
+						 .IsRequired()
+						 .HasMaxLength(1024);
+			albumBuilder.HasIndex(p => p.Title)
+						 .IsUnique();
 		}
-
-
 	}
 }
