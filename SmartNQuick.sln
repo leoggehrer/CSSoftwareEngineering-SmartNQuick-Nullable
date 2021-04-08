@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Anwendungsentwicker Step By Step.txt = Anwendungsentwicker Step By Step.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNQuick.WebApi", "SmartNQuick.WebApi\SmartNQuick.WebApi.csproj", "{DEEE04A7-6F3B-4372-9125-CE9EFD989B0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.WebApi", "SmartNQuick.WebApi\SmartNQuick.WebApi.csproj", "{DEEE04A7-6F3B-4372-9125-CE9EFD989B0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNQuick.Transfer", "SmartNQuick.Transfer\SmartNQuick.Transfer.csproj", "{27E686AC-5044-42DB-BFBF-5991B7543183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.Transfer", "SmartNQuick.Transfer\SmartNQuick.Transfer.csproj", "{27E686AC-5044-42DB-BFBF-5991B7543183}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNQuick.AspMvc", "SmartNQuick.AspMvc\SmartNQuick.AspMvc.csproj", "{EAD77CB9-AA6F-4649-84B4-1E44ED11AFF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{27E686AC-5044-42DB-BFBF-5991B7543183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E686AC-5044-42DB-BFBF-5991B7543183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E686AC-5044-42DB-BFBF-5991B7543183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAD77CB9-AA6F-4649-84B4-1E44ED11AFF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAD77CB9-AA6F-4649-84B4-1E44ED11AFF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAD77CB9-AA6F-4649-84B4-1E44ED11AFF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD77CB9-AA6F-4649-84B4-1E44ED11AFF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
