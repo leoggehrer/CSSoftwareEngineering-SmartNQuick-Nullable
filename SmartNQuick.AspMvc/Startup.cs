@@ -50,7 +50,7 @@ namespace SmartNQuick.AspMvc
 			{
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "{controller=Home}/{action=Privacy}/{id?}");
+					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
 		}
 	}

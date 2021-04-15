@@ -2,19 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Contract = SmartNQuick.Contracts.Persistence.MusicStore.IGenre;
+using Model = SmartNQuick.AspMvc.Models.MusicStore.Genre;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public class GenreController : Controller
+	public class GenreController : GenericModelController<Contract, Model>
 	{
-		public async Task<IActionResult> Index()
-		{
-			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
-			var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
+		//public async Task<IActionResult> Index()
+		//{
+		//	using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+		//	var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
 
-			return View(entities.Select(e => ToModel(e)));
-		}
-
+		//	return View(entities.Select(e => ToModel(e)));
+		//}
+		[HttpGet]
 		public async Task<IActionResult> Create()
 		{
 			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
@@ -31,14 +33,47 @@ namespace SmartNQuick.AspMvc.Controllers
 			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 			return RedirectToAction("Index");
 		}
-		private Models.MusicStore.Genre ToModel(Contracts.Persistence.MusicStore.IGenre entity)
+		[HttpGet]
+		public async Task<IActionResult> Edit(int id)
 		{
-			entity.CheckArgument(nameof(entity));
+			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-			var result = new Models.MusicStore.Genre();
-
-			result.CopyProperties(entity);
-			return result;
+			return View(ToModel(entity));
 		}
+		[HttpPost]
+		public async Task<IActionResult> Update(Models.MusicStore.Genre model)
+		{
+			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+			var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+
+			if (entity != null)
+			{
+				entity.Name = model.Name;
+				await ctrl.UpdateAsync(entity).ConfigureAwait(false);
+				await ctrl.SaveChangesAsync().ConfigureAwait(false);
+			}
+			return RedirectToAction("Index");
+		}
+		[HttpGet]
+		public async Task<IActionResult> Delete(int id)
+		{
+			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
+
+			return View(ToModel(entity));
+		}
+
+//		[HttpDelete]
+		public async Task<IActionResult> DeleteEntity(int id)
+		{
+			using var ctrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+			
+			await ctrl.DeleteAsync(id).ConfigureAwait(false);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
+
+			return RedirectToAction("Index");
+		}
+
 	}
 }

@@ -70,10 +70,10 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 		{
 			entity.CheckArgument(nameof(entity));
 
-			var updateEntity = new E();
+			var updateEntity = await Context.GetByIdAsync<C, E>(entity.Id).ConfigureAwait(false);
 
 			updateEntity.CopyProperties(entity);
-
+			
 			BeforeUpdate(updateEntity);
 			var result = await Context.UpdateAsync<C, E>(updateEntity).ConfigureAwait(false);
 			AfterUpdate(result);
