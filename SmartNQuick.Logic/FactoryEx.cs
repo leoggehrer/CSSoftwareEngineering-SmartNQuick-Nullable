@@ -1,13 +1,9 @@
-﻿using CommonBase.Extensions;
+﻿//@Ignore
+using CommonBase.Extensions;
 using SmartNQuick.Contracts;
 using SmartNQuick.Contracts.Client;
 using SmartNQuick.Logic.Contracts;
 using SmartNQuick.Logic.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic
 {

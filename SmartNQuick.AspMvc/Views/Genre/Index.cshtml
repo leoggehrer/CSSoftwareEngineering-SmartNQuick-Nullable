@@ -1,4 +1,5 @@
-﻿@model IEnumerable<SmartNQuick.AspMvc.Models.MusicStore.Genre>
+﻿@*@Ignore*@
+@model IEnumerable<SmartNQuick.AspMvc.Models.MusicStore.Genre>
 
 @{
 	ViewData["Title"] = "Index";
@@ -25,19 +26,19 @@
 	<tbody>
 		@foreach (var item in Model)
 		{
-		<tr>
-			<td>
-				@Html.DisplayFor(modelItem => item.Id)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Name)
-			</td>
-			<td>
-				@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-				@Html.ActionLink("Details", "Details", new { id=item.Id }) |
-				@Html.ActionLink("Delete", "Delete", new { id=item.Id })
-			</td>
-		</tr>
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+					@Html.ActionLink("Details", "Details", new { id = item.Id }) |
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+				</td>
+			</tr>
 		}
 	</tbody>
 </table>

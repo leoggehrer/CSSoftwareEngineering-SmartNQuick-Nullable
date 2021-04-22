@@ -1,4 +1,5 @@
-﻿using CommonBase.Attributes;
+﻿//@Ignore
+using CommonBase.Attributes;
 
 namespace SmartNQuick.Contracts.Persistence.MusicStore
 {

@@ -1,4 +1,5 @@
-﻿using SmartNQuick.Logic.Contracts;
+﻿//@Ignore
+using SmartNQuick.Logic.Contracts;
 using TContract = SmartNQuick.Contracts.Persistence.MusicStore.IAlbum;
 using TEntity = SmartNQuick.Logic.Entities.MusicStore.Album;
 

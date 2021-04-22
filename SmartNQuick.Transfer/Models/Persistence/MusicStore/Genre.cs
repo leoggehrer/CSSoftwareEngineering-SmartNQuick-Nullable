@@ -1,4 +1,5 @@
-﻿using CommonBase.Extensions;
+﻿//@Ignore
+using CommonBase.Extensions;
 using SmartNQuick.Contracts.Persistence.MusicStore;
 
 namespace SmartNQuick.Transfer.Models.Persistence.MusicStore
