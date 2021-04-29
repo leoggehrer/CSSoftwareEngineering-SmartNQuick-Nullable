@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SmartNQuick.ConApp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

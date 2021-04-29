@@ -1,3 +1,13 @@
+Erforderliche NuGet-Packages
+Module Logic:
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
+System.Linq.Dynamic.Core
+
+Module ConApp
+Microsoft.EntityFrameworkCore.Tools
+Microsoft.EntityFrameworkCore.Design
+
 1. Schnittstelle definieren (interface)
 1.1 Persistence -> IVersionable und ICopyable
 

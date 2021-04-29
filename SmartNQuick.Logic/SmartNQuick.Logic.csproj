@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Business\" />
+    <Folder Include="Controllers\Business\MusicStore\" />
   </ItemGroup>
 
   <ItemGroup>

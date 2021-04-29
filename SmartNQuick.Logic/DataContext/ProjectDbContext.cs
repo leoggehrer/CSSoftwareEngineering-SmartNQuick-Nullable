@@ -15,7 +15,8 @@ namespace SmartNQuick.Logic.DataContext
 		static ProjectDbContext()
 		{
 			ClassConstructing();
-			ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration["ConnectionStrings:DefaultConnection"];
+			//ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();

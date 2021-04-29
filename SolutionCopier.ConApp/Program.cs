@@ -15,7 +15,7 @@ namespace SolutionCopier.ConApp
 											   .Concat(StaticLiterals.SnQProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
 			var sourcePath = GetCurrentSolutionPath();
-            var targetPath = @"C:\Users\ggehr\source\repos\SnQContact";
+            var targetPath = @"C:\Users\ggehr\source\repos\SnQTemplate";
 
             Console.WriteLine("Solution copier!");
             Console.WriteLine("================");
