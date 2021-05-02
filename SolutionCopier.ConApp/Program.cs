@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.IO;
 
 namespace SolutionCopier.ConApp
 {
@@ -14,8 +15,10 @@ namespace SolutionCopier.ConApp
 			var sourceProjects = StaticLiterals.SnQCommonProjects
 											   .Concat(StaticLiterals.SnQProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
-			var sourcePath = GetCurrentSolutionPath();
-            var targetPath = @"C:\Users\ggehr\source\repos\SnQTemplate";
+            
+            var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var sourcePath = GetCurrentSolutionPath();
+            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQTradingCompany");
 
             Console.WriteLine("Solution copier!");
             Console.WriteLine("================");
