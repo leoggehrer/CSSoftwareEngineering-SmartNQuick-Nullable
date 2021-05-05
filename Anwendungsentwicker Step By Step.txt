@@ -8,6 +8,10 @@ Module ConApp
 Microsoft.EntityFrameworkCore.Tools
 Microsoft.EntityFrameworkCore.Design
 
+ConnectionString
+In der Klasse 'ProjectDbContext' muss der ConnctionString gesetzt werden:
+ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+
 1. Schnittstelle definieren (interface)
 1.1 Persistence -> IVersionable und ICopyable
 
