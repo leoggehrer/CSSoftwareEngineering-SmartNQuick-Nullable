@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 //@BaseCode
 
 namespace CommonBase.Modules.Configuration
