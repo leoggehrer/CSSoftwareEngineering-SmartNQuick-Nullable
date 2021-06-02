@@ -7,18 +7,20 @@ namespace SolutionCopier.ConApp
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main(/*string[] args*/)
 		{
 			Console.WriteLine("SolutionCopier");
 
 			var sourceSolutionName = "SmartNQuick";
 			var sourceProjects = StaticLiterals.SnQCommonProjects
+                                               .Concat(StaticLiterals.SnQGenerationProjects
+                                                                     .Select(e => $"{e}"))
 											   .Concat(StaticLiterals.SnQProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
             
             var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var sourcePath = GetCurrentSolutionPath();
-            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQTradingCompany");
+            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQSimpleOrder");
 
             Console.WriteLine("Solution copier!");
             Console.WriteLine("================");
@@ -27,7 +29,7 @@ namespace SolutionCopier.ConApp
             Console.WriteLine($"Copy to:   {targetPath}");
             Console.WriteLine();
 
-            Thread t = new Thread(() =>
+            var t = new Thread(() =>
             {
                 bool hpos = true;
                 int top = Console.CursorTop + 1;

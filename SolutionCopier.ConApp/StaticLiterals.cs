@@ -15,6 +15,10 @@ namespace SolutionCopier.ConApp
 		{
 			"CommonBase",
 		};
+		public static string[] SnQGenerationProjects => new string[]
+		{
+			"CSharpCodeGenerator.ConApp",
+		};
 		public static string[] SnQProjectExtensions => new string[]
 		{
 				".Contracts",

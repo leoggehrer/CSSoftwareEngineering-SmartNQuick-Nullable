@@ -5,16 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
     <ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Business\" />
   </ItemGroup>
 
 </Project>

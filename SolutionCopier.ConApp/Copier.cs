@@ -408,7 +408,7 @@ namespace SolutionCopier.ConApp
         }
         private void ReplaceProjectGuids(string filePath)
         {
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
 
             xml.Load(filePath);
 
