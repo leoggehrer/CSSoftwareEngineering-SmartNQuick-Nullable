@@ -10,7 +10,12 @@ namespace CSharpCodeGenerator.ConApp
 		static void Main(string[] args)
 		{
 			Console.WriteLine(nameof(CSharpCodeGenerator));
-		}
+
+            var solutionPath = GetCurrentSolutionPath();
+            var solutionName = GetSolutionNameByFile(solutionPath);
+            var contractsFilePath = GetContractsFilePath(solutionPath);
+
+        }
         private static string GetCurrentSolutionPath()
         {
             int endPos = AppContext.BaseDirectory

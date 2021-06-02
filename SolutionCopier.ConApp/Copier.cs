@@ -1,4 +1,5 @@
-﻿using CommonBase.Extensions;
+﻿//@BaseCode
+using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
@@ -130,8 +132,8 @@ namespace SolutionCopier.ConApp
         private void CopySolutionStructure(string sourceSolutionDirectory, string targetSolutionDirectory, IEnumerable<string> sourceProjects)
         {
             var sourceSolutionFolder = new DirectoryInfo(sourceSolutionDirectory).Name;
-            var sourceSolutionFilePath = Directory.GetFiles(sourceSolutionDirectory, $"*{StaticLiterals.SolutionFileExtension}", SearchOption.AllDirectories)
-                                                  .FirstOrDefault(f => f.EndsWith($"{sourceSolutionFolder}{StaticLiterals.SolutionFileExtension}", StringComparison.CurrentCultureIgnoreCase));
+            var sourceSolutionFilePath = Directory.GetFiles(sourceSolutionDirectory, $"*{CommonStaticLiterals.SolutionFileExtension}", SearchOption.AllDirectories)
+                                                  .FirstOrDefault(f => f.EndsWith($"{sourceSolutionFolder}{CommonStaticLiterals.SolutionFileExtension}", StringComparison.CurrentCultureIgnoreCase));
             var sourceSolutionPath = Path.GetDirectoryName(sourceSolutionFilePath);
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
             var targetSolutionPath = targetSolutionDirectory;
@@ -304,7 +306,7 @@ namespace SolutionCopier.ConApp
             var sourceSolutionFolder = new DirectoryInfo(sourceSolutionDirectory).Name;
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
 
-            foreach (var sourceFile in new DirectoryInfo(sourceSolutionDirectory).GetFiles($"*{StaticLiterals.ProjectFileExtension}", SearchOption.AllDirectories))
+            foreach (var sourceFile in new DirectoryInfo(sourceSolutionDirectory).GetFiles($"*{CommonStaticLiterals.ProjectFileExtension}", SearchOption.AllDirectories))
             {
                 if (sourceProjects.Any(e => sourceFile.FullName.Contains(e)))
                 {
@@ -371,14 +373,14 @@ namespace SolutionCopier.ConApp
                 }
 
                 if (sourceLines.Any()
-                    && sourceLines.First().Contains(StaticLiterals.SnQIgnoreLabel) == false
-                    && sourceLines.First().Contains(StaticLiterals.SnQGeneratedCodeLabel) == false)
+                    && sourceLines.First().Contains(CommonStaticLiterals.IgnoreLabel) == false
+                    && sourceLines.First().Contains(CommonStaticLiterals.GeneratedCodeLabel) == false)
                 {
                     foreach (var sourceLine in sourceLines)
                     {
                         var targetLine = regex.Replace(sourceLine, targetSolutionName);
 
-                        targetLine = targetLine.Replace(StaticLiterals.SnQBaseCodeLabel, StaticLiterals.SnQCodeCopyLabel);
+                        targetLine = targetLine.Replace(CommonStaticLiterals.BaseCodeLabel, CommonStaticLiterals.CodeCopyLabel);
                         targetLines.Add(targetLine);
                     }
                     File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);

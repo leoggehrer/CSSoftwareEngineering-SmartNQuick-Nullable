@@ -1,7 +1,9 @@
-﻿using System;
+﻿//@BaseCode
+using System;
 using System.Linq;
 using System.Threading;
 using System.IO;
+using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
@@ -12,10 +14,10 @@ namespace SolutionCopier.ConApp
 			Console.WriteLine("SolutionCopier");
 
 			var sourceSolutionName = "SmartNQuick";
-			var sourceProjects = StaticLiterals.SnQCommonProjects
-                                               .Concat(StaticLiterals.SnQGenerationProjects
+			var sourceProjects = CommonStaticLiterals.CommonProjects
+                                               .Concat(CommonStaticLiterals.GenerationProjects
                                                                      .Select(e => $"{e}"))
-											   .Concat(StaticLiterals.SnQProjectExtensions
+											   .Concat(CommonStaticLiterals.ProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
             
             var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
