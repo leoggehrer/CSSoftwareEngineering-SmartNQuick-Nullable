@@ -35,6 +35,10 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 		{
 			var result = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
 
+			if (result == null)
+			{
+				throw new Exception($"Invalid id '{id}'.");
+			}
 			return BeforeReturn(result);
 		}
 		public override async Task<IEnumerable<C>> GetAllAsync()
