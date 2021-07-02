@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 
-using CommonBase.Extensions;
 using SmartNQuick.Contracts;
 
 namespace SmartNQuick.Logic.Entities

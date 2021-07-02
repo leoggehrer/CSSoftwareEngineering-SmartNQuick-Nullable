@@ -1,7 +1,5 @@
 ﻿//@Ignore
-using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 using Contract = SmartNQuick.Contracts.Persistence.MusicStore.IGenre;
 using Model = SmartNQuick.AspMvc.Models.MusicStore.Genre;

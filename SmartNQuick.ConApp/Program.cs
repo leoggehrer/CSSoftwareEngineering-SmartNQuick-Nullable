@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 using System;
-using System.Threading.Tasks;
 
 namespace SmartNQuick.ConApp
 {

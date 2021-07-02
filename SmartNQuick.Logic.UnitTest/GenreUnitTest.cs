@@ -23,7 +23,9 @@ namespace SmartNQuick.Logic.UnitTest
 			await ctrl.SaveChangesAsync();
 		}
 		[ClassInitialize]
+#pragma warning disable IDE0060 // Remove unused parameter
 		public static void ClassInitialize(TestContext context)
+#pragma warning restore IDE0060 // Remove unused parameter
 		{
 			DeleteAllGenresAsync();
 		}

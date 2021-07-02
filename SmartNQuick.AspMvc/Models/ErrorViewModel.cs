@@ -1,5 +1,3 @@
-using System;
-
 namespace SmartNQuick.AspMvc.Models
 {
 	public class ErrorViewModel

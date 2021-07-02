@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Contracts.Client
 {
-    public partial interface IControllerAccess<T> : IDisposable
+	public partial interface IControllerAccess<T> : IDisposable
         where T : IIdentifiable
     {
         #region Async-Methods

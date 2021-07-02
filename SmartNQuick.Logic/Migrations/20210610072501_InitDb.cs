@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartNQuick.Logic.Migrations
 {
-    public partial class InitDb : Migration
+	public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

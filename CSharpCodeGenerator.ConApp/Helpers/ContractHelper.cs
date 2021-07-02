@@ -6,12 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.ConApp.Helpers
 {
-    internal partial class ContractHelper
+	internal partial class ContractHelper
     {
         public static string BusinessLabel => "Business";
         public static string ModulesLabel => "Modules";

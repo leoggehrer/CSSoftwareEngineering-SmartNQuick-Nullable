@@ -1,11 +1,10 @@
 ﻿//@BaseCode
 using CommonBase.Extensions;
+using CSharpCodeGenerator.ConApp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.ConApp.Generation
 {
