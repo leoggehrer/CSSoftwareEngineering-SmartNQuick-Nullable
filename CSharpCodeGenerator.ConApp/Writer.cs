@@ -313,9 +313,13 @@ namespace CSharpCodeGenerator.ConApp
         {
             generatedItems.CheckArgument(nameof(generatedItems));
 
-            foreach (var item in generatedItems)
+            foreach (var item in generatedItems.GroupBy(e => e.FullName))
             {
-                WriteCodeFile($"{item.FullName}{item.FileExtension}", item.SourceCode);
+                var source = new List<string>();
+
+                item.ToList().ForEach(e => source.AddRange(e.SourceCode));
+
+                WriteCodeFile($"{item.Key}{item.First().FileExtension}", source);
             }
         }
 
