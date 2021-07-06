@@ -1,7 +1,7 @@
 ﻿//@Ignore
 using Microsoft.AspNetCore.Mvc;
 using TContract = SmartNQuick.Contracts.Persistence.MusicStore.IArtist;
-using TModel = SmartNQuick.Transfer.Models.Persistence.MusicStore.Artist;
+using TModel = SmartNQuick.Transfer.Persistence.MusicStore.Artist;
 
 namespace SmartNQuick.WebApi.Controllers.Persistence.MusicStore
 {

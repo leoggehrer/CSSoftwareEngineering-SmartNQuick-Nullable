@@ -2,14 +2,13 @@
 using CommonBase.Extensions;
 using SmartNQuick.Contracts;
 using SmartNQuick.Contracts.Client;
-using SmartNQuick.Logic.Contracts;
 using SmartNQuick.Logic.Controllers;
 
 namespace SmartNQuick.Logic
 {
 	partial class Factory
 	{
-		static partial void CreateController<C>(IContext context, ref IControllerAccess<C> controller) where C : IIdentifiable
+		static partial void CreateController<C>(DataContext.IContext context, ref IControllerAccess<C> controller) where C : IIdentifiable
 		{
 			if (typeof(C) == typeof(SmartNQuick.Contracts.Persistence.MusicStore.IGenre))
 			{

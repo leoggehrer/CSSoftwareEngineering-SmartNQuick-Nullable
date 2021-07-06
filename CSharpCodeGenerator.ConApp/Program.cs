@@ -14,7 +14,16 @@ namespace CSharpCodeGenerator.ConApp
             var solutionPath = GetCurrentSolutionPath();
             var solutionName = GetSolutionNameByFile(solutionPath);
             var contractsFilePath = GetContractsFilePath(solutionPath);
+            var solutionProperties = Logic.Factory.GetSolutionProperties(solutionName, contractsFilePath);
+            var appGenerationUnits = Logic.Common.UnitType.AllApps;
 
+            Logic.Generator.DeleteGenerationFiles(solutionPath);
+            var generatedItems = Logic.Generator.Generate(solutionName, contractsFilePath, appGenerationUnits);
+
+            Writer.WriteAll(solutionPath, solutionProperties, generatedItems);
+
+            Console.WriteLine("Excluding Files from Git...");
+            Logic.Git.GitIgnoreManager.Run($"{nameof(CSharpCodeGenerator)}.{nameof(ConApp)}");
         }
         private static string GetCurrentSolutionPath()
         {

@@ -8,8 +8,4 @@
     <ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Business\" />
-  </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 
 using CommonBase.Extensions;
-using SmartNQuick.Logic.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Persistence
 {
-	internal abstract partial class GenericPersistenceController<C, E> : GenericController<C, E>
-		where C : SmartNQuick.Contracts.IIdentifiable
-		where E : Entities.IdentityEntity, SmartNQuick.Contracts.ICopyable<C>, C, new()
+    internal abstract partial class GenericPersistenceController<C, E> : GenericController<C, E>
+		where C : Contracts.IIdentifiable
+		where E : Entities.IdentityEntity, Contracts.ICopyable<C>, C, new()
 	{
-		protected GenericPersistenceController(IContext context) : base(context)
+		protected GenericPersistenceController(DataContext.IContext context) : base(context)
 		{
 		}
 

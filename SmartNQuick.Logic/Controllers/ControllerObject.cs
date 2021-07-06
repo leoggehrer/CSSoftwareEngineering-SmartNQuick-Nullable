@@ -4,11 +4,11 @@ using System;
 
 namespace SmartNQuick.Logic.Controllers
 {
-	internal abstract partial class ControllerObject : IDisposable
+    internal abstract partial class ControllerObject : IDisposable
 	{
-		private bool contextOwner;
-		protected Contracts.IContext Context { get; set; }
-		public ControllerObject(Contracts.IContext context)
+		private readonly bool contextOwner;
+		protected DataContext.IContext Context { get; set; }
+		public ControllerObject(DataContext.IContext context)
 		{
 			context.CheckArgument(nameof(context));
 

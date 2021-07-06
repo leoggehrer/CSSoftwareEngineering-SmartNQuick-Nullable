@@ -6,9 +6,9 @@ namespace SmartNQuick.Logic
 {
 	public static partial class Factory
 	{
-		private static Contracts.IContext CreateContext()
+		private static DataContext.IContext CreateContext()
 		{
-			return new DataContext.ProjectDbContext();
+			return new DataContext.SmartNQuickDbContext();
 		}
 		public static ClientContracts.IControllerAccess<C> Create<C>()
 			where C : SmartNQuick.Contracts.IIdentifiable
@@ -18,7 +18,7 @@ namespace SmartNQuick.Logic
 			CreateController<C>(CreateContext(), ref result);
 			return result;
 		}
-		static partial void CreateController<C>(Contracts.IContext context, ref ClientContracts.IControllerAccess<C> controller) 
+		static partial void CreateController<C>(DataContext.IContext context, ref ClientContracts.IControllerAccess<C> controller) 
 			where C : SmartNQuick.Contracts.IIdentifiable;
 		public static ClientContracts.IControllerAccess<C> Create<C>(object controller)
 			where C : SmartNQuick.Contracts.IIdentifiable

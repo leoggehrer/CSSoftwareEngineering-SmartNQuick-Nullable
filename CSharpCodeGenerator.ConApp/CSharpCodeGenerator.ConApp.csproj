@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonBase\CommonBase.csproj" />
+    <ProjectReference Include="..\CSharpCodeGenerator.Logic\CSharpCodeGenerator.Logic.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,14 @@
 ﻿//@BaseCode
-using SmartNQuick.Logic.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers
 {
-	internal abstract partial class GenericController<C, E> : ControllerObject, SmartNQuick.Contracts.Client.IControllerAccess<C>
+    internal abstract partial class GenericController<C, E> : ControllerObject, SmartNQuick.Contracts.Client.IControllerAccess<C>
 		where C : SmartNQuick.Contracts.IIdentifiable
 		where E : Entities.IdentityEntity, C, new()
 	{
-		protected GenericController(IContext context) : base(context)
+		protected GenericController(DataContext.IContext context) : base(context)
 		{
 		}
 

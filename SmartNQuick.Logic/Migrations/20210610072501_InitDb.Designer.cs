@@ -9,7 +9,7 @@ using SmartNQuick.Logic.DataContext;
 
 namespace SmartNQuick.Logic.Migrations
 {
-    [DbContext(typeof(ProjectDbContext))]
+    [DbContext(typeof(SmartNQuickDbContext))]
     [Migration("20210610072501_InitDb")]
     partial class InitDb
     {

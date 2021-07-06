@@ -8,7 +8,7 @@ using SmartNQuick.Logic.DataContext;
 
 namespace SmartNQuick.Logic.Migrations
 {
-    [DbContext(typeof(ProjectDbContext))]
+    [DbContext(typeof(SmartNQuickDbContext))]
     partial class ProjectDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
