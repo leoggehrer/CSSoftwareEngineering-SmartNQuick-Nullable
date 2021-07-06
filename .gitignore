@@ -339,11 +339,11 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 #QnSCodeIgnoreStart
-/SmartNQuick.AspMvc/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Controllers/Persistence/_GeneratedCode.cs
+/SmartNQuick.AspMvc/Models/Persistence/_GeneratedCode.cs
+/SmartNQuick.WebApi/Controllers/_GeneratedCode.cs
 /SmartNQuick.Transfer/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/DataContext/_GeneratedCode.cs
-/SmartNQuick.WebApi/Controllers/_GeneratedCode.cs
 /SmartNQuick.Logic/_GeneratedCode.cs
 #QnSCodeIgnoreEnd

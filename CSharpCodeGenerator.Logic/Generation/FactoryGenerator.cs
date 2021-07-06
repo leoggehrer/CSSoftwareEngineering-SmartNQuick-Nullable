@@ -112,35 +112,35 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("return result;");
             result.Add("}");
 
-            result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable");
-            result.Add("{");
-            result.Add("Contracts.Client.IControllerAccess<I> result;");
-            first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
-            {
-                var entityName = CreateEntityNameFromInterface(type);
-                var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
+            //result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable");
+            //result.Add("{");
+            //result.Add("Contracts.Client.IControllerAccess<I> result;");
+            //first = true;
+            //foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
+            //{
+            //    var entityName = CreateEntityNameFromInterface(type);
+            //    var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
 
-                if (first)
-                {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
-                }
-                else
-                {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
-                }
-                result.Add("{");
-                result.Add($"result = new {controllerNameSpace}.{entityName}Controller(CreateContext()) " + "{ SessionToken = sessionToken } as Contracts.Client.IControllerAccess<I>;");
-                result.Add("}");
-                first = false;
-            }
-            result.Add("else");
-            result.Add("{");
-            result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
-            result.Add("}");
+            //    if (first)
+            //    {
+            //        result.Add($"if (typeof(I) == typeof({type.FullName}))");
+            //    }
+            //    else
+            //    {
+            //        result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+            //    }
+            //    result.Add("{");
+            //    result.Add($"result = new {controllerNameSpace}.{entityName}Controller(CreateContext()) " + "{ SessionToken = sessionToken } as Contracts.Client.IControllerAccess<I>;");
+            //    result.Add("}");
+            //    first = false;
+            //}
+            //result.Add("else");
+            //result.Add("{");
+            //result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
+            //result.Add("}");
 
-            result.Add("return result;");
-            result.Add("}");
+            //result.Add("return result;");
+            //result.Add("}");
             result.Add("}");
 
 			result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), LogicNameSpace));
