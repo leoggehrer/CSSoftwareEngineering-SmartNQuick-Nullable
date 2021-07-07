@@ -50,11 +50,23 @@ namespace SmartNQuick.Contracts.Client
         /// <returns>The inserted entity.</returns>
         Task<T> InsertAsync(T entity);
         /// <summary>
+        /// The entities are being tracked by the context but does not yet exist in the repository. 
+        /// </summary>
+        /// <param name="entities">The entities which are to be inserted.</param>
+        /// <returns>The inserted entities.</returns>
+        Task<IEnumerable<T>> InsertAsync(IEnumerable<T> entities);
+        /// <summary>
         /// The entity is being tracked by the context and exists in the repository, and some or all of its property values have been modified.
         /// </summary>
         /// <param name="entity">The entity which is to be updated.</param>
         /// <returns>The the modified entity.</returns>
         Task<T> UpdateAsync(T entity);
+        /// <summary>
+        /// The entities are being tracked by the context and exists in the repository, and some or all of its property values have been modified.
+        /// </summary>
+        /// <param name="entities">The entities which are to be updated.</param>
+        /// <returns>The updated entities.</returns>
+        Task<IEnumerable<T>> UpdateAsync(IEnumerable<T> entities);
         /// <summary>
         /// Removes the entity from the repository with the appropriate identity.
         /// </summary>

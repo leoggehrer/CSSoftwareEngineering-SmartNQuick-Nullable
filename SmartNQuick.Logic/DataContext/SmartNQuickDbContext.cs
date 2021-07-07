@@ -154,7 +154,6 @@ namespace SmartNQuick.Logic.DataContext
 
 			base.OnConfiguring(optionsBuilder);
 		}
-		static partial void DoModelCreating(ModelBuilder modelBuilder);
 
 		partial void BeforeOnConfiguring(DbContextOptionsBuilder optionsBuilder, ref bool handled);
 		partial void AfterOnConfiguring(DbContextOptionsBuilder optionsBuilder);
@@ -166,12 +165,13 @@ namespace SmartNQuick.Logic.DataContext
 			BeforeOnModelCreating(modelBuilder, ref handled);
 			if (handled == false)
 			{
-
+				DoModelCreating(modelBuilder);
 			}
 			AfterOnModelCreating(modelBuilder);
 			base.OnModelCreating(modelBuilder);
 		}
 		static partial void BeforeOnModelCreating(ModelBuilder modelBuilder, ref bool handled);
+		static partial void DoModelCreating(ModelBuilder modelBuilder);
 		static partial void AfterOnModelCreating(ModelBuilder modelBuilder);
 	}
 }

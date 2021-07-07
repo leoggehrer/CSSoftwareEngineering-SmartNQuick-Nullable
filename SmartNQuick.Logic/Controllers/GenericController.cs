@@ -1,5 +1,7 @@
 ﻿//@BaseCode
+using CommonBase.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers
@@ -30,16 +32,39 @@ namespace SmartNQuick.Logic.Controllers
 		public abstract Task<IEnumerable<C>> GetAllAsync(); 
 
 		public abstract Task<C> GetByIdAsync(int id); 
-
-		public abstract Task<C> InsertAsync(C entity); 
-
 		public abstract Task<IEnumerable<C>> QueryAllAsync(string predicate); 
+
+		public abstract Task<C> InsertAsync(C entity);
+		public virtual async Task<IEnumerable<C>> InsertAsync(IEnumerable<C> entities)
+		{
+			entities.CheckArgument(nameof(entities));
+
+			var result = new List<C>();
+
+			foreach (var entity in entities)
+			{
+				result.Add(await InsertAsync(entity).ConfigureAwait(false));
+			}
+			return result.AsQueryable();
+		}
+
+		public abstract Task<C> UpdateAsync(C entity);
+		public virtual async Task<IEnumerable<C>> UpdateAsync(IEnumerable<C> entities)
+		{
+			entities.CheckArgument(nameof(entities));
+
+			var result = new List<C>();
+
+			foreach (var entity in entities)
+			{
+				result.Add(await UpdateAsync(entity).ConfigureAwait(false));
+			}
+			return result.AsQueryable();
+		}
 
 		public virtual Task<int> SaveChangesAsync()
 		{
 			return Context.SaveChangesAsync();
 		}
-
-		public abstract Task<C> UpdateAsync(C entity);
  	}
 }

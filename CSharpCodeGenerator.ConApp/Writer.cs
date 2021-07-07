@@ -1,4 +1,4 @@
-﻿//@QnSBaseCode
+﻿//@BaseCode
 //MdStart
 
 using CommonBase.Extensions;
@@ -44,8 +44,8 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.PersistenceEntity);
 
                 Console.WriteLine("Write Logic-Persistence-Entities...");
-                //WriteGeneratedCodeFile(solutionPath, solutionProperties.EntitiesPersistenceFileSubPath, writeItems);
-                WriteCodeFiles(writeItems);
+                WriteGeneratedCodeFile(solutionPath, solutionProperties.EntitiesPersistenceFileSubPath, writeItems);
+                //WriteCodeFiles(solutionPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -309,17 +309,18 @@ namespace CSharpCodeGenerator.ConApp
                 File.WriteAllLines(fullFilePath, sourceLines);
             }
         }
-        public static void WriteCodeFiles(IEnumerable<IGeneratedItem> generatedItems)
+        public static void WriteCodeFiles(string solutionPath, IEnumerable<IGeneratedItem> generatedItems)
         {
             generatedItems.CheckArgument(nameof(generatedItems));
 
             foreach (var item in generatedItems.GroupBy(e => e.FullName))
             {
-                var source = new List<string>();
+                var sourceLines = new List<string>();
+                var filePath = Path.Combine(solutionPath, $"{item.Key}{item.First().FileExtension}");
 
-                item.ToList().ForEach(e => source.AddRange(e.SourceCode));
-
-                WriteCodeFile($"{item.Key}{item.First().FileExtension}", source);
+                item.ToList().ForEach(e => sourceLines.AddRange(e.SourceCode));
+                sourceLines.Insert(0, $"//{StaticLiterals.GeneratedCodeLabel}");
+                WriteCodeFile(filePath, sourceLines);
             }
         }
 

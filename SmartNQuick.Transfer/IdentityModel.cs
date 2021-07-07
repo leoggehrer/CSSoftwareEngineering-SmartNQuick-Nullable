@@ -2,7 +2,7 @@
 
 namespace SmartNQuick.Transfer
 {
-	public partial class IdentityModel : TransferObject, Contracts.IIdentifiable
+	public partial class IdentityModel : TransferModel, Contracts.IIdentifiable
 	{
 		public int Id { get; set; }
 	}

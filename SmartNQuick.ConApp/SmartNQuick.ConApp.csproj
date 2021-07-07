@@ -17,9 +17,13 @@
   <ItemGroup>
     <ProjectReference Include="..\CommonBase\CommonBase.csproj" />
     <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
+    <ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\Album.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.Production.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -27,6 +31,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Artist.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Genre.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Track.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

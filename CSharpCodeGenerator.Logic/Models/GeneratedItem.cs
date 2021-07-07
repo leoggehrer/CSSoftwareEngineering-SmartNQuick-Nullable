@@ -19,7 +19,7 @@ namespace CSharpCodeGenerator.Logic.Models
         }
         public UnitType UnitType { get; }
         public ItemType ItemType { get; }
-        public string FullName { get; set; }
+        public string FullName { get; init; }
         public string SubFilePath { get; set; }
         public string FileExtension { get; set; }
         public IEnumerable<string> SourceCode => Source;

@@ -1,10 +1,9 @@
 ﻿//@BaseCode
-using CommonBase.Extensions;
 using ClientContracts = SmartNQuick.Contracts.Client;
 
 namespace SmartNQuick.Logic
 {
-	public static partial class Factory
+    public static partial class Factory
 	{
 		private static DataContext.IContext CreateContext()
 		{
