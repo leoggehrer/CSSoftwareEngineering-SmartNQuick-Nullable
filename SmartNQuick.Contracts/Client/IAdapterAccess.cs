@@ -1,12 +1,19 @@
-﻿using System;
+﻿//@BaseCode
+//MdStart
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Contracts.Client
 {
-    public partial interface IControllerAccess<T> : IDisposable
-        where T : IIdentifiable
+    public partial interface IAdapterAccess<T> : IDisposable
     {
+        /// <summary>
+        /// Gets the max page size.
+        /// </summary>
+        int MaxPageSize { get; }
+
         #region Async-Methods
         /// <summary>
         /// Gets the number of quantity in the collection.
@@ -31,6 +38,7 @@ namespace SmartNQuick.Contracts.Client
         /// </summary>
         /// <returns>All interfaces of the entity collection.</returns>
         Task<IEnumerable<T>> GetAllAsync();
+
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
@@ -54,7 +62,7 @@ namespace SmartNQuick.Contracts.Client
         /// </summary>
         /// <param name="entities">The entities which are to be inserted.</param>
         /// <returns>The inserted entities.</returns>
-        Task<IEnumerable<T>> InsertAsync(IEnumerable<T> entities);
+        Task<IQueryable<T>> InsertAsync(IEnumerable<T> entities);
         /// <summary>
         /// The entity is being tracked by the context and exists in the repository, and some or all of its property values have been modified.
         /// </summary>
@@ -66,23 +74,13 @@ namespace SmartNQuick.Contracts.Client
         /// </summary>
         /// <param name="entities">The entities which are to be updated.</param>
         /// <returns>The updated entities.</returns>
-        Task<IEnumerable<T>> UpdateAsync(IEnumerable<T> entities);
+        Task<IQueryable<T>> UpdateAsync(IEnumerable<T> entities);
         /// <summary>
         /// Removes the entity from the repository with the appropriate identity.
         /// </summary>
         /// <param name="id">The identification.</param>
         Task DeleteAsync(int id);
-
-        /// <summary>
-        /// Saves any changes in the underlying persistence.
-        /// </summary>
-        /// <returns>The number of state entries written to the underlying database.</returns>
-        Task<int> SaveChangesAsync();
-        /// <summary>
-        /// Reject any changes in the underlying persistence.
-        /// </summary>
-        /// <returns>The number of state entries reject in the context.</returns>
-        Task<int> RejectChangesAsync();
         #endregion Async-Methods
     }
 }
+//MdEnd

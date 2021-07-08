@@ -7,11 +7,13 @@ namespace SmartNQuick.ConApp
     {
         static void Main(/*string[] args*/)
         {
-            Console.WriteLine("Test SmartNQuick");
+            Console.WriteLine("SmartNQuick");
+            Console.WriteLine(DateTime.Now);
 
             BeforeRun();
 
             AfterRun();
+            Console.WriteLine(DateTime.Now);
         }
 
         static partial void BeforeRun();

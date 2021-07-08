@@ -66,5 +66,9 @@ namespace SmartNQuick.Logic.Controllers
 		{
 			return Context.SaveChangesAsync();
 		}
- 	}
+		public virtual Task<int> RejectChangesAsync()
+		{
+			return Context.RejectChangesAsync();
+		}
+	}
 }

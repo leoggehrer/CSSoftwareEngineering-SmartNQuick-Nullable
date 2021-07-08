@@ -53,9 +53,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             result.Add("public static partial class Factory");
             result.Add("{");
-            result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>() where I : Contracts.IIdentifiable");
+            result.Add("static partial void CreateController<I>(ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
             result.Add("{");
-            result.Add("Contracts.Client.IControllerAccess<I> result;");
             foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
             {
                 var entityName = CreateEntityNameFromInterface(type);
@@ -70,7 +69,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                     result.Add($"else if (typeof(I) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"result = new {controllerNameSpace}.{entityName}Controller(CreateContext()) as Contracts.Client.IControllerAccess<I>;");
+                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(CreateContext()) as Contracts.Client.IControllerAccess<I>;");
                 result.Add("}");
                 first = false;
             }
@@ -78,13 +77,10 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
             result.Add("}");
-
-            result.Add("return result;");
             result.Add("}");
 
-            result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(object sharedController) where I : Contracts.IIdentifiable");
+            result.Add("static partial void CreateController<I>(object sharedController, ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
             result.Add("{");
-            result.Add("Contracts.Client.IControllerAccess<I> result;");
             first = true;
             foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
             {
@@ -100,7 +96,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                     result.Add($"else if (typeof(I) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"result = new {controllerNameSpace}.{entityName}Controller(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<I>;");
+                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<I>;");
                 result.Add("}");
                 first = false;
             }
@@ -108,8 +104,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
             result.Add("}");
-
-            result.Add("return result;");
             result.Add("}");
 
             //result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable");

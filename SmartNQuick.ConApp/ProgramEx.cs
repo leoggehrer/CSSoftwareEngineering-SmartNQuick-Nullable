@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Factory = SmartNQuick.Adapters.Factory;
 
 namespace SmartNQuick.ConApp
 {
@@ -20,10 +21,10 @@ namespace SmartNQuick.ConApp
         }
         private static async Task ImportCsvDataAsync()
         {
-            using var genreCtrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
-            using var artistCtrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IArtist>();
-            using var albumCtrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.IAlbum>();
-            using var trackCtrl = Logic.Factory.Create<Contracts.Persistence.MusicStore.ITrack>();
+            using var genreCtrl = Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
+            using var artistCtrl = Factory.Create<Contracts.Persistence.MusicStore.IArtist>();
+            using var albumCtrl = Factory.Create<Contracts.Persistence.MusicStore.IAlbum>();
+            using var trackCtrl = Factory.Create<Contracts.Persistence.MusicStore.ITrack>();
             var genreData = File.ReadAllLines("Data\\Genre.csv", Encoding.Default).Skip(1).Select(l =>
             {
                 var data = l.Split(';');
@@ -50,31 +51,9 @@ namespace SmartNQuick.ConApp
             var tracks = new List<Contracts.Persistence.MusicStore.ITrack>();
 
             // import genre
-            foreach (var item in genreData)
-            {
-                genres.Add(await genreCtrl.InsertAsync(item.Entity));
-            }
-            try
-            {
-                await genreCtrl.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-            }
+            genres.AddRange(await genreCtrl.InsertAsync(genreData.Select(e => e.Entity)));
             // import artist
-            foreach (var item in artistData)
-            {
-                artists.Add(await artistCtrl.InsertAsync(item.Entity));
-            }
-            try
-            {
-                await artistCtrl.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-            }
+            artists.AddRange(await artistCtrl.InsertAsync(artistData.Select(e => e.Entity)));
             // import alben
             foreach (var item in albumData)
             {
@@ -84,17 +63,8 @@ namespace SmartNQuick.ConApp
                 {
                     item.Entity.ArtistId = artists[idx].Id;
                 }
-
-                alben.Add(await albumCtrl.InsertAsync(item.Entity));
             }
-            try
-            {
-                await albumCtrl.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-            }
+            alben.AddRange(await albumCtrl.InsertAsync(albumData.Select(e => e.Entity)));
             // import tracks
             foreach (var item in trackData)
             {
@@ -111,18 +81,8 @@ namespace SmartNQuick.ConApp
                 {
                     item.Entity.AlbumId = alben[idx].Id;
                 }
-
-                tracks.Add(await trackCtrl.InsertAsync(item.Entity));
             }
-            try
-            {
-                await trackCtrl.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in {System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-            }
-
+            tracks.AddRange(await trackCtrl.InsertAsync(trackData.Select(e => e.Entity)));
         }
     }
 }

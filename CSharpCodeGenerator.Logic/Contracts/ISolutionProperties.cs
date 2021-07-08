@@ -9,6 +9,11 @@ namespace CSharpCodeGenerator.Logic.Contracts
         string SolutionName { get; }
         IEnumerable<string> ProjectNames { get; }
 
+        string AdaptersFactoryFileSubPath { get; }
+        string AdaptersFactorySubPath { get; }
+        string AdaptersSubPath { get; }
+        string AdaptersProjectName { get; }
+
         string AspMvcBusinessFileSubPath { get; }
         string AspMvcBusinessSubPath { get; }
         string AspMvcModulesFileSubPath { get; }

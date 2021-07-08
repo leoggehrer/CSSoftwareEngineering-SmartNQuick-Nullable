@@ -2,7 +2,6 @@
 //MdStart
 
 using CommonBase.Extensions;
-using CSharpCodeGenerator.Logic;
 using CSharpCodeGenerator.Logic.Common;
 using CSharpCodeGenerator.Logic.Contracts;
 using System;
@@ -121,6 +120,16 @@ namespace CSharpCodeGenerator.ConApp
                 WriteGeneratedCodeFile(solutionPath, solutionProperties.TransferShadowFileSubPath, writeItems);
             }));
             #endregion WriteTansfer
+
+            #region WriteAdapter
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Adapters && e.ItemType == ItemType.Factory);
+
+                Console.WriteLine("Write Adapters-Factory...");
+                WriteGeneratedCodeFile(solutionPath, solutionProperties.AdaptersFactoryFileSubPath, writeItem);
+            }));
+            #endregion WriteTransfer
 
             #region WriteWebApi
             tasks.Add(Task.Factory.StartNew(() =>

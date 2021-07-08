@@ -15,16 +15,18 @@ namespace CommonBase
         };
         public static string[] GenerationProjects { get; } = new string[]
         {
+            "CSharpCodeGenerator.Logic",
             "CSharpCodeGenerator.ConApp",
         };
         public static string[] ProjectExtensions { get; } = new string[]
         {
-                ".Contracts",
-                ".Logic",
-                ".Transfer",
-                ".WebApi",
-                ".AspMvc",
-                ".ConApp"
+            ".Contracts",
+            ".Logic",
+            ".Transfer",
+            ".WebApi",
+            ".Adapters",
+            ".AspMvc",
+            ".ConApp"
         };
         public static IDictionary<string, string> SourceFileHeaders { get; } = new Dictionary<string, string>()
         {

@@ -47,5 +47,6 @@ namespace SmartNQuick.Logic.DataContext
 			where E : IdentityEntity, C;
 
 		Task<int> SaveChangesAsync();
+		Task<int> RejectChangesAsync();
 	}
 }

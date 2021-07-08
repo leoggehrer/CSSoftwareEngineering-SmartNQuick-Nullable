@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommonBase\CommonBase.csproj" />
-    <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
+    <ProjectReference Include="..\SmartNQuick.Adapters\SmartNQuick.Adapters.csproj" />
     <ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
   </ItemGroup>
 

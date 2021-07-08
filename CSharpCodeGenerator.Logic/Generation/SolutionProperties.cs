@@ -48,6 +48,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string LogicSubPath => LogicProjectName;
         public string TransferSubPath => TransferProjectName;
         public string WebApiSubPath => WebApiProjectName;
+        public string AdaptersSubPath => AdaptersProjectName;
         public string AspMvcSubPath => AspMvcProjectName;
         public string ConnectorSubPath => ConnectorProjectName;
         #endregion ProjectPaths
@@ -106,6 +107,11 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string WebApiControllersSubPath => Path.Combine(WebApiSubPath, StaticLiterals.ControllersFolder);
         public string WebApiControllersFileSubPath => Path.Combine(WebApiControllersSubPath, GeneratedCodeFileName);
         #endregion WebApi
+
+        #region Adapters-Factory
+        public string AdaptersFactorySubPath => Path.Combine(AdaptersSubPath);
+        public string AdaptersFactoryFileSubPath => Path.Combine(AdaptersFactorySubPath, GeneratedCodeFileName);
+        #endregion Adapters-Factory
 
         #region AspMvc
         public string AspMvcBusinessSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.BusinessFolder);

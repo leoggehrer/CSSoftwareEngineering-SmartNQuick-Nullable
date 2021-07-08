@@ -345,8 +345,9 @@ healthchecksdb
 /SmartNQuick.WebApi/Controllers/_GeneratedCode.cs
 /SmartNQuick.Transfer/Persistence/_GeneratedCode.cs
 /SmartNQuick.Transfer/Modules/_GeneratedCode.cs
+/SmartNQuick.Logic/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Modules/_GeneratedCode.cs
 /SmartNQuick.Logic/DataContext/_GeneratedCode.cs
-/SmartNQuick.Logic/_GeneratedCode.cs
+/SmartNQuick.Adapters/_GeneratedCode.cs
 #QnSCodeIgnoreEnd
