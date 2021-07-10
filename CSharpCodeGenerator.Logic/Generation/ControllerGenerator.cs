@@ -126,8 +126,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, result.Source);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}>");
@@ -163,8 +163,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, result.Source);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {connectorGenericType.FullName}, {connectorEntityType}, {oneGenericType.FullName}, {oneEntityType}, {anotherGenericType.FullName}, {anotherEntityType}>");
@@ -227,8 +227,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, result.Source);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {oneGenericType.FullName}, {oneEntityType}, {anotherGenericType.FullName}, {anotherEntityType}>");
@@ -283,8 +283,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, result.Source);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {oneGenericType.FullName}, {oneEntityType}, {manyGenericType.FullName}, {manyEntityType}>");
@@ -348,8 +348,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, controllerAttributes);
             result.AddRange(controllerAttributes);
@@ -396,8 +396,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
             CreateLogicControllerAttributes(type, result.Source);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {sourceGenericType.FullName}, {sourceEntityType}>");
@@ -460,14 +460,14 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityName = CreateEntityNameFromInterface(type);
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
-            var modelType = $"Transfer.{subNameSpace}.{entityName}";
+            var modelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
             var controllerName = entityName.EndsWith("s") ? entityName : $"{entityName}s";
             var result = new Models.GeneratedItem(Common.UnitType.WebApi, Common.ItemType.WebApiController)
             {
                 FullName = CreateWebApiControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             ConvertWebApiControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");
             result.Add($"using TContract = {contractType};");
@@ -485,8 +485,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             return result;
         }
         static partial void ConvertWebApiControllerName(Type type, ref string name);
-        static partial void ConvertGenericPersistenceControllerName(Type type, ref string name);
         #endregion WebApiController
+        static partial void ConvertGenericPersistenceControllerName(Type type, ref string name);
     }
 }
 //MdEnd

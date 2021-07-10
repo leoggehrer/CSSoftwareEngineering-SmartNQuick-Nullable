@@ -61,8 +61,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = $"{nameSpace}.{SolutionProperties.SolutionName}DbContext",
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = System.IO.Path.Combine("DataContext", $"{SolutionProperties.SolutionName}DbContextPartA{StaticLiterals.CSharpFileExtension}"),
             };
-            result.SubFilePath = $"{result.FullName}PartA{result.FileExtension}";
             result.Add($"namespace {nameSpace}");
             result.Add("{");
             result.Add("using Microsoft.EntityFrameworkCore;");

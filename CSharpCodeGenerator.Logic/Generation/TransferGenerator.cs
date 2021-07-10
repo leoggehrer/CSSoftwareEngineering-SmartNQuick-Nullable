@@ -20,8 +20,8 @@ namespace CSharpCodeGenerator.Logic.Generation
 
         public override Common.UnitType UnitType => Common.UnitType.Transfer;
         public override string AppPostfix => SolutionProperties.TransferPostfix;
-        public override string AppModelsNameSpace => $"{SolutionProperties.TransferProjectName}";
-        public override string ModelsFolder => string.Empty;
+        public override string AppModelsNameSpace => $"{SolutionProperties.TransferProjectName}.{StaticLiterals.ModelsFolder}";
+        public override string ModelsFolder => StaticLiterals.ModelsFolder;
 
         protected override void CreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines)
         {

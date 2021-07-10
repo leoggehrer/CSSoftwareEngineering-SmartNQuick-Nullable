@@ -49,8 +49,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = $"{LogicNameSpace}.Factory",
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = System.IO.Path.Combine($"FactoryPartA{StaticLiterals.CSharpFileExtension}"),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             result.Add("public static partial class Factory");
             result.Add("{");
             result.Add("static partial void CreateController<I>(ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
@@ -151,12 +151,6 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             return $"Controllers.{CreateSubNamespaceFromType(type)}";
         }
-        public static string CreateTransferNameSpace(Type type)
-        {
-            type.CheckArgument(nameof(type));
-
-            return $"Transfer.{CreateSubNamespaceFromType(type)}";
-        }
         public Contracts.IGeneratedItem CreateAdapterFactory()
         {
             var first = true;
@@ -168,8 +162,8 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = $"{AdapterNameSpace}.Factory",
                 FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = System.IO.Path.Combine($"FactoryPartA{StaticLiterals.CSharpFileExtension}"),
             };
-            result.SubFilePath = $"{result.FullName}{result.FileExtension}";
             result.Add("public static partial class Factory");
             result.Add("{");
             result.Add("public static Contracts.Client.IAdapterAccess<I> Create<I>()");
@@ -203,7 +197,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
             {
                 var modelName = CreateEntityNameFromInterface(type);
-                var modelNameSpace = CreateTransferNameSpace(type);
+                var modelNameSpace = CreateTransferModelNameSpace(type);
                 var extUri = modelName.EndsWith("s") ? $"{modelName}" : $"{modelName}s";
 
                 ConvertExtUri(type, ref extUri);
@@ -257,7 +251,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
             {
                 var modelName = CreateEntityNameFromInterface(type);
-                var modelNameSpace = CreateTransferNameSpace(type);
+                var modelNameSpace = CreateTransferModelNameSpace(type);
                 var extUri = modelName.EndsWith("s") ? $"{modelName}" : $"{modelName}s";
 
                 ConvertExtUri(type, ref extUri);

@@ -1,6 +1,6 @@
 ﻿//@Ignore
 using CommonBase.Extensions;
-using SmartNQuick.Transfer.Persistence.MusicStore;
+using SmartNQuick.Transfer.Models.Persistence.MusicStore;
 using System;
 using System.Collections.Generic;
 using System.IO;

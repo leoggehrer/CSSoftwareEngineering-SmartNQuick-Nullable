@@ -231,6 +231,19 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
 
         /// <summary>
+        /// Diese Methode ermittelt den Transfer-Model-Namensraum aus einem Typ.
+        /// </summary>
+        /// <param name="type">Typ</param>
+        /// <returns>Transfer-Model-Namensraum</returns>
+        public static string CreateTransferModelNameSpace(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return $"Transfer.{StaticLiterals.ModelsFolder}.{CreateSubNamespaceFromType(type)}";
+        }
+
+
+        /// <summary>
         /// Diese Methode ermittelt den Entity Namen aus seinem Schnittstellen Typ.
         /// </summary>
         /// <param name="type">Schnittstellen-Typ</param>
@@ -300,6 +313,36 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 result = type.FullName.Replace(type.Name, entityName);
                 result = result.Replace(".Contracts", ".Logic.Entities");
+            }
+            return result;
+        }
+        /// <summary>
+        /// Diese Methode ermittelt den Teil-Pfad aus der Schnittstelle.
+        /// </summary>
+        /// <param name="type">Schnittstellen-Typ</param>
+        /// <param name="pathPrefix">Ein optionaler Pfad-Prefix.</param>
+        /// <param name="filePostfix">Ein optionaler Datei-Postfix.</param>
+        /// <param name="fileExtension">Die Datei-Extension.</param>
+        /// <returns></returns>
+        public static string CreateSubFilePathFromInterface(Type type, string pathPrefix, string filePostfix, string fileExtension)
+        {
+            CheckInterfaceType(type);
+
+            var result = string.Empty;
+
+            if (type.IsInterface)
+            {
+                var entityName = CreateEntityNameFromInterface(type);
+
+                if (pathPrefix.IsNullOrEmpty())
+                {
+                    result = CreateSubPathFromType(type);
+                }
+                else
+                {
+                    result = System.IO.Path.Combine(pathPrefix, CreateSubPathFromType(type));
+                }
+                result = System.IO.Path.Combine(result, $"{entityName}{filePostfix}{fileExtension}");
             }
             return result;
         }
