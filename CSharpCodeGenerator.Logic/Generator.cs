@@ -194,6 +194,14 @@ namespace CSharpCodeGenerator.Logic
                     generatedItems.AddRange(aspMvcGenerator.CreateShadowModels());
                     result.AddRangeSafe(generatedItems);
                 }));
+                tasks.Add(Task.Factory.StartNew(() =>
+                {
+                    var generatedItems = new List<IGeneratedItem>();
+
+                    Console.WriteLine("Create AspMvc-Controllers...");
+                    generatedItems.AddRange(controllerGenerator.CreateAspMvcControllers());
+                    result.AddRangeSafe(generatedItems);
+                }));
             }
             #endregion AspMvc
 

@@ -67,25 +67,9 @@ namespace CSharpCodeGenerator.ConApp
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 var projectPath = Path.Combine(solutionPath, solutionProperties.LogicProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.BusinessController);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.LogicController);
 
-                Console.WriteLine("Write logic-Business-Controllers...");
-                WriteCodeFiles(projectPath, writeItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.LogicProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.PersistenceController);
-
-                Console.WriteLine("Write Logic-Persistence-Controllers...");
-                WriteCodeFiles(projectPath, writeItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.LogicProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.ShadowController);
-
-                Console.WriteLine("Write Logic-Shadow-Controllers...");
+                Console.WriteLine("Write Logic-Controllers...");
                 WriteCodeFiles(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
@@ -186,6 +170,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write AspMvc-Shadow-Models...");
+                WriteCodeFiles(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcController);
+
+                Console.WriteLine("Write AspMvc-Controllers...");
                 WriteCodeFiles(projectPath, writeItems);
             }));
             #endregion AspMvc

@@ -13,6 +13,8 @@ namespace CSharpCodeGenerator.Logic.Contracts
         IEnumerable<IGeneratedItem> CreateShadowControllers();
 
         IEnumerable<IGeneratedItem> CreateWebApiControllers();
+
+        IEnumerable<IGeneratedItem> CreateAspMvcControllers();
     }
 }
 //MdEnd

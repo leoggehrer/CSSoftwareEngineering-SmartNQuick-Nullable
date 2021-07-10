@@ -40,11 +40,16 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 CanCreateWebApiController(type, ref create);
             }
+            else if (generationName.Equals(nameof(CreateAspMvcControllers)))
+            {
+                CanCreateAspMvcController(type, ref create);
+            }
             return create;
         }
         static partial void CanCreateController(string generationName, Type type, ref bool create);
         static partial void CanCreateLogicController(Type type, ref bool create);
         static partial void CanCreateWebApiController(Type type, ref bool create);
+        static partial void CanCreateAspMvcController(Type type, ref bool create);
         #endregion General
 
         #region LogicController
@@ -122,7 +127,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "BusinessControllerAdapter";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.BusinessController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -159,7 +164,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var connectorCtrlType = $"{CreateLogicControllerFullNameFromInterface(connectorGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var anotherCtrlType = $"{CreateLogicControllerFullNameFromInterface(anotherGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.BusinessController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -223,7 +228,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var anotherEntityType = $"{CreateEntityFullNameFromInterface(anotherGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var anotherCtrlType = $"{CreateLogicControllerFullNameFromInterface(anotherGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.BusinessController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -279,7 +284,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var manyEntityType = $"{CreateEntityFullNameFromInterface(manyGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var manyCtrlType = $"{CreateLogicControllerFullNameFromInterface(manyGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.BusinessController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -344,7 +349,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "GenericPersistenceController";
             var controllerAttributes = InitLogicControllerAttributes(type);
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.PersistenceController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -392,7 +397,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var sourceGenericType = interfaceTypes.Single(e => e.IsGenericType && e.Name.Equals(StaticLiterals.IShadowName)).GetGenericArguments()[0];
             var sourceEntityType = $"{CreateEntityFullNameFromInterface(sourceGenericType)}";
             var sourceCtrlType = $"{CreateLogicControllerFullNameFromInterface(sourceGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.ShadowController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -476,7 +481,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("[ApiController]");
             result.Add("[Route(\"Controller\")]");
             CreateWebApiControllerAttributes(type, result.Source);
-            result.Add($"public partial class {controllerName}Controller : GenericController<TContract, TModel>");
+            result.Add($"public partial class {controllerName}Controller : WebApi.Controllers.GenericController<TContract, TModel>");
             result.Add("{");
 
             result.Add("}");
@@ -486,6 +491,66 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
         static partial void ConvertWebApiControllerName(Type type, ref string name);
         #endregion WebApiController
+
+        #region AspMvc-Controller
+        public string AspMvcNameSpace => $"{SolutionProperties.AspMvcProjectName}.{StaticLiterals.ControllersFolder}";
+        public string CreateAspMvcControllerNameSpace(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return $"{AspMvcNameSpace}.{CreateSubNamespaceFromType(type)}";
+        }
+        static partial void CreateAspMvcControllerAttributes(Type type, List<string> codeLines);
+        static partial void CreateAspMvcActionAttributes(Type type, string action, List<string> codeLines);
+
+        public IEnumerable<Contracts.IGeneratedItem> CreateAspMvcControllers()
+        {
+            var result = new List<Contracts.IGeneratedItem>();
+            var contractsProject = ContractsProject.Create(SolutionProperties);
+            var types = contractsProject.PersistenceTypes
+                                        .Union(contractsProject.ShadowTypes)
+                                        .Union(contractsProject.BusinessTypes);
+
+            foreach (var type in types)
+            {
+                if (CanCreate(nameof(CreateWebApiControllers), type))
+                {
+                    result.Add(CreateAspMvcController(type));
+                }
+            }
+            return result;
+        }
+        private Contracts.IGeneratedItem CreateAspMvcController(Type type)
+        {
+            var entityName = CreateEntityNameFromInterface(type);
+            var subNameSpace = CreateSubNamespaceFromType(type);
+            var contractType = $"Contracts.{subNameSpace}.{type.Name}";
+            var modelType = $"AspMvc.{StaticLiterals.ModelsFolder}.{subNameSpace}.{entityName}";
+            var controllerName = entityName.EndsWith("s") ? entityName : $"{entityName}s";
+            var result = new Models.GeneratedItem(Common.UnitType.AspMvc, Common.ItemType.AspMvcController)
+            {
+                FullName = CreateAspMvcControllerFullNameFromInterface(type),
+                FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
+            };
+            ConvertWebApiControllerName(type, ref controllerName);
+            result.Add("using Microsoft.AspNetCore.Mvc;");
+            result.Add("using System.Threading.Tasks;");
+            result.Add($"using TContract = {contractType};");
+            result.Add($"using TModel = {modelType};");
+
+            CreateWebApiControllerAttributes(type, result.Source);
+            result.Add($"public partial class {controllerName}Controller : AspMvc.Controllers.GenericController<TContract, TModel>");
+            result.Add("{");
+
+            result.Add("}");
+            result.EnvelopeWithANamespace(CreateWebApiControllerNameSpace(type));
+            result.FormatCSharpCode();
+            return result;
+        }
+        static partial void ConvertAspMvcControllerName(Type type, ref string name);
+        #endregion AspMvc-Controller
+
         static partial void ConvertGenericPersistenceControllerName(Type type, ref string name);
     }
 }

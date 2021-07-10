@@ -6,7 +6,7 @@ using Model = SmartNQuick.AspMvc.Models.MusicStore.Genre;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public class GenreController : GenericModelController<Contract, Model>
+	public class GenreController : GenericController<Contract, Model>
 	{
 		//public async Task<IActionResult> Index()
 		//{

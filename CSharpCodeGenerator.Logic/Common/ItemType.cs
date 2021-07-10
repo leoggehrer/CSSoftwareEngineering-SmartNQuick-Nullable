@@ -17,11 +17,10 @@ namespace CSharpCodeGenerator.Logic.Common
         DbContext = 16,
         Factory = 32,
 
-        BusinessController = 64,
-        PersistenceController = 128,
-        ShadowController = 256,
-        WebApiController = 512,
-        Controller = BusinessController  + PersistenceController + ShadowController + WebApiController,
+        LogicController = 64,
+        WebApiController = 128,
+        AspMvcController = 256,
+        Controller = LogicController  + WebApiController + AspMvcController,
 
         BusinessModel = 1024,
         ModuleModel = 2048,

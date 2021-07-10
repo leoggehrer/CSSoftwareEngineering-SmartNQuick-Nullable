@@ -388,6 +388,27 @@ namespace CSharpCodeGenerator.Logic.Generation
             }
             return result;
         }
+        /// <summary>
+        /// Diese Methode ermittelt den Kontroller Namen aus seinem Schnittstellen Typ.
+        /// </summary>
+        /// <param name="type">Schnittstellen-Typ</param>
+        /// <returns>Name des Kontrollers.</returns>
+        public static string CreateAspMvcControllerFullNameFromInterface(Type type)
+        {
+            CheckInterfaceType(type);
+
+            var result = string.Empty;
+
+            if (type.IsInterface)
+            {
+                var entityName = $"{type.Name[1..]}s";
+
+                result = type.FullName.Replace(type.Name, entityName);
+                result = result.Replace(".Contracts", ".AspMvc.Controllers");
+                result = $"{result}Controller";
+            }
+            return result;
+        }
 
         #region Property-Helpers
         /// <summary>

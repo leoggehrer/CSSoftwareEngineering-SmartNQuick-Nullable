@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public abstract class GenericModelController<Contract, Model> : Controller
+	public abstract class GenericController<Contract, Model> : Controller
 		where Contract : Contracts.IIdentifiable, Contracts.ICopyable<Contract>
 		where Model : Contract, new()
 	{
