@@ -513,7 +513,7 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             foreach (var type in types)
             {
-                if (CanCreate(nameof(CreateWebApiControllers), type))
+                if (CanCreate(nameof(CreateAspMvcControllers), type))
                 {
                     result.Add(CreateAspMvcController(type));
                 }
@@ -533,18 +533,18 @@ namespace CSharpCodeGenerator.Logic.Generation
                 FileExtension = StaticLiterals.CSharpFileExtension,
                 SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
-            ConvertWebApiControllerName(type, ref controllerName);
+            ConvertAspMvcControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");
             result.Add("using System.Threading.Tasks;");
             result.Add($"using TContract = {contractType};");
             result.Add($"using TModel = {modelType};");
 
-            CreateWebApiControllerAttributes(type, result.Source);
+            CreateAspMvcControllerAttributes(type, result.Source);
             result.Add($"public partial class {controllerName}Controller : AspMvc.Controllers.GenericController<TContract, TModel>");
             result.Add("{");
 
             result.Add("}");
-            result.EnvelopeWithANamespace(CreateWebApiControllerNameSpace(type));
+            result.EnvelopeWithANamespace(CreateAspMvcControllerNameSpace(type));
             result.FormatCSharpCode();
             return result;
         }
