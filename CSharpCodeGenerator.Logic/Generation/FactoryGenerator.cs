@@ -73,10 +73,13 @@ namespace CSharpCodeGenerator.Logic.Generation
                 result.Add("}");
                 first = false;
             }
-            result.Add("else");
-            result.Add("{");
-            result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
-            result.Add("}");
+            if (first == false)
+            {
+                result.Add("else");
+                result.Add("{");
+                result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
+                result.Add("}");
+            }
             result.Add("}");
 
             result.Add("static partial void CreateController<I>(object sharedController, ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
@@ -100,10 +103,13 @@ namespace CSharpCodeGenerator.Logic.Generation
                 result.Add("}");
                 first = false;
             }
-            result.Add("else");
-            result.Add("{");
-            result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
-            result.Add("}");
+            if (first == false)
+            {
+                result.Add("else");
+                result.Add("{");
+                result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
+                result.Add("}");
+            }
             result.Add("}");
 
             //result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable");
@@ -137,7 +143,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             //result.Add("}");
             result.Add("}");
 
-			result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), LogicNameSpace));
+            result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), LogicNameSpace));
             result.AddRange(result.Source.Eject().FormatCSharpCode());
             return result;
         }
