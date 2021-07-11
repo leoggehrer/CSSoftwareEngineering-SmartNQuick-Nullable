@@ -15,7 +15,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 		private Contracts.Client.IControllerAccess<I> Controller { get; set; }
 
-		public GenericController()
+		protected GenericController()
 		{
             Controller = Logic.Factory.Create<I>();
 		}
@@ -68,6 +68,16 @@ namespace SmartNQuick.WebApi.Controllers
 			await Controller.SaveChangesAsync();
 			return ToModel(entity);
 		}
+		[HttpPost("/api/[controller]/Array")]
+		public async Task<IQueryable<M>> PostArrayAsync(IEnumerable<M> models)
+		{
+			var result = new List<M>();
+			var entities = await Controller.InsertAsync(models).ConfigureAwait(false);
+
+			await Controller.SaveChangesAsync().ConfigureAwait(false);
+			result.AddRange(entities.Select(e => ToModel(e)));
+			return result.AsQueryable();
+		}
 		[HttpPut("/api/[controller]")]
 		public async Task<M> PutAsync([FromBody]M model)
 		{
@@ -75,6 +85,16 @@ namespace SmartNQuick.WebApi.Controllers
 
 			await Controller.SaveChangesAsync();
 			return ToModel(entity);
+		}
+		[HttpPut("/api/[controller]/Array")]
+		public async Task<IQueryable<M>> PutArrayAsync(IEnumerable<M> models)
+		{
+			var result = new List<M>();
+			var entities = await Controller.UpdateAsync(models).ConfigureAwait(false);
+
+			await Controller.SaveChangesAsync().ConfigureAwait(false);
+			result.AddRange(entities.Select(e => ToModel(e)));
+			return result.AsQueryable();
 		}
 		[HttpDelete("/api/[controller]/{id}")]
 		public async Task DeleteAsync(int id)

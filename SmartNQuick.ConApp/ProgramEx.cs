@@ -15,6 +15,9 @@ namespace SmartNQuick.ConApp
     {
         static partial void AfterRun()
         {
+            Adapters.Factory.BaseUri = "http://localhost:5000/api";
+            Adapters.Factory.Adapter = Adapters.AdapterType.Service;
+
             Task.Run(async () =>
                 await ImportCsvDataAsync()
             ).Wait();
