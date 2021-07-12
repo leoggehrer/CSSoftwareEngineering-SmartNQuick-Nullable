@@ -3,9 +3,9 @@
 using System.Collections;
 using System.Linq;
 
-namespace SmartNQuick.Transfer
+namespace SmartNQuick.Transfer.Models
 {
-	public partial class TransferModel
+    public partial class TransferModel
 	{
         protected static bool IsEqualsWith(object obj1, object obj2)
         {

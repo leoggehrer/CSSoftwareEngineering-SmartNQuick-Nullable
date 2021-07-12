@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.WebApi.Controllers
 {
-	public abstract class GenericController<I, M> : ControllerBase, IDisposable
+    public abstract class GenericController<I, M> : ControllerBase, IDisposable
         where I : Contracts.IIdentifiable
-        where M : Transfer.IdentityModel, I, Contracts.ICopyable<I>, new()
+        where M : Transfer.Models.IdentityModel, I, Contracts.ICopyable<I>, new()
     {
 		private bool disposedValue;
 
