@@ -13,13 +13,20 @@ namespace CommonBase
         {
             "CommonBase",
         };
-        public static string[] GenerationProjects { get; } = new string[]
+        public static string[] GeneratorProjects { get; } = new string[]
         {
             "CSharpCodeGenerator.Logic",
             "CSharpCodeGenerator.ConApp",
         };
+        public static string[] ToolProjects { get; } = new[]
+            {
+                "SolutionCodeComparsion.ConApp",
+                "SolutionCopier.ConApp",
+                "SolutionDeveloperHelper.ConApp",
+                "SolutionGeneratedCodeDeleter.ConApp",
+            };
         public static string[] ProjectExtensions { get; } = new string[]
-        {
+            {
             ".Contracts",
             ".Logic",
             ".Transfer",
@@ -27,7 +34,7 @@ namespace CommonBase
             ".Adapters",
             ".AspMvc",
             ".ConApp"
-        };
+            };
         public static IDictionary<string, string> SourceFileHeaders { get; } = new Dictionary<string, string>()
         {
             {".css", $"/*{GeneratedCodeLabel}*/" },

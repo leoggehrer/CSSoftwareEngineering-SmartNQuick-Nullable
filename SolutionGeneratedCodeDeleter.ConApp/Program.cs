@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
 
-namespace SolutionDeleter.ConApp
+namespace SolutionGeneratedCodeDeleter.ConApp
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(/*string[] args*/)
         {
             var solutionPath = GetCurrentSolutionPath();
 
-            Console.WriteLine(nameof(SolutionDeleter));
+            Console.WriteLine(nameof(SolutionGeneratedCodeDeleter));
             RunProgress();
 
             CSharpCodeGenerator.Logic.Generator.DeleteGenerationFiles(solutionPath);
@@ -45,10 +45,9 @@ namespace SolutionDeleter.ConApp
         private static string GetCurrentSolutionPath()
         {
             int endPos = AppContext.BaseDirectory
-                                   .IndexOf($"{nameof(SolutionDeleter)}", StringComparison.CurrentCultureIgnoreCase);
+                                   .IndexOf($"{nameof(SolutionGeneratedCodeDeleter)}", StringComparison.CurrentCultureIgnoreCase);
 
             return AppContext.BaseDirectory.Substring(0, endPos);
         }
-
     }
 }

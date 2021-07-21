@@ -7,15 +7,15 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
-	class Program
+    internal class Program
 	{
-		static void Main(/*string[] args*/)
+        private static void Main(/*string[] args*/)
 		{
 			Console.WriteLine("SolutionCopier");
 
 			var sourceSolutionName = "SmartNQuick";
 			var sourceProjects = CommonStaticLiterals.CommonProjects
-                                               .Concat(CommonStaticLiterals.GenerationProjects
+                                               .Concat(CommonStaticLiterals.GeneratorProjects
                                                                      .Select(e => $"{e}"))
 											   .Concat(CommonStaticLiterals.ProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
