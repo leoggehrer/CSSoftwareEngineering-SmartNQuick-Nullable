@@ -48,7 +48,7 @@ namespace SmartNQuick.Logic.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArtistId = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>

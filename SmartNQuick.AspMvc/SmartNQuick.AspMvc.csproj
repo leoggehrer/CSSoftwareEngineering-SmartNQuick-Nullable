@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
+    <ProjectReference Include="..\SmartNQuick.Adapters\SmartNQuick.Adapters.csproj" />
   </ItemGroup>
 
 </Project>

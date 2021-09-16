@@ -10,7 +10,7 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
-    [Migration("20210707201109_InitDb")]
+    [Migration("20210915102200_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,8 @@ namespace SmartNQuick.Logic.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.HasKey("Id");
 

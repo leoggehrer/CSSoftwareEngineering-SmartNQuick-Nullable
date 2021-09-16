@@ -531,7 +531,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateAspMvcControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreatePluralSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertAspMvcControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");

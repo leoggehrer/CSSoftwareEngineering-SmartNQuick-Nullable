@@ -36,8 +36,8 @@ namespace SmartNQuick.Logic.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.HasKey("Id");
 

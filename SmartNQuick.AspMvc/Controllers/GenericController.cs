@@ -6,14 +6,28 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public abstract class GenericController<TContract, TModel> : Controller
+	public abstract partial class GenericController<TContract, TModel> : Controller
 		where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
 		where TModel : TContract, new()
 	{
+		static GenericController()
+		{
+			ClassConstructing();
+			ClassConstructed();
+		}
+		static partial void ClassConstructing();
+		static partial void ClassConstructed();
+		internal GenericController()
+		{
+			Constructing();
+			Constructed();
+		}
+		partial void Constructing();
+		partial void Constructed();
 		protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
-		protected static Contracts.Client.IControllerAccess<TContract> CreateController()
+		protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
         {
-			return Logic.Factory.Create<TContract>();
+			return Adapters.Factory.Create<TContract>();
         }
 		protected TModel ToModel(TContract entity)
 		{
@@ -45,7 +59,6 @@ namespace SmartNQuick.AspMvc.Controllers
 			using var ctrl = CreateController();
 
 			await ctrl.InsertAsync(model).ConfigureAwait(false);
-			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 			return RedirectToAction("Index");
 		}
 		[HttpGet]
@@ -65,7 +78,6 @@ namespace SmartNQuick.AspMvc.Controllers
 			if (entity != null)
 			{
 				await ctrl.UpdateAsync(model).ConfigureAwait(false);
-				await ctrl.SaveChangesAsync().ConfigureAwait(false);
 			}
 			return RedirectToAction("Index");
 		}
@@ -83,7 +95,6 @@ namespace SmartNQuick.AspMvc.Controllers
 			using var ctrl = CreateController();
 
 			await ctrl.DeleteAsync(id).ConfigureAwait(false);
-			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 
 			return RedirectToAction("Index");
 		}

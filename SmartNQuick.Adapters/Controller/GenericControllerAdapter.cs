@@ -51,14 +51,14 @@ namespace SmartNQuick.Adapters.Controller
         {
             return controller.GetByIdAsync(id);
         }
-        public async Task<IEnumerable<TContract>> GetAllAsync()
+        public Task<IEnumerable<TContract>> GetAllAsync()
         {
-            return (await controller.GetAllAsync().ConfigureAwait(false)).ToArray();
+            return controller.GetAllAsync();
         }
 
-        public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
+        public Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
         {
-            return (await controller.QueryAllAsync(predicate).ConfigureAwait(false)).ToArray();
+            return controller.QueryAllAsync(predicate);
         }
 
         public Task<TContract> CreateAsync()
