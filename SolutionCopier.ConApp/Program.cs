@@ -22,7 +22,7 @@ namespace SolutionCopier.ConApp
             
             var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var sourcePath = GetCurrentSolutionPath();
-            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQBookStore");
+            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQTestCopy");
             Console.WriteLine("Solution copier!");
             Console.WriteLine("================");
             Console.WriteLine();

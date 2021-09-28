@@ -11,7 +11,7 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
-	class Copier
+    class Copier
 	{
         private static char Separator => ';';
         public static Action<string> Logger { get; set; } = s => System.Diagnostics.Debug.WriteLine(s);
@@ -35,6 +35,7 @@ namespace SolutionCopier.ConApp
             ,"\\bin\\"
             ,"\\obj\\"
             ,"\\node_modules\\"
+            ,"\\Migrations\\"
         };
         private static string[] ReplaceExtensions { get; } = new string[]
         {

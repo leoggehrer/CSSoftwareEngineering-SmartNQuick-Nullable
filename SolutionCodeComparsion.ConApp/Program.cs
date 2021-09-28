@@ -23,16 +23,16 @@ namespace SolutionCodeComparsion.ConApp
 
             // Project: SmartNQuick-Projects
             var basePath = @"C:\Users\Gerhard\source\repos";
-            var qnsSourcePath = @"SmartNQuickForBusiness\SmartNQuick";
+            var qnsSourcePath = @"leoggehrer\SmartNQuick";
             var sourcePath = Path.Combine(basePath, qnsSourcePath);
             var targetPaths = new string[]
             {
                 //Path.Combine(basePath, qnsVoucherPath),
                 //@"HtlLeo\QnSVoucher",
                 //@"C:\Develop\QnSDevelopForBusiness\QnSHungryLama\source\QnSHungryLama",
-                @"C:\Users\Gerhard\source\repos\HtlLeo\QnSProjectAward",
-                @"C:\Users\Gerhard\source\repos\HtlLeo\QnSTradingCompany",
-                @"C:\Users\Gerhard\source\repos\SmartNQuickForBusiness\QnSCodeStore",
+                @"C:\Users\Gerhard\source\repos\HtlLeo\SnQTestCopy",
+                //@"C:\Users\Gerhard\source\repos\HtlLeo\QnSTradingCompany",
+                //@"C:\Users\Gerhard\source\repos\SmartNQuickForBusiness\QnSCodeStore",
             };
             Paths.Add(sourcePath, targetPaths);
             SourceLabels.Add(sourcePath, new string[] { CommonStaticLiterals.BaseCodeLabel });
@@ -50,7 +50,51 @@ namespace SolutionCodeComparsion.ConApp
 
         private static void Main(/*string[] args*/)
         {
-            Console.WriteLine("Hello World!");
+            string input;
+            string queryMsg = "Copy [y|n]?: ";
+
+            PrintHeader();
+            Console.Write(queryMsg);
+            input = Console.ReadLine();
+            while (input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+            {
+                PrintHeader();
+                PrintBusyProgress();
+
+                foreach (var path in Paths)
+                {
+                    // Delete all QnSCopyCode files
+                    foreach (var targetPath in path.Value)
+                    {
+                        foreach (var searchPattern in SearchPatterns)
+                        {
+                            var targetCodeFiles = GetSourceCodeFiles(targetPath, searchPattern, TargetLabels);
+                            foreach (var targetCodeFile in targetCodeFiles)
+                            {
+                                File.Delete(targetCodeFile);
+                            }
+                        }
+                    }
+                    // Copy all QnSBasCode files
+                    foreach (var searchPattern in SearchPatterns)
+                    {
+                        var sourceLabels = SourceLabels[path.Key];
+                        var sourceCodeFiles = GetSourceCodeFiles(path.Key, searchPattern, sourceLabels);
+
+                        foreach (var targetPath in path.Value)
+                        {
+                            foreach (var sourceCodeFile in sourceCodeFiles)
+                            {
+                                SynchronizeSourceCodeFile(path.Key, sourceCodeFile, targetPath, sourceLabels, TargetLabels);
+                            }
+                        }
+                    }
+                }
+                runBusyProgress = false;
+                PrintHeader();
+                Console.Write(queryMsg);
+                input = Console.ReadLine();
+            }
         }
 
         private static bool runBusyProgress = false;
@@ -189,6 +233,13 @@ namespace SolutionCodeComparsion.ConApp
                         result = data[i];
                     }
                 }
+                for (int j = 0; j < CommonStaticLiterals.ToolProjects.Length; j++)
+                {
+                    if (data[i].Equals(CommonStaticLiterals.ToolProjects[j]))
+                    {
+                        result = data[i];
+                    }
+                }
                 if (string.IsNullOrEmpty(result))
                 {
                     for (int j = 0; j < CommonStaticLiterals.ProjectExtensions.Length; j++)
@@ -202,6 +253,5 @@ namespace SolutionCodeComparsion.ConApp
             }
             return result;
         }
-
     }
 }
