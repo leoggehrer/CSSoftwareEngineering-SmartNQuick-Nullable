@@ -70,7 +70,7 @@ namespace SmartNQuick.AspMvc.Controllers
 			return View(ToModel(entity));
 		}
 		[HttpPost]
-		public async Task<IActionResult> Update(TModel model)
+		public virtual async Task<IActionResult> Update(TModel model)
 		{
 			using var ctrl = CreateController();
 			var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
@@ -82,15 +82,15 @@ namespace SmartNQuick.AspMvc.Controllers
 			return RedirectToAction("Index");
 		}
 		[HttpGet]
-		public async Task<IActionResult> Delete(int id)
+		public virtual async Task<IActionResult> Delete(int id)
 		{
 			using var ctrl = CreateController();
 			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
 			return View(ToModel(entity));
 		}
-
-		public async Task<IActionResult> DeleteEntity(int id)
+		[HttpDelete]
+		public virtual async Task<IActionResult> DeleteEntity(int id)
 		{
 			using var ctrl = CreateController();
 
