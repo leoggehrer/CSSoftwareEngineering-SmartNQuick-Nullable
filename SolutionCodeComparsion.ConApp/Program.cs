@@ -22,7 +22,7 @@ namespace SolutionCodeComparsion.ConApp
             SourceLabels = new Dictionary<string, string[]>();
 
             // Project: SmartNQuick-Projects
-            var basePath = @"C:\Users\Gerhard\source\repos";
+            var basePath = @"C:\Users\ggehr\source\repos";
             var qnsSourcePath = @"leoggehrer\SmartNQuick";
             var sourcePath = Path.Combine(basePath, qnsSourcePath);
             var targetPaths = new string[]
@@ -30,9 +30,10 @@ namespace SolutionCodeComparsion.ConApp
                 //Path.Combine(basePath, qnsVoucherPath),
                 //@"HtlLeo\QnSVoucher",
                 //@"C:\Develop\QnSDevelopForBusiness\QnSHungryLama\source\QnSHungryLama",
-                @"C:\Users\Gerhard\source\repos\HtlLeo\SnQTestCopy",
+                //@"C:\Users\Gerhard\source\repos\HtlLeo\SnQTestCopy",
                 //@"C:\Users\Gerhard\source\repos\HtlLeo\QnSTradingCompany",
                 //@"C:\Users\Gerhard\source\repos\SmartNQuickForBusiness\QnSCodeStore",
+                @"C:\Users\ggehr\source\repos\HtlLeo\SnQTradingCompany",
             };
             Paths.Add(sourcePath, targetPaths);
             SourceLabels.Add(sourcePath, new string[] { CommonStaticLiterals.BaseCodeLabel });

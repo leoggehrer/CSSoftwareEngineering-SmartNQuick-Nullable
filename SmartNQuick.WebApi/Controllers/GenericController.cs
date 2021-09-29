@@ -51,6 +51,13 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return entities.Select(e => ToModel(e));
 		}
+		[HttpGet("/api/[controller]/QueryAllBy/{predicate}")]
+		public async Task<IEnumerable<M>> QueryAllBy(string predicate)
+		{
+			var entities = await Controller.QueryAllAsync(predicate);
+
+			return entities.Select(e => ToModel(e));
+		}
 
 		[HttpGet("/api/[controller]/Create")]
 		public async Task<M> CreateAsync()
