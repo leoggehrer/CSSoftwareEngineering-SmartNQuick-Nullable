@@ -56,11 +56,20 @@ namespace SmartNQuick.AspMvc.Controllers
 		[HttpPost]
 		public virtual async Task<IActionResult> Insert(TModel model)
 		{
-			using var ctrl = CreateController();
+			var handled = false;
 
-			await ctrl.InsertAsync(model).ConfigureAwait(false);
+			BeforeInsertEntity(model, ref handled);
+			if (handled == false)
+			{
+				using var ctrl = CreateController();
+
+				await ctrl.InsertAsync(model).ConfigureAwait(false);
+			}
+			AfterInsertEntity(model);
 			return RedirectToAction("Index");
 		}
+		partial void BeforeInsertEntity(TModel model, ref bool handled);
+		partial void AfterInsertEntity(TModel model);
 		[HttpGet]
 		public virtual async Task<IActionResult> Edit(int id)
 		{
@@ -72,15 +81,24 @@ namespace SmartNQuick.AspMvc.Controllers
 		[HttpPost]
 		public virtual async Task<IActionResult> Update(TModel model)
 		{
-			using var ctrl = CreateController();
-			var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+			var handled = false;
 
-			if (entity != null)
+			BeforeUpdateEntity(model, ref handled);
+			if (handled == false)
 			{
-				await ctrl.UpdateAsync(model).ConfigureAwait(false);
+				using var ctrl = CreateController();
+				var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+
+				if (entity != null)
+				{
+					await ctrl.UpdateAsync(model).ConfigureAwait(false);
+				}
 			}
+			AfterUpdateEntity(model);
 			return RedirectToAction("Index");
 		}
+		partial void BeforeUpdateEntity(TModel model, ref bool handled);
+		partial void AfterUpdateEntity(TModel model);
 		[HttpGet]
 		public virtual async Task<IActionResult> Delete(int id)
 		{
@@ -92,11 +110,19 @@ namespace SmartNQuick.AspMvc.Controllers
 		[HttpDelete]
 		public virtual async Task<IActionResult> DeleteEntity(int id)
 		{
-			using var ctrl = CreateController();
+			var handled = false;
 
-			await ctrl.DeleteAsync(id).ConfigureAwait(false);
+			BeforeDeleteEntity(id, ref handled);
+			if (handled == false)
+			{
+				using var ctrl = CreateController();
 
+				await ctrl.DeleteAsync(id).ConfigureAwait(false);
+			}
+			AfterDeleteEntity(id);
 			return RedirectToAction("Index");
 		}
+		partial void BeforeDeleteEntity(int id, ref bool handled);
+		partial void AfterDeleteEntity(int id);
 	}
 }
