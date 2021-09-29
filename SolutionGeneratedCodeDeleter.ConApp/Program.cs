@@ -3,16 +3,33 @@ using System.Threading;
 
 namespace SolutionGeneratedCodeDeleter.ConApp
 {
-    internal class Program
+    internal partial class Program
     {
+        static Program()
+        {
+            ClassConstructing();
+            HomePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
+                        Environment.OSVersion.Platform == PlatformID.MacOSX)
+                       ? Environment.GetEnvironmentVariable("HOME")
+                       : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+
+            UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            SolutionPath = GetCurrentSolutionPath();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
+        private static string HomePath { get; set; }
+        private static string UserPath { get; set; }
+        private static string SolutionPath { get; set; }
+
         private static void Main(/*string[] args*/)
         {
-            var solutionPath = GetCurrentSolutionPath();
-
             Console.WriteLine(nameof(SolutionGeneratedCodeDeleter));
             RunProgress();
 
-            CSharpCodeGenerator.Logic.Generator.DeleteGenerationFiles(solutionPath);
+            CSharpCodeGenerator.Logic.Generator.DeleteGenerationFiles(SolutionPath);
         }
 
         private static void RunProgress()

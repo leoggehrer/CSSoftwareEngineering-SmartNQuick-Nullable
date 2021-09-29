@@ -18,32 +18,29 @@ namespace SolutionCodeComparsion.ConApp
                        ? Environment.GetEnvironmentVariable("HOME")
                        : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
 
+            UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            SourcePath = GetCurrentSolutionPath();
             Paths = new Dictionary<string, string[]>();
-            SourceLabels = new Dictionary<string, string[]>();
+			SourceLabels = new Dictionary<string, string[]>
+			{
+				{ SourcePath, new string[] { CommonStaticLiterals.BaseCodeLabel } }
+			};
 
-            // Project: SmartNQuick-Projects
-            var basePath = @"C:\Users\ggehr\source\repos";
-            var qnsSourcePath = @"leoggehrer\SmartNQuick";
-            var sourcePath = Path.Combine(basePath, qnsSourcePath);
-            var targetPaths = new string[]
+			// Project: SmartNQuick-Projects
+			var targetPaths = new string[]
             {
-                //Path.Combine(basePath, qnsVoucherPath),
-                //@"HtlLeo\QnSVoucher",
-                //@"C:\Develop\QnSDevelopForBusiness\QnSHungryLama\source\QnSHungryLama",
-                //@"C:\Users\Gerhard\source\repos\HtlLeo\SnQTestCopy",
-                //@"C:\Users\Gerhard\source\repos\HtlLeo\QnSTradingCompany",
-                //@"C:\Users\Gerhard\source\repos\SmartNQuickForBusiness\QnSCodeStore",
                 @"C:\Users\ggehr\source\repos\HtlLeo\SnQTradingCompany",
             };
-            Paths.Add(sourcePath, targetPaths);
-            SourceLabels.Add(sourcePath, new string[] { CommonStaticLiterals.BaseCodeLabel });
+            Paths.Add(SourcePath, targetPaths);
             // End: SmartNQuick-Projects
             ClassConstructed();
         }
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        private static string HomePath { get; }
+        private static string HomePath { get; set; }
+        private static string UserPath { get; set; }
+        private static string SourcePath { get; set; }
         private static Dictionary<string, string[]> Paths { get; set; }
         private static Dictionary<string, string[]> SourceLabels { get; set; }
         private static string[] SearchPatterns => CommonStaticLiterals.SourceFileExtensions.Split('|');
@@ -253,6 +250,13 @@ namespace SolutionCodeComparsion.ConApp
                 }
             }
             return result;
+        }
+        private static string GetCurrentSolutionPath()
+        {
+            int endPos = AppContext.BaseDirectory
+                                   .IndexOf($"{nameof(SolutionCodeComparsion)}", StringComparison.CurrentCultureIgnoreCase);
+
+            return AppContext.BaseDirectory.Substring(0, endPos);
         }
     }
 }

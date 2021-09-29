@@ -7,66 +7,82 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
-    internal class Program
+	internal partial class Program
 	{
-        private static void Main(/*string[] args*/)
+		static Program()
+		{
+			ClassConstructing();
+			HomePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
+						Environment.OSVersion.Platform == PlatformID.MacOSX)
+					   ? Environment.GetEnvironmentVariable("HOME")
+					   : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+
+			UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+			SourcePath = GetCurrentSolutionPath();
+			TargetPath = Path.Combine(UserPath, @"source\repos\HtlLeo\SnQProjectC");
+			ClassConstructed();
+		}
+		static partial void ClassConstructing();
+		static partial void ClassConstructed();
+
+		private static string HomePath { get; set; }
+		private static string UserPath { get; set; }
+		private static string SourcePath { get; set; }
+		private static string TargetPath { get; set; }
+		private static void Main(/*string[] args*/)
 		{
 			Console.WriteLine("SolutionCopier");
 
 			var sourceSolutionName = "SmartNQuick";
 			var sourceProjects = CommonStaticLiterals.CommonProjects
-                                               .Concat(CommonStaticLiterals.GeneratorProjects
-                                                                     .Select(e => $"{e}"))
+											   .Concat(CommonStaticLiterals.GeneratorProjects
+																	 .Select(e => $"{e}"))
 											   .Concat(CommonStaticLiterals.ProjectExtensions
 																	 .Select(e => $"{sourceSolutionName}{e}"));
-            
-            var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var sourcePath = GetCurrentSolutionPath();
-            var targetPath = Path.Combine(userPath, @"source\repos\HtlLeo\SnQProjectC");
-            Console.WriteLine("Solution copier!");
-            Console.WriteLine("================");
-            Console.WriteLine();
-            Console.WriteLine($"Copy from: {sourcePath}");
-            Console.WriteLine($"Copy to:   {targetPath}");
-            Console.WriteLine();
 
-            var t = new Thread(() =>
-            {
-                bool hpos = true;
-                int top = Console.CursorTop + 1;
+			Console.WriteLine("Solution copier!");
+			Console.WriteLine("================");
+			Console.WriteLine();
+			Console.WriteLine($"Copy from: {SourcePath}");
+			Console.WriteLine($"Copy to:   {TargetPath}");
+			Console.WriteLine();
 
-                while (true)
-                {
-                    Console.SetCursorPosition(0, top);
-                    if (hpos)
-                    {
-                        Console.Write("---");
-                    }
-                    else
-                    {
-                        Console.Write(" | ");
-                    }
-                    hpos = !hpos;
-                    Thread.Sleep(500);
-                }
-            })
-            {
-                IsBackground = true
-            };
-            t.Start();
+			var t = new Thread(() =>
+			{
+				bool hpos = true;
+				int top = Console.CursorTop + 1;
 
-            var sc = new Copier();
+				while (true)
+				{
+					Console.SetCursorPosition(0, top);
+					if (hpos)
+					{
+						Console.Write("---");
+					}
+					else
+					{
+						Console.Write(" | ");
+					}
+					hpos = !hpos;
+					Thread.Sleep(500);
+				}
+			})
+			{
+				IsBackground = true
+			};
+			t.Start();
 
-            sc.Copy(sourcePath, targetPath, sourceProjects);
-        }
+			var sc = new Copier();
 
-        private static string GetCurrentSolutionPath()
+			sc.Copy(SourcePath, TargetPath, sourceProjects);
+		}
+
+		private static string GetCurrentSolutionPath()
 		{
 			int endPos = AppContext.BaseDirectory
 								   .IndexOf($"{nameof(SolutionCopier)}", StringComparison.CurrentCultureIgnoreCase);
 
 			return AppContext.BaseDirectory.Substring(0, endPos);
 		}
-
 	}
 }
