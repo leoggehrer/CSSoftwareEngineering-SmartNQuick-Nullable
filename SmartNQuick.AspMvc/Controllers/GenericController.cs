@@ -1,6 +1,7 @@
 ﻿//@BaseCode
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +25,8 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		partial void Constructing();
 		partial void Constructed();
+		protected string LastError { get; set; }
+		protected bool HasError => string.IsNullOrEmpty(LastError) == false;
 		protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 		protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
         {
@@ -61,9 +64,17 @@ namespace SmartNQuick.AspMvc.Controllers
 			BeforeInsertEntity(model, ref handled);
 			if (handled == false)
 			{
-				using var ctrl = CreateController();
+				try
+				{
+					using var ctrl = CreateController();
 
-				await ctrl.InsertAsync(model).ConfigureAwait(false);
+					await ctrl.InsertAsync(model).ConfigureAwait(false);
+					LastError = string.Empty;
+				}
+				catch (Exception ex)
+				{
+					LastError = ex.GetError();
+				}
 			}
 			AfterInsertEntity(model);
 			return RedirectToAction("Index");
@@ -86,12 +97,20 @@ namespace SmartNQuick.AspMvc.Controllers
 			BeforeUpdateEntity(model, ref handled);
 			if (handled == false)
 			{
-				using var ctrl = CreateController();
-				var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
-
-				if (entity != null)
+				try
 				{
-					await ctrl.UpdateAsync(model).ConfigureAwait(false);
+					using var ctrl = CreateController();
+					var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+
+					if (entity != null)
+					{
+						await ctrl.UpdateAsync(model).ConfigureAwait(false);
+					}
+					LastError = string.Empty;
+				}
+				catch (Exception ex)
+				{
+					LastError = ex.GetError();
 				}
 			}
 			AfterUpdateEntity(model);
@@ -115,9 +134,17 @@ namespace SmartNQuick.AspMvc.Controllers
 			BeforeDeleteEntity(id, ref handled);
 			if (handled == false)
 			{
-				using var ctrl = CreateController();
+				try
+				{
+					using var ctrl = CreateController();
 
-				await ctrl.DeleteAsync(id).ConfigureAwait(false);
+					await ctrl.DeleteAsync(id).ConfigureAwait(false);
+					LastError = string.Empty;
+				}
+				catch (Exception ex)
+				{
+					LastError = ex.GetError();
+				}
 			}
 			AfterDeleteEntity(id);
 			return RedirectToAction("Index");

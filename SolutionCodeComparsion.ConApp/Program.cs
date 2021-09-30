@@ -154,10 +154,15 @@ namespace SolutionCodeComparsion.ConApp
                                                   .Replace(sourceProjectName, string.Empty)
                                                   .Replace("\\\\", string.Empty)
                                                   .Replace("//", string.Empty);
+            var sourceSubFilePath2 = sourceFilePath.Replace(sourcePath, string.Empty)
+                                                  .Replace(sourceProjectName, string.Empty)
+                                                  .Replace("\\", "#")
+                                                  .Replace("//", "#")
+                                                  .Split('#', StringSplitOptions.RemoveEmptyEntries);
 
             var targetSolutionName = GetSolutionNameFromPath(targetPath);
             var targetProjectName = sourceProjectName.Replace(sourceSolutionName, targetSolutionName);
-            var targetFilePath = Path.Combine(targetPath, targetProjectName, sourceSubFilePath);
+            var targetFilePath = Path.Combine(targetPath, targetProjectName, string.Join("\\", sourceSubFilePath2));
             var targetFileFolder = Path.GetDirectoryName(targetFilePath);
 
             var tFilePath = Path.Combine(targetPath, targetProjectName);
@@ -202,7 +207,7 @@ namespace SolutionCodeComparsion.ConApp
         private static string GetSolutionNameFromPath(string path)
         {
             var result = string.Empty;
-            var data = path.Split("\\");
+            var data = path.Split("\\", StringSplitOptions.RemoveEmptyEntries);
 
             if (data.Any())
             {
@@ -213,7 +218,7 @@ namespace SolutionCodeComparsion.ConApp
         private static string GetProjectNameFromFilePath(string filePath, string solutionName)
         {
             var result = string.Empty;
-            var data = filePath.Split("\\");
+            var data = filePath.Split("\\", StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < data.Length && result == string.Empty; i++)
             {
