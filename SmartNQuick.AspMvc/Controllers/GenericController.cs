@@ -11,6 +11,8 @@ namespace SmartNQuick.AspMvc.Controllers
 		where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
 		where TModel : TContract, new()
 	{
+		private string lastError;
+
 		static GenericController()
 		{
 			ClassConstructing();
@@ -25,13 +27,21 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		partial void Constructing();
 		partial void Constructed();
-		protected string LastError { get; set; }
+		protected string LastError 
+		{
+			get => lastError;
+			set
+			{
+				lastError = value;
+				ViewBag.LastError = value;
+			}
+		}
 		protected bool HasError => string.IsNullOrEmpty(LastError) == false;
 		protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 		protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
-        {
+		{
 			return Adapters.Factory.Create<TContract>();
-        }
+		}
 		protected TModel ToModel(TContract entity)
 		{
 			entity.CheckArgument(nameof(entity));
@@ -77,7 +87,7 @@ namespace SmartNQuick.AspMvc.Controllers
 				}
 			}
 			AfterInsertEntity(model);
-			return RedirectToAction("Index");
+			return HasError ? View("Create", model) : RedirectToAction("Index");
 		}
 		partial void BeforeInsertEntity(TModel model, ref bool handled);
 		partial void AfterInsertEntity(TModel model);
@@ -114,7 +124,7 @@ namespace SmartNQuick.AspMvc.Controllers
 				}
 			}
 			AfterUpdateEntity(model);
-			return RedirectToAction("Index");
+			return HasError ? View("Edit", model) : RedirectToAction("Index");
 		}
 		partial void BeforeUpdateEntity(TModel model, ref bool handled);
 		partial void AfterUpdateEntity(TModel model);
@@ -147,7 +157,7 @@ namespace SmartNQuick.AspMvc.Controllers
 				}
 			}
 			AfterDeleteEntity(id);
-			return RedirectToAction("Index");
+			return HasError ? RedirectToAction("Delete", new { id }) : RedirectToAction("Index");
 		}
 		partial void BeforeDeleteEntity(int id, ref bool handled);
 		partial void AfterDeleteEntity(int id);
