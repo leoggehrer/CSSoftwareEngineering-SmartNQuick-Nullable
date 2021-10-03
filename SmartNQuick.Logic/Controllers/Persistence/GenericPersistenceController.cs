@@ -44,6 +44,9 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         #region Query
         public override async Task<C> GetByIdAsync(int id)
         {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetBy).ConfigureAwait(false);
+#endif
             var result = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
 
             if (result == null)
@@ -55,12 +58,18 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         }
         public override async Task<IEnumerable<C>> GetAllAsync()
         {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
+#endif
             return (await Context.GetAllAsync<C, E>()
                                  .ConfigureAwait(false))
                                  .Select(e => BeforeReturn(e));
         }
         public override async Task<IEnumerable<C>> QueryAllAsync(string predicate)
         {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
+#endif
             return (await Context.QueryAllAsync<C, E>(predicate)
                                  .ConfigureAwait(false))
                                  .Select(e => BeforeReturn(e));
@@ -79,24 +88,25 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         protected virtual Task<E> BeforeInsertAsync(E entity) => Task.FromResult(entity);
         public override async Task<C> InsertAsync(C entity)
         {
+            entity.CheckArgument(nameof(entity));
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Insert).ConfigureAwait(false);
 #endif
-            return await ExecuteInsertAsync(entity).ConfigureAwait(false);
-        }
-        public virtual async Task<C> ExecuteInsertAsync(C entity)
-        {
-            entity.CheckArgument(nameof(entity));
-
             var innerEntity = new E();
 
             innerEntity.CopyProperties(entity);
 
-            innerEntity = BeforeInsertUpdate(innerEntity);
-            innerEntity = await BeforeInsertUpdateAsync(innerEntity).ConfigureAwait(false);
-            innerEntity = BeforeInsert(innerEntity);
-            innerEntity = await BeforeInsertAsync(innerEntity).ConfigureAwait(false);
-            var result = await Context.InsertAsync<C, E>(innerEntity).ConfigureAwait(false);
+            return await InsertEntityAsync(innerEntity).ConfigureAwait(false);
+        }
+        public virtual async Task<E> InsertEntityAsync(E entity)
+        {
+            entity.CheckArgument(nameof(entity));
+
+            entity = BeforeInsertUpdate(entity);
+            entity = await BeforeInsertUpdateAsync(entity).ConfigureAwait(false);
+            entity = BeforeInsert(entity);
+            entity = await BeforeInsertAsync(entity).ConfigureAwait(false);
+            var result = await Context.InsertAsync<C, E>(entity).ConfigureAwait(false);
             result = AfterInsert(result);
             result = await AfterInsertAsync(result).ConfigureAwait(false);
             result = AfterInsertUpdate(result);
@@ -113,24 +123,25 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         protected virtual Task<E> BeforeUpdateAsync(E entity) => Task.FromResult(entity);
         public override async Task<C> UpdateAsync(C entity)
         {
+            entity.CheckArgument(nameof(entity));
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Update).ConfigureAwait(false);
 #endif
-            return await ExecuteUpdateAsync(entity).ConfigureAwait(false);
-        }
-        public virtual async Task<C> ExecuteUpdateAsync(C entity)
-        {
-            entity.CheckArgument(nameof(entity));
-
             var innerEntity = await Context.GetByIdAsync<C, E>(entity.Id).ConfigureAwait(false);
 
             innerEntity.CopyProperties(entity);
 
-            innerEntity = BeforeInsertUpdate(innerEntity);
-            innerEntity = await BeforeInsertUpdateAsync(innerEntity).ConfigureAwait(false);
-            innerEntity = BeforeUpdate(innerEntity);
-            innerEntity = await BeforeUpdateAsync(innerEntity).ConfigureAwait(false);
-            var result = await Context.UpdateAsync<C, E>(innerEntity).ConfigureAwait(false);
+            return await UpdateEntityAsync(innerEntity).ConfigureAwait(false);
+        }
+        public virtual async Task<E> UpdateEntityAsync(E entity)
+        {
+            entity.CheckArgument(nameof(entity));
+
+            entity = BeforeInsertUpdate(entity);
+            entity = await BeforeInsertUpdateAsync(entity).ConfigureAwait(false);
+            entity = BeforeUpdate(entity);
+            entity = await BeforeUpdateAsync(entity).ConfigureAwait(false);
+            var result = await Context.UpdateAsync<C, E>(entity).ConfigureAwait(false);
             result = AfterUpdate(result);
             result = await AfterUpdateAsync(result).ConfigureAwait(false);
             result = AfterInsertUpdate(result);
@@ -150,18 +161,20 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Delete).ConfigureAwait(false);
 #endif
-            await ExecuteDeleteAsync(id).ConfigureAwait(false);
-        }
-        public virtual async Task ExecuteDeleteAsync(int id)
-        {
             var entity = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
 
             if (entity == null)
                 throw new Exception($"Invalid id: '{id}'");
 
+            await DeleteEntityAsync(entity).ConfigureAwait(false);
+        }
+        public virtual async Task DeleteEntityAsync(E entity)
+        {
+            entity.CheckArgument(nameof(entity));
+
             BeforeDelete(entity);
             await BeforeDeleteAsync(entity).ConfigureAwait(false);
-            await Context.DeleteAsync<C, E>(id).ConfigureAwait(false);
+            await Context.DeleteAsync<C, E>(entity.Id).ConfigureAwait(false);
             AfterDelete(entity);
             await AfterDeleteAsync(entity).ConfigureAwait(false);
         }

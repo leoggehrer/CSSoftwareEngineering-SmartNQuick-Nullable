@@ -5,6 +5,8 @@ namespace SmartNQuick.Logic.Controllers
 {
     internal enum AccessType
     {
+        GetBy,
+        GetAll,
         Query,
         Create,
         Insert,

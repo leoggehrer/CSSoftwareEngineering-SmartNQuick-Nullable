@@ -44,7 +44,6 @@ namespace SmartNQuick.Logic.Modules.Account
             {
                 SessionToken = Authorization.SystemAuthorizationToken,
             };
-
             var appAccessCount = await appAccessCtrl.CountAsync().ConfigureAwait(false);
 
             if (appAccessCount == 0)
@@ -55,6 +54,7 @@ namespace SmartNQuick.Logic.Modules.Account
                 appAccess.OneItem.Email = email;
                 appAccess.OneItem.Password = password;
                 appAccess.OneItem.EnableJwtAuth = enableJwtAuth;
+
                 var role = appAccess.CreateManyItem();
 
                 role.Designation = "SysAdmin";

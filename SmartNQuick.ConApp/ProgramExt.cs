@@ -8,26 +8,105 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Factory = SmartNQuick.Adapters.Factory;
-
+#if ACCOUNT_ON
+using SmartNQuick.Adapters.Modules.Account;
+using System.Reflection;
+#endif
 namespace SmartNQuick.ConApp
 {
     partial class Program
     {
+#if ACCOUNT_ON
+        private static string SaUser => "LeoAdmin";
+        private static string SaEmail => "LeoAdmin.SmartNQuick@gmx.at";
+        private static string SaPwd => "Leo2189!Admin";
+
+        private static string AaUser => "AppAdmin";
+        private static string AaEmail => "AppAdmin.QuickNSmart@gmx.at";
+        private static string AaPwd => "App2189!Admin";
+        private static string AaRole => "AppAdmin";
+
+        private static bool AaEnableJwt => true;
+
+        private static async Task InitAppAccessAsync()
+        {
+            await Logic.Factory.CreateAccountManager().InitAppAccessAsync(SaUser, SaEmail, SaPwd, true).ConfigureAwait(false);
+        }
+        private static async Task<Contracts.Business.Account.IAppAccess> AddAppAccessAsync(string user, string email, string pwd, bool enableJwtAuth, params string[] roles)
+        {
+            var accMngr = new AccountManager();
+            var login = await accMngr.LogonAsync(SaEmail, SaPwd, string.Empty).ConfigureAwait(false);
+            using var ctrl = Factory.Create<Contracts.Business.Account.IAppAccess>(login.SessionToken);
+            var entity = await ctrl.CreateAsync();
+
+            entity.OneItem.Name = user;
+            entity.OneItem.Email = email;
+            entity.OneItem.Password = pwd;
+            entity.OneItem.EnableJwtAuth = enableJwtAuth;
+
+            foreach (var item in roles)
+            {
+                var role = entity.CreateManyItem();
+
+                role.Designation = item;
+                entity.AddManyItem(role);
+            }
+            var identity = await ctrl.InsertAsync(entity).ConfigureAwait(false);
+            await accMngr.LogoutAsync(login.SessionToken).ConfigureAwait(false);
+            return identity;
+        }
+#endif
         static partial void AfterRun()
         {
             Adapters.Factory.BaseUri = "http://localhost:5000/api";
             Adapters.Factory.Adapter = Adapters.AdapterType.Controller;
 
+#if ACCOUNT_ON
+            Task.Run(async () =>
+            {
+                try
+                {
+                    //await InitAppAccessAsync();
+                    await AddAppAccessAsync(AaUser, AaEmail, AaPwd, AaEnableJwt, AaRole);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error in {MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            ).Wait();
+#endif
             Task.Run(async () =>
                 await ImportCsvDataAsync()
             ).Wait();
         }
+#if ACCOUNT_ON
+        private static Contracts.Persistence.Account.ILoginSession Login { get; set; }
+        private static Contracts.Client.IAdapterAccess<C> Create<C>()
+        {
+            if (Login == null)
+            {
+                Task.Run(async() =>
+                {
+                    var accMngr = new AccountManager();
+                    
+                    Login = await accMngr.LogonAsync(AaEmail, AaPwd);
+                }).Wait();
+            }
+            return Factory.Create<C>(Login.SessionToken);
+        }
+#else
+        private static Contracts.Client.IAdapterAccess<C> Create<C>()
+        {
+            return Factory.Create<C>();
+        }
+#endif
         private static async Task ImportCsvDataAsync()
         {
-            using var genreCtrl = Factory.Create<Contracts.Persistence.MusicStore.IGenre>();
-            using var artistCtrl = Factory.Create<Contracts.Persistence.MusicStore.IArtist>();
-            using var albumCtrl = Factory.Create<Contracts.Persistence.MusicStore.IAlbum>();
-            using var trackCtrl = Factory.Create<Contracts.Persistence.MusicStore.ITrack>();
+            using var genreCtrl = Create<Contracts.Persistence.MusicStore.IGenre>();
+            using var artistCtrl = Create<Contracts.Persistence.MusicStore.IArtist>();
+            using var albumCtrl = Create<Contracts.Persistence.MusicStore.IAlbum>();
+            using var trackCtrl = Create<Contracts.Persistence.MusicStore.ITrack>();
             var genreData = File.ReadAllLines("Data\\Genre.csv", Encoding.Default).Skip(1).Select(l =>
             {
                 var data = l.Split(';');

@@ -12,7 +12,7 @@ namespace SmartNQuick.Logic.Entities
         where TOneEntity : IdentityEntity, Contracts.ICopyable<TOne>, TOne, new()
         where TManyEntity : IdentityEntity, Contracts.ICopyable<TMany>, TMany, new()
     {
-        public virtual TOneEntity OneEntity { get; } = new TOneEntity();
+        public virtual TOneEntity OneEntity { get; set; } = new TOneEntity();
         public virtual TOne OneItem => OneEntity;
 
         public virtual List<TManyEntity> ManyEntities { get; } = new List<TManyEntity>();
