@@ -225,6 +225,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("return result;");
             result.Add("}");
 
+            result.Add("#if ACCOUNT_ON");
             result.Add("public static Contracts.Client.IAdapterAccess<I> Create<I>(string sessionToken)");
             result.Add("{");
             result.Add("Contracts.Client.IAdapterAccess<I> result = null;");
@@ -277,6 +278,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("}");
             result.Add("return result;");
             result.Add("}");
+            result.Add("#endif");
 
             result.Add("}");
             result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), AdapterNameSpace));

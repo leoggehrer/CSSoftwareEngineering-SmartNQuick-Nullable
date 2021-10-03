@@ -7,6 +7,19 @@ namespace SmartNQuick.Contracts.Client
     public partial interface IControllerAccess<T> : IDisposable
         where T : IIdentifiable
     {
+        #region Properties
+#if ACCOUNT_ON
+        /// <summary>
+        /// Sets the authorization token.
+        /// </summary>
+        string SessionToken { set; }
+#endif
+        /// <summary>
+        /// Indicates whether it is a business controller.
+        /// </summary>
+        bool IsTransient { get; }
+        #endregion Properties
+
         #region Async-Methods
         /// <summary>
         /// Gets the number of quantity in the collection.

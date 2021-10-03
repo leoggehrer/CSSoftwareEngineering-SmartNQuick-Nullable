@@ -145,6 +145,47 @@ namespace CommonBase.Extensions
             }
             return text;
         }
+        private static bool GetPreprocessorBlockPositions(string text, ref int start, ref int end)
+        {
+            var cornerBraket = 0;
+            var blockBegin = 0;
+            var blockEnd = 0;
+            var quotationMarks = 0;
+
+            start = end = -1;
+            for (var idx = 0; idx >= 0 && idx < text.Length && (start == -1 || end == -1); idx++)
+            {
+                var chr = text[idx];
+
+                if (chr == '"')
+                {
+                    quotationMarks++;
+                }
+                else if (quotationMarks % 2 == 0)
+                {
+                    if (chr == '[')
+                        cornerBraket++;
+                    else if (chr == ']')
+                        cornerBraket++;
+                    else if (chr == '#' && cornerBraket % 2 == 0)
+                    {
+                        if (blockBegin == 0)
+                        {
+                            blockBegin++;
+                            if (blockBegin == 1)
+                                start = idx;
+                        }
+                        else if (blockEnd == 0)
+                        {
+                            blockEnd++;
+                            if (blockEnd == blockBegin)
+                                end = idx;
+                        }
+                    }
+                }
+            }
+            return blockBegin > 0 && blockEnd > 0 && blockBegin == blockEnd;
+        }
         private static bool GetCodeBlockPositions(string text, ref int start, ref int end)
         {
             var cornerBraket = 0;
@@ -183,15 +224,39 @@ namespace CommonBase.Extensions
             }
             return blockBegin > 0 && blockEnd > 0 && blockBegin == blockEnd;
         }
+        private static IEnumerable<string> SplitSourceLine(this string line)
+        {
+            line.CheckArgument(nameof(line));
+
+            var result = new List<string>();
+            var splitLines = line.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var item in splitLines)
+            {
+                if (item.Trim().Length > 0)
+                {
+                    if (item.Trim().StartsWith("#"))
+                    {
+                        result.Add(item.Trim());
+                    }
+                    else
+                    {
+                        result.AddRange(item.SplitCSharpAssignments());
+                    }
+                }
+            }
+            return result;
+        }
+
         private static IEnumerable<string> SplitCSharpAssignments(this string line)
         {
             line.CheckArgument(nameof(line));
 
+            var result = new List<string>();
             var startIdx = -1;
             var partialStartIdx = -1;
-            var result = new List<string>();
-
             int partialEndIdx;
+
             while ((partialEndIdx = line.IndexOf(';', startIdx + 1)) >= 0)
             {
                 if (IsAssignmentSemicolon(line, partialEndIdx))
@@ -205,7 +270,7 @@ namespace CommonBase.Extensions
                     startIdx++;
                 }
             }
-            string endPartial = line.Partialstring(partialStartIdx + 1, line.Length - 1).TrimCSharpLine();
+            var endPartial = line.Partialstring(partialStartIdx + 1, line.Length - 1).TrimCSharpLine();
 
             if (endPartial.Length > 0)
             {
@@ -245,7 +310,7 @@ namespace CommonBase.Extensions
             line.CheckArgument(nameof(line));
 
             var result = new List<string>();
-            var lines = new List<string>(line.SplitCSharpAssignments());
+            var lines = new List<string>(line.SplitSourceLine());
             string blockBegin = "/*", blockEnd = "*/";
 
             for (var i = 0; i < lines.Count; i++)
@@ -253,9 +318,12 @@ namespace CommonBase.Extensions
                 if (lines[i].Length > 0)
                 {
                     int sIdx, eIdx;
-
+                    if (lines[i].StartsWith("#"))
+                    {
+                        result.Add(lines[i]);
+                    }
                     // add comment
-                    if ((sIdx = lines[i].IndexOf("//", StringComparison.Ordinal)) >= 0
+                    else if ((sIdx = lines[i].IndexOf("//", StringComparison.Ordinal)) >= 0
                          &&
                         (lines[i].IndexOf("\\r\\n", sIdx + 1, StringComparison.Ordinal)) >= 0)
                     {
@@ -366,7 +434,7 @@ namespace CommonBase.Extensions
                 var items = txt.SplitCSharpLine();
 
                 list.AddRange(items.Where(l => l.Length > 0)
-                    .Select(l => l.SetIndent(idt))
+                    .Select(l => l.StartsWith("#") ? l : l.SetIndent(idt))
                     .ToArray());
             }
 

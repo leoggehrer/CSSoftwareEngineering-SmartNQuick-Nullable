@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using CommonBase.Extensions;
 
 namespace CSharpCodeGenerator.ConApp
 {
@@ -10,7 +11,6 @@ namespace CSharpCodeGenerator.ConApp
 		static void Main(string[] args)
 		{
 			Console.WriteLine(nameof(CSharpCodeGenerator));
-
             var solutionPath = GetCurrentSolutionPath();
             var solutionName = GetSolutionNameByFile(solutionPath);
             var contractsFilePath = GetContractsFilePath(solutionPath);

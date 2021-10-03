@@ -51,7 +51,7 @@ namespace CSharpCodeGenerator.Logic.Models
             }
             Source.AddRange(codeLines);
         }
-        public void FormatCSharpCode(bool removeBlockComments = true, bool removeLineComments = true)
+        public void FormatCSharpCode(bool removeBlockComments = false, bool removeLineComments = true)
         {
             Source.AddRange(Source.Eject().FormatCSharpCode(removeBlockComments, removeLineComments));
         }

@@ -1,4 +1,4 @@
-﻿//@QnSBaseCode
+﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
 using System;
@@ -19,23 +19,6 @@ namespace SmartNQuick.Adapters.Service
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        public ServiceAdapterObject(string baseUri)
-        {
-            Constructing();
-            BaseUri = baseUri;
-            Constructed();
-        }
-        public ServiceAdapterObject(string sessionToken, string baseUri)
-        {
-            Constructing();
-            SessionToken = sessionToken;
-            BaseUri = baseUri;
-            Constructed();
-        }
-        partial void Constructing();
-        partial void Constructed();
-
-        protected static JsonSerializerOptions DeserializerOptions => new() { PropertyNameCaseInsensitive = true };
         /// <summary>
         /// The base url like https://localhost:5001/api
         /// </summary>
@@ -43,10 +26,59 @@ namespace SmartNQuick.Adapters.Service
         {
             get;
         }
+        public ServiceAdapterObject(string baseUri)
+        {
+            Constructing();
+            BaseUri = baseUri;
+            Constructed();
+        }
+#if ACCOUNT_ON
         public string SessionToken { private get; set; }
+        public ServiceAdapterObject(string sessionToken, string baseUri)
+        {
+            Constructing();
+            SessionToken = sessionToken;
+            BaseUri = baseUri;
+            Constructed();
+        }
+#endif
+        partial void Constructing();
+        partial void Constructed();
+
+        protected static JsonSerializerOptions DeserializerOptions => new() { PropertyNameCaseInsensitive = true };
 
         #region Helpers
         protected static string MediaType => "application/json";
+        protected HttpClient GetClient(string baseAddress)
+        {
+            return CreateClient(baseAddress);
+        }
+        protected static HttpClient CreateClient(string baseAddress)
+        {
+            HttpClient client = new();
+
+            if (baseAddress.HasContent())
+            {
+                if (baseAddress.EndsWith(@"/") == false
+                    || baseAddress.EndsWith(@"\") == false)
+                {
+                    baseAddress += "/";
+                }
+
+                client.BaseAddress = new Uri(baseAddress);
+            }
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            // Add an Accept header for JSON format.
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+
+            return client;
+        }
+#if ACCOUNT_ON
+        protected static HttpClient GetClient(string baseAddress, string sessionToken)
+        {
+            return CreateClient(baseAddress, sessionToken);
+        }
         protected static HttpClient CreateClient(string baseAddress, string sessionToken)
         {
             HttpClient client = new();
@@ -75,15 +107,7 @@ namespace SmartNQuick.Adapters.Service
             }
             return client;
         }
-        protected HttpClient GetClient(string baseAddress)
-        {
-            return CreateClient(baseAddress, SessionToken);
-        }
-        protected static HttpClient GetClient(string baseAddress, string sessionToken)
-        {
-            return CreateClient(baseAddress, sessionToken);
-        }
-
+#endif
         #endregion Helpers
 
         #region IDisposable Support

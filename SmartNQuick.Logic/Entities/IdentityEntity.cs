@@ -6,7 +6,7 @@ namespace SmartNQuick.Logic.Entities
 {
     internal abstract partial class IdentityEntity : EntityObject, IIdentifiable
 	{
-		public int Id { get; set; }
+		public virtual int Id { get; set; }
     }
 }
 //MdEnd

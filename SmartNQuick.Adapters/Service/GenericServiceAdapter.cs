@@ -1,4 +1,4 @@
-﻿//@QnSBaseCode
+﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
 using SmartNQuick.Adapters.Exceptions;
@@ -31,6 +31,7 @@ namespace SmartNQuick.Adapters.Service
             ExtUri = extUri;
             Constructed();
         }
+#if ACCOUNT_ON
         public GenericServiceAdapter(string sessionToken, string baseUri, string extUri)
             : base(sessionToken, baseUri)
         {
@@ -38,6 +39,7 @@ namespace SmartNQuick.Adapters.Service
             ExtUri = extUri;
             Constructed();
         }
+#endif
         partial void Constructing();
         partial void Constructed();
 

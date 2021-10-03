@@ -4,6 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>REVISION_OFF;ACCOUNT_ON</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
     <ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />

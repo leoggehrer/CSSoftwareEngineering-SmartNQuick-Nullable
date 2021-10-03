@@ -13,9 +13,25 @@ namespace CommonBase.Modules.Configuration
             set => configuration = value;
         }
 
-        public static string GetValue(string key)
+        public static string Get(string key)
         {
-            return Configuration[key];
+            var result = default(string);
+
+            if (Configuration != null)
+            {
+                result = Configuration[key];
+            }
+            return result;
+        }
+        public static IConfigurationSection GetSection(string key)
+        {
+            var result = default(IConfigurationSection);
+
+            if (Configuration != null)
+            {
+                result = Configuration.GetSection(key);
+            }
+            return result;
         }
     }
 }

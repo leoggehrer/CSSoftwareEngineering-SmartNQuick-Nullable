@@ -12,6 +12,7 @@ namespace CommonBase
         public static string[] CommonProjects { get; } = new string[]
         {
             "CommonBase",
+            "SolutionPreprocessorHelper.ConApp"
         };
         public static string[] GeneratorProjects { get; } = new string[]
         {
@@ -19,12 +20,12 @@ namespace CommonBase
             "CSharpCodeGenerator.ConApp",
         };
         public static string[] ToolProjects { get; } = new[]
-            {
-                "SolutionCodeComparsion.ConApp",
-                "SolutionCopier.ConApp",
-                "SolutionDeveloperHelper.ConApp",
-                "SolutionGeneratedCodeDeleter.ConApp",
-            };
+        {
+            "SolutionCodeComparsion.ConApp",
+            "SolutionCopier.ConApp",
+            "SolutionDeveloperHelper.ConApp",
+            "SolutionGeneratedCodeDeleter.ConApp",
+        };
         public static string[] ProjectExtensions { get; } = new string[]
             {
             ".Contracts",

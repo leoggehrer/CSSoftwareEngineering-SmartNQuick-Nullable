@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers
 {
-    internal abstract partial class GenericController<C, E> : ControllerObject, SmartNQuick.Contracts.Client.IControllerAccess<C>
-		where C : SmartNQuick.Contracts.IIdentifiable
+    internal abstract partial class GenericController<C, E> : ControllerObject, Contracts.Client.IControllerAccess<C>
+		where C : Contracts.IIdentifiable
 		where E : Entities.IdentityEntity, C, new()
 	{
+		public abstract bool IsTransient { get; }
 		protected GenericController(DataContext.IContext context) : base(context)
 		{
 		}
@@ -29,9 +30,8 @@ namespace SmartNQuick.Logic.Controllers
 
 		public abstract Task DeleteAsync(int id);
 
-		public abstract Task<IEnumerable<C>> GetAllAsync(); 
-
 		public abstract Task<C> GetByIdAsync(int id); 
+		public abstract Task<IEnumerable<C>> GetAllAsync(); 
 		public abstract Task<IEnumerable<C>> QueryAllAsync(string predicate); 
 
 		public abstract Task<C> InsertAsync(C entity);

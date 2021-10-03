@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.DataContext
 {
-    internal partial class SmartNQuickDbContext : DbContext, DataContext.IContext
+    internal partial class SmartNQuickDbContext : DbContext, IContext
 	{
 		static SmartNQuickDbContext()
 		{
@@ -41,6 +41,15 @@ namespace SmartNQuick.Logic.DataContext
 			
 			return result;
 		}
+		IQueryable<E> IContext.QueryableSet<C, E>()
+		{
+			DbSet<E> result = null;
+
+			GetDbSet<C, E>(ref result);
+
+			return result;
+		}
+
 		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class;
 
 		public Task<int> CountAsync<C, E>()

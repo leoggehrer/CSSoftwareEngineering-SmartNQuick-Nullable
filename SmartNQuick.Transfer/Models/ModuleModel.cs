@@ -1,4 +1,4 @@
-﻿//@QnSBaseCode
+﻿//@BaseCode
 //MdStart
 
 namespace SmartNQuick.Transfer.Models

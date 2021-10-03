@@ -62,7 +62,46 @@ namespace CommonBase.Extensions
         {
             return source?.IndexOf(toCheck, comparison) >= 0;
         }
+        public static bool Contains(this string source, params string[] toChecks)
+        {
+            return source.Contains(StringComparison.CurrentCultureIgnoreCase, toChecks);
+        }
+        public static bool Contains(this string source, StringComparison comparison, params string[] toChecks)
+        {
+            source.CheckArgument(nameof(source));
 
+            var result = toChecks.Length > 0;
+
+            foreach (var item in toChecks)
+            {
+                result = result && source.Contains(item, comparison);
+            }
+            return result;
+        }
+
+        public static string ReplaceBetween(this string source, string startText, string endText, string replaceText)
+        {
+            source.CheckArgument(nameof(source));
+            startText.CheckArgument(nameof(startText));
+            endText.CheckArgument(nameof(endText));
+            replaceText.CheckArgument(nameof(replaceText));
+
+            string result;
+            var sIdx = source.IndexOf(startText);
+            var eIdx = source.IndexOf(endText);
+
+            if (sIdx > -1 && eIdx > -1 && sIdx <= eIdx)
+            {
+                result = source.Substring(0, sIdx + startText.Length);
+                result += replaceText;
+                result += source.Substring(eIdx);
+            }
+            else
+            {
+                result = source;
+            }
+            return result;
+        }
         public static IEnumerable<string[]> Split(this IEnumerable<string> source, string separator)
         {
             source.CheckArgument(nameof(source));

@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,18 +8,35 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.WebApi.Controllers
 {
-    public abstract class GenericController<I, M> : ControllerBase, IDisposable
+    public abstract class GenericController<I, M> : ApiControllerBase, IDisposable
         where I : Contracts.IIdentifiable
         where M : Transfer.Models.IdentityModel, I, Contracts.ICopyable<I>, new()
     {
 		private bool disposedValue;
 
-		private Contracts.Client.IControllerAccess<I> Controller { get; set; }
-
 		protected GenericController()
 		{
-            Controller = Logic.Factory.Create<I>();
 		}
+
+#if ACCOUNT_ON
+		protected async Task<Contracts.Client.IControllerAccess<I>> CreateControllerAsync()
+		{
+			var result = Logic.Factory.Create<I>();
+			var sessionToken = await GetSessionTokenAsync().ConfigureAwait(false);
+
+			if (sessionToken.HasContent())
+			{
+				result.SessionToken = sessionToken;
+			}
+
+			return result;
+		}
+#else
+		protected Task<Contracts.Client.IControllerAccess<I>> CreateControllerAsync()
+		{
+			return Task.Run(() => Logic.Factory.Create<I>());
+		}
+#endif
 
 		protected M ToModel(I entity)
 		{
@@ -27,87 +45,102 @@ namespace SmartNQuick.WebApi.Controllers
 			result.CopyProperties(entity);
 			return result;
 		}
+
 		[HttpGet("/api/[controller]/Count")]
-		public Task<int> GetCountAsync()
+		public async Task<int> GetCountAsync()
 		{
-			return Controller.CountAsync();
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+
+			return await ctrl.CountAsync().ConfigureAwait(false);
 		}
 		[HttpGet("/api/[controller]/Count/{predicate}")]
-		public Task<int> GetCountByAsync(string predicate)
+		public async Task<int> GetCountByAsync(string predicate)
 		{
-			return Controller.CountByAsync(predicate);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+
+			return await ctrl.CountByAsync(predicate).ConfigureAwait(false);
 		}
 		[HttpGet("/api/[controller]/{id}")]
 		public async Task<M> GetByIdAsync(int id)
 		{
-			var entity = await Controller.GetByIdAsync(id);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-			return ToModel(entity);
+			return ToModel(result);
 		}
 		[HttpGet("/api/[controller]/GetAll")]
 		public async Task<IEnumerable<M>> GetAllAsync()
 		{
-			var entities = await Controller.GetAllAsync();
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.GetAllAsync().ConfigureAwait(false);
 
-			return entities.Select(e => ToModel(e));
+			return result.Select(e => ToModel(e));
 		}
 		[HttpGet("/api/[controller]/QueryAllBy/{predicate}")]
 		public async Task<IEnumerable<M>> QueryAllBy(string predicate)
 		{
-			var entities = await Controller.QueryAllAsync(predicate);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
 
-			return entities.Select(e => ToModel(e));
+			return result.Select(e => ToModel(e));
 		}
 
 		[HttpGet("/api/[controller]/Create")]
 		public async Task<M> CreateAsync()
 		{
-			var entity = await Controller.CreateAsync();
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.CreateAsync().ConfigureAwait(false);
 
-			return ToModel(entity);
+			return ToModel(result);
 		}
 
 		[HttpPost("/api/[controller]")]
 		public async Task<M> PostAsync([FromBody] M model)
 		{
-			var entity = await Controller.InsertAsync(model);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.InsertAsync(model).ConfigureAwait(false);
 
-			await Controller.SaveChangesAsync();
-			return ToModel(entity);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
+			return ToModel(result);
 		}
 		[HttpPost("/api/[controller]/Array")]
 		public async Task<IQueryable<M>> PostArrayAsync(IEnumerable<M> models)
 		{
 			var result = new List<M>();
-			var entities = await Controller.InsertAsync(models).ConfigureAwait(false);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var entities = await ctrl.InsertAsync(models).ConfigureAwait(false);
 
-			await Controller.SaveChangesAsync().ConfigureAwait(false);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 			result.AddRange(entities.Select(e => ToModel(e)));
 			return result.AsQueryable();
 		}
 		[HttpPut("/api/[controller]")]
 		public async Task<M> PutAsync([FromBody]M model)
 		{
-			var entity = await Controller.UpdateAsync(model);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.UpdateAsync(model).ConfigureAwait(false);
 
-			await Controller.SaveChangesAsync();
-			return ToModel(entity);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
+			return ToModel(result);
 		}
 		[HttpPut("/api/[controller]/Array")]
 		public async Task<IQueryable<M>> PutArrayAsync(IEnumerable<M> models)
 		{
 			var result = new List<M>();
-			var entities = await Controller.UpdateAsync(models).ConfigureAwait(false);
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var entities = await ctrl.UpdateAsync(models).ConfigureAwait(false);
 
-			await Controller.SaveChangesAsync().ConfigureAwait(false);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 			result.AddRange(entities.Select(e => ToModel(e)));
 			return result.AsQueryable();
 		}
 		[HttpDelete("/api/[controller]/{id}")]
 		public async Task DeleteAsync(int id)
 		{
-			await Controller.DeleteAsync(id);
-			await Controller.SaveChangesAsync();
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+
+			await ctrl.DeleteAsync(id).ConfigureAwait(false);
+			await ctrl.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		#region Disposable pattern
@@ -118,11 +151,6 @@ namespace SmartNQuick.WebApi.Controllers
 				if (disposing)
 				{
 					// TODO: dispose managed state (managed objects)
-					if (Controller != null)
-					{
-						Controller.Dispose();
-					}
-					Controller = null;
 				}
 
 				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
