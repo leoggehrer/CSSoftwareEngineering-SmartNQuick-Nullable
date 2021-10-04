@@ -10,7 +10,7 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
-    [Migration("20211003133023_InitDb")]
+    [Migration("20211004093526_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

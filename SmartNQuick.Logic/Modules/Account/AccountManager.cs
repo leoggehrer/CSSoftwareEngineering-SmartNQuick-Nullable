@@ -48,7 +48,7 @@ namespace SmartNQuick.Logic.Modules.Account
 
             if (appAccessCount == 0)
             {
-                var appAccess = await appAccessCtrl.CreateAsync().ConfigureAwait(false);
+                var appAccess = await appAccessCtrl.CreateEntityAsync().ConfigureAwait(false);
 
                 appAccess.OneItem.Name = name;
                 appAccess.OneItem.Email = email;
@@ -59,7 +59,7 @@ namespace SmartNQuick.Logic.Modules.Account
 
                 role.Designation = "SysAdmin";
                 appAccess.AddManyItem(role);
-                await appAccessCtrl.InsertAsync(appAccess).ConfigureAwait(false);
+                await appAccessCtrl.InsertEntityAsync(appAccess).ConfigureAwait(false);
                 await appAccessCtrl.SaveChangesAsync().ConfigureAwait(false);
             }
             else

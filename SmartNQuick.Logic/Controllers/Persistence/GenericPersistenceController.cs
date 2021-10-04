@@ -98,7 +98,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
             return await InsertEntityAsync(innerEntity).ConfigureAwait(false);
         }
-        public virtual async Task<E> InsertEntityAsync(E entity)
+        internal virtual async Task<E> InsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
 
@@ -133,7 +133,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
             return await UpdateEntityAsync(innerEntity).ConfigureAwait(false);
         }
-        public virtual async Task<E> UpdateEntityAsync(E entity)
+        internal virtual async Task<E> UpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
 
@@ -168,7 +168,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
             await DeleteEntityAsync(entity).ConfigureAwait(false);
         }
-        public virtual async Task DeleteEntityAsync(E entity)
+        internal virtual async Task DeleteEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
 

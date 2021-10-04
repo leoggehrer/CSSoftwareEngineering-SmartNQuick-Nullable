@@ -20,21 +20,23 @@ namespace SmartNQuick.Logic.Controllers
 		}
 
 		public abstract Task<int> CountAsync();
-
 		public abstract Task<int> CountByAsync(string predicate);
 
 		public virtual Task<C> CreateAsync()
 		{
 			return Task.Factory.StartNew<C>(() => new E());
 		}
+		public virtual Task<E> CreateEntityAsync()
+		{
+			return Task.Factory.StartNew(() => new E());
+		}
 
-		public abstract Task DeleteAsync(int id);
-
-		public abstract Task<C> GetByIdAsync(int id); 
-		public abstract Task<IEnumerable<C>> GetAllAsync(); 
-		public abstract Task<IEnumerable<C>> QueryAllAsync(string predicate); 
+		public abstract Task<C> GetByIdAsync(int id);
+		public abstract Task<IEnumerable<C>> GetAllAsync();
+		public abstract Task<IEnumerable<C>> QueryAllAsync(string predicate);
 
 		public abstract Task<C> InsertAsync(C entity);
+		internal abstract Task<E> InsertEntityAsync(E entity);
 		public virtual async Task<IEnumerable<C>> InsertAsync(IEnumerable<C> entities)
 		{
 			entities.CheckArgument(nameof(entities));
@@ -49,6 +51,7 @@ namespace SmartNQuick.Logic.Controllers
 		}
 
 		public abstract Task<C> UpdateAsync(C entity);
+		internal abstract Task<E> UpdateEntityAsync(E entity);
 		public virtual async Task<IEnumerable<C>> UpdateAsync(IEnumerable<C> entities)
 		{
 			entities.CheckArgument(nameof(entities));
@@ -61,6 +64,9 @@ namespace SmartNQuick.Logic.Controllers
 			}
 			return result.AsQueryable();
 		}
+
+		public abstract Task DeleteAsync(int id);
+		internal abstract Task DeleteEntityAsync(E entity);
 
 		public virtual Task<int> SaveChangesAsync()
 		{
