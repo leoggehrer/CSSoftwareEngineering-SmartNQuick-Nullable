@@ -13,6 +13,9 @@ namespace SmartNQuick.Logic.Migrations
             migrationBuilder.EnsureSchema(
                 name: "MusicStore");
 
+            migrationBuilder.EnsureSchema(
+                name: "Revision");
+
             migrationBuilder.CreateTable(
                 name: "Artist",
                 schema: "MusicStore",
@@ -147,6 +150,33 @@ namespace SmartNQuick.Logic.Migrations
                     table.PrimaryKey("PK_ActionLog", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ActionLog_Identity_IdentityId",
+                        column: x => x.IdentityId,
+                        principalSchema: "Account",
+                        principalTable: "Identity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "History",
+                schema: "Revision",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ActionType = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    ActionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdentityId = table.Column<int>(type: "int", nullable: false),
+                    SubjectName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false),
+                    JsonData = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_History", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_History_Identity_IdentityId",
                         column: x => x.IdentityId,
                         principalSchema: "Account",
                         principalTable: "Identity",
@@ -317,6 +347,12 @@ namespace SmartNQuick.Logic.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_History_IdentityId",
+                schema: "Revision",
+                table: "History",
+                column: "IdentityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Identity_Email",
                 schema: "Account",
                 table: "Identity",
@@ -390,6 +426,10 @@ namespace SmartNQuick.Logic.Migrations
             migrationBuilder.DropTable(
                 name: "ActionLog",
                 schema: "Account");
+
+            migrationBuilder.DropTable(
+                name: "History",
+                schema: "Revision");
 
             migrationBuilder.DropTable(
                 name: "IdentityXRole",

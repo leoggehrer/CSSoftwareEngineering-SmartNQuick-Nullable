@@ -10,7 +10,7 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
-    [Migration("20211005130715_InitDb")]
+    [Migration("20211005160708_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -394,6 +394,47 @@ namespace SmartNQuick.Logic.Migrations
                     b.ToTable("Track", "MusicStore");
                 });
 
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Revision.History", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ActionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<int>("IdentityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("JsonData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityId");
+
+                    b.ToTable("History", "Revision");
+                });
+
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Access", b =>
                 {
                     b.HasOne("SmartNQuick.Logic.Entities.Persistence.Account.Identity", "Identity")
@@ -487,11 +528,24 @@ namespace SmartNQuick.Logic.Migrations
                     b.Navigation("Genre");
                 });
 
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Revision.History", b =>
+                {
+                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.Account.Identity", "Identity")
+                        .WithMany("Historys")
+                        .HasForeignKey("IdentityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Identity");
+                });
+
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Identity", b =>
                 {
                     b.Navigation("Accesss");
 
                     b.Navigation("ActionLogs");
+
+                    b.Navigation("Historys");
 
                     b.Navigation("IdentityXRoles");
 

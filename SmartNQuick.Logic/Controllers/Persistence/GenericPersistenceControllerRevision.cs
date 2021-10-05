@@ -1,6 +1,6 @@
-﻿//@QnSBaseCode
+﻿//@BaseCode
 //MdStart
-#if REVISION_ON
+#if ACCOUNT_ON && REVISION_ON
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Persistence
 {
-    internal partial class GenericPersistenceController<I, E>
+    internal partial class GenericPersistenceController<C, E>
     {
         private enum ActionType
         {
@@ -21,43 +21,47 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         private record HistoryItem(int IdentityId, ActionType ActionType, DateTime ActionTime, Entities.IdentityEntity Entity, string JsonData);
         private readonly List<HistoryItem> historyItems = new();
 
-        async partial void AfterInsert(E entity)
+        protected override async Task<E> AfterInsertAsync(E entity)
         {
-            var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken);
+            var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
 
             if (loginSession != null)
             {
                 historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Insert, DateTime.Now, entity, null));
             }
+            return await base.AfterInsertAsync(entity).ConfigureAwait(false);
         }
-        async partial void BeforeUpdate(E entity)
+        protected override async Task<E> BeforeUpdateAsync(E entity)
         {
             var historyItem = historyItems.FirstOrDefault(e => e.Entity.Id == entity.Id);
 
             if (historyItem == null)
             {
-                var oriEntity = Context.ContextSet<I, E>().AsNoTracking().FirstOrDefault(e => e.Id == entity.Id);
+                var oriEntity = Context.QueryableSet<C, E>().AsNoTracking().FirstOrDefault(e => e.Id == entity.Id);
 
                 if (oriEntity != null)
                 {
-                    var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken);
+                    var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
 
                     if (loginSession != null)
                     {
-                        historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Update, DateTime.Now, entity, JsonSerializer.Serialize(oriEntity, new JsonSerializerOptions() { MaxDepth = 0,  })));
+                        historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Update, DateTime.Now, entity, JsonSerializer.Serialize(oriEntity, new JsonSerializerOptions() { MaxDepth = 0, })));
                     }
                 }
             }
+            return await base.BeforeUpdateAsync(entity).ConfigureAwait(false);
         }
-        async partial void BeforeDelete(E entity)
+        protected override async Task BeforeDeleteAsync(E entity)
         {
-            var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken);
+            var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
 
             if (loginSession != null)
             {
                 historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Delete, DateTime.Now, entity, JsonSerializer.Serialize(entity, new JsonSerializerOptions() { MaxDepth = 0 })));
             }
+            await base.BeforeDeleteAsync(entity).ConfigureAwait(false);
         }
+
         protected override async Task AfterSaveChangesAsync()
         {
             using var ctrl = new Revision.HistoryController(Factory.CreateContext());
