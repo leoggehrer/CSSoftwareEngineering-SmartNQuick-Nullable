@@ -75,24 +75,38 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         #endregion Query
 
         #region Insert
-        internal override Task<E> ExecuteInsertEntityAsync(E entity)
+        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
-            return Context.InsertAsync<C, E>(entity);
+            BeforeExecuteInsertEntity(entity);
+            var result = await Context.InsertAsync<C, E>(entity).ConfigureAwait(false);
+            AfterExecuteInsertEntity(entity);
+            return result;
         }
+        partial void BeforeExecuteInsertEntity(E entity);
+        partial void AfterExecuteInsertEntity(E entity);
         #endregion Insert
 
         #region Update
-        internal override Task<E> ExecuteUpdateEntityAsync(E entity)
+        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
-            return Context.UpdateAsync<C, E>(entity);
+            BeforeExecuteUpdateEntity(entity);
+            var result = await Context.UpdateAsync<C, E>(entity).ConfigureAwait(false);
+            AfterExecuteUpdateEntity(entity);
+            return result;
         }
+        partial void BeforeExecuteUpdateEntity(E entity);
+        partial void AfterExecuteUpdateEntity(E entity);
         #endregion Update
 
         #region Delete
-        internal override Task ExecuteDeleteEntityAsync(E entity)
+        internal override async Task ExecuteDeleteEntityAsync(E entity)
         {
-            return Context.DeleteAsync<C, E>(entity.Id);
+            BeforeExecuteDeleteEntity(entity);
+            await Context.DeleteAsync<C, E>(entity.Id).ConfigureAwait(false);
+            AfterExecuteDeleteEntity(entity);
         }
+        partial void BeforeExecuteDeleteEntity(E entity);
+        partial void AfterExecuteDeleteEntity(E entity);
         #endregion Delete
     }
 }

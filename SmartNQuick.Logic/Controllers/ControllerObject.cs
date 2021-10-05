@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using CommonBase.Extensions;
 using SmartNQuick.Logic.Modules.Security;
 using System;
@@ -285,3 +286,4 @@ namespace SmartNQuick.Logic.Controllers
         #endregion Dispose pattern
     }
 }
+//MdEnd

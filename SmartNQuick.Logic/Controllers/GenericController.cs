@@ -1,10 +1,10 @@
 ﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartNQuick.Logic.Modules.Exception;
 #if ACCOUNT_ON
 using System.Reflection;
 #endif
@@ -15,6 +15,7 @@ namespace SmartNQuick.Logic.Controllers
         where C : Contracts.IIdentifiable
         where E : Entities.IdentityEntity, C, Contracts.ICopyable<C>, new()
     {
+        #region Class-Constructors
         static GenericController()
         {
             ClassConstructing();
@@ -22,9 +23,13 @@ namespace SmartNQuick.Logic.Controllers
         }
         static partial void ClassConstructing();
         static partial void ClassConstructed();
+        #endregion Class-Constructors
 
+        #region Properties
         public abstract bool IsTransient { get; }
+        #endregion Properties
 
+        #region Instance-Constructors
         protected GenericController(DataContext.IContext context) : base(context)
         {
             Constructing();
@@ -37,6 +42,31 @@ namespace SmartNQuick.Logic.Controllers
         }
         partial void Constructing();
         partial void Constructed();
+        #endregion Instance-Constructors
+
+        #region Converter
+        protected virtual E ConvertTo(C contract)
+        {
+            contract.CheckArgument(nameof(contract));
+
+            var result = new E();
+
+            result.CopyProperties(contract);
+            return result;
+        }
+        protected virtual IQueryable<E> ConvertTo(IQueryable<C> contracts)
+        {
+            contracts.CheckArgument(nameof(contracts));
+
+            var result = new List<E>();
+
+            foreach (var item in contracts)
+            {
+                result.Add(ConvertTo(item));
+            }
+            return result.AsQueryable();
+        }
+        #endregion Converter
 
         #region Count
         public abstract Task<int> CountAsync();
@@ -122,12 +152,14 @@ namespace SmartNQuick.Logic.Controllers
         public virtual async Task<IEnumerable<C>> InsertAsync(IEnumerable<C> entities)
         {
             entities.CheckArgument(nameof(entities));
-
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.InsertArray).ConfigureAwait(false);
+#endif
             var result = new List<C>();
 
             foreach (var entity in entities)
             {
-                result.Add(await InsertAsync(entity).ConfigureAwait(false));
+                result.Add(await InsertEntityAsync(ConvertTo(entity)).ConfigureAwait(false));
             }
             return result.AsQueryable();
         }
@@ -145,7 +177,6 @@ namespace SmartNQuick.Logic.Controllers
             var innerEntity = await Context.GetByIdAsync<C, E>(entity.Id).ConfigureAwait(false);
 
             innerEntity.CopyProperties(entity);
-
             return await UpdateEntityAsync(innerEntity).ConfigureAwait(false);
         }
         internal virtual async Task<E> UpdateEntityAsync(E entity)
@@ -170,12 +201,14 @@ namespace SmartNQuick.Logic.Controllers
         public virtual async Task<IEnumerable<C>> UpdateAsync(IEnumerable<C> entities)
         {
             entities.CheckArgument(nameof(entities));
-
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.UpdateArray).ConfigureAwait(false);
+#endif
             var result = new List<C>();
 
             foreach (var entity in entities)
             {
-                result.Add(await UpdateAsync(entity).ConfigureAwait(false));
+                result.Add(await UpdateEntityAsync(ConvertTo(entity)).ConfigureAwait(false));
             }
             return result.AsQueryable();
         }
@@ -192,7 +225,7 @@ namespace SmartNQuick.Logic.Controllers
             var entity = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
 
             if (entity == null)
-                throw new Exception($"Invalid id: '{id}'");
+                throw new LogicException(ErrorType.InvalidId);
 
             await DeleteEntityAsync(entity).ConfigureAwait(false);
         }
