@@ -19,11 +19,11 @@ namespace SmartNQuick.ConApp
 #if ACCOUNT_ON
         private static string SaUser => "LeoAdmin";
         private static string SaEmail => "LeoAdmin.SmartNQuick@gmx.at";
-        private static string SaPwd => "Leo2189!Admin";
+        private static string SaPwd => "1234LeoAdmin";
 
         private static string AaUser => "AppAdmin";
         private static string AaEmail => "AppAdmin.QuickNSmart@gmx.at";
-        private static string AaPwd => "App2189!Admin";
+        private static string AaPwd => "1234AppAdmin";
         private static string AaRole => "AppAdmin";
 
         private static bool AaEnableJwt => true;
@@ -59,7 +59,7 @@ namespace SmartNQuick.ConApp
 #endif
         static partial void AfterRun()
         {
-            Adapters.Factory.BaseUri = "http://localhost:5000/api";
+            Adapters.Factory.BaseUri = "https://localhost:5001/api";
             Adapters.Factory.Adapter = Adapters.AdapterType.Service;
 
 #if ACCOUNT_ON
@@ -67,7 +67,7 @@ namespace SmartNQuick.ConApp
             {
                 try
                 {
-                    //await InitAppAccessAsync();
+                    await InitAppAccessAsync();
                     await AddAppAccessAsync(AaUser, AaEmail, AaPwd, AaEnableJwt, AaRole);
                 }
                 catch (Exception ex)
@@ -94,7 +94,7 @@ namespace SmartNQuick.ConApp
                     Login = await accMngr.LogonAsync(AaEmail, AaPwd);
                 }).Wait();
             }
-            return Factory.Create<C>();
+            return Factory.Create<C>(Login.SessionToken);
         }
 #else
         private static Contracts.Client.IAdapterAccess<C> Create<C>()

@@ -1,11 +1,11 @@
 ﻿//@BaseCode
+//MdStart
 using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 #if ACCOUNT_ON
-using SmartNQuick.Logic.Modules.Security;
 using System.Reflection;
 #endif
 
@@ -43,10 +43,10 @@ namespace SmartNQuick.Logic.Controllers
         public abstract Task<int> CountByAsync(string predicate);
         #endregion Count
 
-        #region Before return
+        #region BeforeReturn
         protected virtual E BeforeReturn(E entity) { return entity; }
         protected virtual Task<E> BeforeReturnAsync(E entity) => Task.FromResult(entity);
-        #endregion Before return
+        #endregion BeforeReturn
 
         #region Query
         public abstract Task<C> GetByIdAsync(int id);
@@ -210,39 +210,6 @@ namespace SmartNQuick.Logic.Controllers
         protected virtual void AfterDelete(E entity) { }
         protected virtual Task AfterDeleteAsync(E entity) => Task.FromResult(0);
         #endregion Delete
-
-        public virtual Task<int> SaveChangesAsync()
-        {
-            return Context.SaveChangesAsync();
-        }
-        public virtual Task<int> RejectChangesAsync()
-        {
-            return Context.RejectChangesAsync();
-        }
-
-#if ACCOUNT_ON
-        #region Authorization
-        protected virtual Task CheckAuthorizationAsync(Type subjectType, MethodBase methodBase, AccessType accessType)
-        {
-            return CheckAuthorizationAsync(subjectType, methodBase, accessType, null);
-        }
-        protected virtual async Task CheckAuthorizationAsync(Type subjectType, MethodBase methodBase, AccessType accessType, string infoData)
-        {
-            subjectType.CheckArgument(nameof(subjectType));
-            methodBase.CheckArgument(nameof(methodBase));
-
-            bool handled = false;
-
-            BeforeCheckAuthorization(subjectType, methodBase, accessType, ref handled);
-            if (handled == false)
-            {
-                await Authorization.CheckAuthorizationAsync(SessionToken, subjectType, methodBase, accessType, infoData).ConfigureAwait(false);
-            }
-            AfterCheckAuthorization(subjectType, methodBase, accessType);
-        }
-        partial void BeforeCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType, ref bool handled);
-        partial void AfterCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType);
-        #endregion Authorization
-#endif
     }
 }
+//MdEnd

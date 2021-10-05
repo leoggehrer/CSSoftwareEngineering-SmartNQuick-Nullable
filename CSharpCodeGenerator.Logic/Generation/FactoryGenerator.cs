@@ -203,7 +203,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 var modelName = CreateEntityNameFromInterface(type);
                 var modelNameSpace = CreateTransferModelNameSpace(type);
-                var extUri = modelName.EndsWith("s") ? $"{modelName}" : $"{modelName}s";
+                var extUri = modelName.CreatePluralWord();
 
                 ConvertExtUri(type, ref extUri);
                 if (first)
@@ -258,7 +258,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 var modelName = CreateEntityNameFromInterface(type);
                 var modelNameSpace = CreateTransferModelNameSpace(type);
-                var extUri = modelName.EndsWith("s") ? $"{modelName}" : $"{modelName}s";
+                var extUri = modelName.CreatePluralWord();
 
                 ConvertExtUri(type, ref extUri);
                 if (first)

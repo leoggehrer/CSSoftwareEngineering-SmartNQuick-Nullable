@@ -13,7 +13,7 @@ namespace SolutionPreprocessorHelper.ConApp
 {
     internal class Program
     {
-        private static string[] Directives { get; } = new string[] { "REVISION_OFF", "ACCOUNT_ON" };
+        private static string[] Directives { get; } = new string[] { "ACCOUNT_ON", "LOGGING_ON", "REVISION_OFF" };
 
         private static void Main(/*string[] args*/)
         {

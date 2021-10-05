@@ -1,9 +1,11 @@
 ﻿//@BaseCode
 using CommonBase.Extensions;
+using SmartNQuick.Logic.Modules.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers
 {
@@ -108,6 +110,141 @@ namespace SmartNQuick.Logic.Controllers
         private IEnumerable<PropertyInfo> ControllerManagedProperties => GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                   .Where(p => p.GetCustomAttributes<Attributes.ControllerManagedPropertyAttribute>()
                                                                                   .Any());
+
+        #region SaveChanges
+        protected virtual async Task BeforeSaveChangesAsync()
+        {
+            foreach (var item in ControllerManagedProperties)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            foreach (var item in ControllerManagedFields)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+        }
+        public virtual async Task<int> SaveChangesAsync()
+        {
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
+
+            return await ExecuteSaveChangesAsync().ConfigureAwait(false);
+        }
+        internal async Task<int> ExecuteSaveChangesAsync()
+        {
+            await BeforeSaveChangesAsync().ConfigureAwait(false);
+            var result = await Context.SaveChangesAsync().ConfigureAwait(false);
+            await AfterSaveChangesAsync().ConfigureAwait(false);
+            return result;
+        }
+        protected virtual async Task AfterSaveChangesAsync()
+        {
+            foreach (var item in ControllerManagedProperties)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            foreach (var item in ControllerManagedFields)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+        }
+        internal virtual async Task SaveChangesDirectAsync()
+        {
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
+
+            await Context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        protected virtual async Task BeforeRejectChangesAsync()
+        {
+            foreach (var item in ControllerManagedProperties)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
+                }
+            }
+            foreach (var item in ControllerManagedFields)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
+                }
+            }
+        }
+        public virtual async Task<int> RejectChangesAsync()
+        {
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
+
+            return await ExecuteRejectChangesAsync().ConfigureAwait(false);
+        }
+        internal async Task<int> ExecuteRejectChangesAsync()
+        {
+            await BeforeSaveChangesAsync().ConfigureAwait(false);
+            var result = await Context.RejectChangesAsync().ConfigureAwait(false);
+            await AfterSaveChangesAsync().ConfigureAwait(false);
+            return result;
+        }
+        protected virtual async Task AfterRejectChangesAsync()
+        {
+            foreach (var item in ControllerManagedProperties)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
+                }
+            }
+            foreach (var item in ControllerManagedFields)
+            {
+                if (item.GetValue(this) is ControllerObject controllerObject)
+                {
+                    await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
+                }
+            }
+        }
+        internal virtual async Task RejectChangesDirectAsync()
+        {
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
+
+            await Context.RejectChangesAsync().ConfigureAwait(false);
+        }
+        #endregion SaveChanges
+
+#if ACCOUNT_ON
+        #region Authorization
+        protected virtual Task CheckAuthorizationAsync(Type subjectType, MethodBase methodBase, AccessType accessType)
+        {
+            return CheckAuthorizationAsync(subjectType, methodBase, accessType, null);
+        }
+        protected virtual async Task CheckAuthorizationAsync(Type subjectType, MethodBase methodBase, AccessType accessType, string infoData)
+        {
+            subjectType.CheckArgument(nameof(subjectType));
+            methodBase.CheckArgument(nameof(methodBase));
+
+            bool handled = false;
+
+            BeforeCheckAuthorization(subjectType, methodBase, accessType, ref handled);
+            if (handled == false)
+            {
+                await Authorization.CheckAuthorizationAsync(SessionToken, subjectType, methodBase, accessType, infoData).ConfigureAwait(false);
+            }
+            AfterCheckAuthorization(subjectType, methodBase, accessType);
+        }
+        partial void BeforeCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType, ref bool handled);
+        partial void AfterCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType);
+        #endregion Authorization
+#endif
 
         #region Dispose pattern
         private bool disposedValue;

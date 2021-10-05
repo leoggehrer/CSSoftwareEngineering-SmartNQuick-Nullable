@@ -3,7 +3,6 @@
 #if ACCOUNT_ON
 using CommonBase.Extensions;
 using SmartNQuick.Logic.Controllers;
-using SmartNQuick.Logic.Entities.Persistence.Account;
 using SmartNQuick.Logic.Modules.Account;
 using SmartNQuick.Logic.Modules.Exception;
 using System;
@@ -171,6 +170,7 @@ namespace SmartNQuick.Logic.Modules.Security
 
         private static void Logging(int identityId, Type subjectType, MethodBase methodBase, AccessType accessType, string info)
         {
+#if LOGGING_ON
             Task.Run(async () =>
             {
                 bool handled = false;
@@ -182,7 +182,7 @@ namespace SmartNQuick.Logic.Modules.Security
                     {
                         SessionToken = SystemAuthorizationToken
                     };
-                    var entity = new ActionLog
+                    var entity = new Entities.Persistence.Account.ActionLog
                     {
                         IdentityId = identityId,
                         Time = DateTime.Now,
@@ -195,6 +195,7 @@ namespace SmartNQuick.Logic.Modules.Security
                 }
                 AfterLogging(subjectType, methodBase, accessType);
             });
+#endif
         }
         static partial void BeforeLogging(Type subjectType, MethodBase methodBase, AccessType accessType, ref bool handled);
         static partial void AfterLogging(Type subjectType, MethodBase methodBase, AccessType accessType);
