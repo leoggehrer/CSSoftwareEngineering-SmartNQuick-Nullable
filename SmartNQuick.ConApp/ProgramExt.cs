@@ -14,7 +14,7 @@ using System.Reflection;
 #endif
 namespace SmartNQuick.ConApp
 {
-    partial class Program
+    internal partial class Program
     {
 #if ACCOUNT_ON
         private static string SaUser => "LeoAdmin";
@@ -48,6 +48,7 @@ namespace SmartNQuick.ConApp
             {
                 var role = entity.CreateManyItem();
 
+
                 role.Designation = item;
                 entity.AddManyItem(role);
             }
@@ -59,7 +60,7 @@ namespace SmartNQuick.ConApp
         static partial void AfterRun()
         {
             Adapters.Factory.BaseUri = "http://localhost:5000/api";
-            Adapters.Factory.Adapter = Adapters.AdapterType.Controller;
+            Adapters.Factory.Adapter = Adapters.AdapterType.Service;
 
 #if ACCOUNT_ON
             Task.Run(async () =>
@@ -93,7 +94,7 @@ namespace SmartNQuick.ConApp
                     Login = await accMngr.LogonAsync(AaEmail, AaPwd);
                 }).Wait();
             }
-            return Factory.Create<C>(Login.SessionToken);
+            return Factory.Create<C>();
         }
 #else
         private static Contracts.Client.IAdapterAccess<C> Create<C>()

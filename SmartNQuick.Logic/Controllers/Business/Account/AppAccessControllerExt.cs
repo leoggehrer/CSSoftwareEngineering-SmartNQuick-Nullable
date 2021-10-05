@@ -49,7 +49,61 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
             }
         }
 
-        public override async Task<IAppAccess> InsertAsync(IAppAccess entity)
+        //public override async Task<IAppAccess> InsertAsync(IAppAccess entity)
+        //{
+        //    entity.CheckArgument(nameof(entity));
+        //    entity.OneItem.CheckArgument(nameof(entity.OneItem));
+        //    entity.ManyItems.CheckArgument(nameof(entity.ManyItems));
+
+        //    var result = new AppAccess();
+
+        //    result.OneEntity.CopyProperties(entity.OneItem);
+        //    result.OneEntity = await oneEntityController.InsertEntityAsync(result.OneEntity).ConfigureAwait(false);
+
+        //    foreach (var item in entity.ManyItems)
+        //    {
+        //        var role = new Role();
+        //        var joinRole = new IdentityXRole()
+        //        {
+        //            Identity = result.OneEntity,
+        //        };
+
+        //        if (item.Id == 0)
+        //        {
+        //            item.Designation = RoleController.ClearRoleDesignation(item.Designation);
+
+        //            var qryItem = await manyEntityController.QueryableSet()
+        //                                                    .FirstOrDefaultAsync(e => e.Designation.Equals(item.Designation))
+        //                                                    .ConfigureAwait(false);
+
+        //            if (qryItem != null)
+        //            {
+        //                role.CopyProperties(qryItem);
+        //                joinRole.RoleId = role.Id;
+        //            }
+        //            else
+        //            {
+        //                role.CopyProperties(item);
+        //                role = await manyEntityController.InsertEntityAsync(role).ConfigureAwait(false);
+        //                joinRole.Role = role;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var qryItem = await manyEntityController.GetByIdAsync(item.Id).ConfigureAwait(false);
+
+        //            if (qryItem != null)
+        //            {
+        //                role.CopyProperties(qryItem);
+        //            }
+        //            joinRole.RoleId = role.Id;
+        //        }
+        //        await IdentityXRoleController.InsertEntityAsync(joinRole).ConfigureAwait(false);
+        //        result.AddManyItem(role);
+        //    }
+        //    return result;
+        //}
+        internal override async Task<AppAccess> InsertEntityAsync(AppAccess entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneItem.CheckArgument(nameof(entity.OneItem));
@@ -197,6 +251,7 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
             }
             await OneEntityController.DeleteAsync(id).ConfigureAwait(false);
         }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

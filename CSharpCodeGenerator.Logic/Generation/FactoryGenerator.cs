@@ -53,7 +53,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             };
             result.Add("public static partial class Factory");
             result.Add("{");
-            result.Add("static partial void CreateController<I>(ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
+            result.Add("static partial void CreateController<C>(ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
             result.Add("{");
             foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
             {
@@ -62,14 +62,14 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(CreateContext()) as Contracts.Client.IControllerAccess<I>;");
+                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(CreateContext()) as Contracts.Client.IControllerAccess<C>;");
                 result.Add("}");
                 first = false;
             }
@@ -82,7 +82,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             }
             result.Add("}");
 
-            result.Add("static partial void CreateController<I>(object sharedController, ref Contracts.Client.IControllerAccess<I> controller) where I : Contracts.IIdentifiable");
+            result.Add("static partial void CreateController<C>(object sharedController, ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
             result.Add("{");
             first = true;
             foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
@@ -92,14 +92,14 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<I>;");
+                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(sharedController as Controllers.ControllerObject) as Contracts.Client.IControllerAccess<C>;");
                 result.Add("}");
                 first = false;
             }
@@ -112,35 +112,34 @@ namespace CSharpCodeGenerator.Logic.Generation
             }
             result.Add("}");
 
-            //result.Add("public static Contracts.Client.IControllerAccess<I> Create<I>(string sessionToken) where I : Contracts.IIdentifiable");
-            //result.Add("{");
-            //result.Add("Contracts.Client.IControllerAccess<I> result;");
-            //first = true;
-            //foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
-            //{
-            //    var entityName = CreateEntityNameFromInterface(type);
-            //    var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
+            result.Add("#if ACCOUNT_ON");
+            result.Add("public static void CreateController<C>(string sessionToken, ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
+            result.Add("{");
+            first = true;
+            foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
+            {
+                var entityName = CreateEntityNameFromInterface(type);
+                var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
 
-            //    if (first)
-            //    {
-            //        result.Add($"if (typeof(I) == typeof({type.FullName}))");
-            //    }
-            //    else
-            //    {
-            //        result.Add($"else if (typeof(I) == typeof({type.FullName}))");
-            //    }
-            //    result.Add("{");
-            //    result.Add($"result = new {controllerNameSpace}.{entityName}Controller(CreateContext()) " + "{ SessionToken = sessionToken } as Contracts.Client.IControllerAccess<I>;");
-            //    result.Add("}");
-            //    first = false;
-            //}
-            //result.Add("else");
-            //result.Add("{");
-            //result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
-            //result.Add("}");
-
-            //result.Add("return result;");
-            //result.Add("}");
+                if (first)
+                {
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
+                }
+                else
+                {
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
+                }
+                result.Add("{");
+                result.Add($"controller = new {controllerNameSpace}.{entityName}Controller(CreateContext()) " + "{ SessionToken = sessionToken } as Contracts.Client.IControllerAccess<C>;");
+                result.Add("}");
+                first = false;
+            }
+            result.Add("else");
+            result.Add("{");
+            result.Add("throw new Logic.Modules.Exception.LogicException(Modules.Exception.ErrorType.InvalidControllerType);");
+            result.Add("}");
+            result.Add("}");
+            result.Add("#endif");
             result.Add("}");
 
             result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), LogicNameSpace));
@@ -172,9 +171,9 @@ namespace CSharpCodeGenerator.Logic.Generation
             };
             result.Add("public static partial class Factory");
             result.Add("{");
-            result.Add("public static Contracts.Client.IAdapterAccess<I> Create<I>()");
+            result.Add("public static Contracts.Client.IAdapterAccess<C> Create<C>()");
             result.Add("{");
-            result.Add("Contracts.Client.IAdapterAccess<I> result = null;");
+            result.Add("Contracts.Client.IAdapterAccess<C> result = null;");
             result.Add("if (Adapter == AdapterType.Controller)");
             result.Add("{");
             foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
@@ -184,14 +183,14 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"result = new Controller.GenericControllerAdapter<{type.FullName}>() as Contracts.Client.IAdapterAccess<I>;");
+                result.Add($"result = new Controller.GenericControllerAdapter<{type.FullName}>() as Contracts.Client.IAdapterAccess<C>;");
                 result.Add("}");
                 first = false;
             }
@@ -209,15 +208,15 @@ namespace CSharpCodeGenerator.Logic.Generation
                 ConvertExtUri(type, ref extUri);
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
                 result.Add($"result = new Service.GenericServiceAdapter<{type.FullName}, {modelNameSpace}.{modelName}>(BaseUri, \"{extUri}\")");
-                result.Add(" as Contracts.Client.IAdapterAccess<I>;");
+                result.Add(" as Contracts.Client.IAdapterAccess<C>;");
                 result.Add("}");
                 first = false;
             }
@@ -226,9 +225,9 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("}");
 
             result.Add("#if ACCOUNT_ON");
-            result.Add("public static Contracts.Client.IAdapterAccess<I> Create<I>(string sessionToken)");
+            result.Add("public static Contracts.Client.IAdapterAccess<C> Create<C>(string sessionToken)");
             result.Add("{");
-            result.Add("Contracts.Client.IAdapterAccess<I> result = null;");
+            result.Add("Contracts.Client.IAdapterAccess<C> result = null;");
             result.Add("if (Adapter == AdapterType.Controller)");
             result.Add("{");
 
@@ -240,14 +239,14 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"result = new Controller.GenericControllerAdapter<{type.FullName}>(sessionToken) as Contracts.Client.IAdapterAccess<I>;");
+                result.Add($"result = new Controller.GenericControllerAdapter<{type.FullName}>(sessionToken) as Contracts.Client.IAdapterAccess<C>;");
                 result.Add("}");
                 first = false;
             }
@@ -264,14 +263,14 @@ namespace CSharpCodeGenerator.Logic.Generation
                 ConvertExtUri(type, ref extUri);
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
-                result.Add($"result = new Service.GenericServiceAdapter<{type.FullName}, {modelNameSpace}.{modelName}>(sessionToken, BaseUri, \"{extUri}\") as Contracts.Client.IAdapterAccess<I>;");
+                result.Add($"result = new Service.GenericServiceAdapter<{type.FullName}, {modelNameSpace}.{modelName}>(sessionToken, BaseUri, \"{extUri}\") as Contracts.Client.IAdapterAccess<C>;");
                 result.Add("}");
                 first = false;
             }

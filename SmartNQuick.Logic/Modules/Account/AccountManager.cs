@@ -48,19 +48,26 @@ namespace SmartNQuick.Logic.Modules.Account
 
             if (appAccessCount == 0)
             {
-                var appAccess = await appAccessCtrl.CreateEntityAsync().ConfigureAwait(false);
+                try
+                {
+                    var appAccess = await appAccessCtrl.CreateEntityAsync().ConfigureAwait(false);
 
-                appAccess.OneItem.Name = name;
-                appAccess.OneItem.Email = email;
-                appAccess.OneItem.Password = password;
-                appAccess.OneItem.EnableJwtAuth = enableJwtAuth;
+                    appAccess.OneItem.Name = name;
+                    appAccess.OneItem.Email = email;
+                    appAccess.OneItem.Password = password;
+                    appAccess.OneItem.EnableJwtAuth = enableJwtAuth;
 
-                var role = appAccess.CreateManyItem();
+                    var role = appAccess.CreateManyItem();
 
-                role.Designation = "SysAdmin";
-                appAccess.AddManyItem(role);
-                await appAccessCtrl.InsertEntityAsync(appAccess).ConfigureAwait(false);
-                await appAccessCtrl.SaveChangesAsync().ConfigureAwait(false);
+                    role.Designation = "SysAdmin";
+                    appAccess.AddManyItem(role);
+                    await appAccessCtrl.InsertEntityAsync(appAccess).ConfigureAwait(false);
+                    await appAccessCtrl.SaveChangesAsync().ConfigureAwait(false);
+                }
+                catch (System.Exception)
+                {
+                    throw;
+                }
             }
             else
             {
@@ -351,10 +358,11 @@ namespace SmartNQuick.Logic.Modules.Account
                 if (identity != null
                     && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
                 {
-                    var session = new LoginSession();
                     using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
-
-                    session.Identity = identity;
+                    var session = new LoginSession
+                    {
+                        Identity = identity
+                    };
                     session.Roles.AddRange(identity.IdentityXRoles.Select(e => Role.Create(e.Role)));
                     session.JsonWebToken = JsonWebToken.GenerateToken(new Claim[]
                     {
@@ -373,8 +381,8 @@ namespace SmartNQuick.Logic.Modules.Account
                     await sessionCtrl.SaveChangesAsync().ConfigureAwait(false);
 
                     result = new LoginSession();
-                    result.CopyProperties(session);
-                    LoginSessions.Add(session);
+                    result.CopyProperties(entity);
+                    LoginSessions.Add(entity);
                 }
             }
             else if (VerifyPasswordHash(password, querySession.PasswordHash, querySession.PasswordSalt))

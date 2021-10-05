@@ -11,7 +11,7 @@ using System.Text;
 
 namespace SolutionPreprocessorHelper.ConApp
 {
-    class Program
+    internal class Program
     {
         private static string[] Directives { get; } = new string[] { "REVISION_OFF", "ACCOUNT_ON" };
 

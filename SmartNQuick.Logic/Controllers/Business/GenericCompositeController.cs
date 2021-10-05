@@ -147,7 +147,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                E entity = new E();
+                var entity = new E();
 
                 entity.ConnectorEntity.CopyProperties(item);
                 await LoadChildsAsync(entity).ConfigureAwait(false);
@@ -163,7 +163,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                E entity = new E();
+                var entity = new E();
 
                 entity.ConnectorEntity.CopyProperties(item);
                 await LoadChildsAsync(entity).ConfigureAwait(false);
@@ -177,14 +177,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             return Task.Run<C>(() =>
             {
-                E entity = new E();
+                var entity = new E();
 
                 AfterCreate(entity);
                 return entity;
             });
-        }
-        protected virtual void AfterCreate(E entity)
-        {
         }
 
         public override async Task<C> InsertAsync(C entity)

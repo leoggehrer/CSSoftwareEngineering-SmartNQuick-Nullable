@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+#if ACCOUNT_ON
 using SmartNQuick.Contracts.Business.Account;
 using System.Threading.Tasks;
 
@@ -16,4 +17,5 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
         }
     }
 }
+#endif
 //MdEnd

@@ -27,6 +27,15 @@ namespace SmartNQuick.Logic
             return result;
         }
 #if ACCOUNT_ON
+        public static IControllerAccess<C> Create<C>(string sessionToken)
+            where C : SmartNQuick.Contracts.IIdentifiable
+        {
+            var result = default(IControllerAccess<C>);
+
+            CreateController(sessionToken, ref result);
+            return result;
+        }
+
         public static IAccountManager CreateAccountManager() => new Modules.Account.AccountManagerWrapper();
 #endif
         static partial void CreateController<C>(ref IControllerAccess<C> controller)

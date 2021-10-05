@@ -466,12 +466,12 @@ namespace CSharpCodeGenerator.Logic.Generation
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
             var modelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
-            var controllerName = entityName.EndsWith("s") ? entityName : $"{entityName}s";
+            var controllerName = entityName.CreatePluralWord();
             var result = new Models.GeneratedItem(Common.UnitType.WebApi, Common.ItemType.WebApiController)
             {
                 FullName = CreateWebApiControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreatePluralSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertWebApiControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");

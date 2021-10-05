@@ -51,7 +51,11 @@ namespace SmartNQuick.Adapters.Service
         protected static string MediaType => "application/json";
         protected HttpClient GetClient(string baseAddress)
         {
+#if ACCOUNT_ON
+            return CreateClient(baseAddress, SessionToken);
+#else
             return CreateClient(baseAddress);
+#endif
         }
         protected static HttpClient CreateClient(string baseAddress)
         {

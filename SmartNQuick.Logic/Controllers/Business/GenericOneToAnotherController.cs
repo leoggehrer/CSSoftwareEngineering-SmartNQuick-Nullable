@@ -2,7 +2,6 @@
 //MdStart
 using CommonBase.Extensions;
 using SmartNQuick.Logic.Modules.Exception;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -50,7 +49,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             Constructed();
         }
 #if ACCOUNT_ON
-        private void HandleChangedSessionToken(object sender, EventArgs e)
+        private void HandleChangedSessionToken(object sender, System.EventArgs e)
         {
             OneEntityController.SessionToken = SessionToken;
             AnotherEntityController.SessionToken = SessionToken;
@@ -138,7 +137,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                E entity = new E();
+                var entity = new E();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -155,7 +154,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                E entity = new E();
+                var entity = new E();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -169,14 +168,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             return Task.Run<C>(() =>
             {
-                E entity = new E();
+                var entity = new E();
 
                 AfterCreate(entity);
                 return entity;
             });
-        }
-        protected virtual void AfterCreate(E entity)
-        {
         }
 
         public override async Task<C> InsertAsync(C entity)

@@ -3,11 +3,16 @@
 using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace SmartNQuick.Logic.Controllers.Business
 {
+#if ACCOUNT_ON
+    using SmartNQuick.Logic.Modules.Security;
+
+    [Authorize(AllowModify = true)]
+#endif
     internal abstract partial class BusinessControllerAdapter<C, E> : GenericController<C, E>
         where C : Contracts.IIdentifiable
         where E : Entities.IdentityEntity, C, Contracts.ICopyable<C>, new()
@@ -35,6 +40,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             Constructed();
         }
 
+        #region Count
         public override Task<int> CountAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
@@ -43,7 +49,9 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        #region Async-Methods
+        #endregion Count
+
+        #region Query
         public override Task<C> GetByIdAsync(int id)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
@@ -52,44 +60,37 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-
         public override Task<IEnumerable<C>> QueryAllAsync(string predicate)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
+        #endregion Query
 
         public override Task<C> CreateAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
 
-        public override Task<C> InsertAsync(C entity)
+        #region Insert
+        internal override Task<E> ExecuteInsertEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<E> InsertEntityAsync(E entity)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
+        #endregion Insert
 
-        public override Task<C> UpdateAsync(C entity)
+        #region Update
+        internal override Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<E> UpdateEntityAsync(E entity)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
+        #endregion Update
 
-        public override Task DeleteAsync(int id)
+        #region Delete
+        internal override Task ExecuteDeleteEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task DeleteEntityAsync(E entity)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
-        #endregion Async-Methods
+        #endregion Delete
     }
 }
 //MdEnd
