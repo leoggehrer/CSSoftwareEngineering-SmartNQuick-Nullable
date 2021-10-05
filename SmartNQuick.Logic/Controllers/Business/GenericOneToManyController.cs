@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Business
 {
-    internal abstract partial class GenericOneToManyController<C, E, TOne, TOneEntity, TMany, TManyEntity> : GenericController<C, E>
+    internal abstract partial class GenericOneToManyController<C, E, TOne, TOneEntity, TMany, TManyEntity> : BusinessControllerAdapter<C, E>
         where C : Contracts.IOneToMany<TOne, TMany>
         where E : Entities.OneToManyEntity<TOne, TOneEntity, TMany, TManyEntity>, C, Contracts.ICopyable<C>, new()
         where TOne : Contracts.IIdentifiable, Contracts.ICopyable<TOne>
@@ -220,6 +220,21 @@ namespace SmartNQuick.Logic.Controllers.Business
                 result.AddManyItem(manyEntity);
             }
             return result;
+        }
+        internal override async Task<E> InsertEntityAsync(E entity)
+        {
+            entity.CheckArgument(nameof(entity));
+            entity.OneItem.CheckArgument(nameof(entity.OneItem));
+            entity.ManyItems.CheckArgument(nameof(entity.ManyItems));
+
+            await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
+
+            foreach (var item in entity.ManyEntities)
+            {
+                SetNavigationToParent(item, entity.OneEntity);
+                await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
+            }
+            return entity;
         }
         public override async Task<C> UpdateAsync(C entity)
         {

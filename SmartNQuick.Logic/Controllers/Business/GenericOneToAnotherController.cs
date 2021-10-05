@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Business
 {
-    internal abstract partial class GenericOneToAnotherController<C, E, TOne, TOneEntity, TAnother, TAnotherEntity> : GenericController<C, E>
+    internal abstract partial class GenericOneToAnotherController<C, E, TOne, TOneEntity, TAnother, TAnotherEntity> : BusinessControllerAdapter<C, E>
         where C : Contracts.IOneToAnother<TOne, TAnother>
         where E : Entities.OneToAnotherEntity<TOne, TOneEntity, TAnother, TAnotherEntity>, C, Contracts.ICopyable<C>, new()
         where TOne : Contracts.IIdentifiable, Contracts.ICopyable<TOne>

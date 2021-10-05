@@ -67,7 +67,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal virtual Task<E> InsertEntityAsync(E entity)
+        internal override Task<E> InsertEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
@@ -76,7 +76,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal virtual Task<E> UpdateEntityAsync(E entity)
+        internal override Task<E> UpdateEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
@@ -85,7 +85,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal virtual Task DeleteEntityAsync(E entity)
+        internal override Task DeleteEntityAsync(E entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
