@@ -11,7 +11,7 @@ namespace SmartNQuick.Logic.Entities.Persistence.MusicStore
 	{
 		public override string ToString()
 		{
-			return $"{Title}";
+			return $"{Title} - [{Id}]";
 		}
 	}
 }

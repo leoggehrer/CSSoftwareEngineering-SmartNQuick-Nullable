@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
-using SmartNQuick.Logic.Modules.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,25 +9,28 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers
 {
-    internal abstract partial class ControllerObject : IDisposable
-    {
-        #region Class-Constructors
-        static ControllerObject()
-        {
-            ClassConstructing();
-            ClassConstructed();
-        }
-        static partial void ClassConstructing();
-        static partial void ClassConstructed();
-        #endregion Class-Contructors
+#if ACCOUNT_ON
+	using SmartNQuick.Logic.Modules.Security;
+#endif
+	internal abstract partial class ControllerObject : IDisposable
+	{
+		#region Class-Constructors
+		static ControllerObject()
+		{
+			ClassConstructing();
+			ClassConstructed();
+		}
+		static partial void ClassConstructing();
+		static partial void ClassConstructed();
+		#endregion Class-Contructors
 
-        #region Context
-        private readonly bool contextOwner;
-        internal DataContext.IContext Context { get; private set; }
-        #endregion Context
+		#region Context
+		private readonly bool contextOwner;
+		internal DataContext.IContext Context { get; private set; }
+		#endregion Context
 
 #if ACCOUNT_ON
-        #region SessionToken
+		#region SessionToken
         protected event EventHandler ChangedSessionToken;
 
         private string sessionToken;
@@ -73,157 +75,161 @@ namespace SmartNQuick.Logic.Controllers
         }
         partial void BeforeHandleManagedMembers(ref bool handled);
         partial void AfterHandleManagedMembers();
-        #endregion SessionToken
+		#endregion SessionToken
 #endif
-        #region Instance-Constructors
-        public ControllerObject(DataContext.IContext context)
-        {
-            context.CheckArgument(nameof(context));
+		#region Instance-Constructors
+		public ControllerObject(DataContext.IContext context)
+		{
+			context.CheckArgument(nameof(context));
 
-            Constructing();
-            contextOwner = true;
-            Context = context;
+			Constructing();
+			contextOwner = true;
+			Context = context;
 #if ACCOUNT_ON
             ChangedSessionToken += HandleChangeSessionToken;
 #endif
-            Constructed();
-        }
-        public ControllerObject(ControllerObject other)
-        {
-            other.CheckArgument(nameof(other));
+			Constructed();
+		}
+		public ControllerObject(ControllerObject other)
+		{
+			other.CheckArgument(nameof(other));
 
-            Constructing();
-            contextOwner = false;
-            Context = other.Context;
+			Constructing();
+			contextOwner = false;
+			Context = other.Context;
 #if ACCOUNT_ON
             SessionToken = other.SessionToken;
             ChangedSessionToken += HandleChangeSessionToken;
 #endif
-            Constructed();
-        }
-        partial void Constructing();
-        partial void Constructed();
-        #endregion Instance-Constructors
+			Constructed();
+		}
+		partial void Constructing();
+		partial void Constructed();
+		#endregion Instance-Constructors
 
-        private IEnumerable<FieldInfo> ControllerManagedFields => GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                           .Where(p => p.GetCustomAttributes<Attributes.ControllerManagedFieldAttribute>()
-                                                                           .Any());
-        private IEnumerable<PropertyInfo> ControllerManagedProperties => GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                                  .Where(p => p.GetCustomAttributes<Attributes.ControllerManagedPropertyAttribute>()
-                                                                                  .Any());
+		private IEnumerable<FieldInfo> ControllerManagedFields => GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+																		   .Where(p => p.GetCustomAttributes<Attributes.ControllerManagedFieldAttribute>()
+																		   .Any());
+		private IEnumerable<PropertyInfo> ControllerManagedProperties => GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+																				  .Where(p => p.GetCustomAttributes<Attributes.ControllerManagedPropertyAttribute>()
+																				  .Any());
 
-        #region SaveChanges
-        protected virtual async Task BeforeSaveChangesAsync()
-        {
-            foreach (var item in ControllerManagedProperties)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
-                }
-            }
-            foreach (var item in ControllerManagedFields)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
-                }
-            }
-        }
-        public virtual async Task<int> SaveChangesAsync()
-        {
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
+		#region SaveChanges
+		protected virtual async Task BeforeSaveChangesAsync()
+		{
+			foreach (var item in ControllerManagedProperties)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
+				}
+			}
+			foreach (var item in ControllerManagedFields)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.BeforeSaveChangesAsync().ConfigureAwait(false);
+				}
+			}
+		}
+		public virtual async Task<int> SaveChangesAsync()
+		{
+#if ACCOUNT_ON
+			await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
+#endif
+			return await ExecuteSaveChangesAsync().ConfigureAwait(false);
+		}
+		internal async Task<int> ExecuteSaveChangesAsync()
+		{
+			await BeforeSaveChangesAsync().ConfigureAwait(false);
+			var result = await Context.SaveChangesAsync().ConfigureAwait(false);
+			await AfterSaveChangesAsync().ConfigureAwait(false);
+			return result;
+		}
+		protected virtual async Task AfterSaveChangesAsync()
+		{
+			foreach (var item in ControllerManagedProperties)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
+				}
+			}
+			foreach (var item in ControllerManagedFields)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
+				}
+			}
+		}
+		internal virtual async Task SaveChangesDirectAsync()
+		{
+#if ACCOUNT_ON
+			await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
+#endif
+			await Context.SaveChangesAsync().ConfigureAwait(false);
+		}
 
-            return await ExecuteSaveChangesAsync().ConfigureAwait(false);
-        }
-        internal async Task<int> ExecuteSaveChangesAsync()
-        {
-            await BeforeSaveChangesAsync().ConfigureAwait(false);
-            var result = await Context.SaveChangesAsync().ConfigureAwait(false);
-            await AfterSaveChangesAsync().ConfigureAwait(false);
-            return result;
-        }
-        protected virtual async Task AfterSaveChangesAsync()
-        {
-            foreach (var item in ControllerManagedProperties)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
-                }
-            }
-            foreach (var item in ControllerManagedFields)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.AfterSaveChangesAsync().ConfigureAwait(false);
-                }
-            }
-        }
-        internal virtual async Task SaveChangesDirectAsync()
-        {
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Save).ConfigureAwait(false);
-
-            await Context.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        protected virtual async Task BeforeRejectChangesAsync()
-        {
-            foreach (var item in ControllerManagedProperties)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
-                }
-            }
-            foreach (var item in ControllerManagedFields)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
-                }
-            }
-        }
-        public virtual async Task<int> RejectChangesAsync()
-        {
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
-
-            return await ExecuteRejectChangesAsync().ConfigureAwait(false);
-        }
-        internal async Task<int> ExecuteRejectChangesAsync()
-        {
-            await BeforeSaveChangesAsync().ConfigureAwait(false);
-            var result = await Context.RejectChangesAsync().ConfigureAwait(false);
-            await AfterSaveChangesAsync().ConfigureAwait(false);
-            return result;
-        }
-        protected virtual async Task AfterRejectChangesAsync()
-        {
-            foreach (var item in ControllerManagedProperties)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
-                }
-            }
-            foreach (var item in ControllerManagedFields)
-            {
-                if (item.GetValue(this) is ControllerObject controllerObject)
-                {
-                    await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
-                }
-            }
-        }
-        internal virtual async Task RejectChangesDirectAsync()
-        {
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
-
-            await Context.RejectChangesAsync().ConfigureAwait(false);
-        }
-        #endregion SaveChanges
+		protected virtual async Task BeforeRejectChangesAsync()
+		{
+			foreach (var item in ControllerManagedProperties)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
+				}
+			}
+			foreach (var item in ControllerManagedFields)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.BeforeRejectChangesAsync().ConfigureAwait(false);
+				}
+			}
+		}
+		public virtual async Task<int> RejectChangesAsync()
+		{
+#if ACCOUNT_ON
+			await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
+#endif
+			return await ExecuteRejectChangesAsync().ConfigureAwait(false);
+		}
+		internal async Task<int> ExecuteRejectChangesAsync()
+		{
+			await BeforeSaveChangesAsync().ConfigureAwait(false);
+			var result = await Context.RejectChangesAsync().ConfigureAwait(false);
+			await AfterSaveChangesAsync().ConfigureAwait(false);
+			return result;
+		}
+		protected virtual async Task AfterRejectChangesAsync()
+		{
+			foreach (var item in ControllerManagedProperties)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
+				}
+			}
+			foreach (var item in ControllerManagedFields)
+			{
+				if (item.GetValue(this) is ControllerObject controllerObject)
+				{
+					await controllerObject.AfterRejectChangesAsync().ConfigureAwait(false);
+				}
+			}
+		}
+		internal virtual async Task RejectChangesDirectAsync()
+		{
+#if ACCOUNT_ON
+			await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Reject).ConfigureAwait(false);
+#endif
+			await Context.RejectChangesAsync().ConfigureAwait(false);
+		}
+		#endregion SaveChanges
 
 #if ACCOUNT_ON
-        #region Authorization
+		#region Authorization
         protected virtual Task CheckAuthorizationAsync(Type subjectType, MethodBase methodBase, AccessType accessType)
         {
             return CheckAuthorizationAsync(subjectType, methodBase, accessType, null);
@@ -244,46 +250,46 @@ namespace SmartNQuick.Logic.Controllers
         }
         partial void BeforeCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType, ref bool handled);
         partial void AfterCheckAuthorization(Type subjectType, MethodBase methodBase, AccessType accessType);
-        #endregion Authorization
+		#endregion Authorization
 #endif
 
-        #region Dispose pattern
-        private bool disposedValue;
+		#region Dispose pattern
+		private bool disposedValue;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                    if (contextOwner)
-                    {
-                        Context.Dispose();
-                    }
-                    Context = null;
-                }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					// TODO: dispose managed state (managed objects)
+					if (contextOwner)
+					{
+						Context.Dispose();
+					}
+					Context = null;
+				}
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
+				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
+				// TODO: set large fields to null
+				disposedValue = true;
+			}
+		}
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~ControllerObject()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
+		// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+		// ~ControllerObject()
+		// {
+		//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		//     Dispose(disposing: false);
+		// }
 
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion Dispose pattern
-    }
+		public void Dispose()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
+		#endregion Dispose pattern
+	}
 }
 //MdEnd

@@ -7,7 +7,7 @@ namespace SmartNQuick.Contracts.Persistence.MusicStore
 	public partial interface IAlbum : IVersionable, ICopyable<IAlbum>
 	{
 		int ArtistId { get; set; }
-		[ContractPropertyInfo(Required = true, MaxLength = 2048, IsUnique = true)]
+		[ContractPropertyInfo(Required = true, MaxLength = 1024, IsUnique = true)]
 		string Title { get; set; }
 	}
 }

@@ -48,7 +48,6 @@ namespace SmartNQuick.ConApp
             {
                 var role = entity.CreateManyItem();
 
-
                 role.Designation = item;
                 entity.AddManyItem(role);
             }
@@ -60,7 +59,7 @@ namespace SmartNQuick.ConApp
         static partial void AfterRun()
         {
             Adapters.Factory.BaseUri = "https://localhost:5001/api";
-            Adapters.Factory.Adapter = Adapters.AdapterType.Service;
+            Adapters.Factory.Adapter = Adapters.AdapterType.Controller;
 
 #if ACCOUNT_ON
             Task.Run(async () =>
