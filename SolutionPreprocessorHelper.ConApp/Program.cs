@@ -15,9 +15,9 @@ namespace SolutionPreprocessorHelper.ConApp
     {
         private static string[] Directives { get; } = new string[] 
         { 
-            "ACCOUNT_OFF", 
-            "LOGGING_OFF", 
-            "REVISION_OFF" 
+            "ACCOUNT_ON", 
+            "LOGGING_ON", 
+            "REVISION_ON" 
         };
 
         private static void Main(/*string[] args*/)

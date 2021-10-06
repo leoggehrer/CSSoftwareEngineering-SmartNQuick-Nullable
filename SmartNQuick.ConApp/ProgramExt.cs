@@ -59,7 +59,7 @@ namespace SmartNQuick.ConApp
         static partial void AfterRun()
         {
             Adapters.Factory.BaseUri = "https://localhost:5001/api";
-            Adapters.Factory.Adapter = Adapters.AdapterType.Controller;
+            Adapters.Factory.Adapter = Adapters.AdapterType.Service;
 
 #if ACCOUNT_ON
             Task.Run(async () =>
