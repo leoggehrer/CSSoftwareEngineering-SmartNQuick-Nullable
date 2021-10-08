@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,47 +146,6 @@ namespace CommonBase.Extensions
             }
             return text;
         }
-        private static bool GetPreprocessorBlockPositions(string text, ref int start, ref int end)
-        {
-            var cornerBraket = 0;
-            var blockBegin = 0;
-            var blockEnd = 0;
-            var quotationMarks = 0;
-
-            start = end = -1;
-            for (var idx = 0; idx >= 0 && idx < text.Length && (start == -1 || end == -1); idx++)
-            {
-                var chr = text[idx];
-
-                if (chr == '"')
-                {
-                    quotationMarks++;
-                }
-                else if (quotationMarks % 2 == 0)
-                {
-                    if (chr == '[')
-                        cornerBraket++;
-                    else if (chr == ']')
-                        cornerBraket++;
-                    else if (chr == '#' && cornerBraket % 2 == 0)
-                    {
-                        if (blockBegin == 0)
-                        {
-                            blockBegin++;
-                            if (blockBegin == 1)
-                                start = idx;
-                        }
-                        else if (blockEnd == 0)
-                        {
-                            blockEnd++;
-                            if (blockEnd == blockBegin)
-                                end = idx;
-                        }
-                    }
-                }
-            }
-            return blockBegin > 0 && blockEnd > 0 && blockBegin == blockEnd;
-        }
         private static bool GetCodeBlockPositions(string text, ref int start, ref int end)
         {
             var cornerBraket = 0;
@@ -224,6 +184,7 @@ namespace CommonBase.Extensions
             }
             return blockBegin > 0 && blockEnd > 0 && blockBegin == blockEnd;
         }
+
         private static IEnumerable<string> SplitSourceLine(this string line)
         {
             line.CheckArgument(nameof(line));
@@ -247,7 +208,6 @@ namespace CommonBase.Extensions
             }
             return result;
         }
-
         private static IEnumerable<string> SplitCSharpAssignments(this string line)
         {
             line.CheckArgument(nameof(line));
@@ -278,33 +238,6 @@ namespace CommonBase.Extensions
             }
             return result;
         }
-
-        private static bool IsAssignmentSemicolon(string text, int pos)
-        {
-            text.CheckArgument(nameof(text));
-
-            return IsLiteralCharacter(text, pos) == false && IsSourceString(text, pos) == false;
-        }
-        private static bool IsLiteralCharacter(string text, int pos)
-        {
-            text.CheckArgument(nameof(text));
-
-            return pos > 0 && pos + 1 < text.Length && text[pos - 1] == '\'' && text[pos + 1] == '\'';
-        }
-        private static bool IsSourceString(string text, int pos)
-        {
-            text.CheckArgument(nameof(text));
-
-            var limiterCount = 0;
-
-            for (var i = 0; i < pos && i < text.Length; i++)
-            {
-                if (text[i] == '\"')
-                    limiterCount++;
-            }
-            return limiterCount % 2 > 0;
-        }
-
         private static IEnumerable<string> SplitCSharpLine(this string line)
         {
             line.CheckArgument(nameof(line));
@@ -421,6 +354,33 @@ namespace CommonBase.Extensions
             }
             return result;
         }
+
+        private static bool IsAssignmentSemicolon(string text, int pos)
+        {
+            text.CheckArgument(nameof(text));
+
+            return IsLiteralCharacter(text, pos) == false && IsSourceString(text, pos) == false;
+        }
+        private static bool IsLiteralCharacter(string text, int pos)
+        {
+            text.CheckArgument(nameof(text));
+
+            return pos > 0 && pos + 1 < text.Length && text[pos - 1] == '\'' && text[pos + 1] == '\'';
+        }
+        private static bool IsSourceString(string text, int pos)
+        {
+            text.CheckArgument(nameof(text));
+
+            var limiterCount = 0;
+
+            for (var i = 0; i < pos && i < text.Length; i++)
+            {
+                if (text[i] == '\"')
+                    limiterCount++;
+            }
+            return limiterCount % 2 > 0;
+        }
+
         private static void FormatCSharpCodeBlock(this string text, int indent, List<string> lines)
         {
             text.CheckArgument(nameof(text));
@@ -451,6 +411,7 @@ namespace CommonBase.Extensions
                 AddCodeLines(text, indent, lines);
             }
         }
-        #endregion
+        #endregion Helpers
     }
 }
+//MdEnd

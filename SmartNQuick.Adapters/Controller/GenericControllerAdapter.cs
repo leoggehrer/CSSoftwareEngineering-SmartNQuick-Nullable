@@ -75,12 +75,8 @@ namespace SmartNQuick.Adapters.Controller
         }
         public async Task<IQueryable<TContract>> InsertAsync(IEnumerable<TContract> entities)
         {
-            var result = new List<TContract>();
+            var result = await controller.InsertAsync(entities).ConfigureAwait(false);
 
-            foreach (var item in entities)
-            {
-                result.Add(await controller.InsertAsync(item).ConfigureAwait(false));
-            }
             await SaveChangesAsync().ConfigureAwait(false);
             return result.AsQueryable();
         }
@@ -93,12 +89,8 @@ namespace SmartNQuick.Adapters.Controller
         }
         public async Task<IQueryable<TContract>> UpdateAsync(IEnumerable<TContract> entities)
         {
-            var result = new List<TContract>();
+            var result = await controller.UpdateAsync(entities).ConfigureAwait(false);
 
-            foreach (var item in entities)
-            {
-                result.Add(await controller.UpdateAsync(item).ConfigureAwait(false));
-            }
             await SaveChangesAsync().ConfigureAwait(false);
             return result.AsQueryable();
         }

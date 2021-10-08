@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Shadow
 {
+#if ACCOUNT_ON
+    using SmartNQuick.Logic.Modules.Security;
+
+    [Authorize(AllowModify = true)]
+#endif
     internal abstract partial class GenericShadowController<I, E, TSourceContract, TSourceEntity> : GenericController<I, E>
         where I : Contracts.IIdentifiable
         where E : Entities.ShadowEntity, I, Contracts.ICopyable<I>, new()
@@ -85,21 +90,21 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         #endregion Count
 
         #region Query
-        public override async Task<I> GetByIdAsync(int id)
+        internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             var entity = await SourceEntityController.GetByIdAsync(id).ConfigureAwait(false);
             var result = ConvertTo(entity);
 
             return result;
         }
-        public override async Task<IEnumerable<I>> GetAllAsync()
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var entities = await SourceEntityController.GetAllAsync().ConfigureAwait(false);
             var result = ConvertTo(entities);
 
             return result;
         }
-        public override async Task<IEnumerable<I>> QueryAllAsync(string predicate)
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var entities = await SourceEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
             var result = ConvertTo(entities);

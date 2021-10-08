@@ -75,13 +75,81 @@ namespace SmartNQuick.Logic.Controllers
 
         #region BeforeReturn
         protected virtual E BeforeReturn(E entity) { return entity; }
+        protected virtual IEnumerable<E> BeforeReturn(IEnumerable<E> entities)
+        {
+            var result = new List<E>();
+
+            foreach (var item in entities)
+            {
+                result.Add(BeforeReturn(item));
+            }
+            return result;
+        }
         protected virtual Task<E> BeforeReturnAsync(E entity) => Task.FromResult(entity);
+        protected virtual async Task<IEnumerable<E>> BeforeReturnAsync(IEnumerable<E> entities)
+        {
+            var result = new List<E>();
+
+            foreach (var item in entities)
+            {
+                result.Add(await BeforeReturnAsync(item).ConfigureAwait(false));
+            }
+            return result;
+        }
         #endregion BeforeReturn
 
         #region Query
-        public abstract Task<C> GetByIdAsync(int id);
-        public abstract Task<IEnumerable<C>> GetAllAsync();
-        public abstract Task<IEnumerable<C>> QueryAllAsync(string predicate);
+        public virtual async Task<C> GetByIdAsync(int id)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetBy).ConfigureAwait(false);
+#endif
+            return await GetEntityByIdAsync(id).ConfigureAwait(false);
+        }
+        internal virtual async Task<E> GetEntityByIdAsync(int id)
+        {
+            var result = await ExecuteGetEntityByIdAsync(id).ConfigureAwait(false);
+
+            if (result == null)
+            {
+                throw new LogicException(ErrorType.InvalidId, $"Invalid id '{id}'.");
+            }
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<E> ExecuteGetEntityByIdAsync(int id);
+
+        public virtual async Task<IEnumerable<C>> GetAllAsync()
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
+#endif
+            return await GetEntityAllAsync().ConfigureAwait(false);
+        }
+        internal virtual async Task<IEnumerable<E>> GetEntityAllAsync()
+        {
+            var result = await ExecuteGetEntityAllAsync().ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteGetEntityAllAsync();
+
+        public virtual async Task<IEnumerable<C>> QueryAllAsync(string predicate)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryAll).ConfigureAwait(false);
+#endif
+            return await QueryEntityAllAsync(predicate).ConfigureAwait(false);
+        }
+        internal virtual async Task<IEnumerable<E>> QueryEntityAllAsync(string predicate)
+        {
+            var result = await ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate);
         #endregion Query
 
         #region Create

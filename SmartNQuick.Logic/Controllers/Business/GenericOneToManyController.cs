@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Business
 {
+#if ACCOUNT_ON
+    using SmartNQuick.Logic.Modules.Security;
+
+    [Authorize(AllowModify = true)]
+#endif
     internal abstract partial class GenericOneToManyController<C, E, TOne, TOneEntity, TMany, TManyEntity> : BusinessControllerAdapter<C, E>
         where C : Contracts.IOneToMany<TOne, TMany>
         where E : Entities.OneToManyEntity<TOne, TOneEntity, TMany, TManyEntity>, C, Contracts.ICopyable<C>, new()
@@ -137,7 +142,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        public override async Task<C> GetByIdAsync(int id)
+        internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             E result;
             var oneEntity = await OneEntityController.GetByIdAsync(id).ConfigureAwait(false);
@@ -153,7 +158,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             return result;
         }
-        public override async Task<IEnumerable<C>> GetAllAsync()
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var result = new List<E>();
             var query = await OneEntityController.GetAllAsync().ConfigureAwait(false);
@@ -169,7 +174,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        public override async Task<IEnumerable<C>> QueryAllAsync(string predicate)
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
             var query = await OneEntityController.QueryAllAsync(predicate).ConfigureAwait(false);

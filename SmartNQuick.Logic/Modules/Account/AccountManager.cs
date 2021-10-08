@@ -145,7 +145,7 @@ namespace SmartNQuick.Logic.Modules.Account
         [Authorize]
         public static async Task LogoutAsync(string sessionToken)
         {
-            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
+            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
 
             try
             {
@@ -180,7 +180,7 @@ namespace SmartNQuick.Logic.Modules.Account
         [Authorize]
         public static async Task<IEnumerable<string>> QueryRolesAsync(string sessionToken)
         {
-            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
+            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
 
             var loginSession = await QueryAliveSessionAsync(sessionToken).ConfigureAwait(false);
 
@@ -189,7 +189,7 @@ namespace SmartNQuick.Logic.Modules.Account
         [Authorize]
         public static async Task<bool> HasRoleAsync(string sessionToken, string role)
         {
-            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
+            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
 
             role.CheckArgument(nameof(role));
 
@@ -200,7 +200,7 @@ namespace SmartNQuick.Logic.Modules.Account
         [Authorize]
         public static async Task<ILoginSession> QueryLoginAsync(string sessionToken)
         {
-            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
+            await Authorization.CheckAuthorizationAsync(sessionToken, MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
 
             return await QueryAliveSessionAsync(sessionToken).ConfigureAwait(false);
         }

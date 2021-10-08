@@ -55,32 +55,7 @@ namespace SmartNQuick.ConApp
             await accMngr.LogoutAsync(login.SessionToken).ConfigureAwait(false);
             return identity;
         }
-#endif
-        static partial void AfterRun()
-        {
-            Adapters.Factory.BaseUri = "https://localhost:5001/api";
-            Adapters.Factory.Adapter = Adapters.AdapterType.Service;
 
-#if ACCOUNT_ON
-            Task.Run(async () =>
-            {
-                try
-                {
-                    await InitAppAccessAsync();
-                    await AddAppAccessAsync(AaUser, AaEmail, AaPwd, AaEnableJwt, AaRole);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error in {MethodBase.GetCurrentMethod().Name}: {ex.Message}");
-                }
-            }
-            ).Wait();
-#endif
-            Task.Run(async () =>
-                await ImportCsvDataAsync()
-            ).Wait();
-        }
-#if ACCOUNT_ON
         private static Contracts.Persistence.Account.ILoginSession Login { get; set; }
         private static Contracts.Client.IAdapterAccess<C> Create<C>()
         {
@@ -101,6 +76,31 @@ namespace SmartNQuick.ConApp
             return Factory.Create<C>();
         }
 #endif
+        static partial void AfterRun()
+        {
+            Adapters.Factory.BaseUri = "https://localhost:5001/api";
+            Adapters.Factory.Adapter = Adapters.AdapterType.Controller;
+
+#if ACCOUNT_ON
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await InitAppAccessAsync();
+                    await AddAppAccessAsync(AaUser, AaEmail, AaPwd, AaEnableJwt, AaRole);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error in {MethodBase.GetCurrentMethod().Name}: {ex.Message}");
+                }
+            }
+            ).Wait();
+#endif
+            Task.Run(async () =>
+                await ImportCsvDataAsync()
+            ).Wait();
+        }
+
         private static async Task ImportCsvDataAsync()
         {
             using var genreCtrl = Create<Contracts.Persistence.MusicStore.IGenre>();

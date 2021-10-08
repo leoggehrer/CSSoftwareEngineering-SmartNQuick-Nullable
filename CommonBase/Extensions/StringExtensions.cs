@@ -94,7 +94,7 @@ namespace CommonBase.Extensions
             {
                 result = source.Substring(0, sIdx + startText.Length);
                 result += replaceText;
-                result += source.Substring(eIdx);
+                result += source[eIdx..];
             }
             else
             {

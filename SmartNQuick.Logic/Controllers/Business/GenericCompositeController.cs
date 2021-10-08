@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Business
 {
+#if ACCOUNT_ON
+    using SmartNQuick.Logic.Modules.Security;
+
+    [Authorize(AllowModify = true)]
+#endif
     internal abstract partial class GenericCompositeController<C, E, TConnector, TConnectorEntity, TOne, TOneEntity, TAnother, TAnotherEntity> : BusinessControllerAdapter<C, E>
         where C : Contracts.IComposite<TConnector, TOne, TAnother>
         where E : Entities.CompositeEntity<TConnector, TConnectorEntity, TOne, TOneEntity, TAnother, TAnotherEntity>, C, Contracts.ICopyable<C>, new()
@@ -125,7 +130,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        public override async Task<C> GetByIdAsync(int id)
+        internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             E result;
             var entity = await ConnectorEntityController.GetByIdAsync(id).ConfigureAwait(false);
@@ -142,7 +147,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        public override async Task<IEnumerable<C>> GetAllAsync()
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var result = new List<E>();
             var query = await ConnectorEntityController.GetAllAsync().ConfigureAwait(false);
@@ -158,7 +163,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        public override async Task<IEnumerable<C>> QueryAllAsync(string predicate)
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
             var query = await ConnectorEntityController.QueryAllAsync(predicate).ConfigureAwait(false);

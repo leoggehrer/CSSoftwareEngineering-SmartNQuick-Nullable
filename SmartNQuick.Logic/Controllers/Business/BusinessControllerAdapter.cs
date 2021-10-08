@@ -52,24 +52,19 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        public override Task<C> GetByIdAsync(int id)
+        internal override Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        public override Task<IEnumerable<C>> GetAllAsync()
+        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        public override Task<IEnumerable<C>> QueryAllAsync(string predicate)
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
         #endregion Query
-
-        public override Task<C> CreateAsync()
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
 
         #region Insert
         internal override Task<E> ExecuteInsertEntityAsync(E entity)

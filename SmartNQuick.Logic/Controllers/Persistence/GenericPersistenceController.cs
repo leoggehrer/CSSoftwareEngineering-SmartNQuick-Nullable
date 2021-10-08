@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 //MdStart
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 {
 #if ACCOUNT_ON
     using SmartNQuick.Logic.Modules.Security;
-    using System.Reflection;
 
     [Authorize(AllowModify = true)]
 #endif
@@ -40,37 +38,17 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         #endregion Count
 
         #region Query
-        public override async Task<C> GetByIdAsync(int id)
+        internal override Task<E> ExecuteGetEntityByIdAsync(int id)
         {
-#if ACCOUNT_ON
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetBy).ConfigureAwait(false);
-#endif
-            var result = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
-
-            if (result == null)
-            {
-                throw new Exception($"Invalid id '{id}'.");
-            }
-            result = BeforeReturn(result);
-            return await BeforeReturnAsync(result).ConfigureAwait(false);
+            return Context.GetByIdAsync<C, E>(id);
         }
-        public override async Task<IEnumerable<C>> GetAllAsync()
+        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
-#if ACCOUNT_ON
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
-#endif
-            return (await Context.GetAllAsync<C, E>()
-                                 .ConfigureAwait(false))
-                                 .Select(e => BeforeReturn(e));
+            return Context.GetAllAsync<C, E>();
         }
-        public override async Task<IEnumerable<C>> QueryAllAsync(string predicate)
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
-#if ACCOUNT_ON
-            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Query).ConfigureAwait(false);
-#endif
-            return (await Context.QueryAllAsync<C, E>(predicate)
-                                 .ConfigureAwait(false))
-                                 .Select(e => BeforeReturn(e));
+            return Context.QueryAllAsync<C, E>(predicate);
         }
         #endregion Query
 

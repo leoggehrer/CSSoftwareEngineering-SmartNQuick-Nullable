@@ -7,7 +7,8 @@ namespace SmartNQuick.Logic.Controllers
     {
         GetBy,
         GetAll,
-        Query,
+        QueryBy,
+        QueryAll,
         Create,
         Insert,
         InsertArray,
