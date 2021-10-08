@@ -57,16 +57,6 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
 #endif
 
-        #region Async-Methods
-        public override Task<int> CountAsync()
-        {
-            return OneEntityController.CountAsync();
-        }
-        public override Task<int> CountByAsync(string predicate)
-        {
-            return OneEntityController.CountByAsync(predicate);
-        }
-
         protected virtual bool SetNavigationToParent(object obj, object value)
         {
             var result = false;
@@ -135,6 +125,18 @@ namespace SmartNQuick.Logic.Controllers.Business
             return result;
         }
 
+        #region Count
+        public override Task<int> CountAsync()
+        {
+            return OneEntityController.CountAsync();
+        }
+        public override Task<int> CountByAsync(string predicate)
+        {
+            return OneEntityController.CountByAsync(predicate);
+        }
+        #endregion Count
+
+        #region Query
         public override async Task<C> GetByIdAsync(int id)
         {
             E result;
@@ -183,19 +185,10 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        #endregion Query
 
-        public override Task<C> CreateAsync()
-        {
-            return Task.Run<C>(() =>
-            {
-                var entity = new E();
-
-                AfterCreate(entity);
-                return entity;
-            });
-        }
-
-        public override async Task<C> InsertAsync(C entity)
+        #region Insert
+        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneItem.CheckArgument(nameof(entity.OneItem));
@@ -217,22 +210,10 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<E> InsertEntityAsync(E entity)
-        {
-            entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.ManyItems.CheckArgument(nameof(entity.ManyItems));
+        #endregion Insert
 
-            await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
-
-            foreach (var item in entity.ManyEntities)
-            {
-                SetNavigationToParent(item, entity.OneEntity);
-                await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
-            }
-            return entity;
-        }
-        public override async Task<C> UpdateAsync(C entity)
+        #region Update
+        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneItem.CheckArgument(nameof(entity.OneItem));
@@ -278,24 +259,19 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        public override async Task DeleteAsync(int id)
-        {
-            var entity = await GetByIdAsync(id).ConfigureAwait(false);
+        #endregion Update
 
-            if (entity != null)
+        #region Delete
+        internal override async Task<E> ExecuteDeleteEntityAsync(E entity)
+        {
+            foreach (var item in entity.ManyItems)
             {
-                foreach (var item in entity.ManyItems)
-                {
-                    await ManyEntityController.DeleteAsync(item.Id).ConfigureAwait(false);
-                }
-                await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
+                await ManyEntityController.DeleteAsync(item.Id).ConfigureAwait(false);
             }
-            else
-            {
-                throw new LogicException(ErrorType.InvalidId);
-            }
+            await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
+            return entity;
         }
-        #endregion Async-Methods
+        #endregion Delete
 
         protected override void Dispose(bool disposing)
         {

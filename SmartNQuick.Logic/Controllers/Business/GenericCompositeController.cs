@@ -62,16 +62,6 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
 #endif
 
-        #region Async-Methods
-        public override Task<int> CountAsync()
-        {
-            return OneEntityController.CountAsync();
-        }
-        public override Task<int> CountByAsync(string predicate)
-        {
-            return OneEntityController.CountByAsync(predicate);
-        }
-
         protected virtual PropertyInfo GetNavigationToOne()
         {
             return typeof(TConnectorEntity).GetProperty(typeof(TOneEntity).Name);
@@ -123,6 +113,18 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
         }
 
+        #region Count
+        public override Task<int> CountAsync()
+        {
+            return OneEntityController.CountAsync();
+        }
+        public override Task<int> CountByAsync(string predicate)
+        {
+            return OneEntityController.CountByAsync(predicate);
+        }
+        #endregion Count
+
+        #region Query
         public override async Task<C> GetByIdAsync(int id)
         {
             E result;
@@ -172,19 +174,10 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        #endregion Query
 
-        public override Task<C> CreateAsync()
-        {
-            return Task.Run<C>(() =>
-            {
-                var entity = new E();
-
-                AfterCreate(entity);
-                return entity;
-            });
-        }
-
-        public override async Task<C> InsertAsync(C entity)
+        #region Insert
+        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.ConnectorItem.CheckArgument(nameof(entity.ConnectorItem));
@@ -236,7 +229,10 @@ namespace SmartNQuick.Logic.Controllers.Business
             await ConnectorEntityController.InsertAsync(result.ConnectorEntity).ConfigureAwait(false);
             return result;
         }
-        public override async Task<C> UpdateAsync(C entity)
+        #endregion Insert
+
+        #region Update
+        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneItem.CheckArgument(nameof(entity.OneItem));
@@ -287,20 +283,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             await ConnectorEntityController.UpdateAsync(result.ConnectorEntity).ConfigureAwait(false);
             return result;
         }
-        public override async Task DeleteAsync(int id)
-        {
-            var entity = await GetByIdAsync(id).ConfigureAwait(false);
+        #endregion Update
 
-            if (entity != null)
-            {
-                await ConnectorEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
-            }
-            else
-            {
-                throw new LogicException(ErrorType.InvalidId);
-            }
+        #region Delete
+        internal override async Task ExecuteDeleteEntityAsync(E entity)
+        {
+            await ConnectorEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
         }
-        #endregion Async-Methods
+        #endregion Delete
 
         protected override void Dispose(bool disposing)
         {
