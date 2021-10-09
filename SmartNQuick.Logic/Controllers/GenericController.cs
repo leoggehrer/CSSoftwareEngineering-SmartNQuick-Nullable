@@ -73,7 +73,7 @@ namespace SmartNQuick.Logic.Controllers
         public abstract Task<int> CountByAsync(string predicate);
         #endregion Count
 
-        #region BeforeReturn
+        #region Before-Return
         protected virtual E BeforeReturn(E entity) { return entity; }
         protected virtual IEnumerable<E> BeforeReturn(IEnumerable<E> entities)
         {
@@ -96,7 +96,7 @@ namespace SmartNQuick.Logic.Controllers
             }
             return result;
         }
-        #endregion BeforeReturn
+        #endregion Before-Return
 
         #region Query
         public virtual async Task<C> GetByIdAsync(int id)

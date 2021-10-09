@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CommonBase.Extensions
 {
-	public static partial class EnumerableExtensions
+    public static partial class EnumerableExtensions
     {
         public static IEnumerable<ST> ToEnumerable<T, ST>(this IEnumerable<T> source, Func<T, ST> expandSelector)
         {
@@ -52,7 +52,7 @@ namespace CommonBase.Extensions
             }
             return source;
         }
-        public static IEnumerable<T> ForeachAction<T>(this IEnumerable<T> source, Action<T> action)
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source != null && action != null)
             {
@@ -69,7 +69,7 @@ namespace CommonBase.Extensions
 
             if (source != null && getValue != null)
             {
-                source.ForeachAction(i =>
+                source.ForEach(i =>
                 {
                     int value = getValue(i);
 
