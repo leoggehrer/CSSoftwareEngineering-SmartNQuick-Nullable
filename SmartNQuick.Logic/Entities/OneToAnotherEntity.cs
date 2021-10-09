@@ -9,10 +9,10 @@ namespace SmartNQuick.Logic.Entities
         where TOneEntity : IdentityEntity, Contracts.ICopyable<TOne>, TOne, new()
         where TAnotherEntity : IdentityEntity, Contracts.ICopyable<TAnother>, TAnother, new()
     {
-        public virtual TOneEntity OneEntity { get; } = new TOneEntity();
+        public virtual TOneEntity OneEntity { get; set; } = new TOneEntity();
         public virtual TOne OneItem => OneEntity;
 
-        public virtual TAnotherEntity AnotherEntity { get; } = new TAnotherEntity();
+        public virtual TAnotherEntity AnotherEntity { get; set; } = new TAnotherEntity();
         public virtual TAnother AnotherItem => AnotherEntity;
 
         public override int Id { get => OneEntity.Id; set => OneEntity.Id = value; }

@@ -186,6 +186,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)", initStatements));
             result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", initStatements, false));
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {connectorCtrlType} connectorEntityController = null;");
             result.Add($"protected override GenericController<{connectorGenericType.FullName}, {connectorEntityType}> ConnectorEntityController");
             result.Add("{");
@@ -193,6 +194,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"set => connectorEntityController = value as {connectorCtrlType};");
             result.Add("}");
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {oneCtrlType} oneEntityController = null;");
             result.Add($"protected override GenericController<{oneGenericType.FullName}, {oneEntityType}> OneEntityController");
             result.Add("{");
@@ -200,6 +202,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"set => oneEntityController = value as {oneCtrlType};");
             result.Add("}");
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {anotherCtrlType} anotherEntityController = null;");
             result.Add($"protected override GenericController<{anotherGenericType.FullName}, {anotherEntityType}> AnotherEntityController");
             result.Add("{");
@@ -249,6 +252,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)", initStatements));
             result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", initStatements, false));
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {oneCtrlType} oneEntityController = null;");
             result.Add($"protected override GenericController<{oneGenericType.FullName}, {oneEntityType}> OneEntityController");
             result.Add("{");
@@ -256,6 +260,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"set => oneEntityController = value as {oneCtrlType};");
             result.Add("}");
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {anotherCtrlType} anotherEntityController = null;");
             result.Add($"protected override GenericController<{anotherGenericType.FullName}, {anotherEntityType}> AnotherEntityController");
             result.Add("{");
@@ -305,6 +310,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)", initStatements));
             result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", initStatements, false));
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {oneCtrlType} oneEntityController = null;");
             result.Add($"protected override GenericController<{oneGenericType.FullName}, {oneEntityType}> OneEntityController");
             result.Add("{");
@@ -312,6 +318,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"set => oneEntityController = value as {oneCtrlType};");
             result.Add("}");
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {manyCtrlType} manyEntityController = null;");
             result.Add($"protected override GenericController<{manyGenericType.FullName}, {manyEntityType}> ManyEntityController");
             result.Add("{");
@@ -417,6 +424,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)", initStatements));
             result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", initStatements, false));
 
+            result.Add("[Attributes.ControllerManagedField]");
             result.Add($"private {sourceCtrlType} sourceEntityController = null;");
             result.Add($"protected override GenericController<{sourceGenericType.FullName}, {sourceEntityType}> SourceEntityController");
             result.Add("{");

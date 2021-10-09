@@ -185,54 +185,49 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.ConnectorItem.CheckArgument(nameof(entity.ConnectorItem));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.AnotherItem.CheckArgument(nameof(entity.AnotherItem));
+            entity.ConnectorEntity.CheckArgument(nameof(entity.ConnectorEntity));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.AnotherEntity.CheckArgument(nameof(entity.AnotherEntity));
 
-            var result = new E();
-
-            result.OneEntity.CopyProperties(entity.OneItem);
             if (entity.OneItemIncludeSave)
             {
-                if (result.OneEntity.Id == 0)
+                if (entity.OneEntity.Id == 0)
                 {
-                    await OneEntityController.InsertAsync(result.OneEntity).ConfigureAwait(false);
+                    entity.OneEntity = await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
 
                     var piNav = GetNavigationToOne();
 
                     if (piNav != null)
                     {
-                        piNav.SetValue(result.ConnectorEntity, result.OneEntity);
+                        piNav.SetValue(entity.ConnectorEntity, entity.OneEntity);
                     }
                 }
                 else
                 {
-                    await OneEntityController.UpdateAsync(result.OneEntity).ConfigureAwait(false);
+                    entity.OneEntity = await OneEntityController.UpdateEntityAsync(entity.OneEntity).ConfigureAwait(false);
                 }
             }
 
-            result.AnotherEntity.CopyProperties(entity.AnotherItem);
             if (entity.AnotherItemIncludeSave)
             {
-                if (result.AnotherItem.Id == 0)
+                if (entity.AnotherItem.Id == 0)
                 {
-                    await AnotherEntityController.InsertAsync(result.AnotherEntity).ConfigureAwait(false);
+                    entity.AnotherEntity = await AnotherEntityController.InsertEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
 
                     var piNav = GetNavigationToAnother();
 
                     if (piNav != null)
                     {
-                        piNav.SetValue(result.ConnectorEntity, result.AnotherEntity);
+                        piNav.SetValue(entity.ConnectorEntity, entity.AnotherEntity);
                     }
                 }
                 else
                 {
-                    await AnotherEntityController.UpdateAsync(result.AnotherEntity).ConfigureAwait(false);
+                    entity.AnotherEntity = await AnotherEntityController.UpdateEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
                 }
             }
-            result.ConnectorEntity.CopyProperties(entity.ConnectorItem);
-            await ConnectorEntityController.InsertAsync(result.ConnectorEntity).ConfigureAwait(false);
-            return result;
+            entity.ConnectorEntity = await ConnectorEntityController.InsertEntityAsync(entity.ConnectorEntity).ConfigureAwait(false);
+            return entity;
         }
         #endregion Insert
 
@@ -240,53 +235,48 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.AnotherItem.CheckArgument(nameof(entity.AnotherItem));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.AnotherEntity.CheckArgument(nameof(entity.AnotherEntity));
 
-            var result = new E();
-
-            result.OneEntity.CopyProperties(entity.OneItem);
             if (entity.OneItemIncludeSave)
             {
-                if (result.OneEntity.Id == 0)
+                if (entity.OneEntity.Id == 0)
                 {
-                    await OneEntityController.InsertAsync(result.OneEntity).ConfigureAwait(false);
+                    entity.OneEntity = await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
 
                     var piNav = GetNavigationToOne();
 
                     if (piNav != null)
                     {
-                        piNav.SetValue(result.ConnectorEntity, result.OneEntity);
+                        piNav.SetValue(entity.ConnectorEntity, entity.OneEntity);
                     }
                 }
                 else
                 {
-                    await OneEntityController.UpdateAsync(result.OneEntity).ConfigureAwait(false);
+                    entity.OneEntity = await OneEntityController.UpdateEntityAsync(entity.OneEntity).ConfigureAwait(false);
                 }
             }
 
-            result.AnotherEntity.CopyProperties(entity.AnotherItem);
             if (entity.AnotherItemIncludeSave)
             {
-                if (result.AnotherItem.Id == 0)
+                if (entity.AnotherEntity.Id == 0)
                 {
-                    await AnotherEntityController.InsertAsync(result.AnotherItem).ConfigureAwait(false);
+                    entity.AnotherEntity = await AnotherEntityController.InsertEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
 
                     var piNav = GetNavigationToAnother();
 
                     if (piNav != null)
                     {
-                        piNav.SetValue(result.ConnectorEntity, result.AnotherItem);
+                        piNav.SetValue(entity.ConnectorEntity, entity.AnotherEntity);
                     }
                 }
                 else
                 {
-                    await AnotherEntityController.UpdateAsync(result.AnotherItem).ConfigureAwait(false);
+                    entity.AnotherEntity = await AnotherEntityController.UpdateEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
                 }
             }
-            result.ConnectorEntity.CopyProperties(entity.ConnectorItem);
-            await ConnectorEntityController.UpdateAsync(result.ConnectorEntity).ConfigureAwait(false);
-            return result;
+            entity.ConnectorEntity = await ConnectorEntityController.UpdateEntityAsync(entity.ConnectorEntity).ConfigureAwait(false);
+            return entity;
         }
         #endregion Update
 

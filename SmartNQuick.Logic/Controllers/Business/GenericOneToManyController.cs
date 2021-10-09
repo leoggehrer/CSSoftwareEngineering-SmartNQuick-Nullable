@@ -196,40 +196,34 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.ManyItems.CheckArgument(nameof(entity.ManyItems));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.ManyEntities.CheckArgument(nameof(entity.ManyEntities));
 
-            var result = new E();
+            entity.OneEntity = await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
 
-            result.OneEntity.CopyProperties(entity.OneItem);
-            await OneEntityController.InsertAsync(result.OneEntity).ConfigureAwait(false);
-
-            foreach (var item in entity.ManyItems)
+            foreach (var item in entity.ManyEntities)
             {
-                var manyEntity = new TManyEntity();
-
-                manyEntity.CopyProperties(item);
-                SetNavigationToParent(manyEntity, result.OneEntity);
-                await ManyEntityController.InsertAsync(manyEntity).ConfigureAwait(false);
-                result.AddManyItem(manyEntity);
+                SetNavigationToParent(item, entity.OneEntity);
+                await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
             }
-            return result;
+            return entity;
         }
         #endregion Insert
 
         #region Update
+
         internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.ManyItems.CheckArgument(nameof(entity.ManyItems));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.ManyEntities.CheckArgument(nameof(entity.ManyEntities));
 
             var query = (await QueryDetailsAsync(entity.Id).ConfigureAwait(false)).ToList();
 
             //Delete all costs that are no longer included in the list.
             foreach (var item in query)
             {
-                var exitsItem = entity.ManyItems.SingleOrDefault(i => i.Id == item.Id);
+                var exitsItem = entity.ManyEntities.SingleOrDefault(i => i.Id == item.Id);
 
                 if (exitsItem == null)
                 {
@@ -237,11 +231,8 @@ namespace SmartNQuick.Logic.Controllers.Business
                 }
             }
 
-            var result = new E();
-            var oneEntity = await OneEntityController.UpdateAsync(entity.OneItem).ConfigureAwait(false);
-
-            result.OneItem.CopyProperties(oneEntity);
-            foreach (var item in entity.ManyItems)
+            entity.OneEntity = await OneEntityController.UpdateEntityAsync(entity.OneEntity).ConfigureAwait(false);
+            foreach (var item in entity.ManyEntities)
             {
                 if (item.Id == 0)
                 {
@@ -249,31 +240,35 @@ namespace SmartNQuick.Logic.Controllers.Business
 
                     if (pi != null)
                     {
-                        pi.SetValue(item, oneEntity.Id);
+                        pi.SetValue(item, entity.OneEntity.Id);
                     }
-                    var insDetail = await ManyEntityController.InsertAsync(item).ConfigureAwait(false);
+                    var insDetail = await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
 
                     item.CopyProperties(insDetail);
                 }
                 else
                 {
-                    var updDetail = await ManyEntityController.UpdateAsync(item).ConfigureAwait(false);
+                    var updDetail = await ManyEntityController.UpdateEntityAsync(item).ConfigureAwait(false);
 
                     item.CopyProperties(updDetail);
                 }
             }
-            return result;
+            return entity;
         }
         #endregion Update
 
         #region Delete
         internal override async Task<E> ExecuteDeleteEntityAsync(E entity)
         {
-            foreach (var item in entity.ManyItems)
+            entity.CheckArgument(nameof(entity));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.ManyEntities.CheckArgument(nameof(entity.ManyEntities));
+
+            foreach (var item in entity.ManyEntities)
             {
-                await ManyEntityController.DeleteAsync(item.Id).ConfigureAwait(false);
+                await ManyEntityController.DeleteEntityAsync(item).ConfigureAwait(false);
             }
-            await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
+            await OneEntityController.DeleteEntityAsync(entity.OneEntity).ConfigureAwait(false);
             return entity;
         }
         #endregion Delete

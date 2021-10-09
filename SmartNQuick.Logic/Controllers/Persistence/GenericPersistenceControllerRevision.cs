@@ -23,11 +23,14 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
         protected override async Task<E> AfterInsertAsync(E entity)
         {
-            var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
-
-            if (loginSession != null)
+            if (entity.GetType() != typeof(Entities.Persistence.Revision.History))
             {
-                historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Insert, DateTime.Now, entity, null));
+                var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
+
+                if (loginSession != null)
+                {
+                    historyItems.Add(new HistoryItem(loginSession.IdentityId, ActionType.Insert, DateTime.Now, entity, null));
+                }
             }
             return await base.AfterInsertAsync(entity).ConfigureAwait(false);
         }
@@ -62,7 +65,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             await base.BeforeDeleteAsync(entity).ConfigureAwait(false);
         }
 
-        protected override async Task AfterSaveChangesAsync()
+        internal override async Task AfterSaveChangesAsync()
         {
             using var ctrl = new Revision.HistoryController(Factory.CreateContext());
 
@@ -83,7 +86,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             await ctrl.Context.SaveChangesAsync().ConfigureAwait(false);
             historyItems.Clear();
         }
-        protected override Task AfterRejectChangesAsync()
+        internal override Task AfterRejectChangesAsync()
         {
             historyItems.Clear();
             return base.AfterRejectChangesAsync();

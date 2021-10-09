@@ -90,10 +90,6 @@ namespace SmartNQuick.Logic.Modules.Security
         static partial void BeforeCheckAuthorization(string sessionToken, MethodBase methodBase, AccessType accessType, ref bool handled);
         static partial void AfterCheckAuthorization(string sessionToken, MethodBase methodBase, AccessType accessType);
 
-        internal static Task CheckAuthorizationAsync(string sessionToken, Type subjectType, MethodBase methodBase, AccessType accessType)
-        {
-            return CheckAuthorizationAsync(sessionToken, methodBase, accessType, null);
-        }
         internal static async Task CheckAuthorizationAsync(string sessionToken, Type subjectType, MethodBase methodBase, AccessType accessType, string infoData)
         {
             bool handled = false;

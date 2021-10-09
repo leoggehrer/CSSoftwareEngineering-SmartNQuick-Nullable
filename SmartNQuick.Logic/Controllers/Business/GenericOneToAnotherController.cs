@@ -176,23 +176,19 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.AnotherItem.CheckArgument(nameof(entity.AnotherItem));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.AnotherEntity.CheckArgument(nameof(entity.AnotherEntity));
 
-            var result = new E();
+            entity.OneEntity = await OneEntityController.InsertEntityAsync(entity.OneEntity).ConfigureAwait(false);
 
-            result.OneEntity.CopyProperties(entity.OneItem);
-            await OneEntityController.InsertAsync(result.OneEntity).ConfigureAwait(false);
-
-            result.AnotherEntity.CopyProperties(entity.AnotherItem);
             var pi = GetNavigationToOne();
 
             if (pi != null)
             {
-                pi.SetValue(result.AnotherEntity, result.OneEntity);
+                pi.SetValue(entity.AnotherEntity, entity.OneEntity);
             }
-            await AnotherEntityController.InsertAsync(result.AnotherEntity).ConfigureAwait(false);
-            return result;
+            entity.AnotherEntity = await AnotherEntityController.InsertEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
+            return entity;
         }
         #endregion Insert
 
@@ -200,41 +196,35 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));
-            entity.OneItem.CheckArgument(nameof(entity.OneItem));
-            entity.AnotherItem.CheckArgument(nameof(entity.AnotherItem));
+            entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
+            entity.AnotherEntity.CheckArgument(nameof(entity.AnotherEntity));
 
-            var result = new E();
-            var updOne = await OneEntityController.UpdateAsync(entity.OneItem).ConfigureAwait(false);
+            entity.OneEntity = await OneEntityController.UpdateEntityAsync(entity.OneEntity).ConfigureAwait(false);
 
-            result.OneEntity.CopyProperties(updOne);
-            if (entity.AnotherItem.Id == 0)
+            if (entity.AnotherEntity.Id == 0)
             {
                 var pi = GetForeignKeyToOne();
 
                 if (pi != null)
                 {
-                    pi.SetValue(entity.AnotherItem, result.OneEntity.Id);
+                    pi.SetValue(entity.AnotherEntity, entity.OneEntity.Id);
                 }
-                var insAnother = await AnotherEntityController.InsertAsync(entity.AnotherItem).ConfigureAwait(false);
-
-                result.AnotherEntity.CopyProperties(insAnother);
+                entity.AnotherEntity = await AnotherEntityController.InsertEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
             }
             else
             {
-                var updAnother = await AnotherEntityController.UpdateAsync(entity.AnotherItem).ConfigureAwait(false);
-
-                result.AnotherEntity.CopyProperties(updAnother);
+                entity.AnotherEntity = await AnotherEntityController.UpdateEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
             }
-            return await BeforeReturnAsync(result).ConfigureAwait(false);
+            return entity;
         }
         #endregion Update
 
         #region Delete
         internal override async Task<E> ExecuteDeleteEntityAsync(E entity)
         {
-            if (entity.AnotherItem.Id > 0)
+            if (entity.AnotherEntity.Id > 0)
             {
-                await AnotherEntityController.DeleteAsync(entity.AnotherItem.Id).ConfigureAwait(false);
+                await AnotherEntityController.DeleteAsync(entity.AnotherEntity.Id).ConfigureAwait(false);
             }
             await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
             return entity;

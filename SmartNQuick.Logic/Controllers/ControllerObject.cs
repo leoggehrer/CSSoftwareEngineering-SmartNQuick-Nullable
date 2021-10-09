@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace SmartNQuick.Logic.Controllers
 {
 #if ACCOUNT_ON
-	using SmartNQuick.Logic.Modules.Security;
+    using SmartNQuick.Logic.Modules.Security;
 #endif
-	internal abstract partial class ControllerObject : IDisposable
+    internal abstract partial class ControllerObject : IDisposable
 	{
 		#region Class-Constructors
 		static ControllerObject()
@@ -115,7 +115,7 @@ namespace SmartNQuick.Logic.Controllers
 																				  .Any());
 
 		#region SaveChanges
-		protected virtual async Task BeforeSaveChangesAsync()
+		internal virtual async Task BeforeSaveChangesAsync()
 		{
 			foreach (var item in ControllerManagedProperties)
 			{
@@ -146,7 +146,7 @@ namespace SmartNQuick.Logic.Controllers
 			await AfterSaveChangesAsync().ConfigureAwait(false);
 			return result;
 		}
-		protected virtual async Task AfterSaveChangesAsync()
+		internal virtual async Task AfterSaveChangesAsync()
 		{
 			foreach (var item in ControllerManagedProperties)
 			{
@@ -171,7 +171,7 @@ namespace SmartNQuick.Logic.Controllers
 			await Context.SaveChangesAsync().ConfigureAwait(false);
 		}
 
-		protected virtual async Task BeforeRejectChangesAsync()
+		internal virtual async Task BeforeRejectChangesAsync()
 		{
 			foreach (var item in ControllerManagedProperties)
 			{
@@ -202,7 +202,7 @@ namespace SmartNQuick.Logic.Controllers
 			await AfterSaveChangesAsync().ConfigureAwait(false);
 			return result;
 		}
-		protected virtual async Task AfterRejectChangesAsync()
+		internal virtual async Task AfterRejectChangesAsync()
 		{
 			foreach (var item in ControllerManagedProperties)
 			{

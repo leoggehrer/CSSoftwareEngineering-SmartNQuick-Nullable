@@ -26,6 +26,12 @@ namespace SmartNQuick.Logic.Entities
         {
             return new TManyEntity();
         }
+        internal virtual void AddManyEntity(TManyEntity manyEntity)
+        {
+            manyEntity.CheckArgument(nameof(manyEntity));
+
+            ManyEntities.Add(manyEntity);
+        }
         public virtual void AddManyItem(TMany manyItem)
         {
             manyItem.CheckArgument(nameof(manyItem));

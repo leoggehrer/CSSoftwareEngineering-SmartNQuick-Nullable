@@ -9,15 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Contracts\**" />
-    <Compile Remove="Controllers\Business\MusicStore\**" />
-    <EmbeddedResource Remove="Contracts\**" />
-    <EmbeddedResource Remove="Controllers\Business\MusicStore\**" />
-    <None Remove="Contracts\**" />
-    <None Remove="Controllers\Business\MusicStore\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
   </ItemGroup>
 
