@@ -42,9 +42,6 @@ namespace SmartNQuick.Logic.Controllers.Business
         public GenericCompositeController(DataContext.IContext context) : base(context)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
         partial void Constructing();
@@ -52,20 +49,8 @@ namespace SmartNQuick.Logic.Controllers.Business
         public GenericCompositeController(ControllerObject controller) : base(controller)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
-
-#if ACCOUNT_ON
-        private void HandleChangedSessionToken(object sender, EventArgs e)
-        {
-            ConnectorEntityController.SessionToken = SessionToken;
-            OneEntityController.SessionToken = SessionToken;
-            AnotherEntityController.SessionToken = SessionToken;
-        }
-#endif
 
         protected virtual PropertyInfo GetNavigationToOne()
         {
@@ -286,25 +271,6 @@ namespace SmartNQuick.Logic.Controllers.Business
             await ConnectorEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
         }
         #endregion Delete
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-#if ACCOUNT_ON
-                ChangedSessionToken -= HandleChangedSessionToken;
-#endif
-                ConnectorEntityController.Dispose();
-                OneEntityController.Dispose();
-                AnotherEntityController.Dispose();
-
-                ConnectorEntityController = null;
-                OneEntityController = null;
-                AnotherEntityController = null;
-            }
-        }
     }
 }
 //MdEnd

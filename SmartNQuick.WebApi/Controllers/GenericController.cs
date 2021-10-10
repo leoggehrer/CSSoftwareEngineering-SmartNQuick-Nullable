@@ -28,7 +28,6 @@ namespace SmartNQuick.WebApi.Controllers
 			{
 				result.SessionToken = sessionToken;
 			}
-
 			return result;
 		}
 #else

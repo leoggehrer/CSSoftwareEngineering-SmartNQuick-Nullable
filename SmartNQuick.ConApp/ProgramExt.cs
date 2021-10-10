@@ -1,4 +1,5 @@
 ﻿//@Ignore
+using CommonBase.Extensions;
 using SmartNQuick.Transfer.Models.Persistence.MusicStore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Factory = SmartNQuick.Adapters.Factory;
-using CommonBase.Extensions;
 #if ACCOUNT_ON
 using SmartNQuick.Adapters.Modules.Account;
 using System.Reflection;

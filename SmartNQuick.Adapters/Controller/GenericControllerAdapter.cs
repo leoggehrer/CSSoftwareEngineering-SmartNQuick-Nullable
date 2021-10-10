@@ -26,15 +26,20 @@ namespace SmartNQuick.Adapters.Controller
             controller = Logic.Factory.Create<TContract>();
             Constructed();
         }
+#if ACCOUNT_ON
         public GenericControllerAdapter(string sessionToken)
         {
             Constructing();
             controller = Logic.Factory.Create<TContract>(sessionToken);
             Constructed();
         }
+#endif
         partial void Constructing();
         partial void Constructed();
 
+#if ACCOUNT_ON
+        public string SessionToken { set => controller.SessionToken = value; }
+#endif
         public int MaxPageSize => 500;
 
         #region Async-Methods

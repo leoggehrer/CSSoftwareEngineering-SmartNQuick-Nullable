@@ -30,17 +30,14 @@ namespace SmartNQuick.Logic.Controllers.Business
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
+        public override bool IsTransient => true;
+
         protected abstract GenericController<TOne, TOneEntity> OneEntityController { get; set; }
         protected abstract GenericController<TMany, TManyEntity> ManyEntityController { get; set; }
-
-        public override bool IsTransient => true;
 
         public GenericOneToManyController(DataContext.IContext context) : base(context)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
         partial void Constructing();
@@ -48,19 +45,8 @@ namespace SmartNQuick.Logic.Controllers.Business
         public GenericOneToManyController(ControllerObject controller) : base(controller)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
-
-#if ACCOUNT_ON
-        private void HandleChangedSessionToken(object sender, System.EventArgs e)
-        {
-            OneEntityController.SessionToken = SessionToken;
-            ManyEntityController.SessionToken = SessionToken;
-        }
-#endif
 
         protected virtual bool SetNavigationToParent(object obj, object value)
         {
@@ -271,23 +257,6 @@ namespace SmartNQuick.Logic.Controllers.Business
             return entity;
         }
         #endregion Delete
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-#if ACCOUNT_ON
-                ChangedSessionToken -= HandleChangedSessionToken;
-#endif
-                OneEntityController.Dispose();
-                ManyEntityController.Dispose();
-
-                OneEntityController = null;
-                ManyEntityController = null;
-            }
-        }
     }
 }
 //MdEnd

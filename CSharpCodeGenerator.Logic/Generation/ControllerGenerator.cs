@@ -127,6 +127,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "BusinessControllerAdapter";
+            var controllerAttributes = InitLogicControllerAttributes(type);
             var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
@@ -134,7 +135,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
-            CreateLogicControllerAttributes(type, result.Source);
+            CreateLogicControllerAttributes(type, controllerAttributes);
+            result.AddRange(controllerAttributes);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}>");
             result.Add("{");
             result.AddRange(CreatePartialStaticConstrutor(controllerName));
@@ -154,6 +156,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "GenericCompositeController";
+            var controllerAttributes = InitLogicControllerAttributes(type);
             var interfaceTypes = type.GetInterfaces();
             var connectorGenericType = interfaceTypes[0].GetGenericArguments()[0];
             var oneGenericType = interfaceTypes[0].GetGenericArguments()[1];
@@ -171,7 +174,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
-            CreateLogicControllerAttributes(type, result.Source);
+            CreateLogicControllerAttributes(type, controllerAttributes);
+            result.AddRange(controllerAttributes);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {connectorGenericType.FullName}, {connectorEntityType}, {oneGenericType.FullName}, {oneEntityType}, {anotherGenericType.FullName}, {anotherEntityType}>");
             result.Add("{");
 
@@ -224,6 +228,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "GenericOneToAnotherController";
+            var controllerAttributes = InitLogicControllerAttributes(type);
             var interfaceTypes = type.GetInterfaces();
             var oneGenericType = interfaceTypes[0].GetGenericArguments()[0];
             var anotherGenericType = interfaceTypes[0].GetGenericArguments()[1];
@@ -238,7 +243,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
-            CreateLogicControllerAttributes(type, result.Source);
+            CreateLogicControllerAttributes(type, controllerAttributes);
+            result.AddRange(controllerAttributes);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {oneGenericType.FullName}, {oneEntityType}, {anotherGenericType.FullName}, {anotherEntityType}>");
             result.Add("{");
 
@@ -282,6 +288,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "GenericOneToManyController";
+            var controllerAttributes = InitLogicControllerAttributes(type);
             var interfaceTypes = type.GetInterfaces();
             var oneGenericType = interfaceTypes[0].GetGenericArguments()[0];
             var manyGenericType = interfaceTypes[0].GetGenericArguments()[1];
@@ -296,7 +303,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
             };
             ConvertGenericPersistenceControllerName(type, ref baseControllerName);
-            CreateLogicControllerAttributes(type, result.Source);
+            CreateLogicControllerAttributes(type, controllerAttributes);
+            result.AddRange(controllerAttributes);
             result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {oneGenericType.FullName}, {oneEntityType}, {manyGenericType.FullName}, {manyEntityType}>");
             result.Add("{");
 

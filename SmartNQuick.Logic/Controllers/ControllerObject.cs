@@ -48,7 +48,7 @@ namespace SmartNQuick.Logic.Controllers
             }
         }
 
-        private void HandleChangeSessionToken(object source, EventArgs e)
+        private void HandleChangedSessionToken(object source, EventArgs e)
         {
             var handled = false;
 
@@ -86,7 +86,7 @@ namespace SmartNQuick.Logic.Controllers
             contextOwner = true;
             Context = context;
 #if ACCOUNT_ON
-            ChangedSessionToken += HandleChangeSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
 #endif
             InitManagedMembers();
             Constructed();
@@ -100,7 +100,7 @@ namespace SmartNQuick.Logic.Controllers
             Context = other.Context;
 #if ACCOUNT_ON
             SessionToken = other.SessionToken;
-            ChangedSessionToken += HandleChangeSessionToken;
+            ChangedSessionToken += HandleChangedSessionToken;
 #endif
             InitManagedMembers();
             Constructed();
@@ -163,6 +163,7 @@ namespace SmartNQuick.Logic.Controllers
                 {
                     if (item.GetValue(this) is ControllerObject controllerObject)
                     {
+                        System.Diagnostics.Debug.WriteLine($"Dispose object {controllerObject.GetType().Name}");
                         controllerObject.Dispose();
                     }
                     item.SetValue(this, null);
@@ -171,6 +172,7 @@ namespace SmartNQuick.Logic.Controllers
                 {
                     if (item.GetValue(this) is ControllerObject controllerObject)
                     {
+                        System.Diagnostics.Debug.WriteLine($"Dispose object {controllerObject.GetType().Name}");
                         controllerObject.Dispose();
                     }
                     item.SetValue(this, null);
@@ -330,16 +332,20 @@ namespace SmartNQuick.Logic.Controllers
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects)
-                    if (contextOwner)
+#if ACCOUNT_ON
+                    ChangedSessionToken -= HandleChangedSessionToken;
+#endif
+                    // TODO: dispose managed state (managed objects).
+                    if (contextOwner && Context != null)
                     {
                         Context.Dispose();
                     }
-                    Context = null;
+                    DisposeManagedMembers();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+                Context = null;
                 disposedValue = true;
             }
         }

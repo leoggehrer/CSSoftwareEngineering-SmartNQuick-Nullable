@@ -16,7 +16,7 @@ namespace SmartNQuick.WebApi.Controllers
     {
         private IAccountManager accountManager = null;
         private IAccountManager AccountManager => accountManager ??= Logic.Factory.CreateAccountManager();
-        private ILoginSession ConvertTo(ILoginSession loginSession)
+        private static ILoginSession ConvertTo(ILoginSession loginSession)
         {
             var result = new Transfer.Models.Persistence.Account.LoginSession();
 

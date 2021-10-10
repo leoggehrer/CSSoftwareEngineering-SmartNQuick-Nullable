@@ -38,9 +38,6 @@ namespace SmartNQuick.Logic.Controllers.Business
         public GenericOneToAnotherController(DataContext.IContext context) : base(context)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
         partial void Constructing();
@@ -48,19 +45,8 @@ namespace SmartNQuick.Logic.Controllers.Business
         public GenericOneToAnotherController(ControllerObject controller) : base(controller)
         {
             Constructing();
-#if ACCOUNT_ON
-            ChangedSessionToken += HandleChangedSessionToken;
-#endif
             Constructed();
         }
-
-#if ACCOUNT_ON
-        private void HandleChangedSessionToken(object sender, System.EventArgs e)
-        {
-            OneEntityController.SessionToken = SessionToken;
-            AnotherEntityController.SessionToken = SessionToken;
-        }
-#endif
 
         protected virtual PropertyInfo GetNavigationToOne()
         {
@@ -230,23 +216,6 @@ namespace SmartNQuick.Logic.Controllers.Business
             return entity;
         }
         #endregion Delete
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-#if ACCOUNT_ON
-                ChangedSessionToken -= HandleChangedSessionToken;
-#endif
-                OneEntityController.Dispose();
-                AnotherEntityController.Dispose();
-
-                OneEntityController = null;
-                AnotherEntityController = null;
-            }
-        }
     }
 }
 //MdEnd
