@@ -27,11 +27,11 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         }
 
         #region Count
-        public override Task<int> CountAsync()
+        internal override Task<int> ExecuteCountAsync()
         {
             return Context.CountAsync<C, E>();
         }
-        public override Task<int> CountByAsync(string predicate)
+        internal override Task<int> ExecuteCountByAsync(string predicate)
         {
             return Context.CountByAsync<C, E>(predicate);
         }

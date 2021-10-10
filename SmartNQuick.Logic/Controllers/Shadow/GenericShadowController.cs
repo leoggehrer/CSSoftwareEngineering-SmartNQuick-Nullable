@@ -79,11 +79,11 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         }
 
         #region Count
-        public override Task<int> CountAsync()
+        internal override Task<int> ExecuteCountAsync()
         {
             return SourceEntityController.CountAsync();
         }
-        public override Task<int> CountByAsync(string predicate)
+        internal override Task<int> ExecuteCountByAsync(string predicate)
         {
             return SourceEntityController.CountByAsync(predicate);
         }

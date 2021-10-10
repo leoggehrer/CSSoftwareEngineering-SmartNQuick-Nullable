@@ -41,11 +41,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
 
         #region Count
-        public override Task<int> CountAsync()
+        internal override Task<int> ExecuteCountAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        public override Task<int> CountByAsync(string predicate)
+        internal override Task<int> ExecuteCountByAsync(string predicate)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }

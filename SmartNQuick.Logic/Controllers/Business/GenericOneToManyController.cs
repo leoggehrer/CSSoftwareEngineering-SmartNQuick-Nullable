@@ -131,11 +131,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
 
         #region Count
-        public override Task<int> CountAsync()
+        internal override Task<int> ExecuteCountAsync()
         {
             return OneEntityController.CountAsync();
         }
-        public override Task<int> CountByAsync(string predicate)
+        internal override Task<int> ExecuteCountByAsync(string predicate)
         {
             return OneEntityController.CountByAsync(predicate);
         }
@@ -211,7 +211,6 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Insert
 
         #region Update
-
         internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
         {
             entity.CheckArgument(nameof(entity));

@@ -69,8 +69,23 @@ namespace SmartNQuick.Logic.Controllers
         #endregion Converter
 
         #region Count
-        public abstract Task<int> CountAsync();
-        public abstract Task<int> CountByAsync(string predicate);
+        public virtual async Task<int> CountAsync()
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryCount).ConfigureAwait(false);
+#endif
+            return await ExecuteCountAsync().ConfigureAwait(false);
+        }
+        internal abstract Task<int> ExecuteCountAsync();
+
+        public virtual async Task<int> CountByAsync(string predicate)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryCountBy).ConfigureAwait(false);
+#endif
+            return await ExecuteCountByAsync(predicate).ConfigureAwait(false);
+        }
+        internal abstract Task<int> ExecuteCountByAsync(string predicate);
         #endregion Count
 
         #region Before-Return
