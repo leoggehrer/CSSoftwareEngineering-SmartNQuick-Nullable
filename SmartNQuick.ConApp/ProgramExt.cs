@@ -22,12 +22,12 @@ namespace SmartNQuick.ConApp
         private static string SaPwd => "1234LeoAdmin";
 
         private static string AaUser => "AppAdmin";
-        private static string AaEmail => "AppAdmin.QuickNSmart@gmx.at";
+        private static string AaEmail => "AppAdmin.SmartNQuick@gmx.at";
         private static string AaPwd => "1234AppAdmin";
         private static string AaRole => "AppAdmin";
 
         private static string AppUser => "AppUser";
-        private static string AppEmail => "AppUser.QuickNSmart@gmx.at";
+        private static string AppEmail => "AppUser.SmartNQuick@gmx.at";
         private static string AppPwd => "1234AppUser";
         private static string AppRole => "AppUser";
 
