@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-
 namespace SmartNQuick.AspMvc.Models
 {
     public abstract partial class CompositeModel<TConnector, TConnectorModel, TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel
