@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,7 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		static partial void ClassConstructing();
 		static partial void ClassConstructed();
+
 		internal GenericController()
 		{
 			Constructing();
@@ -27,13 +29,14 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		partial void Constructing();
 		partial void Constructed();
+
 		protected string LastError 
 		{
 			get => lastError;
 			set
 			{
 				lastError = value;
-				ViewBag.LastError = value;
+				Modules.Handler.ErrorHandler.LastError = value;
 			}
 		}
 		protected bool HasError => string.IsNullOrEmpty(LastError) == false;
@@ -51,6 +54,7 @@ namespace SmartNQuick.AspMvc.Controllers
 			result.CopyProperties(entity);
 			return result;
 		}
+
 		[HttpGet]
 		public virtual async Task<IActionResult> Index()
 		{
@@ -166,3 +170,4 @@ namespace SmartNQuick.AspMvc.Controllers
 		partial void AfterDeleteEntity(int id);
 	}
 }
+//MdEnd
