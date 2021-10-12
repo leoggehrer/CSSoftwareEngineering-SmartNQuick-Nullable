@@ -24,6 +24,13 @@ namespace SmartNQuick.AspMvc.Modules.Handler
             }
         }
         public static void Clear() => errorList.Clear();
+        public static string GetLastErrorAndClear()
+        {
+            var result = LastError;
+
+            LastError = null;
+            return result;
+        }
         public static IEnumerable<string> GetErrors()
         {
             return errorList;

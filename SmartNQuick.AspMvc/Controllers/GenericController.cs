@@ -64,16 +64,24 @@ namespace SmartNQuick.AspMvc.Controllers
 			return View("Index", entities.Select(e => ToModel(e)));
 		}
 		[HttpGet]
-		public virtual async Task<IActionResult> Create()
+		[ActionName("Create")]
+		public virtual async Task<IActionResult> CreateAsync()
+		{
+			var model = await CreateModelAsync().ConfigureAwait(false);
+
+			return View("Create", model);
+		}
+		protected virtual async Task<TModel> CreateModelAsync()
 		{
 			using var ctrl = CreateController();
 			var entity = await ctrl.CreateAsync().ConfigureAwait(false);
 
-			return View(ToModel(entity));
+			return ToModel(entity);
 		}
+
 		[HttpPost]
 		[ActionName("Create")]
-		public virtual async Task<IActionResult> Insert(TModel model)
+		public virtual async Task<IActionResult> InsertAsync(TModel model)
 		{
 			var handled = false;
 
@@ -97,14 +105,23 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		partial void BeforeInsertEntity(TModel model, ref bool handled);
 		partial void AfterInsertEntity(TModel model);
+
 		[HttpGet]
-		public virtual async Task<IActionResult> Edit(int id)
+		[ActionName("Edit")]
+		public virtual async Task<IActionResult> EditAsync(int id)
+		{
+			var model = await EditModelAsync(id).ConfigureAwait(false);
+
+			return View("Edit", model);
+		}
+		protected virtual async Task<TModel> EditModelAsync(int id)
 		{
 			using var ctrl = CreateController();
 			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-			return View(ToModel(entity));
+			return ToModel(entity);
 		}
+
 		[HttpPost]
 		[ActionName("Edit")]
 		public virtual async Task<IActionResult> Update(TModel model)
@@ -135,16 +152,18 @@ namespace SmartNQuick.AspMvc.Controllers
 		}
 		partial void BeforeUpdateEntity(TModel model, ref bool handled);
 		partial void AfterUpdateEntity(TModel model);
+
 		[HttpGet]
-		public virtual async Task<IActionResult> Delete(int id)
+		[ActionName("Delete")]
+		public virtual async Task<IActionResult> ViewDeleteAsync(int id)
 		{
 			using var ctrl = CreateController();
 			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-			return View(ToModel(entity));
+			return View("Delete", ToModel(entity));
 		}
 		[ActionName("Delete")]
-		public virtual async Task<IActionResult> DeleteEntity(int id)
+		public virtual async Task<IActionResult> DeleteAsync(int id)
 		{
 			var handled = false;
 
