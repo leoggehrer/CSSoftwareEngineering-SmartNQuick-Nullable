@@ -16,9 +16,19 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         where C : Contracts.IIdentifiable
         where E : Entities.IdentityEntity, Contracts.ICopyable<C>, C, new()
     {
+        static GenericPersistenceController()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
         public override bool IsTransient => false;
+
         public DbSet<E> Set() => Context.Set<C, E>();
-        public IQueryable<E> QueryableSet() => Context.Set<C, E>();
+        internal IQueryable<E> QueryableSet() => Context.Set<C, E>();
+
         protected GenericPersistenceController(DataContext.IContext context) : base(context)
         {
         }

@@ -91,9 +91,13 @@ namespace SmartNQuick.ConApp
             {
                 try
                 {
+                    Console.Write("Start: Create accounts:  ");
+                    Console.WriteLine(DateTime.Now);
                     await InitAppAccessAsync();
                     await AddAppAccessAsync(SaEmail, SaPwd, AaUser, AaEmail, AaPwd, AaEnableJwt, AaRole);
                     await AddAppAccessAsync(AaEmail, AaPwd, AppUser, AppEmail, AppPwd, AaEnableJwt, AppRole);
+                    Console.Write("Finish: Create accounts: ");
+                    Console.WriteLine(DateTime.Now);
                 }
                 catch (Exception ex)
                 {
@@ -103,8 +107,13 @@ namespace SmartNQuick.ConApp
             ).Wait();
 #endif
             Task.Run(async () =>
-                await ImportCsvDataAsync()
-            ).Wait();
+            {
+                Console.Write("Start: Import csv:  ");
+                Console.WriteLine(DateTime.Now);
+                await ImportCsvDataAsync();
+                Console.Write("Finish: Import csv: ");
+                Console.WriteLine(DateTime.Now);
+            }).Wait();
         }
 
         private static async Task ImportCsvDataAsync()

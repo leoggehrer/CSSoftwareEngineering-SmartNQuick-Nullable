@@ -3,11 +3,9 @@
 #if ACCOUNT_ON
 using CommonBase.Extensions;
 using Microsoft.EntityFrameworkCore;
-using SmartNQuick.Contracts.Business.Account;
 using SmartNQuick.Logic.Controllers.Persistence.Account;
 using SmartNQuick.Logic.Entities.Business.Account;
 using SmartNQuick.Logic.Entities.Persistence.Account;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +16,6 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
     {
         [Attributes.ControllerManagedProperty]
         private IdentityXRoleController IdentityXRoleController { get; set; }
-
-        private void AppAccessController_ChangedSessionToken(object sender, EventArgs e)
-        {
-            IdentityXRoleController.SessionToken = SessionToken;
-        }
 
         protected override async Task LoadDetailsAsync(AppAccess entity, int masterId)
         {
@@ -98,7 +91,7 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
             }
             return result;
         }
-        public override async Task<IAppAccess> UpdateAsync(IAppAccess entity)
+        internal override async Task<AppAccess> UpdateEntityAsync(AppAccess entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneItem.CheckArgument(nameof(entity.OneItem));
@@ -106,7 +99,7 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
 
             var accessRoles = new List<Role>();
 
-            foreach (var item in entity.ManyItems)
+            foreach (var item in entity.ManyEntities)
             {
                 var role = new Role();
 
@@ -178,11 +171,11 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
             }
             return result;
         }
-        public override async Task DeleteAsync(int id)
+        internal override async Task DeleteEntityAsync(AppAccess entity)
         {
             //Delete all costs that are no longer included in the list.
             var identXRoles = await IdentityXRoleController.QueryableSet()
-                                                           .Where(e => e.IdentityId == id)
+                                                           .Where(e => e.IdentityId == entity.Id)
                                                            .ToArrayAsync()
                                                            .ConfigureAwait(false);
 
@@ -190,7 +183,7 @@ namespace SmartNQuick.Logic.Controllers.Business.Account
             {
                 await IdentityXRoleController.DeleteAsync(item.Id).ConfigureAwait(false);
             }
-            await OneEntityController.DeleteAsync(id).ConfigureAwait(false);
+            await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
         }
     }
 }
