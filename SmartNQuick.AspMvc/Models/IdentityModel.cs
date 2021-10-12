@@ -1,6 +1,5 @@
 //@BaseCode
 //MdStart
-
 namespace SmartNQuick.AspMvc.Models
 {
     public abstract partial class IdentityModel : ModelObject, Contracts.IIdentifiable

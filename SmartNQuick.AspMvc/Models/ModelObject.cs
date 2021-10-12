@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿//@BaseCode
+//MdStart
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SmartNQuick.AspMvc.Models
 {
-	public class ModelObject
+    public class ModelObject
 	{
         [ScaffoldColumn(false)]
         public bool HasError => string.IsNullOrEmpty(ActionError) == false;
@@ -36,3 +38,4 @@ namespace SmartNQuick.AspMvc.Models
         }
     }
 }
+//MdEnd

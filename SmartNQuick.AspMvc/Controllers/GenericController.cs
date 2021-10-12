@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public abstract partial class GenericController<TContract, TModel> : Controller
+    public abstract partial class GenericController<TContract, TModel> : Controller
 		where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
 		where TModel : TContract, new()
 	{
@@ -51,6 +51,7 @@ namespace SmartNQuick.AspMvc.Controllers
 			result.CopyProperties(entity);
 			return result;
 		}
+		[HttpGet]
 		public virtual async Task<IActionResult> Index()
 		{
 			using var ctrl = CreateController();
@@ -67,6 +68,7 @@ namespace SmartNQuick.AspMvc.Controllers
 			return View(ToModel(entity));
 		}
 		[HttpPost]
+		[ActionName("Create")]
 		public virtual async Task<IActionResult> Insert(TModel model)
 		{
 			var handled = false;
@@ -100,6 +102,7 @@ namespace SmartNQuick.AspMvc.Controllers
 			return View(ToModel(entity));
 		}
 		[HttpPost]
+		[ActionName("Edit")]
 		public virtual async Task<IActionResult> Update(TModel model)
 		{
 			var handled = false;
@@ -136,7 +139,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
 			return View(ToModel(entity));
 		}
-		[HttpDelete]
+		[ActionName("Delete")]
 		public virtual async Task<IActionResult> DeleteEntity(int id)
 		{
 			var handled = false;

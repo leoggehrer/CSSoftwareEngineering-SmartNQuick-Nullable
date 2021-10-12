@@ -29,7 +29,7 @@ namespace SolutionCodeComparsion.ConApp
 			// Project: SmartNQuick-Projects
 			var targetPaths = new string[]
             {
-                @"C:\Users\ggehr\source\repos\HtlLeo\SnQTradingCompany",
+                @"C:\Users\g.gehrer\source\repos\leoggehrer\5BHIF2122\SnQTradingCompany",
             };
             Paths.Add(SourcePath, targetPaths);
             // End: SmartNQuick-Projects
