@@ -257,7 +257,7 @@ namespace SmartNQuick.Logic.Controllers
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Update).ConfigureAwait(false);
 #endif
-            var innerEntity = await Context.GetByIdAsync<C, E>(entity.Id).ConfigureAwait(false);
+            var innerEntity = await GetEntityByIdAsync(entity.Id).ConfigureAwait(false);
 
             innerEntity.CopyProperties(entity);
             return await UpdateEntityAsync(innerEntity).ConfigureAwait(false);
@@ -305,7 +305,7 @@ namespace SmartNQuick.Logic.Controllers
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Delete).ConfigureAwait(false);
 #endif
-            var entity = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
+            var entity = await GetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (entity == null)
                 throw new LogicException(ErrorType.InvalidId);
