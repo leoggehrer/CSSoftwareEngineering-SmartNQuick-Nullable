@@ -67,7 +67,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return ToModel(result);
 		}
-		[HttpGet("/api/[controller]/GetAll")]
+		[HttpGet("/api/[controller]/All")]
 		public async Task<IEnumerable<M>> GetAllAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
