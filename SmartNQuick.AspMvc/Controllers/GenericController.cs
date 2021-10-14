@@ -3,6 +3,7 @@
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,13 @@ namespace SmartNQuick.AspMvc.Controllers
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : TContract, new()
     {
+        protected enum Action
+        {
+            Index,
+            Create,
+            Edit,
+            Delete,
+        }
         private string lastError;
 
         static GenericController()
@@ -45,7 +53,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             return Adapters.Factory.Create<TContract>();
         }
-        protected TModel ToModel(TContract entity)
+        protected virtual TModel ToModel(TContract entity)
         {
             entity.CheckArgument(nameof(entity));
 
@@ -54,14 +62,21 @@ namespace SmartNQuick.AspMvc.Controllers
             result.CopyProperties(entity);
             return result;
         }
-
+        protected virtual TModel BeforeView(TModel model, Action action) => model;
+        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, Action action) => models;
+        protected virtual Task<TModel> BeforeViewAsync(TModel model, Action action) => Task.FromResult(model);
+        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, Action action) => Task.FromResult(models);
         [HttpGet]
-        public virtual async Task<IActionResult> Index()
+        [ActionName("Index")]
+        public virtual async Task<IActionResult> IndexAsync()
         {
             using var ctrl = CreateController();
             var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var models = entities.Select(e => ToModel(e));
 
-            return View("Index", entities.Select(e => ToModel(e)));
+            models = BeforeView(models, Action.Index);
+            models = await BeforeViewAsync(models, Action.Index).ConfigureAwait(false);
+            return View("Index", models);
         }
         [HttpGet]
         [ActionName("Create")]
@@ -69,6 +84,8 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var model = await CreateModelAsync().ConfigureAwait(false);
 
+            model = BeforeView(model, Action.Create);
+            model = await BeforeViewAsync(model, Action.Create).ConfigureAwait(false);
             return View("Create", model);
         }
         protected virtual async Task<TModel> CreateModelAsync()
@@ -101,6 +118,11 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterInsertEntity(model);
+            if (HasError)
+            {
+                model = BeforeView(model, Action.Create);
+                model = await BeforeViewAsync(model, Action.Create).ConfigureAwait(false);
+            }
             return HasError ? View("Create", model) : RedirectToAction("Index");
         }
         partial void BeforeInsertEntity(TModel model, ref bool handled);
@@ -112,6 +134,8 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var model = await EditModelAsync(id).ConfigureAwait(false);
 
+            model = BeforeView(model, Action.Edit);
+            model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
             return View("Edit", model);
         }
         protected virtual async Task<TModel> EditModelAsync(int id)
@@ -143,6 +167,11 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterUpdateEntity(model);
+            if (HasError)
+            {
+                model = BeforeView(model, Action.Edit);
+                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+            }
             return HasError ? View("Edit", model) : RedirectToAction("Index");
         }
         partial void BeforeUpdateEntity(TModel model, ref bool handled);
@@ -154,8 +183,11 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             using var ctrl = CreateController();
             var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
+            var model = ToModel(entity);
 
-            return View("Delete", ToModel(entity));
+            model = BeforeView(model, Action.Delete);
+            model = await BeforeViewAsync(model, Action.Delete).ConfigureAwait(false);
+            return View("Delete", model);
         }
         [ActionName("Delete")]
         public virtual async Task<IActionResult> DeleteAsync(int id)
