@@ -67,7 +67,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return ToModel(result);
 		}
-		[HttpGet("/api/[controller]/All")]
+		[HttpGet("/api/[controller]")]
 		public async Task<IEnumerable<M>> GetAllAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return result.Select(e => ToModel(e));
 		}
-		[HttpGet("/api/[controller]/QueryAllBy/{predicate}")]
+		[HttpGet("/api/[controller]/Query/{predicate}")]
 		public async Task<IEnumerable<M>> QueryAllBy(string predicate)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);

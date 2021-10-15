@@ -48,6 +48,7 @@ namespace SmartNQuick.AspMvc.Controllers
             }
         }
         protected bool HasError => string.IsNullOrEmpty(LastError) == false;
+        protected bool FromCreateToEdit { get; set; } = true;
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
         protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
         {
@@ -108,8 +109,9 @@ namespace SmartNQuick.AspMvc.Controllers
                 try
                 {
                     using var ctrl = CreateController();
+                    var entity = await ctrl.InsertAsync(model).ConfigureAwait(false);
 
-                    await ctrl.InsertAsync(model).ConfigureAwait(false);
+                    model.CopyProperties(entity);
                     LastError = string.Empty;
                 }
                 catch (Exception ex)
@@ -123,7 +125,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 model = BeforeView(model, Action.Create);
                 model = await BeforeViewAsync(model, Action.Create).ConfigureAwait(false);
             }
-            return HasError ? View("Create", model) : RedirectToAction("Index");
+            return HasError ? View("Create", model) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
         }
         partial void BeforeInsertEntity(TModel model, ref bool handled);
         partial void AfterInsertEntity(TModel model);

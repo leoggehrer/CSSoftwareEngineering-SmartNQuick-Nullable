@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Adapters.Service
 {
-    partial class GenericServiceAdapter<TContract, TModel> : ServiceAdapterObject, Contracts.Client.IAdapterAccess<TContract>
+    internal partial class GenericServiceAdapter<TContract, TModel> : ServiceAdapterObject, Contracts.Client.IAdapterAccess<TContract>
         where TContract : Contracts.IIdentifiable
         where TModel : TContract, Contracts.ICopyable<TContract>, new()
     {
@@ -207,10 +207,10 @@ namespace SmartNQuick.Adapters.Service
             //return result;
         }
 
-        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
+        public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
         {
             using var client = GetClient(BaseUri);
-            var response = await client.GetAsync($"{ExtUri}/{predicate}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+            var response = await client.GetAsync($"{ExtUri}/Query/{predicate}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -227,22 +227,6 @@ namespace SmartNQuick.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
-        public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
-        {
-            var result = new List<TContract>();
-            var index = 0;
-            var pageSize = MaxPageSize;
-            int qryCount;
-            do
-            {
-                var qry = await QueryPageListAsync(predicate, index++, pageSize).ConfigureAwait(false);
-
-                qryCount = qry.Count();
-                result.AddRange(qry);
-            } while (qryCount > 0 && qryCount % pageSize == 0);
-            return result;
-        }
-
         public async Task<TContract> CreateAsync()
         {
             using var client = GetClient(BaseUri);
