@@ -2,6 +2,7 @@
 //MdStart
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using SmartNQuick.AspMvc.Modules.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,12 @@ namespace SmartNQuick.AspMvc.Controllers
 
         protected bool FromCreateToEdit { get; set; } = true;
         protected bool FromEditToIndex { get; set; } = false;
+
+        #region SessionWrapper
+        public bool IsSessionAvailable => HttpContext?.Session != null;
+        private ISessionWrapper sessionWrapper = null;
+        internal ISessionWrapper SessionWrapper => sessionWrapper ?? (sessionWrapper = new SessionWrapper(HttpContext.Session));
+        #endregion
 
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
         protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
