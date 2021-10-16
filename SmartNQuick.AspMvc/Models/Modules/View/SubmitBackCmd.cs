@@ -1,10 +1,18 @@
 //@BaseCode
 //MdStart
 
-namespace SmartNQuick.AspMvc.Models.View
+namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public class SubmitBackCmd : SubmitCmd
+    public partial class SubmitBackCmd : SubmitCmd
     {
+        public SubmitBackCmd()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         public string BackText { get; set; } = "Back to List";
         public string BackAction { get; set; } = "Index";
         public string BackController { get; set; }

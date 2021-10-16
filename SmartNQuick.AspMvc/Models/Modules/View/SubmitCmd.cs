@@ -1,10 +1,18 @@
 //@BaseCode
 //MdStart
 
-namespace SmartNQuick.AspMvc.Models.View
+namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public class SubmitCmd
+    public partial class SubmitCmd
     {
+        public SubmitCmd()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         public bool RightAlign { get; set; } = false;
         public string SubmitText { get; set; } = "Save";
         public string SubmitCss { get; set; } = "btn btn-primary";
