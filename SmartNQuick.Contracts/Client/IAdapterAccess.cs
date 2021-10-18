@@ -9,10 +9,18 @@ namespace SmartNQuick.Contracts.Client
 {
     public partial interface IAdapterAccess<T> : IDisposable
     {
+        #region Properties
         /// <summary>
         /// Gets the max page size.
         /// </summary>
         int MaxPageSize { get; }
+#if ACCOUNT_ON
+        /// <summary>
+        /// Sets the authorization token.
+        /// </summary>
+        string SessionToken { set; }
+#endif
+        #endregion Properties
 
         #region Async-Methods
         /// <summary>

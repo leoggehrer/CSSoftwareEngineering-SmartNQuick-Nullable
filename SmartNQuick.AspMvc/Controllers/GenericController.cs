@@ -29,6 +29,22 @@ namespace SmartNQuick.AspMvc.Controllers
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
+        protected Contracts.Client.IAdapterAccess<TContract> CreateController()
+        {
+            var handled = false;
+            var result = default(Contracts.Client.IAdapterAccess<TContract>);
+
+            BeforeCreateController(ref result, ref handled);
+            if (handled == false)
+            {
+                result = Adapters.Factory.Create<TContract>();
+            }
+            AfterCreateController(result);
+            return Adapters.Factory.Create<TContract>();
+        }
+        partial void BeforeCreateController(ref Contracts.Client.IAdapterAccess<TContract> controller, ref bool handled);
+        partial void AfterCreateController(Contracts.Client.IAdapterAccess<TContract> controller);
+
         internal GenericController()
         {
             Constructing();
@@ -37,15 +53,10 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void Constructing();
         partial void Constructed();
 
-
         protected bool FromCreateToEdit { get; set; } = true;
         protected bool FromEditToIndex { get; set; } = false;
-
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
-        protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
-        {
-            return Adapters.Factory.Create<TContract>();
-        }
+
         protected virtual TModel ToModel(TContract entity)
         {
             entity.CheckArgument(nameof(entity));
