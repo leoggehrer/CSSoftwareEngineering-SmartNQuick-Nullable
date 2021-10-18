@@ -2,7 +2,6 @@
 //MdStart
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using SmartNQuick.AspMvc.Modules.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-    public abstract partial class GenericController<TContract, TModel> : Controller
+    public abstract partial class GenericController<TContract, TModel> : MvcController
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : TContract, new()
     {
@@ -21,7 +20,6 @@ namespace SmartNQuick.AspMvc.Controllers
             Edit,
             Delete,
         }
-        private string lastError;
 
         static GenericController()
         {
@@ -39,25 +37,9 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void Constructing();
         partial void Constructed();
 
-        protected string LastError
-        {
-            get => lastError;
-            set
-            {
-                lastError = value;
-                Modules.Handler.ErrorHandler.LastError = value;
-            }
-        }
-        protected bool HasError => string.IsNullOrEmpty(LastError) == false;
 
         protected bool FromCreateToEdit { get; set; } = true;
         protected bool FromEditToIndex { get; set; } = false;
-
-        #region SessionWrapper
-        public bool IsSessionAvailable => HttpContext?.Session != null;
-        private ISessionWrapper sessionWrapper = null;
-        internal ISessionWrapper SessionWrapper => sessionWrapper ?? (sessionWrapper = new SessionWrapper(HttpContext.Session));
-        #endregion
 
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
         protected static Contracts.Client.IAdapterAccess<TContract> CreateController()
