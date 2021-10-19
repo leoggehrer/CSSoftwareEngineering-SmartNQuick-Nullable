@@ -40,7 +40,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 result = Adapters.Factory.Create<TContract>();
             }
             AfterCreateController(result);
-            return Adapters.Factory.Create<TContract>();
+            return result;
         }
         partial void BeforeCreateController(ref Contracts.Client.IAdapterAccess<TContract> controller, ref bool handled);
         partial void AfterCreateController(Contracts.Client.IAdapterAccess<TContract> controller);
