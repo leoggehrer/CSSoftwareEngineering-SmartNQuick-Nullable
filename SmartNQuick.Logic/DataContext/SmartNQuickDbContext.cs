@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+using CommonBase.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SmartNQuick.Contracts;
 using SmartNQuick.Logic.Entities;
@@ -14,8 +15,11 @@ namespace SmartNQuick.Logic.DataContext
 		static SmartNQuickDbContext()
 		{
 			ClassConstructing();
-			//ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration["ConnectionStrings:DefaultConnection"];
-			ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration["ConnectionStrings:DefaultConnection"];
+			if (ConnectionString.IsNullOrEmpty())
+            {
+				ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			}
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();

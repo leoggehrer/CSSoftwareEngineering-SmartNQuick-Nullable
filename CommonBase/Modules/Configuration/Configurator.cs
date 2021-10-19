@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿//@BaseCode
+using Microsoft.Extensions.Configuration;
 using System;
-//@BaseCode
 
 namespace CommonBase.Modules.Configuration
 {

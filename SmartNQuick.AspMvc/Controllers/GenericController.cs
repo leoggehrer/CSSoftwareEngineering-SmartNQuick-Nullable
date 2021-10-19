@@ -82,6 +82,7 @@ namespace SmartNQuick.AspMvc.Controllers
             models = await BeforeViewAsync(models, Action.Index).ConfigureAwait(false);
             return View("Index", models);
         }
+
         [HttpGet]
         [ActionName("Create")]
         public virtual async Task<IActionResult> CreateAsync()
@@ -94,8 +95,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    model = await CreateModelAsync().ConfigureAwait(false);
                     LastError = string.Empty;
+                    model = await CreateModelAsync().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -103,12 +104,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterCreate(model);
-            if (HasError)
+            if (HasError == false)
             {
                 model = BeforeView(model, Action.Create);
                 model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
             }
-            return HasError ? View("Create", model) : RedirectToAction("Index");
+            return HasError ? RedirectToAction("Index") : View("Create", model);
         }
         partial void BeforeCreate(ref TModel model, ref bool handled);
         partial void AfterCreate(TModel model);
@@ -156,7 +157,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterInsertModel(model);
-            if (HasError)
+            if (HasError == false)
             {
                 model = BeforeView(model, Action.Create);
                 model = await BeforeViewAsync(model, Action.Create).ConfigureAwait(false);
@@ -187,12 +188,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterEdit(model);
-            if (HasError)
+            if (HasError == false)
             {
                 model = BeforeView(model, Action.Edit);
                 model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
             }
-            return HasError ? View("Edit", model) : RedirectToAction("Index");
+            return HasError ? RedirectToAction("Index") : View("Edit", model);
         }
         partial void BeforeEdit(ref TModel model, ref bool handled);
         partial void AfterEdit(TModel model);
@@ -239,7 +240,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterUpdateModel(model);
-            if (HasError)
+            if (HasError == false)
             {
                 model = BeforeView(model, Action.Edit);
                 model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
@@ -273,12 +274,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterDelete(model);
-            if (HasError)
+            if (HasError == false)
             {
                 model = BeforeView(model, Action.Delete);
                 model = await BeforeViewAsync(model, Action.Delete).ConfigureAwait(false);
             }
-            return HasError ? View("Delete", model) : RedirectToAction("Index");
+            return HasError ? RedirectToAction("Index") : View("Delete", model);
         }
         partial void BeforeDelete(ref TModel model, ref bool handled);
         partial void AfterDelete(TModel model);
@@ -287,6 +288,7 @@ namespace SmartNQuick.AspMvc.Controllers
         public virtual async Task<IActionResult> DeleteAsync(int id)
         {
             var handled = false;
+            var model = default(TModel);
 
             BeforeDeleteModel(id, ref handled);
             if (handled == false)
@@ -304,7 +306,14 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterDeleteModel(id);
-            return HasError ? RedirectToAction("Delete", new { id }) : RedirectToAction("Index");
+            if (HasError)
+            {
+                using var ctrl = CreateController();
+                var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
+
+                model = ToModel(entity);
+            }
+            return HasError ? View("Delete", model) : RedirectToAction("Index");
         }
         partial void BeforeDeleteModel(int id, ref bool handled);
         partial void AfterDeleteModel(int id);
