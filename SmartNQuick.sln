@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionGeneratedCodeDelete
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionCodeComparsion.ConApp", "SolutionCodeComparsion.ConApp\SolutionCodeComparsion.ConApp.csproj", "{4DB72177-DA46-49AE-9F0E-98BB05584A6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionPreprocessorHelper.ConApp", "SolutionPreprocessorHelper.ConApp\SolutionPreprocessorHelper.ConApp.csproj", "{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionPreprocessorHelper.ConApp", "SolutionPreprocessorHelper.ConApp\SolutionPreprocessorHelper.ConApp.csproj", "{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionDockerBuilder.ConApp", "SolutionDockerBuilder.ConApp\SolutionDockerBuilder.ConApp.csproj", "{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

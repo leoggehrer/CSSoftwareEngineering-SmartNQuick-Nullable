@@ -9,9 +9,10 @@ namespace CommonBase
         public static string SolutionFileExtension => ".sln";
         public static string ProjectFileExtension => ".csproj";
 
-        public static string[] CommonProjects { get; } = new string[]
+        public static string[] SolutionProjects { get; } = new string[]
         {
             "CommonBase",
+            "SolutionDockerBuilder.ConApp",
             "SolutionPreprocessorHelper.ConApp"
         };
         public static string[] GeneratorProjects { get; } = new string[]
@@ -23,7 +24,6 @@ namespace CommonBase
         {
             "SolutionCodeComparsion.ConApp",
             "SolutionCopier.ConApp",
-            "SolutionDeveloperHelper.ConApp",
             "SolutionGeneratedCodeDeleter.ConApp",
         };
         public static string[] ProjectExtensions { get; } = new string[]

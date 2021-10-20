@@ -11,13 +11,13 @@ using System.Text;
 
 namespace SolutionPreprocessorHelper.ConApp
 {
-    internal class Program
+    internal partial class Program
     {
         private static string[] Directives { get; } = new string[] 
         { 
-            "ACCOUNT_ON", 
-            "LOGGING_ON", 
-            "REVISION_ON" 
+            "ACCOUNT_OFF", 
+            "LOGGING_OFF", 
+            "REVISION_OFF" 
         };
 
         private static void Main(/*string[] args*/)

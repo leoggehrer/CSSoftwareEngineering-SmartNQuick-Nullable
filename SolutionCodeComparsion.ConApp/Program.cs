@@ -31,6 +31,7 @@ namespace SolutionCodeComparsion.ConApp
             {
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTradingCompany"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTranslator"),
+                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQContact"),
             };
             Paths.Add(SourcePath, targetPaths);
             // End: SmartNQuick-Projects
@@ -223,9 +224,9 @@ namespace SolutionCodeComparsion.ConApp
 
             for (int i = 0; i < data.Length && result == string.Empty; i++)
             {
-                for (int j = 0; j < CommonStaticLiterals.CommonProjects.Length; j++)
+                for (int j = 0; j < CommonStaticLiterals.SolutionProjects.Length; j++)
                 {
-                    if (data[i].Equals(CommonStaticLiterals.CommonProjects[j]))
+                    if (data[i].Equals(CommonStaticLiterals.SolutionProjects[j]))
                     {
                         result = data[i];
                     }

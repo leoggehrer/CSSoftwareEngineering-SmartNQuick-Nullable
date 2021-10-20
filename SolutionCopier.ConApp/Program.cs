@@ -1,13 +1,14 @@
 ﻿//@BaseCode
+//MdStart
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
-using System.IO;
 using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
-	internal partial class Program
+    internal partial class Program
 	{
 		static Program()
 		{
@@ -19,7 +20,7 @@ namespace SolutionCopier.ConApp
 
 			UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 			SourcePath = GetCurrentSolutionPath();
-			TargetPath = Path.Combine(UserPath, @"source\repos\SnQTranslator");
+			TargetPath = Path.Combine(UserPath, @"source\repos\HtlLeo\SnQContact");
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();
@@ -31,10 +32,10 @@ namespace SolutionCopier.ConApp
 		private static string TargetPath { get; set; }
 		private static void Main(/*string[] args*/)
 		{
-			Console.WriteLine("SolutionCopier");
+			Console.WriteLine(nameof(SolutionCopier));
 
 			var sourceSolutionName = "SmartNQuick";
-			var sourceProjects = CommonStaticLiterals.CommonProjects
+			var sourceProjects = CommonStaticLiterals.SolutionProjects
 											   .Concat(CommonStaticLiterals.GeneratorProjects
 																	 .Select(e => $"{e}"))
 											   .Concat(CommonStaticLiterals.ProjectExtensions
@@ -86,3 +87,4 @@ namespace SolutionCopier.ConApp
 		}
 	}
 }
+//MdEnd
