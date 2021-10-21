@@ -37,9 +37,9 @@ namespace SolutionDockerBuilder.ConApp
                 var dockerfiles = PrintHeader();
 
                 Console.Write($"Build [1..{dockerfiles.Count() + 1}|X]?: ");
-                var input = Console.ReadLine();
+                var input = Console.ReadLine().ToLower();
 
-                running = input.Equals("x", StringComparison.CurrentCultureIgnoreCase) == false;
+                running = input.Equals("x") == false;
                 if (running)
                 {
                     var numbers = input.Split(',').Where(s => Int32.TryParse(s, out int n))
@@ -56,7 +56,7 @@ namespace SolutionDockerBuilder.ConApp
                         }
                         else if (number > 0 && number <= dockerfiles.Count())
                         {
-                            BuildDockerfile(dockerfiles.ElementAt(number - 1));
+                            BuildDockerfile(dockerfiles.ElementAt(number - 1), true);
                         }
                     }
                 }
@@ -87,14 +87,14 @@ namespace SolutionDockerBuilder.ConApp
             Console.WriteLine();
             return result;
         }
-        private static void BuildDockerfile(string dockerfile)
+        private static void BuildDockerfile(string dockerfile, bool buildContracts)
         {
             var maxWaiting = 10 * 60 * 1000;    // 10 minutes
             var slnPath = Directory.GetParent(Path.GetDirectoryName(dockerfile)).FullName;
             var csprojFile = GetContractProjectFileFromDockerfile(dockerfile);
             var csprojLines = default(string[]);
 
-            if (string.IsNullOrEmpty(csprojFile) == false)
+            if (string.IsNullOrEmpty(csprojFile) == false && buildContracts)
             {
                 csprojLines = File.ReadAllLines(csprojFile, Encoding.Default);
                 try
@@ -117,7 +117,8 @@ namespace SolutionDockerBuilder.ConApp
             var dockerfileInfo = new FileInfo(dockerfile);
             var directoryName = dockerfileInfo.Directory.Name;
             var directoryFullName = dockerfileInfo.Directory.FullName;
-            var arguments = $"build -f \"{dockerfile}\" --force-rm -t {directoryName.Replace(".", string.Empty).ToLower()}  --label \"com.microsoft.created-by=visual-studio\" --label \"com.microsoft.visual-studio.project-name={directoryName}\" \"{slnPath}\"";
+            var tagLabel = $"{directoryName.Replace(".", string.Empty).ToLower()}";
+            var arguments = $"build -f \"{dockerfile}\" --force-rm -t {tagLabel} --label \"com.microsoft.created-by=visual-studio\" --label \"com.microsoft.visual-studio.project-name={directoryName}\" \"{slnPath}\"";
 
             Console.WriteLine(arguments);
             ProcessStartInfo buildStartInfo = new ProcessStartInfo("docker")
@@ -141,9 +142,11 @@ namespace SolutionDockerBuilder.ConApp
         }
         private static void BuildDockerfiles(string solutionPath)
         {
+            int counter = 0;
+
             foreach (var dockerfile in GetDockerfiles(solutionPath))
             {
-                BuildDockerfile(dockerfile);
+                BuildDockerfile(dockerfile, counter++ == 0);
             }
         }
 
