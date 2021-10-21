@@ -1,20 +1,18 @@
 ﻿//@BaseCode
 //MdStart
-
-using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
 
-namespace SmartNQuick.AspMvc.Modules.Handler
+namespace SolutionDockerBuilder.ConApp
 {
     public static class ErrorHandler
     {
         private static string lastError;
-        private static readonly List<string> errorList = new();
+        private static readonly List<string> errorList = new ();
 
-        public static string LastError
-        {
-            get => lastError;
+        public static string LastError 
+        { 
+            get => lastError; 
             set
             {
                 if (string.IsNullOrEmpty(lastError) == false)
@@ -44,7 +42,8 @@ namespace SmartNQuick.AspMvc.Modules.Handler
         #region ExceptionExtension
         public static string GetFullError(this Exception source)
         {
-            source.CheckArgument(nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             var tab = string.Empty;
             var errMsg = source.Message;

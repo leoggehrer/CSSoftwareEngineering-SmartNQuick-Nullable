@@ -34,10 +34,11 @@ namespace SolutionDockerBuilder.ConApp
 
             do
             {
+                var input = string.Empty;
                 var dockerfiles = PrintHeader();
 
                 Console.Write($"Build [1..{dockerfiles.Count() + 1}|X]?: ");
-                var input = Console.ReadLine().ToLower();
+                input = Console.ReadLine().ToLower();
 
                 running = input.Equals("x") == false;
                 if (running)
@@ -60,9 +61,18 @@ namespace SolutionDockerBuilder.ConApp
                         }
                     }
                 }
+                if (ErrorHandler.HasError)
+                {
+                    Console.Clear();
+                    Console.WriteLine("*** ERROR(S) ***");
+                    ErrorHandler.GetErrors().ToList().ForEach(e => Console.WriteLine(e));
+                    ErrorHandler.Clear();
+                }
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
             } while (running);
-
         }
+
         private static IEnumerable<string> PrintHeader()
         {
             int index = 0;
@@ -90,54 +100,90 @@ namespace SolutionDockerBuilder.ConApp
         private static void BuildDockerfile(string dockerfile, bool buildContracts)
         {
             var maxWaiting = 10 * 60 * 1000;    // 10 minutes
+            var arguments = string.Empty;       // arguments for process start
             var slnPath = Directory.GetParent(Path.GetDirectoryName(dockerfile)).FullName;
-            var csprojFile = GetContractProjectFileFromDockerfile(dockerfile);
-            var csprojLines = default(string[]);
+            var contractsCsproj = GetContractProjectFileFromDockerfile(dockerfile);
+            var codeGeneratorCsproj = GetCSharpCodeGeneratorProjectFileFromDockerfile(dockerfile);
+            var contractsCsprojLines = default(string[]);
 
-            if (string.IsNullOrEmpty(csprojFile) == false && buildContracts)
+            if (string.IsNullOrEmpty(contractsCsproj) == false)
             {
-                csprojLines = File.ReadAllLines(csprojFile, Encoding.Default);
                 try
                 {
-                    //RUN dotnet build "QnSIdentityServer.WebApi.csproj" - c Release - o / app / build
-                    ProcessStartInfo csprojStartInfo = new ProcessStartInfo("dotnet.exe")
+                    contractsCsprojLines = File.ReadAllLines(contractsCsproj, Encoding.Default);
+                    File.WriteAllLines(contractsCsproj, contractsCsprojLines.Select(l => l.Replace("Condition=\"True\"", "Condition=\"False\"")), Encoding.Default);
+
+                    if (buildContracts)
                     {
-                        Arguments = $"build \"{csprojFile}\" -c Release",
-                        //WorkingDirectory = projectPath,
-                        UseShellExecute = false
-                    };
-                    Process.Start(csprojStartInfo).WaitForExit(maxWaiting);
-                    File.WriteAllLines(csprojFile, csprojLines.Select(l => l.Replace("Condition=\"True\"", "Condition=\"False\"")), Encoding.Default);
+                        arguments = $"build \"{contractsCsproj}\" -c Release";
+                        Console.WriteLine(arguments);
+                        Debug.WriteLine($"dotnet.exe {arguments}");
+                        ProcessStartInfo csprojStartInfo = new ProcessStartInfo("dotnet.exe")
+                        {
+                            Arguments = arguments,
+                            //WorkingDirectory = projectPath,
+                            UseShellExecute = false
+                        };
+                        Process.Start(csprojStartInfo).WaitForExit(maxWaiting);
+
+                        if (string.IsNullOrEmpty(codeGeneratorCsproj) == false)
+                        {
+                            arguments = $"run --project \"{codeGeneratorCsproj}\" -c Release";
+                            Console.WriteLine(arguments);
+                            Debug.WriteLine($"dotnet.exe {arguments}");
+                            csprojStartInfo = new ProcessStartInfo("dotnet.exe")
+                            {
+                                Arguments = arguments,
+                                //WorkingDirectory = projectPath,
+                                UseShellExecute = false
+                            };
+                            Process.Start(csprojStartInfo).WaitForExit(maxWaiting);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine($"Error: {e.Message}");
+                    ErrorHandler.LastError = e.GetFullError();
+                    Debug.WriteLine($"Error: {ErrorHandler.LastError}");
                 }
             }
             var dockerfileInfo = new FileInfo(dockerfile);
             var directoryName = dockerfileInfo.Directory.Name;
             var directoryFullName = dockerfileInfo.Directory.FullName;
             var tagLabel = $"{directoryName.Replace(".", string.Empty).ToLower()}";
-            var arguments = $"build -f \"{dockerfile}\" --force-rm -t {tagLabel} --label \"com.microsoft.created-by=visual-studio\" --label \"com.microsoft.visual-studio.project-name={directoryName}\" \"{slnPath}\"";
 
-            Console.WriteLine(arguments);
-            ProcessStartInfo buildStartInfo = new ProcessStartInfo("docker")
-            {
-                Arguments = arguments,
-                WorkingDirectory = directoryFullName,
-                UseShellExecute = false
-            };
             try
             {
+                arguments = $"build -f \"{dockerfile}\" --force-rm -t {tagLabel} --label \"com.microsoft.created-by=visual-studio\" --label \"com.microsoft.visual-studio.project-name={directoryName}\" \"{slnPath}\"";
+                Console.WriteLine(arguments);
+                Debug.WriteLine($"Docker {arguments}");
+                ProcessStartInfo buildStartInfo = new ProcessStartInfo("docker")
+                {
+                    Arguments = arguments,
+                    WorkingDirectory = directoryFullName,
+                    UseShellExecute = false
+                };
+                Process.Start(buildStartInfo).WaitForExit(maxWaiting);
+
+                arguments = $"scan {tagLabel}";
+                Console.WriteLine(arguments);
+                Debug.WriteLine($"Docker {arguments}");
+                buildStartInfo = new ProcessStartInfo("docker")
+                {
+                    Arguments = arguments,
+                    WorkingDirectory = directoryFullName,
+                    UseShellExecute = false
+                };
                 Process.Start(buildStartInfo).WaitForExit(maxWaiting);
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Error: {e.Message}");
+                ErrorHandler.LastError = e.GetFullError();
+                Debug.WriteLine($"Error: {ErrorHandler.LastError}");
             }
-            if (csprojLines != null)
+            if (contractsCsprojLines != null)
             {
-                File.WriteAllLines(csprojFile, csprojLines, Encoding.Default);
+                File.WriteAllLines(contractsCsproj, contractsCsprojLines, Encoding.Default);
             }
         }
         private static void BuildDockerfiles(string solutionPath)
@@ -166,6 +212,14 @@ namespace SolutionDockerBuilder.ConApp
             var path = Path.GetDirectoryName(dockerfile);
             var dirInfo = Directory.GetParent(path);
             var fileInfo = dirInfo.GetFiles("*.Contracts.*proj", SearchOption.AllDirectories).FirstOrDefault();
+
+            return fileInfo?.FullName;
+        }
+        private static string GetCSharpCodeGeneratorProjectFileFromDockerfile(string dockerfile)
+        {
+            var path = Path.GetDirectoryName(dockerfile);
+            var dirInfo = Directory.GetParent(path);
+            var fileInfo = dirInfo.GetFiles("CSharpCodeGenerator.ConApp.csproj", SearchOption.AllDirectories).FirstOrDefault();
 
             return fileInfo?.FullName;
         }
