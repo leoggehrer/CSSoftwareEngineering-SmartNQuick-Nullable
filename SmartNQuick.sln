@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionCodeComparsion.ConA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionPreprocessorHelper.ConApp", "SolutionPreprocessorHelper.ConApp\SolutionPreprocessorHelper.ConApp.csproj", "{709A80C4-069A-4DCE-80F4-B20F3BFDD10C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionDockerBuilder.ConApp", "SolutionDockerBuilder.ConApp\SolutionDockerBuilder.ConApp.csproj", "{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionDockerBuilder.ConApp", "SolutionDockerBuilder.ConApp\SolutionDockerBuilder.ConApp.csproj", "{E5FB6D10-4434-4BEB-BCD7-7F9CD992557C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

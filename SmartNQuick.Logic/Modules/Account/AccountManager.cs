@@ -59,7 +59,7 @@ namespace SmartNQuick.Logic.Modules.Account
 
                     var role = appAccess.CreateManyItem();
 
-                    role.Designation = "SysAdmin";
+                    role.Designation = StaticLiterals.RoleSysAdmin;
                     appAccess.AddManyItem(role);
                     await appAccessCtrl.InsertEntityAsync(appAccess).ConfigureAwait(false);
                     await appAccessCtrl.SaveChangesAsync().ConfigureAwait(false);

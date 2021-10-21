@@ -238,9 +238,9 @@ namespace SolutionCodeComparsion.ConApp
                         result = data[i];
                     }
                 }
-                for (int j = 0; j < CommonStaticLiterals.ToolProjects.Length; j++)
+                for (int j = 0; j < CommonStaticLiterals.SolutionToolProjects.Length; j++)
                 {
-                    if (data[i].Equals(CommonStaticLiterals.ToolProjects[j]))
+                    if (data[i].Equals(CommonStaticLiterals.SolutionToolProjects[j]))
                     {
                         result = data[i];
                     }

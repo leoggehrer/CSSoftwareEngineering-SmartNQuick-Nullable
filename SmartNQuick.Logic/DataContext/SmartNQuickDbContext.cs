@@ -15,11 +15,15 @@ namespace SmartNQuick.Logic.DataContext
 		static SmartNQuickDbContext()
 		{
 			ClassConstructing();
-			ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration["ConnectionStrings:DefaultConnection"];
+			ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration[StaticLiterals.EnvironmentConnectionStringKey];
 			if (ConnectionString.IsNullOrEmpty())
-            {
-				ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			{
+				ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration[StaticLiterals.AppSettingsConnectionStringKey];
 			}
+			//if (ConnectionString.IsNullOrEmpty())
+   //         {
+			//	ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			//}
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();
