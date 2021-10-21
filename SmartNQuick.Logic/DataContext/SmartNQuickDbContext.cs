@@ -20,10 +20,10 @@ namespace SmartNQuick.Logic.DataContext
 			{
 				ConnectionString = CommonBase.Modules.Configuration.AppSettings.Configuration[StaticLiterals.AppSettingsConnectionStringKey];
 			}
-			//if (ConnectionString.IsNullOrEmpty())
-   //         {
-			//	ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
-			//}
+			if (ConnectionString.IsNullOrEmpty())
+			{
+				ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			}
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();

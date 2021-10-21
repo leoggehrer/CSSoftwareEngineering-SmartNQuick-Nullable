@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -19,3 +20,4 @@ namespace CommonBase.Modules.Configuration
         }
     }
 }
+//MdEnd
