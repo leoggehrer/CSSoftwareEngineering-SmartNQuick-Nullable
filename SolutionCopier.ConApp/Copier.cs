@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace SolutionCopier.ConApp
 {
-    class Copier
+    internal partial class Copier
 	{
         private static char Separator => ';';
         public static Action<string> Logger { get; set; } = s => System.Diagnostics.Debug.WriteLine(s);
 
+        private static string DockerfileName => "dockerfile";
+        private static string DockerComposefileName => "docker-compose.yml";
         private static readonly string[] IgnoreFolders = new string[]
         {
             "\\.vs"
@@ -69,6 +72,7 @@ namespace SolutionCopier.ConApp
             ".xlsx",
             ".docx",
             ".pdf",
+            ".yml",
         };
         private List<string> Extensions { get; } = new List<string>();
         private List<string> ProjectGuids { get; } = new List<string>();
@@ -125,7 +129,7 @@ namespace SolutionCopier.ConApp
                 {
                     subFolder = subFolder.Replace(sourceFolderName, targetFolderName);
 
-                    CopyDirectoryWorkFiles(directory, sourceSolutionDirectory, targetSolutionDirectory);
+                    CopyProjectDirectoryWorkFiles(directory, sourceSolutionDirectory, targetSolutionDirectory);
                 }
             }
             return true;
@@ -142,7 +146,7 @@ namespace SolutionCopier.ConApp
 
             CopySolutionFile(sourceSolutionFilePath, targetSolutionFilePath, sourceSolutionFolder, targetSolutionFolder, sourceProjects);
             CopySolutionFiles(sourceSolutionDirectory, targetSolutionDirectory);
-            CopyProjectFiles(sourceSolutionDirectory, targetSolutionDirectory, sourceProjects);
+            CopySolutionProjectFiles(sourceSolutionDirectory, targetSolutionDirectory, sourceProjects);
         }
         private static string[] SplitProjectEntry(TagInfo tag)
         {
@@ -301,7 +305,7 @@ namespace SolutionCopier.ConApp
             }
         }
 
-        private void CopyProjectFiles(string sourceSolutionDirectory, string targetSolutionDirectory, IEnumerable<string> sourceProjects)
+        private void CopySolutionProjectFiles(string sourceSolutionDirectory, string targetSolutionDirectory, IEnumerable<string> sourceProjects)
         {
             var projectFilePath = string.Empty;
             var sourceSolutionFolder = new DirectoryInfo(sourceSolutionDirectory).Name;
@@ -321,14 +325,14 @@ namespace SolutionCopier.ConApp
                 ReplaceProjectGuids(projectFilePath);
             }
         }
-        private void CopyDirectoryWorkFiles(string sourceDirectory, string sourceSolutionDirectory, string targetSolutionDirectory)
+        private void CopyProjectDirectoryWorkFiles(string sourceDirectory, string sourceSolutionDirectory, string targetSolutionDirectory)
         {
             var projectFilePath = string.Empty;
             var sourceSolutionFolder = new DirectoryInfo(sourceSolutionDirectory).Name;
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
             var sourceFiles = new DirectoryInfo(sourceDirectory).GetFiles("*", SearchOption.AllDirectories)
                                                                 .Where(f => IgnoreFileFolders.Any(i => f.FullName.ToLower().Contains(i.ToLower())) == false
-                                                                         && ReplaceExtensions.Any(i => i.Equals(Path.GetExtension(f.Name))));
+                                                                         && (f.Name.Equals("dockerfile", StringComparison.CurrentCultureIgnoreCase) || ReplaceExtensions.Any(i => i.Equals(Path.GetExtension(f.Name)))));
 
             foreach (var sourceFile in sourceFiles)
             {
@@ -347,13 +351,27 @@ namespace SolutionCopier.ConApp
                 Extensions.Add(extension);
             }
 
-            if (targetDirectory != null
-                && Directory.Exists(targetDirectory) == false)
+            if (targetDirectory != null && Directory.Exists(targetDirectory) == false)
             {
                 Directory.CreateDirectory(targetDirectory);
             }
 
-            if (ReplaceExtensions.SingleOrDefault(i => i.Equals(extension, StringComparison.CurrentCultureIgnoreCase)) != null)
+            if (sourceFilePath.EndsWith(DockerfileName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var sourceLines = File.ReadAllLines(sourceFilePath, Encoding.Default);
+                var targetLines = sourceLines.Select(l => l.Replace(sourceSolutionName, targetSolutionName));
+
+                File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);
+            }
+            if (sourceFilePath.EndsWith(DockerComposefileName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var sourceLines = File.ReadAllLines(sourceFilePath, Encoding.Default);
+                var targetLines = sourceLines.Select(l => l.Replace(sourceSolutionName, targetSolutionName))
+                                             .Select(l => l.Replace(sourceSolutionName.ToLower(), targetSolutionName.ToLower()));
+
+                File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);
+            }
+            else if (ReplaceExtensions.SingleOrDefault(i => i.Equals(extension, StringComparison.CurrentCultureIgnoreCase)) != null)
             {
                 var targetLines = new List<string>();
                 var sourceLines = File.ReadAllLines(sourceFilePath, Encoding.Default);
@@ -437,3 +455,4 @@ namespace SolutionCopier.ConApp
         }
     }
 }
+//MdEnd
