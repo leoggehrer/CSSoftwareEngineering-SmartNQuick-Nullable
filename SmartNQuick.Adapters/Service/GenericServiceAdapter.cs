@@ -31,7 +31,7 @@ namespace SmartNQuick.Adapters.Service
             ExtUri = extUri;
             Constructed();
         }
-#if ACCOUNT_ON
+//#if ACCOUNT_ON
         public GenericServiceAdapter(string sessionToken, string baseUri, string extUri)
             : base(sessionToken, baseUri)
         {
@@ -39,7 +39,7 @@ namespace SmartNQuick.Adapters.Service
             ExtUri = extUri;
             Constructed();
         }
-#endif
+//#endif
         partial void Constructing();
         partial void Constructed();
 
@@ -177,7 +177,7 @@ namespace SmartNQuick.Adapters.Service
         public async Task<IEnumerable<TContract>> GetAllAsync()
         {
             using var client = GetClient(BaseUri);
-            var response = await client.GetAsync($"{ExtUri}/All").ConfigureAwait(false);
+            var response = await client.GetAsync($"{ExtUri}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {

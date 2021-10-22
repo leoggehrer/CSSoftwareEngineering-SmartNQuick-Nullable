@@ -29,7 +29,15 @@ namespace SmartNQuick.AspMvc.Controllers
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        protected Contracts.Client.IAdapterAccess<TContract> CreateController()
+        internal GenericController()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
+        protected virtual Contracts.Client.IAdapterAccess<TContract> CreateController()
         {
             var handled = false;
             var result = default(Contracts.Client.IAdapterAccess<TContract>);
@@ -44,14 +52,6 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeCreateController(ref Contracts.Client.IAdapterAccess<TContract> controller, ref bool handled);
         partial void AfterCreateController(Contracts.Client.IAdapterAccess<TContract> controller);
-
-        internal GenericController()
-        {
-            Constructing();
-            Constructed();
-        }
-        partial void Constructing();
-        partial void Constructed();
 
         protected bool FromCreateToEdit { get; set; } = true;
         protected bool FromEditToIndex { get; set; } = false;

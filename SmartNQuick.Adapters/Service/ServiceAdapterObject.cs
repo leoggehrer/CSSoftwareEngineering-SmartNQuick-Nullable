@@ -32,7 +32,6 @@ namespace SmartNQuick.Adapters.Service
             BaseUri = baseUri;
             Constructed();
         }
-#if ACCOUNT_ON
         public string SessionToken { private get; set; }
         public ServiceAdapterObject(string sessionToken, string baseUri)
         {
@@ -41,7 +40,6 @@ namespace SmartNQuick.Adapters.Service
             BaseUri = baseUri;
             Constructed();
         }
-#endif
         partial void Constructing();
         partial void Constructed();
 
@@ -51,11 +49,7 @@ namespace SmartNQuick.Adapters.Service
         protected static string MediaType => "application/json";
         protected HttpClient GetClient(string baseAddress)
         {
-#if ACCOUNT_ON
-            return CreateClient(baseAddress, SessionToken);
-#else
-            return CreateClient(baseAddress);
-#endif
+            return SessionToken.HasContent() ? CreateClient(baseAddress, SessionToken) : CreateClient(baseAddress);
         }
         protected static HttpClient CreateClient(string baseAddress)
         {
@@ -75,10 +69,8 @@ namespace SmartNQuick.Adapters.Service
 
             // Add an Accept header for JSON format.
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
-
             return client;
         }
-#if ACCOUNT_ON
         protected static HttpClient GetClient(string baseAddress, string sessionToken)
         {
             return CreateClient(baseAddress, sessionToken);
@@ -100,8 +92,7 @@ namespace SmartNQuick.Adapters.Service
             client.DefaultRequestHeaders.Accept.Clear();
 
             // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue(MediaType));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
 
             if (sessionToken.HasContent())
             {
@@ -111,7 +102,6 @@ namespace SmartNQuick.Adapters.Service
             }
             return client;
         }
-#endif
         #endregion Helpers
 
         #region IDisposable Support

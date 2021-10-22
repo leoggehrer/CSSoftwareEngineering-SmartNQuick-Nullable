@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.ConApp
 {
-    class Writer
+    internal class Writer
     {
         public static void WriteAll(string solutionPath, ISolutionProperties solutionProperties, IEnumerable<IGeneratedItem> generatedItems)
         {
@@ -112,7 +112,15 @@ namespace CSharpCodeGenerator.ConApp
                 var projectPath = Path.Combine(solutionPath, solutionProperties.TransferProjectName);
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ShadowModel);
 
-                Console.WriteLine("Write Transfer-Modules-Models...");
+                Console.WriteLine("Write Transfer-Shadow-Models...");
+                WriteCodeFiles(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.TransferProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ThridPartyModel);
+
+                Console.WriteLine("Write Transfer-ThirdParty-Models...");
                 WriteCodeFiles(projectPath, writeItems);
             }));
             #endregion WriteTansfer
@@ -121,10 +129,10 @@ namespace CSharpCodeGenerator.ConApp
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 var projectPath = Path.Combine(solutionPath, solutionProperties.AdaptersProjectName);
-                var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Adapters && e.ItemType == ItemType.Factory);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Adapters && e.ItemType == ItemType.Factory);
 
                 Console.WriteLine("Write Adapters-Factory...");
-                WriteCodeFiles(projectPath, new IGeneratedItem[] { writeItem });
+                WriteCodeFiles(projectPath, writeItems);
             }));
             #endregion WriteTransfer
 
@@ -170,6 +178,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write AspMvc-Shadow-Models...");
+                WriteCodeFiles(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ThridPartyModel);
+
+                Console.WriteLine("Write AspMvc-ThridParty-Models...");
                 WriteCodeFiles(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
@@ -231,7 +247,8 @@ namespace CSharpCodeGenerator.ConApp
         {
             return $"{property.AppName}{separator}{property.EntityName}{separator}{property.PropertyName}{separator}{property.Attribute}{separator}{property.Value}";
         }
-        static Property ToProperty(string line, string separator)
+
+        private static Property ToProperty(string line, string separator)
         {
             var data = line.Split(separator);
             return new Property(data[0], data[1], data[2], data[3], data[4]);

@@ -58,6 +58,17 @@ namespace CSharpCodeGenerator.Logic.Generation
         partial void CanCreateProperty(Type type, string propertyName, ref bool create);
         partial void CreateEntityAttributes(Type type, List<string> codeLines);
 
+        public virtual IEnumerable<Contracts.IGeneratedItem> GenerateAll()
+        {
+            var result = new List<Contracts.IGeneratedItem>();
+
+            result.AddRange(CreateBusinessEntities());
+            result.AddRange(CreateModulesEntities());
+            result.AddRange(CreatePersistenceEntities());
+            result.AddRange(CreateShadowEntities());
+            return result;
+        }
+
         public IEnumerable<Contracts.IGeneratedItem> CreateBusinessEntities()
         {
             var result = new List<Contracts.IGeneratedItem>();

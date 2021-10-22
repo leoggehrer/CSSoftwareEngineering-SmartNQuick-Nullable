@@ -30,32 +30,8 @@ namespace CSharpCodeGenerator.Logic
             {
                 var generatedItems = new List<IGeneratedItem>();
 
-                Console.WriteLine("Create Business-Entities...");
-                generatedItems.AddRange(entityGenerator.CreateBusinessEntities());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Modules-Entities...");
-                generatedItems.AddRange(entityGenerator.CreateModulesEntities());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Persistence-Entities...");
-                generatedItems.AddRange(entityGenerator.CreatePersistenceEntities());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Shadow-Entities...");
-                generatedItems.AddRange(entityGenerator.CreateShadowEntities());
+                Console.WriteLine("Create Logic-Entities...");
+                generatedItems.AddRange(entityGenerator.GenerateAll());
                 result.AddRangeSafe(generatedItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
@@ -107,32 +83,8 @@ namespace CSharpCodeGenerator.Logic
             {
                 var generatedItems = new List<IGeneratedItem>();
 
-                Console.WriteLine("Create Transfer-Business...");
-                generatedItems.AddRange(transferGenerator.CreateBusinessModels());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Transfer-Modules...");
-                generatedItems.AddRange(transferGenerator.CreateModulesModels());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Transfer-Persistence...");
-                generatedItems.AddRange(transferGenerator.CreatePersistenceModels());
-                result.AddRangeSafe(generatedItems);
-            }));
-            tasks.Add(Task.Factory.StartNew(() =>
-            {
-                var generatedItems = new List<IGeneratedItem>();
-
-                Console.WriteLine("Create Transfer-Shadow...");
-                generatedItems.AddRange(transferGenerator.CreateShadowModels());
+                Console.WriteLine("Create Transfer-Models...");
+                generatedItems.AddRange(transferGenerator.GenerateAll());
                 result.AddRangeSafe(generatedItems);
             }));
             #endregion Transfer
@@ -144,6 +96,14 @@ namespace CSharpCodeGenerator.Logic
 
                 Console.WriteLine("Create Adapters-Factory...");
                 generatedItem = factoryGenerator.CreateAdapterFactory();
+                result.AddSafe(generatedItem);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var generatedItem = default(IGeneratedItem);
+
+                Console.WriteLine("Create ThridParty-Factory...");
+                generatedItem = factoryGenerator.CreateThirdPartyFactory();
                 result.AddSafe(generatedItem);
             }));
             #endregion Adapters 
@@ -166,32 +126,8 @@ namespace CSharpCodeGenerator.Logic
                 {
                     var generatedItems = new List<IGeneratedItem>();
 
-                    Console.WriteLine("Create AspMvc-Business-Models...");
-                    generatedItems.AddRange(aspMvcGenerator.CreateBusinessModels());
-                    result.AddRangeSafe(generatedItems);
-                }));
-                tasks.Add(Task.Factory.StartNew(() =>
-                {
-                    var generatedItems = new List<IGeneratedItem>();
-
-                    Console.WriteLine("Create AspMvc-Modules-Models...");
-                    generatedItems.AddRange(aspMvcGenerator.CreateModulesModels());
-                    result.AddRangeSafe(generatedItems);
-                }));
-                tasks.Add(Task.Factory.StartNew(() =>
-                {
-                    var generatedItems = new List<IGeneratedItem>();
-
-                    Console.WriteLine("Create AspMvc-Persistence-Models...");
-                    generatedItems.AddRange(aspMvcGenerator.CreatePersistenceModels());
-                    result.AddRangeSafe(generatedItems);
-                }));
-                tasks.Add(Task.Factory.StartNew(() =>
-                {
-                    var generatedItems = new List<IGeneratedItem>();
-
-                    Console.WriteLine("Create AspMvc-Shadow-Models...");
-                    generatedItems.AddRange(aspMvcGenerator.CreateShadowModels());
+                    Console.WriteLine("Create AspMvc-Models...");
+                    generatedItems.AddRange(aspMvcGenerator.GenerateAll());
                     result.AddRangeSafe(generatedItems);
                 }));
                 tasks.Add(Task.Factory.StartNew(() =>

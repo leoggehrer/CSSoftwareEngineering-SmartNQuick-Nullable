@@ -1,14 +1,14 @@
 version: '3.4'
 
 services:
-  smartnquick.webapi:
-    image: "smartnquickwebapi"
-    container_name: smartnquick.webapi
+  snqtradingcompany.webapi:
+    image: "snqtradingcompanywebapi"
+    container_name: snqtradingcompany.webapi
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SmartNQuickDb; User Id=sa;Password=passme!1234
+      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SnQTradingCompanyDb; User Id=sa;Password=passme!1234
     ports:
       - "32785:80"
       - "443"
@@ -17,14 +17,14 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-  smartnquick.aspmvc:
-    image: "smartnquickaspmvc"
-    container_name: smartnquick.aspmvc
+  snqtradingcompany.aspmvc:
+    image: "snqtradingcompanyaspmvc"
+    container_name: snqtradingcompany.aspmvc
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SmartNQuickDb; User Id=sa;Password=passme!1234
+      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SnQTradingCompanyDb; User Id=sa;Password=passme!1234
     ports:
       - "32790:80"
       - "443"

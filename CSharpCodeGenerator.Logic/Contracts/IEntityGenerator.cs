@@ -8,6 +8,7 @@ namespace CSharpCodeGenerator.Logic.Contracts
     {
         ISolutionProperties Properties { get; }
 
+        IEnumerable<IGeneratedItem> GenerateAll();
         IEnumerable<IGeneratedItem> CreateBusinessEntities();
         IEnumerable<IGeneratedItem> CreateModulesEntities();
         IEnumerable<IGeneratedItem> CreatePersistenceEntities();

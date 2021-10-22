@@ -29,6 +29,7 @@ namespace CSharpCodeGenerator.Logic
         public static string BusinessFolder => "Business";
         public static string PersistenceFolder => "Persistence";
         public static string ShadowFolder => "Shadow";
+        public static string ThirdPartyFolder => "ThirdParty";
         #endregion Folders
 
         public static string RootSubName => ".Contracts.";
@@ -37,12 +38,14 @@ namespace CSharpCodeGenerator.Logic
         public static string ModulesSubName => ".Modules.";
         public static string PersistenceSubName => ".Persistence.";
         public static string ShadowSubName => ".Shadow.";
+        public static string ThirdPartySubName => ".ThirdParty.";
 
         public static string EntitiesLabel => "Entities";
         public static string ModulesLabel => "Modules";
         public static string BusinessLabel => "Business";
         public static string PersistenceLabel => "Persistence";
         public static string ShadowLabel => "Shadow";
+        public static string ThirdPartyLabel => "ThirdParty";
 
         public static string DelegatePropertyName => "DelegateObject";
         public static string IIdentifiableName => "IIdentifiable";

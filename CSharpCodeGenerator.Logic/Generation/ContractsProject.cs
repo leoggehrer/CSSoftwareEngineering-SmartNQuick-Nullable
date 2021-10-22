@@ -100,6 +100,14 @@ namespace CSharpCodeGenerator.Logic.Generation
                                               && t.FullName.Contains(StaticLiterals.ShadowSubName));
             }
         }
+        public IEnumerable<Type> ThirdPartyTypes
+        {
+            get
+            {
+                return InterfaceTypes.Where(t => t.IsInterface
+                                              && t.FullName.Contains(StaticLiterals.ThirdPartySubName));
+            }
+        }
     }
 }
 //MdEnd

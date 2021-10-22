@@ -71,6 +71,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreateModulesModels());
             result.AddRange(CreatePersistenceModels());
             result.AddRange(CreateShadowModels());
+            result.AddRange(CreateThirdPartyModels());
             return result;
         }
 
@@ -213,6 +214,39 @@ namespace CSharpCodeGenerator.Logic.Generation
             return result;
         }
 
+        public virtual IEnumerable<Contracts.IGeneratedItem> CreateThirdPartyModels()
+        {
+            var result = new List<Contracts.IGeneratedItem>();
+            var contractsProject = ContractsProject.Create(SolutionProperties);
+
+            foreach (var type in contractsProject.ThirdPartyTypes)
+            {
+                if (CanCreate(type))
+                {
+                    result.Add(CreateModelFromContract(type, UnitType, Common.ItemType.ThridPartyModel));
+                    result.Add(CreateThirdPartyModel(type, UnitType));
+                }
+            }
+            return result;
+        }
+        protected virtual Contracts.IGeneratedItem CreateThirdPartyModel(Type type, Common.UnitType unitType)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = new Models.GeneratedItem(unitType, Common.ItemType.ThridPartyModel)
+            {
+                FullName = CreateModelFullNameFromInterface(type),
+                FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Models", "PartA", StaticLiterals.CSharpFileExtension),
+            };
+            result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
+            result.Source.Add("{");
+            result.Source.Add("}");
+            result.EnvelopeWithANamespace(CreateModelsNamespace(type));
+            result.FormatCSharpCode();
+            return result;
+        }
+
         protected virtual Contracts.IGeneratedItem CreateModelFromContract(Type type, Common.UnitType unitType, Common.ItemType itemType)
         {
             type.CheckArgument(nameof(type));
@@ -322,7 +356,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             return result;
         }
 
-        private string GetBaseClassByContract(Type type)
+        protected string GetBaseClassByContract(Type type)
         {
             type.CheckArgument(nameof(type));
 
@@ -405,7 +439,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             }
             return result;
         }
-        private string CreateModelFullNameFromInterface(Type type)
+        protected string CreateModelFullNameFromInterface(Type type)
         {
             CheckInterfaceType(type);
 

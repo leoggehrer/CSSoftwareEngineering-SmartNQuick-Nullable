@@ -28,7 +28,8 @@ namespace SolutionDockerBuilder.ConApp
         private static string HomePath { get; set; }
         private static string UserPath { get; set; }
         private static string SourcePath { get; set; }
-        static void Main(string[] args)
+
+        private static void Main(/*string[] args*/)
         {
             bool running = false;
 
@@ -87,8 +88,8 @@ namespace SolutionDockerBuilder.ConApp
 
             foreach (var dockerfile in GetDockerfiles(solutionPath))
             {
-                FileInfo dockerfileInfo = new FileInfo(dockerfile);
-                string directoryName = dockerfileInfo.Directory.Name;
+                var dockerfileInfo = new FileInfo(dockerfile);
+                var directoryName = dockerfileInfo.Directory.Name;
 
                 result.Add(dockerfileInfo.FullName);
                 Console.WriteLine($"Build docker image for: [{++index,2}] {directoryName}");
@@ -118,7 +119,7 @@ namespace SolutionDockerBuilder.ConApp
                         arguments = $"build \"{contractsCsproj}\" -c Release";
                         Console.WriteLine(arguments);
                         Debug.WriteLine($"dotnet.exe {arguments}");
-                        ProcessStartInfo csprojStartInfo = new ProcessStartInfo("dotnet.exe")
+                        var csprojStartInfo = new ProcessStartInfo("dotnet.exe")
                         {
                             Arguments = arguments,
                             //WorkingDirectory = projectPath,
@@ -157,7 +158,7 @@ namespace SolutionDockerBuilder.ConApp
                 arguments = $"build -f \"{dockerfile}\" --force-rm -t {tagLabel} --label \"com.microsoft.created-by=visual-studio\" --label \"com.microsoft.visual-studio.project-name={directoryName}\" \"{slnPath}\"";
                 Console.WriteLine(arguments);
                 Debug.WriteLine($"Docker {arguments}");
-                ProcessStartInfo buildStartInfo = new ProcessStartInfo("docker")
+                var buildStartInfo = new ProcessStartInfo("docker")
                 {
                     Arguments = arguments,
                     WorkingDirectory = directoryFullName,

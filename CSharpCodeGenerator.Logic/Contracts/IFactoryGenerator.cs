@@ -9,6 +9,7 @@ namespace CSharpCodeGenerator.Logic.Contracts
 
         IGeneratedItem CreateLogicFactory();
         IGeneratedItem CreateAdapterFactory();
+        IGeneratedItem CreateThirdPartyFactory();
     }
 }
 //MdEnd

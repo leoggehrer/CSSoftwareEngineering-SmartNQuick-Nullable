@@ -284,6 +284,84 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(result.Source.Eject().FormatCSharpCode());
             return result;
         }
+        public Contracts.IGeneratedItem CreateThirdPartyFactory()
+        {
+            var first = true;
+            var contractsProject = ContractsProject.Create(SolutionProperties);
+            var types = contractsProject.PersistenceTypes
+                                        .Union(contractsProject.ShadowTypes)
+                                        .Union(contractsProject.BusinessTypes);
+            var result = new Models.GeneratedItem(Common.UnitType.Adapters, Common.ItemType.Factory)
+            {
+                FullName = $"{AdapterNameSpace}.Factory",
+                FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = System.IO.Path.Combine($"FactoryPartC{StaticLiterals.CSharpFileExtension}"),
+            };
+            result.Add("public static partial class Factory");
+            result.Add("{");
+            result.Add("public static Contracts.Client.IAdapterAccess<C> CreateThridParty<C>(string baseUri)");
+            result.Add("{");
+            result.Add("Contracts.Client.IAdapterAccess<C> result = null;");
+
+            first = true;
+            foreach (var type in contractsProject.ThirdPartyTypes.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            {
+                var modelName = CreateEntityNameFromInterface(type);
+                var modelNameSpace = CreateTransferModelNameSpace(type);
+                var extUri = modelName.CreatePluralWord();
+
+                ConvertExtUri(type, ref extUri);
+                if (first)
+                {
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
+                }
+                else
+                {
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
+                }
+                result.Add("{");
+                result.Add($"result = new Service.GenericServiceAdapter<{type.FullName}, {modelNameSpace}.{modelName}>(baseUri, \"{extUri}\")");
+                result.Add(" as Contracts.Client.IAdapterAccess<C>;");
+                result.Add("}");
+                first = false;
+            }
+            result.Add("return result;");
+            result.Add("}");
+
+            result.Add("public static Contracts.Client.IAdapterAccess<C> Create<C>(string baseUri, string sessionToken)");
+            result.Add("{");
+            result.Add("Contracts.Client.IAdapterAccess<C> result = null;");
+
+            first = true;
+            foreach (var type in contractsProject.ThirdPartyTypes.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            {
+                var modelName = CreateEntityNameFromInterface(type);
+                var modelNameSpace = CreateTransferModelNameSpace(type);
+                var extUri = modelName.CreatePluralWord();
+
+                ConvertExtUri(type, ref extUri);
+                if (first)
+                {
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
+                }
+                else
+                {
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
+                }
+                result.Add("{");
+                result.Add($"result = new Service.GenericServiceAdapter<{type.FullName}, {modelNameSpace}.{modelName}>(sessionToken, baseUri, \"{extUri}\") as Contracts.Client.IAdapterAccess<C>;");
+                result.Add("}");
+                first = false;
+            }
+            result.Add("return result;");
+            result.Add("}");
+
+            result.Add("}");
+            result.AddRange(EnvelopeWithANamespace(result.Source.Eject(), AdapterNameSpace));
+            result.AddRange(result.Source.Eject().FormatCSharpCode());
+            return result;
+        }
+
         static partial void ConvertExtUri(Type type, ref string extUri);
         #endregion
     }

@@ -40,7 +40,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
         partial void BeforeCreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines, ref bool handled);
         partial void AfterCreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines);
-
     }
 }
 //MdEnd
