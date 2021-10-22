@@ -1,0 +1,42 @@
+﻿@*@BaseCode*@
+@using SmartNQuick.AspMvc.Modules.Handler
+@using SmartNQuick.AspMvc.Models.Modules.View
+@model SmartNQuick.AspMvc.Models.IdentityModel
+
+@{
+    ViewData["Title"] = "Create";
+    var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
+}
+
+<h1>Create</h1>
+<h4>@(Model.GetType().Name)</h4>
+
+@if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @ErrorHandler.GetLastErrorAndClear()
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @foreach (var item in Model.GetType().GetProperties().Where(p => p.CanWrite && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+            {
+                <div class="form-group">
+                    <label class="control-label" for="@item.Name">@item.Name</label>
+                    <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" />
+                    <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
+                </div>
+            }
+            @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd())
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

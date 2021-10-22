@@ -1,0 +1,45 @@
+﻿@*@BaseCode*@
+@using SmartNQuick.AspMvc.Modules.Handler
+@model SmartNQuick.AspMvc.Models.IdentityModel
+
+@{
+    ViewData["Title"] = "Delete";
+    var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
+}
+
+<h1>Delete</h1>
+<h4>@(Model.GetType().Name)</h4>
+
+@if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @ErrorHandler.GetLastErrorAndClear()
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        Should the entry be deleted?
+    </div>
+}
+
+<hr />
+<div>
+    <dl class="row">
+        @foreach (var item in Model.GetType().GetProperties().Where(p => p.CanWrite && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+        {
+            <dt class="col-sm-2">
+                @item.Name
+            </dt>
+            <dd class="col-sm-10">
+                @item.GetValue(Model)
+            </dd>
+        }
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" id="Id" asp-for="Id" value="@Model.Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

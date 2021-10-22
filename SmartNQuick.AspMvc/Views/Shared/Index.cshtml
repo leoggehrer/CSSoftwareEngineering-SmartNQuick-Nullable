@@ -1,7 +1,13 @@
-﻿@model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+﻿@*@BaseCode*@
+@using CommonBase.Extensions
+@using SmartNQuick.AspMvc.Modules.Session
+@model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
 
 @{
     ViewData["Title"] = "Index";
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var modelSubType = Model.GetType().GetGenericArguments()[0];
+    var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
 }
 
 <h1>Index</h1>
@@ -9,12 +15,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
+            @foreach (var headerItem in modelSubType.GetAllInterfacePropertyInfos()
+                                                    .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+            {
+                <th>
+                    @Html.DisplayName(headerItem.Name)
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -22,13 +33,18 @@
         @foreach (var item in Model)
         {
             <tr>
+                @foreach (var bodyItem in modelSubType.GetAllInterfacePropertyInfos()
+                                                      .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+                {
+                    var value = bodyItem.GetValue(item);
+
+                    <td>
+                        @(value != null ? value.ToString() : string.Empty)
+                    </td>
+                }
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 </td>
             </tr>
         }
