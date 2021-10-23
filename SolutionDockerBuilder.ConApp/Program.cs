@@ -166,16 +166,16 @@ namespace SolutionDockerBuilder.ConApp
                 };
                 Process.Start(buildStartInfo).WaitForExit(maxWaiting);
 
-                arguments = $"scan {tagLabel}";
-                Console.WriteLine(arguments);
-                Debug.WriteLine($"Docker {arguments}");
-                buildStartInfo = new ProcessStartInfo("docker")
-                {
-                    Arguments = arguments,
-                    WorkingDirectory = directoryFullName,
-                    UseShellExecute = false
-                };
-                Process.Start(buildStartInfo).WaitForExit(maxWaiting);
+                //arguments = $"scan {tagLabel}";
+                //Console.WriteLine(arguments);
+                //Debug.WriteLine($"Docker {arguments}");
+                //buildStartInfo = new ProcessStartInfo("docker")
+                //{
+                //    Arguments = arguments,
+                //    WorkingDirectory = directoryFullName,
+                //    UseShellExecute = false
+                //};
+                //Process.Start(buildStartInfo).WaitForExit(maxWaiting);
             }
             catch (Exception e)
             {

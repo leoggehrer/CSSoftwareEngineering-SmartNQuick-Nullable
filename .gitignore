@@ -339,6 +339,8 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 #QnSCodeIgnoreStart
+/SmartNQuick.WebApi/Controllers/Persistence/MusicStore/TracksController.cs
+/SmartNQuick.WebApi/Controllers/Persistence/MusicStore/GenresController.cs
 /SmartNQuick.WebApi/Controllers/Persistence/MusicStore/ArtistsController.cs
 /SmartNQuick.WebApi/Controllers/Persistence/MusicStore/AlbumsController.cs
 /SmartNQuick.WebApi/Controllers/Business/MusicStore/ArtistAlbumsesController.cs
@@ -359,12 +361,6 @@ healthchecksdb
 /SmartNQuick.Transfer/Models/Business/MusicStore/AlbumTracksPartD.cs
 /SmartNQuick.Transfer/Models/Business/MusicStore/AlbumTracksPartA.cs
 /SmartNQuick.Transfer/Models/Business/MusicStore/AlbumTracks.cs
-/SmartNQuick.Transfer/Models/ThirdParty/TranslationPartA.cs
-/SmartNQuick.Transfer/Models/ThirdParty/Translation.cs
-/SmartNQuick.AspMvc/Models/ThirdParty/TranslationPartA.cs
-/SmartNQuick.AspMvc/Models/ThirdParty/Translation.cs
-/SmartNQuick.WebApi/Controllers/Persistence/MusicStore/TracksController.cs
-/SmartNQuick.WebApi/Controllers/Persistence/MusicStore/GenresController.cs
 /SmartNQuick.Logic/Entities/Persistence/MusicStore/TrackPartB.cs
 /SmartNQuick.Logic/Entities/Persistence/MusicStore/TrackPartA.cs
 /SmartNQuick.Logic/Entities/Persistence/MusicStore/Track.cs
@@ -411,6 +407,10 @@ healthchecksdb
 /SmartNQuick.AspMvc/Controllers/Persistence/MusicStore/AlbumsController.cs
 /SmartNQuick.AspMvc/Controllers/Business/MusicStore/ArtistAlbumsesController.cs
 /SmartNQuick.AspMvc/Controllers/Business/MusicStore/AlbumTracksesController.cs
+/SmartNQuick.Transfer/Models/ThirdParty/TranslationPartA.cs
+/SmartNQuick.Transfer/Models/ThirdParty/Translation.cs
+/SmartNQuick.AspMvc/Models/ThirdParty/TranslationPartA.cs
+/SmartNQuick.AspMvc/Models/ThirdParty/Translation.cs
 /SmartNQuick.Logic/DataContext/SmartNQuickDbContextPartA.cs
 /SmartNQuick.Logic/FactoryPartA.cs
 /SmartNQuick.Adapters/FactoryPartC.cs

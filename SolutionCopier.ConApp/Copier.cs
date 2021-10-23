@@ -362,7 +362,7 @@ namespace SolutionCopier.ConApp
 
                 File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);
             }
-            if (sourceFilePath.EndsWith(DockerComposefileName, StringComparison.CurrentCultureIgnoreCase))
+            else if (sourceFilePath.EndsWith(DockerComposefileName, StringComparison.CurrentCultureIgnoreCase))
             {
                 var sourceLines = File.ReadAllLines(sourceFilePath, Encoding.Default);
                 var targetLines = sourceLines.Select(l => l.Replace(sourceSolutionName, targetSolutionName))

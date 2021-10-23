@@ -13,9 +13,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.ConApp", "Smart
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C4BC300B-0CAF-4A53-815C-C432B6C80611}"
 	ProjectSection(SolutionItems) = preProject
+		CodeGeneration.drawio = CodeGeneration.drawio
+		CodeGeneration.png = CodeGeneration.png
+		Communication_Path.drawio = Communication_Path.drawio
+		Communication_Path.png = Communication_Path.png
+		CreateProject.drawio = CreateProject.drawio
+		CreateProject.png = CreateProject.png
 		DevelopmentStepByStep.md = DevelopmentStepByStep.md
 		docker-compose.yml = docker-compose.yml
 		ReadMe.md = ReadMe.md
+		ReadMeSave.md = ReadMeSave.md
+		SyncProjects.drawio = SyncProjects.drawio
+		SyncProjects.png = SyncProjects.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.WebApi", "SmartNQuick.WebApi\SmartNQuick.WebApi.csproj", "{DEEE04A7-6F3B-4372-9125-CE9EFD989B0C}"
