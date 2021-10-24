@@ -20,7 +20,6 @@ namespace SolutionCopier.ConApp
 			UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 			SourcePath = GetCurrentSolutionPath();
 			TargetPath = Path.Combine(UserPath, @"source\repos\HtlLeo\AustroSoftAG\SnQAustroSoftProject");
-			TargetPath = Path.Combine(@"C:\Temp", @"SnQDockerCompose");
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();

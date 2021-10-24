@@ -145,8 +145,8 @@ Als Ausgangsbasis wird der Framework 'SmartNQuick' verwendet. Diese Projekt wird
 Zum Beispiel soll ein Projekt mit dem Namen 'QnSTravelCount' erstellt werden. Im 'SolutionCopier' werden folgende Parameter eingestellt:  
 
 ```csharp
-string sourcePath = @"BasePath\SmartNQuick";     // Verzeichnis - Framework-SmartNQuick
-string targetPath = @"BasePath\QnSTravelCount";  // Verzeichnis - Domain-Project
+SourcePath = @"BasePath\SmartNQuick";     // Verzeichnis - Framework-SmartNQuick
+TargetPath = @"BasePath\QnSTravelCount";  // Verzeichnis - Domain-Project
 
 var sc = new SolutionCopier();
 
@@ -188,33 +188,31 @@ Die generierten Komponenten werden in den Dateien mit dem Namen '_GeneratedCode.
 
 ### Synchronisieren vom Framework (SmartNQuick) mit den Domain-Projekten  
 
-In der Software-Entwicklung gibt es immer wieder Verbesserungen und Erweiterungen. Das betrifft den Framework 'SmartNQuick' genauso wie alle anderen Projekte. Nun stellt sich die Frage: Wie können Verbesserungen und/oder Erweiterungen vom Framework auf die Domain-Projekte übertragen werden? Im Framework sind die Quellcode-Dateien mit Labels (@QnSBaseCode) gekennzeichnet. Beim Kopieren werden diese Labels durch den Label (@CodeCopy) ersetzt. Mit dem Hilfsprogramm BaseCodeCopier werden die Dateien mit dem Label '@QnSBaseCode' und '@CodeCopy' abgeglichen. In der folgenden Skizze ist dieser Prozess dargestellt:
+In der Software-Entwicklung gibt es immer wieder Verbesserungen und Erweiterungen. Das betrifft den Framework 'SmartNQuick' genauso wie alle anderen Projekte. Nun stellt sich die Frage: Wie können Verbesserungen und/oder Erweiterungen vom Framework auf die Domain-Projekte übertragen werden? Im Framework sind die Quellcode-Dateien mit Labels (@BaseCode) gekennzeichnet. Beim Kopieren werden diese Labels durch den Label (@CodeCopy) ersetzt. Mit dem Hilfsprogramm BaseCodeCopier werden die Dateien mit dem Label '@BaseCode' und '@CodeCopy' abgeglichen. In der folgenden Skizze ist dieser Prozess dargestellt:
 
-![Synchron-Prozess](SmartNQuick_Sync.png)
+![Synchron-Prozess](SyncProjects.png)
 
 Die Einstellungen für den Abgleichprozess müssen wie folgt definiert werden:
 
 ```csharp
 // Quell-Project: SmartNQuick
-var sourcePath = Path.Combine(HomePath, "Google Drive", "Schule", "CSharp", "SmartNQuick", "Solution", "SmartNQuick");
+SourcePath = @"BasePath\SmartNQuick";     // Verzeichnis - Framework-SmartNQuick
 var targetPaths = new string[]
 {
-    // Ziel-Projekt: QnSTravelCount
-    Path.Combine(HomePath, "Google Drive", "Schule", "CSharp", "QnSTravelCount", "Solution", "QnSTravelCount"),
+    // Target-Projects
+	@"BasePath\DomainProject1",
+	@"BasePath\DomainProject2",
+	@"BasePath\DomainProject3",
 };
-Paths.Add(sourcePath, targetPaths);
-// Abgleich aller Dateien mit dem Label QnSBaseCodeLabel
-SourceLabels.Add(sourcePath, new string[] { QnSBaseCodeLabel });  
-
+Paths.Add(SourcePath, targetPaths);
 ```
 
-Des Programm 'BaseCodeCopier.ConApp' muss manuell gestartet werden damit der Abgleich-Prozess aktiviert wird. Sollen Dateien vom Abgleich-Prozess ausgenommen werden, dann können die Labels (@CodeCopy) in den einzelnen Dateien im Ziel-Projekt entfernt werden.  
-
+Des Programm 'SolutionCodeComparsion.ConApp' muss manuell gestartet werden damit der Abgleich-Prozess aktiviert wird. Sollen Dateien vom Abgleich-Prozess ausgenommen werden, dann können die Labels (@CodeCopy) in den einzelnen Dateien im Ziel-Projekt entfernt werden.  
 ## Code-Generierungs-Prozess  
 
-In der obigen Abbildung ist der Code-Generierungs-Prozess schemenhaft dargestellt. Der Code-Generator bekommt als Eingabe-Information die 'Domain-Projekt.Contracts.dll' und der Generator generiert aufgrund dieser Informationen die einzelnen Komponenten und letgt diese in den enstprechenden Teil-Projekten ab. Dieser Prozess wird automatisch ausgeführt, wenn eine Änderung im Schnittstellen-Projekt durchgeführt wurde. Der Prozess kann natürlich auch manuell akiviert werden. In beiden Fällen wird der gesamte generierte Code wieder vollständig erzeugt.  
+In der obigen Abbildung ist der Code-Generierungs-Prozess schematisch dargestellt. Der Code-Generator bekommt als Eingabe-Information die 'Domain-Projekt.Contracts.dll' und der Generator generiert aufgrund dieser Informationen die einzelnen Komponenten und letgt diese in den enstprechenden Teil-Projekten ab. Dieser Prozess wird automatisch ausgeführt, wenn eine Änderung im Schnittstellen-Projekt durchgeführt wurde. Der Prozess kann natürlich auch manuell akiviert werden. In beiden Fällen wird der gesamte generierte Code wieder vollständig erzeugt.  
 
-Wie bereits erwähnt, werden bei der Code-Generierung viele Komponenten vom System erzeugt. Diese Komponenten werden in den Dateien '_GeneratedCode.cs' abgelegt und können vom Programmierer abgeändert werden. Allerdings dürfen keine Änderungen in der '_GeneratedCode.cs' direkt durchgeführt werden - der Grund ist - diese Dateien werden nach jeder Schnittstellen-Änderung automatisch erzeugt und die darin enthaltenen Änderungen gehen verloren. Im Nachfolgenden Abschnitt werden die einzelenen Komponenten detailiert erläutert.
+Wie bereits erwähnt, werden bei der Code-Generierung viele Komponenten vom System erzeugt. Diese Komponenten werden in den Dateien mit dem Label '@GeneratedCode' abgelegt und können vom Programmierer abgeändert werden. Allerdings sollten keine Änderungen in diesen Dateien vorgenommen werden, da der Code-Generator diese wieder neu erzeugt und dadurch die Änderungen verloren gehen. Ist dies doch erwünscht, dann sollte der Labe '@GeneratedCode' entfernt werden. Dann wird diese Datei vom Generator vom Generierungs-Prozess ausgeschlossen. Eine besser Variante ist jedoch die Erstellung einer partiellen Klasse für die Anpassung der Komponente.
 
 ### Entities  
 
