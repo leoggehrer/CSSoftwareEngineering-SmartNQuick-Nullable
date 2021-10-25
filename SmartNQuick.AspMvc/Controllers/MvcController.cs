@@ -5,7 +5,7 @@ using SmartNQuick.AspMvc.Modules.Session;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-	public class MvcController : Controller
+    public class MvcController : Controller
 	{
         private string lastError;
         protected string LastError
@@ -22,7 +22,7 @@ namespace SmartNQuick.AspMvc.Controllers
         #region SessionWrapper
         public bool IsSessionAvailable => HttpContext?.Session != null;
         private ISessionWrapper sessionWrapper = null;
-        internal ISessionWrapper SessionWrapper => sessionWrapper ?? (sessionWrapper = new SessionWrapper(HttpContext.Session));
+        internal ISessionWrapper SessionWrapper => sessionWrapper ??= new SessionWrapper(HttpContext.Session);
         #endregion
     }
 }

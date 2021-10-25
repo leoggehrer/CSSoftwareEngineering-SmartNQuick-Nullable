@@ -101,6 +101,19 @@ namespace CommonBase.Extensions
             result.AddRange(items);
             return result;
         }
+        public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source)
+        {
+            source.CheckArgument(nameof(source));
+
+            using var e = source.GetEnumerator();
+            if (e.MoveNext())
+            {
+                for (var value = e.Current; e.MoveNext(); value = e.Current)
+                {
+                    yield return value;
+                }
+            }
+        }
 
         ///<summary>Finds the index of the first item matching an expression in an enumerable.</summary>
         ///<param name="items">The enumerable to search.</param>

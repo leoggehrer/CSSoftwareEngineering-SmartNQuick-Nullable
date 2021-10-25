@@ -542,7 +542,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
             var modelType = $"AspMvc.{StaticLiterals.ModelsFolder}.{subNameSpace}.{entityName}";
-            var controllerName = entityName.EndsWith("s") ? entityName : $"{entityName}s";
+            var controllerName = entityName.CreatePluralWord();
             var result = new Models.GeneratedItem(Common.UnitType.AspMvc, Common.ItemType.AspMvcController)
             {
                 FullName = CreateAspMvcControllerFullNameFromInterface(type),

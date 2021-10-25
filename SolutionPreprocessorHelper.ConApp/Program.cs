@@ -13,11 +13,11 @@ namespace SolutionPreprocessorHelper.ConApp
 {
     internal partial class Program
     {
-        private static string[] Directives { get; } = new string[] 
-        { 
-            "ACCOUNT_OFF", 
-            "LOGGING_OFF", 
-            "REVISION_OFF" 
+        private static string[] Directives { get; } = new string[]
+        {
+            "ACCOUNT_ON",
+            "LOGGING_OFF",
+            "REVISION_OFF"
         };
 
         private static void Main(/*string[] args*/)
@@ -29,6 +29,7 @@ namespace SolutionPreprocessorHelper.ConApp
             stopwatch.Start();
             PrintSolutionDirectives("DEBUG");
             SetPreprocessorDirectivesInProjectFiles(Directives);
+            EditPreprocessorDirectivesInRazorFiles(Directives);
             stopwatch.Stop();
             Console.WriteLine($"Set directives in {fileCount} file(s) in {stopwatch.ElapsedMilliseconds / 1000:f}");
         }
@@ -59,13 +60,13 @@ namespace SolutionPreprocessorHelper.ConApp
             }
         }
 
-        private static int SetPreprocessorDirectivesInProjectFiles(params string[] directivItems)
+        private static int SetPreprocessorDirectivesInProjectFiles(params string[] directiveItems)
         {
-            directivItems.CheckArgument(nameof(directivItems));
+            directiveItems.CheckArgument(nameof(directiveItems));
 
             var path = SolutionAccessor.GetCurrentSolutionPath(nameof(SolutionPreprocessorHelper));
             var files = Directory.GetFiles(path, "*.csproj", SearchOption.AllDirectories);
-            var directives = string.Join(";", directivItems);
+            var directives = string.Join(";", directiveItems);
 
             foreach (var file in files)
             {
@@ -106,6 +107,121 @@ namespace SolutionPreprocessorHelper.ConApp
                 }
             }
             return files.Length;
+        }
+        private static void EditPreprocessorDirectivesInRazorFiles(params string[] directiveItems)
+        {
+            directiveItems.CheckArgument(nameof(directiveItems));
+
+
+            foreach (var directive in directiveItems)
+            {
+                var analyzeDirective = directive.ToUpper();
+
+                if (analyzeDirective.EndsWith("_OFF", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    SetPreprocessorDirectivesCommentsInRazorFiles(directive.Replace("_OFF", "_ON"));
+                }
+                else if (analyzeDirective.EndsWith("_ON"))
+                {
+                    RemovePreprocessorDirectivesCommentsInRazorFiles(directive);
+                }
+            }
+        }
+        private static void SetPreprocessorDirectivesCommentsInRazorFiles(params string[] directiveItems)
+        {
+            directiveItems.CheckArgument(nameof(directiveItems));
+
+            var path = SolutionAccessor.GetCurrentSolutionPath(nameof(SolutionPreprocessorHelper));
+            var files = Directory.GetFiles(path, "*.cshtml", SearchOption.AllDirectories);
+
+            foreach (var directive in directiveItems)
+            {
+                foreach (var file in files)
+                {
+                    var startIndex = 0;
+                    var hasChanged = false;
+                    var result = string.Empty;
+                    var text = File.ReadAllText(file, Encoding.Default);
+
+                    foreach (var tag in text.GetAllTags($"#if {directive}", "#endif"))
+                    {
+                        if (tag.StartTagIndex > startIndex)
+                        {
+                            hasChanged = true;
+                            result += text.Partialstring(startIndex, tag.StartTagIndex - 1);
+                            result += tag.StartTag;
+                            if (tag.InnerText.StartsWith("@*"))
+                            {
+                                result += tag.InnerText;
+                            }
+                            else
+                            {
+                                result += Environment.NewLine + "@*";
+                                result += tag.InnerText;
+                                result += "*@" + Environment.NewLine;
+                            }
+                            result += tag.EndTag;
+                            startIndex += tag.EndTagIndex + tag.EndTag.Length;
+                        }
+                    }
+                    if (hasChanged && startIndex < text.Length)
+                    {
+                        result += text.Partialstring(startIndex, text.Length);
+                    }
+                    if (hasChanged)
+                    {
+                        File.WriteAllText(file, result, Encoding.Default);
+                    }
+                }
+            }
+        }
+        private static void RemovePreprocessorDirectivesCommentsInRazorFiles(params string[] directiveItems)
+        {
+            directiveItems.CheckArgument(nameof(directiveItems));
+
+            var path = SolutionAccessor.GetCurrentSolutionPath(nameof(SolutionPreprocessorHelper));
+            var files = Directory.GetFiles(path, "*.cshtml", SearchOption.AllDirectories);
+
+            foreach (var directive in directiveItems)
+            {
+                foreach (var file in files)
+                {
+                    var startIndex = 0;
+                    var hasChanged = false;
+                    var result = string.Empty;
+                    var text = File.ReadAllText(file, Encoding.Default);
+
+                    foreach (var tag in text.GetAllTags($"#if {directive}", "#endif"))
+                    {
+                        if (tag.StartTagIndex > startIndex)
+                        {
+                            hasChanged = true;
+                            result += text.Partialstring(startIndex, tag.StartTagIndex - 1);
+                            result += tag.StartTag;
+                            var innerText = tag.InnerText.Trim(Environment.NewLine.ToCharArray());
+                            if (innerText.StartsWith("@*") && innerText.EndsWith("*@"))
+                            {
+                                result += innerText.Partialstring(2, innerText.Length - 5);
+                                result += Environment.NewLine;
+                            }
+                            else
+                            {
+                                result += tag.InnerText;
+                            }
+                            startIndex += tag.EndTagIndex + tag.EndTag.Length;
+                            result += tag.EndTag;
+                        }
+                    }
+                    if (hasChanged && startIndex < text.Length)
+                    {
+                        result += text.Partialstring(startIndex, text.Length);
+                    }
+                    if (hasChanged)
+                    {
+                        File.WriteAllText(file, result, Encoding.Default);
+                    }
+                }
+            }
         }
     }
 }

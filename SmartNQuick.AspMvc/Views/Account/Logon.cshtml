@@ -1,0 +1,70 @@
+@*@BaseCode*@
+#if ACCOUNT_ON
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Models.Modules.Account
+    @model LogonViewModel
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(action);
+    var subTitle = translate("Please provide your user credentials to proceed:");
+    var submit = translateFor("Logon");
+    var forgotPassword = translate("Forgot your password?");
+
+    ViewData["Title"] = title;
+
+    <hr />
+
+    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastErrorAndClear()
+        </div>
+    }
+
+    <div class="vertical-flex-center">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <h2>@title</h2>
+                    <h4>@subTitle</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 offset-2 text-center">
+                    <div class="account-wall">
+                        <span class="profile-img text-center">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        @using (Html.BeginForm("Logon", "Account", new { returnUrl = "" }, FormMethod.Post, null, new { @class = "form-signin", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+
+                            <input name="@nameof(Model.ReturnUrl)" type="hidden" value="@Model.ReturnUrl" />
+                            <input name="@nameof(Model.IdentityUrl)" type="hidden" value="@Model.IdentityUrl" />
+                            <input name="@nameof(Model.Email)" type="text" class="form-control" placeholder="@translateFor("Email")" required autofocus />
+                            <p></p>
+                            <input name="@nameof(Model.Password)" type="password" class="form-control" placeholder="@translateFor("Password")" required />
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                @translateFor("Sign in")
+                            </button>
+                        }
+                        @if (Model.HasError)
+                        {
+                            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+#endif

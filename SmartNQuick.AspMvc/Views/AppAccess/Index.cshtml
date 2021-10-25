@@ -1,0 +1,97 @@
+@*@BaseCode*@
+#if ACCOUNT_ON
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Language
+    @model IEnumerable<SmartNQuick.AspMvc.Models.Business.Account.AppAccess>
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(action);
+
+    ViewData["Title"] = title;
+
+    <h1>@title</h1>
+
+    @if (sessionWrapper.IsAuthenticated && sessionWrapper.HasRole("SysAdmin", "AppAdmin"))
+    {
+        <div class="d-flex bg-transparent">
+            <div class="mr-auto p-sm-2">
+                <a asp-action="Create" class="btn btn-outline-secondary">@translateFor("Create New")</a>
+            </div>
+            <div class="p-sm-2">
+                <a asp-action="Export" class="btn btn-outline-secondary">@translateFor("Export")</a>
+            </div>
+            <div class="p-sm-2">
+                <a asp-action="Import" class="btn btn-outline-primary">@translateFor("Import")</a>
+            </div>
+        </div>
+    }
+    <p></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.OneItem.Name))
+                </th>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.OneItem.Email))
+                </th>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.OneItem.EnableJwtAuth))
+                </th>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.ManyItems))
+                </th>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.OneItem.AccessFailedCount))
+                </th>
+                <th>
+                    @translateFor(Html.DisplayNameFor(model => model.OneItem.State))
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OneItem.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OneItem.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OneItem.EnableJwtAuth)
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach (var role in item.ManyItems)
+                            {
+                                <li>@role.Designation</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OneItem.AccessFailedCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OneItem.State)
+                    </td>
+                    <td>
+                        @Html.ActionLink(translateFor("Edit"), "Edit", new { id = item.Id }) |
+                        @Html.ActionLink(translateFor("Details"), "Details", new { id = item.Id }) |
+                        @Html.ActionLink(translateFor("Delete"), "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+#endif

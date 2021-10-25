@@ -1,0 +1,57 @@
+@*@BaseCode*@
+#if ACCOUNT_ON
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(action);
+
+    ViewData["Title"] = title;
+
+    <h1>@title</h1>
+
+    <div class="d-flex bg-transparent">
+        <div class="p-sm-2 mr-auto">
+            <h4>@translate(controller)</h4>
+        </div>
+    </div>
+    <hr />
+
+    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastErrorAndClear()
+        </div>
+    }
+
+    <form asp-action="Delete" method="post">
+        @if (Model.HasError)
+        {
+            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
+        }
+        else
+        {
+            <h3>@translate("Are you sure you want to delete this?")</h3>
+        }
+        <div style="margin-top: 1em;">
+            @await Html.PartialAsync("_IdentityDetails", Model.OneItem)
+        </div>
+
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = "Delete", SubmitCss = "btn btn-danger" })
+    </form>
+
+    <div style="margin-top: 1em;">
+        <h4>Rolen</h4>
+        @await Html.PartialAsync("_RoleListDetails", Model.ManyItems)
+    </div>
+}
+#endif

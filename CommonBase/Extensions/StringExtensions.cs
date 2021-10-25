@@ -509,6 +509,35 @@ namespace CommonBase.Extensions
             return result;
         }
 
+        public static IEnumerable<string> Trim(this IEnumerable<string> source)
+        {
+            source.CheckArgument(nameof(source));
+
+            var result = new List<string>();
+            var prvEmpty = true;
+
+            foreach (var item in source)
+            {
+                if (string.IsNullOrEmpty(item) && prvEmpty == false)
+                {
+                    result.Add(string.Empty);
+                    prvEmpty = true;
+                }
+                else if (string.IsNullOrEmpty(item) == false)
+                {
+                    result.Add(item);
+                    prvEmpty = false;
+                }
+            }
+            var lastElem = result.LastOrDefault();
+
+            if (string.IsNullOrEmpty(lastElem))
+            {
+                result.Remove(lastElem);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Extracts a substring from a string (excludes from to).
         /// </summary>
