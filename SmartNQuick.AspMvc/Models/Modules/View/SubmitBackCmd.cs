@@ -13,6 +13,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         partial void Constructing();
         partial void Constructed();
 
+        public bool FromSubmitToBack { get; set; } = false;
         public string BackText { get; set; } = "Back to List";
         public string BackAction { get; set; } = "Index";
         public string BackController { get; set; }

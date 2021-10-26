@@ -6,7 +6,7 @@
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.Persistence.Account.Role
+    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -38,28 +38,25 @@
         {
             <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
         }
-        <div class="row">
-            <div class="col-md-8">
-                <input asp-for="Id" type="hidden" />
-                <input asp-for="RowVersion" type="hidden" />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="control-label">@translateFor(nameof(Model.Designation))</label>
-                    <input asp-for="Designation" class="form-control" />
-                    <span asp-validation-for="Designation" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">@translateFor(nameof(Model.Description))</label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-            </div>
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="RowVersion" type="hidden" />
+        <div style="margin-top: 1em;">
+            @await Html.PartialAsync("_IdentityEdit", Model.OneItem)
         </div>
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd())
+
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })
+
+        <div style="margin-top: 1em;">
+            <h4>Rolen</h4>
+            @await Html.PartialAsync("_RoleListEdit", Model.ManyItems)
+        </div>
     </form>
 }
 @*#endif*@
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_EditScriptsPartial");
+    }
 }

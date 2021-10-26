@@ -1,52 +1,71 @@
 ﻿@*@BaseCode*@
-@using CommonBase.Extensions
-@using SmartNQuick.AspMvc.Modules.Session
-@model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
-
 @{
-    ViewData["Title"] = "Index";
+    @using CommonBase.Extensions
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var modelSubType = Model.GetType().GetGenericArguments()[0];
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(controller);
+
     var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
-}
 
-<h1>Index</h1>
+    ViewData["Title"] = title;
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    <h1>@title</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            @foreach (var headerItem in modelSubType.GetAllInterfacePropertyInfos()
-                                                    .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
-            {
-                <th>
-                    @Html.DisplayName(headerItem.Name)
-                </th>
-            }
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                @foreach (var bodyItem in modelSubType.GetAllInterfacePropertyInfos()
-                                                      .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastErrorAndClear()
+        </div>
+    }
+    else
+    {
+        var modelSubType = Model.GetType().GetGenericArguments()[0];
+
+        <p style="margin-top: 1em;">
+            <a asp-action="Create" class="btn btn-outline-secondary">@translateFor("Create New")</a>
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (var headerItem in modelSubType.GetAllInterfacePropertyInfos()
+                                             .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+                    {
+                        <th>
+                            @translateFor(Html.DisplayName(headerItem.Name))
+                        </th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    var value = bodyItem.GetValue(item);
+                    <tr>
+                        @foreach (var bodyItem in modelSubType.GetAllInterfacePropertyInfos()
+                                               .Where(p => p.CanRead && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
+                        {
+                            var value = bodyItem.GetValue(item);
 
-                    <td>
-                        @(value != null ? value.ToString() : string.Empty)
-                    </td>
+                            <td>
+                                @(value != null ? value.ToString() : string.Empty)
+                            </td>
+                        }
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
                 }
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    }
+}

@@ -1,0 +1,31 @@
+@*@BaseCode*@
+
+<script type="text/javascript">
+
+    var changed = false;
+
+    function isChanged() {
+        return changed;
+    }
+    function setChanged(val) {
+        changed = val;
+    };
+
+    $().ready(function () {
+        $("input[type='submit']").click(function () {
+            setChanged(false);
+        });
+
+        $('input[type="text"], textarea, select').change(function () {
+            setChanged(true);
+        });
+    });
+
+    $(window).bind('beforeunload', function () {
+        //to update the dirty flag when there is a different form values
+        if (isChanged()) {
+            return "New information not saved. Do you wish to leave the page?";
+        }
+    });
+
+</script>

@@ -2,11 +2,11 @@
 @*#if ACCOUNT_ON*@
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
-    @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
+    @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -33,25 +33,29 @@
         </div>
     }
 
-    <form asp-action="Delete" method="post">
+    <form asp-action="Edit">
         @if (Model.HasError)
         {
             <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
         }
-        else
-        {
-            <h3>@translate("Are you sure you want to delete this?")</h3>
-        }
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="RowVersion" type="hidden" />
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_IdentityDetails", Model.OneItem)
+            @await Html.PartialAsync("_IdentityEdit", Model.OneItem)
         </div>
 
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = "Delete", SubmitCss = "btn btn-danger" })
-    </form>
+        <div style="margin-top: 1em;">
+            @await Html.PartialAsync("_UserEdit", Model.AnotherItem)
+        </div>
 
-    <div style="margin-top: 1em;">
-        <h4>Rolen</h4>
-        @await Html.PartialAsync("_RoleListDetails", Model.ManyItems)
-    </div>
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })
+    </form>
 }
 @*#endif*@
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_EditScriptsPartial");
+    }
+}

@@ -1,30 +1,43 @@
 ﻿@*@BaseCode*@
-@using SmartNQuick.AspMvc.Modules.Handler
-@model SmartNQuick.AspMvc.Models.IdentityModel
-
 @{
-    ViewData["Title"] = "Delete";
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(action);
     var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
-}
 
-<h1>Delete</h1>
-<h4>@(Model.GetType().Name)</h4>
+    ViewData["Title"] = title;
 
-@if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
-{
-    <div class="alert alert-danger" role="alert">
-        @ErrorHandler.GetLastErrorAndClear()
+    <h1>@title</h1>
+
+    <div class="d-flex bg-transparent">
+        <div class="p-sm-2 mr-auto">
+            <h4>@translate(controller)</h4>
+        </div>
     </div>
-}
-else
-{
-    <div class="alert alert-danger" role="alert">
-        Should the entry be deleted?
-    </div>
-}
+    <hr />
 
-<hr />
-<div>
+    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastErrorAndClear()
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            Should the entry be deleted?
+        </div>
+    }
+
     <dl class="row">
         @foreach (var item in Model.GetType().GetProperties().Where(p => p.CanWrite && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
         {
@@ -39,7 +52,7 @@ else
 
     <form asp-action="Delete">
         <input type="hidden" id="Id" asp-for="Id" value="@Model.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <hr />
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Delete"), BackText = translateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>
-</div>
+}

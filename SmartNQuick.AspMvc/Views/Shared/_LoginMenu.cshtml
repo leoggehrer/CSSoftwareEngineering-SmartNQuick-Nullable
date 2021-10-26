@@ -15,7 +15,6 @@
     var mnuRoleMngr = translateFor("Role-Management");
     var mnuPwdChange = translateFor("Change password");
     var mnuPwdReset = translateFor("Reset password");
-    var mnuTranslation = translateFor("Translations");
     var mnuUser = string.Empty;
 
     if (sessionWrapper.LoginSession != null)
@@ -39,25 +38,19 @@
                     <ul class="dropdown-menu">
                         @if (sessionWrapper.HasRole("SysAdmin") == true)
                         {
-                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccess", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUser", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Role", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccesses", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUsers", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Roles", routeValues: null, htmlAttributes: null)</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdReset, "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
-                            <li class="dropdown-divider"></li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuTranslation, "Index", "AppTranslation", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-divider"></li>
                         }
                         else if (sessionWrapper.HasRole("AppAdmin") == true)
                         {
-                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccess", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUser", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Role", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccesses", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUsers", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Roles", routeValues: null, htmlAttributes: null)</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdReset, "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
-                            <li class="dropdown-divider"></li>
-                            <li class="dropdown-item">@Html.ActionLink(mnuTranslation, "Index", "AppTranslation", routeValues: null, htmlAttributes: null)</li>
-                            <li class="dropdown-divider"></li>
                         }
                         else
                         {

@@ -4,12 +4,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using Model = SmartNQuick.AspMvc.Models.Business.Account.AppAccess;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
 using Microsoft.AspNetCore.Http;
 using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
+using Model = SmartNQuick.AspMvc.Models.Business.Account.AppAccess;
 
 namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {
@@ -186,14 +186,22 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             }
         }
 
+        #region Export and Import
+        protected override string[] CsvHeader => new string[] 
+        { 
+            "Id",
+            $"{nameof(Model.OneItem)}.Name",
+            $"{nameof(Model.OneItem)}.Email",
+            $"{nameof(Model.OneItem)}.Password",
+            $"{nameof(Model.OneItem)}.AccessFailedCount",
+            $"{nameof(Model.OneItem)}.EnableJwtAuth", 
+            "RoleList"
+        };
 
-#region Csv and Import
-        protected override string[] CsvHeader => new string[] { "Id", "OneItem.Name", "OneItem.Email", "OneItem.Password", "OneItem.AccessFailedCount", "OneItem.EnableJwtAuth", "RoleList" };
-
-        [ActionName("Csv")]
-        public async Task<FileResult> CsvAsync()
+        [ActionName("Export")]
+        public async Task<FileResult> ExportAsync()
         {
-            var fileName = "AppAccess.csv";
+            var fileName = "AppAccesses.csv";
             using var ctrl = CreateController();
             var entities = (await ctrl.GetAllAsync().ConfigureAwait(false)).Select(e => ToModel(e));
 
@@ -265,9 +273,9 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             model.LogInfos = logInfos;
             return View(model);
         }
-#endregion Csv and Import
+        #endregion Export and Import
 
-#region Helpers
+        #region Helpers
         private async Task LoadRolesAsync(Model model)
         {
             model.CheckArgument(nameof(model));
@@ -292,7 +300,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                 }
             }
         }
-#endregion Helpers
+        #endregion Helpers
     }
 }
 #endif

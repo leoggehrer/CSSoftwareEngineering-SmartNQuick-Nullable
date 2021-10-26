@@ -1,0 +1,61 @@
+@*@BaseCode*@
+@*#if ACCOUNT_ON*@
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using CommonBase.Extensions
+    @using SmartNQuick.AspMvc.Extensions
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Language
+    @model SmartNQuick.AspMvc.Models.Persistence.Account.Identity
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var options = EnumExtensions.ToList<SmartNQuick.Contracts.Modules.Common.State>();
+
+    <div class="row">
+        <div class="col-md-8">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">@translateFor(nameof(Model.Guid))</label>
+                <input asp-for="Guid" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Guid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@translateFor(nameof(Model.Name))</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@translateFor(nameof(Model.Email))</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            @if (Model.Id == 0)
+            {
+                <div class="form-group">
+                    <label class="control-label">@translateFor(nameof(Model.Password))</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EnableJwtAuth" />@translateFor(nameof(Model.EnableJwtAuth))
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@translateFor(nameof(Model.AccessFailedCount))</label>
+                <input asp-for="AccessFailedCount" class="form-control" />
+                <span asp-validation-for="AccessFailedCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">@translateFor(nameof(Model.State))</label>
+                @Html.ToSelect("form-control", string.Empty, "State", options, Model.State)
+            </div>
+        </div>
+    </div>
+}
+@*#endif*@

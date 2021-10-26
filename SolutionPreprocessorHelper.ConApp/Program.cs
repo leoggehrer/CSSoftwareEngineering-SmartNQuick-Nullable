@@ -29,7 +29,6 @@ namespace SolutionPreprocessorHelper.ConApp
             stopwatch.Start();
             PrintSolutionDirectives("DEBUG");
             SetPreprocessorDirectivesInProjectFiles(Directives);
-            //ReplacePreprocessorDirectivesInRazorFiles(Directives);
             EditPreprocessorDirectivesInRazorFiles(Directives);
             stopwatch.Stop();
             Console.WriteLine($"Set directives in {fileCount} file(s) in {stopwatch.ElapsedMilliseconds / 1000:f}");

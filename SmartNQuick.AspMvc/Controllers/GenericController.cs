@@ -77,14 +77,31 @@ namespace SmartNQuick.AspMvc.Controllers
         [ActionName("Index")]
         public virtual async Task<IActionResult> IndexAsync()
         {
-            using var ctrl = CreateController();
-            var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var models = entities.Select(e => ToModel(e));
+            var handled = false;
+            var models = default(IEnumerable<TModel>);
 
-            models = BeforeView(models, Action.Index);
-            models = await BeforeViewAsync(models, Action.Index).ConfigureAwait(false);
+            BeforeIndex(ref models, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    using var ctrl = CreateController();
+                    var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
+
+                    models = entities.Select(e => ToModel(e));
+                    models = BeforeView(models, Action.Index);
+                    models = await BeforeViewAsync(models, Action.Index).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastError = ex.GetError();
+                }
+            }
+            AfterIndex(models);
             return View("Index", models);
         }
+        partial void BeforeIndex(ref IEnumerable<TModel> models, ref bool handled);
+        partial void AfterIndex(IEnumerable<TModel> models);
 
         [HttpGet]
         [ActionName("Create")]

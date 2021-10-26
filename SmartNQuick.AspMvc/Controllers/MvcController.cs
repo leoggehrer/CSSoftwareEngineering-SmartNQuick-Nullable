@@ -17,7 +17,7 @@ namespace SmartNQuick.AspMvc.Controllers
     public class MvcController : Controller
 	{
         private string lastError;
-        protected string LastError
+        protected virtual string LastError
         {
             get => lastError;
             set
