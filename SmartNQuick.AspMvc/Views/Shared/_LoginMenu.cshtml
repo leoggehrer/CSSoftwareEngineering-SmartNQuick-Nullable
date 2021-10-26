@@ -1,0 +1,79 @@
+@*@BaseCode*@
+@*#if ACCOUNT_ON*@
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Language
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"LoginMenu.{pn}");
+    var mnoLogon = translateFor("Logon");
+    var mnuLogout = translateFor("Logout");
+    var mnuAccessAuth = translateFor("Access-Authorization");
+    var mnuIdentityUser = translateFor("Identity-User");
+    var mnuRoleMngr = translateFor("Role-Management");
+    var mnuPwdChange = translateFor("Change password");
+    var mnuPwdReset = translateFor("Reset password");
+    var mnuTranslation = translateFor("Translations");
+    var mnuUser = string.Empty;
+
+    if (sessionWrapper.LoginSession != null)
+    {
+        mnuUser = sessionWrapper.LoginSession.Name;
+        if (sessionWrapper.LoginSession.IsRemoteAuth)
+        {
+            mnuUser = $"{mnuUser} [rm]";
+        }
+    }
+
+    @if (sessionWrapper.LoginSession != null && sessionWrapper.LoginSession.LogoutTime.HasValue == false)
+    {
+        using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">@mnuUser</a>
+                    <ul class="dropdown-menu">
+                        @if (sessionWrapper.HasRole("SysAdmin") == true)
+                        {
+                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccess", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUser", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Role", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuPwdReset, "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li class="dropdown-divider"></li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuTranslation, "Index", "AppTranslation", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-divider"></li>
+                        }
+                        else if (sessionWrapper.HasRole("AppAdmin") == true)
+                        {
+                            <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccess", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUser", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuRoleMngr, "Index", "Role", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuPwdReset, "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li class="dropdown-divider"></li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuTranslation, "Index", "AppTranslation", routeValues: null, htmlAttributes: null)</li>
+                            <li class="dropdown-divider"></li>
+                        }
+                        else
+                        {
+                            <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                        }
+                        <li class="dropdown-item"><a href="javascript:document.getElementById('logoutForm').submit()">@mnuLogout<i style="margin-left: 1em;" class="fas fa-sign-out-alt"></i></a></li>
+                    </ul>
+                </li>
+            </ul>
+        }
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink(mnoLogon, "Logon", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    }
+}
+@*#endif*@

@@ -1,5 +1,5 @@
 @*@BaseCode*@
-#if ACCOUNT_ON
+@*#if ACCOUNT_ON*@
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
@@ -55,4 +55,4 @@
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = "Delete", SubmitCss = "btn btn-danger" })
     </form>
 }
-#endif
+@*#endif*@

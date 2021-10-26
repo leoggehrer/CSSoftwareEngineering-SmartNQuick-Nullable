@@ -41,6 +41,6 @@ services:
       SA_PASSWORD: "passme!1234"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433:1433"
+      - "14330:1433"
     volumes:
       - "C:\\Share\\Docker\\MSSQL:/var/opt/mssql/data/"

@@ -29,6 +29,7 @@ namespace SolutionPreprocessorHelper.ConApp
             stopwatch.Start();
             PrintSolutionDirectives("DEBUG");
             SetPreprocessorDirectivesInProjectFiles(Directives);
+            //ReplacePreprocessorDirectivesInRazorFiles(Directives);
             EditPreprocessorDirectivesInRazorFiles(Directives);
             stopwatch.Stop();
             Console.WriteLine($"Set directives in {fileCount} file(s) in {stopwatch.ElapsedMilliseconds / 1000:f}");
@@ -143,7 +144,7 @@ namespace SolutionPreprocessorHelper.ConApp
                     var result = string.Empty;
                     var text = File.ReadAllText(file, Encoding.Default);
 
-                    foreach (var tag in text.GetAllTags($"#if {directive}", "#endif"))
+                    foreach (var tag in text.GetAllTags($"@*#if {directive}*@", "@*#endif*@"))
                     {
                         if (tag.StartTagIndex > startIndex)
                         {
@@ -191,7 +192,7 @@ namespace SolutionPreprocessorHelper.ConApp
                     var result = string.Empty;
                     var text = File.ReadAllText(file, Encoding.Default);
 
-                    foreach (var tag in text.GetAllTags($"#if {directive}", "#endif"))
+                    foreach (var tag in text.GetAllTags($"@*#if {directive}*@", "@*#endif*@"))
                     {
                         if (tag.StartTagIndex > startIndex)
                         {
@@ -219,6 +220,44 @@ namespace SolutionPreprocessorHelper.ConApp
                     if (hasChanged)
                     {
                         File.WriteAllText(file, result, Encoding.Default);
+                    }
+                }
+            }
+        }
+        private static void ReplacePreprocessorDirectivesInRazorFiles(params string[] directiveItems)
+        {
+            directiveItems.CheckArgument(nameof(directiveItems));
+
+            var path = SolutionAccessor.GetCurrentSolutionPath(nameof(SolutionPreprocessorHelper));
+            var files = Directory.GetFiles(path, "*.cshtml", SearchOption.AllDirectories);
+
+            foreach (var directive in directiveItems)
+            {
+                var labels = new[] { $"#if {directive}", "#endif" };
+
+                foreach (var file in files)
+                {
+                    var hasChanged = false;
+                    var result = new List<string>();
+                    var lines = File.ReadAllLines(file, Encoding.Default);
+
+                    foreach (var line in lines)
+                    {
+                        var targetLine = line;
+
+                        foreach (var label in labels)
+                        {
+                            if (line.StartsWith(label))
+                            {
+                                hasChanged = true;
+                                targetLine = line.Replace(label, $"@*{label}*@");
+                            }
+                        }
+                        result.Add(targetLine);
+                    }
+                    if (hasChanged)
+                    {
+                        File.WriteAllLines(file, result, Encoding.Default);
                     }
                 }
             }

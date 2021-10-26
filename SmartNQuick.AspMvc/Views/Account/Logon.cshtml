@@ -1,12 +1,11 @@
 @*@BaseCode*@
-#if ACCOUNT_ON
+@*#if ACCOUNT_ON*@
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
-    @using SmartNQuick.AspMvc.Models.Modules.Account
-    @model LogonViewModel
+    @model SmartNQuick.AspMvc.Models.Modules.Account.LogonViewModel
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -22,13 +21,6 @@
 
     <hr />
 
-    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
-    {
-        <div class="alert alert-danger" role="alert">
-            @ErrorHandler.GetLastErrorAndClear()
-        </div>
-    }
-
     <div class="vertical-flex-center">
         <div class="container-fluid">
             <div class="row">
@@ -37,6 +29,7 @@
                     <h4>@subTitle</h4>
                 </div>
             </div>
+            <p></p>
             <div class="row">
                 <div class="col-sm-8 offset-2 text-center">
                     <div class="account-wall">
@@ -47,19 +40,21 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true)
-
-                            <input name="@nameof(Model.ReturnUrl)" type="hidden" value="@Model.ReturnUrl" />
-                            <input name="@nameof(Model.IdentityUrl)" type="hidden" value="@Model.IdentityUrl" />
-                            <input name="@nameof(Model.Email)" type="text" class="form-control" placeholder="@translateFor("Email")" required autofocus />
+                            @Html.HiddenFor(m => m.ReturnUrl)
+                            <input name="@nameof(Model.Email)" type="text" class="form-control" placeholder="Email" required autofocus />
                             <p></p>
-                            <input name="@nameof(Model.Password)" type="password" class="form-control" placeholder="@translateFor("Password")" required />
+                            <input name="@nameof(Model.Password)" type="password" class="form-control" placeholder="Password" required />
+                            <p></p>
                             <button class="btn btn-lg btn-primary btn-block" type="submit">
-                                @translateFor("Sign in")
+                                Sign in
                             </button>
                         }
-                        @if (Model.HasError)
+                        @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
                         {
-                            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
+                            <p></p>
+                            <div class="alert alert-danger" role="alert">
+                                @ErrorHandler.GetLastErrorAndClear()
+                            </div>
                         }
                     </div>
                 </div>
@@ -67,4 +62,4 @@
         </div>
     </div>
 }
-#endif
+@*#endif*@

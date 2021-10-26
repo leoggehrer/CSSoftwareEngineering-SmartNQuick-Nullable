@@ -1,0 +1,23 @@
+@*@BaseCode*@
+@*#if ACCOUNT_ON*@
+@{
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Language
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"PortalMenu.{pn}");
+
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@translateFor("Home")</a>
+        </li>
+        @if (sessionWrapper.LoginSession != null)
+        {
+        }
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">@translateFor("Privacy")</a>
+        </li>
+    </ul>
+}
+@*#endif*@

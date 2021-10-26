@@ -46,6 +46,9 @@ namespace SmartNQuick.AspMvc.Controllers
             if (handled == false)
             {
                 result = Adapters.Factory.Create<TContract>();
+#if ACCOUNT_ON
+                result.SessionToken = SessionWrapper?.SessionToken;
+#endif
             }
             AfterCreateController(result);
             return result;
@@ -264,7 +267,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 {
                     using var ctrl = CreateController();
                     var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
-                    
+
                     model = ToModel(entity);
                     LastError = string.Empty;
                 }

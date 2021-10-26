@@ -107,7 +107,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         public Models.Persistence.Account.LoginSession LoginSession
         {
             get => Session.Get<Models.Persistence.Account.LoginSession>(nameof(LoginSession));
-            set => Session.Set<Models.Persistence.Account.LoginSession>(nameof(LoginSession), value);
+            set => Session.Set(nameof(LoginSession), value);
         }
         public string SessionToken
         {

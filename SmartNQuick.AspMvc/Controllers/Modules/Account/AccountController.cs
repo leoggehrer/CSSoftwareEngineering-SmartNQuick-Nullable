@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using CommonBase.Extensions;
 using SmartNQuick.AspMvc.Models.Modules.Account;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
-using AccountManager = SmartNQuick.Adapters.Modules.Account.AccountManager;
 using SmartNQuick.AspMvc.Modules.Handler;
+using AccountManager = SmartNQuick.Adapters.Modules.Account.AccountManager;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
@@ -52,6 +52,13 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeLogon(LogonViewModel model, ref bool handled);
         partial void AfterLogon(LogonViewModel model, ref string viewName);
+
+        [HttpGet]
+        [ActionName("Index")]
+        public virtual IActionResult Index()
+        {
+            return RedirectToAction("Index", "Home");
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
