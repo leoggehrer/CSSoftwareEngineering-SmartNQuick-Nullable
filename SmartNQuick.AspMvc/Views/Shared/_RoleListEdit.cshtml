@@ -1,38 +1,42 @@
 @*@BaseCode*@
-@model IEnumerable<SmartNQuick.AspMvc.Models.Persistence.Account.Role>
+@*#if ACCOUNT_ON*@
+    @{
+    @model IEnumerable<SmartNQuick.AspMvc.Models.Persistence.Account.Role>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Assigned)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Designation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            foreach (var item in Model.OrderBy(i => i.Designation))
-            {
-                <tr>
-                    <td>
-                        <input class="form-check-input" type="checkbox" style="margin-left: 1em;" name="@($"Assigned[{item.Id}]")" id="@item.Id" @(item.Assigned ? "checked" : string.Empty) />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Designation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td></td>
-                </tr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Assigned)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Designation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.OrderBy(i => i.Designation))
+                {
+                    <tr>
+                        <td>
+                            <input class="form-check-input" type="checkbox" style="margin-left: 1em;" name="@($"Assigned[{item.Id}]")" id="@item.Id" @(item.Assigned ? "checked" : string.Empty) />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Designation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td></td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+@*#endif*@

@@ -6,7 +6,7 @@
     @using SmartNQuick.AspMvc.Extensions
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Language
-    @model SmartNQuick.AspMvc.Models.Persistence.Account.Identity
+    @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -16,44 +16,45 @@
     var options = EnumExtensions.ToList<SmartNQuick.Contracts.Modules.Common.State>();
 
     <div class="row">
+        <input asp-for="OneModel.Id" type="hidden" />
+        <input asp-for="OneModel.RowVersion" type="hidden" />
         <div class="col-md-8">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.Guid))</label>
-                <input asp-for="Guid" class="form-control" readonly="readonly" />
-                <span asp-validation-for="Guid" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.OneItem.Guid))</label>
+                <input asp-for="OneModel.Guid" class="form-control" readonly="readonly" />
             </div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.Name))</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.OneItem.Name))</label>
+                <input asp-for="OneModel.Name" class="form-control" />
+                <span asp-validation-for="OneModel.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.Email))</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.OneItem.Email))</label>
+                <input asp-for="OneModel.Email" class="form-control" />
+                <span asp-validation-for="OneModel.Email" class="text-danger"></span>
             </div>
             @if (Model.Id == 0)
             {
                 <div class="form-group">
-                    <label class="control-label">@translateFor(nameof(Model.Password))</label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <label class="control-label">@translateFor(nameof(Model.OneItem.Password))</label>
+                    <input asp-for="OneModel.Password" class="form-control" />
+                    <span asp-validation-for="OneModel.Password" class="text-danger"></span>
                 </div>
             }
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EnableJwtAuth" />@translateFor(nameof(Model.EnableJwtAuth))
+                    <input class="form-check-input" asp-for="OneModel.EnableJwtAuth" />@translateFor(nameof(Model.OneItem.EnableJwtAuth))
                 </label>
             </div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.AccessFailedCount))</label>
-                <input asp-for="AccessFailedCount" class="form-control" />
-                <span asp-validation-for="AccessFailedCount" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.OneItem.AccessFailedCount))</label>
+                <input asp-for="OneModel.AccessFailedCount" class="form-control" />
+                <span asp-validation-for="OneModel.AccessFailedCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.State))</label>
-                @Html.ToSelect("form-control", string.Empty, "State", options, Model.State)
+                <label class="control-label">@translateFor(nameof(Model.OneModel.State))</label>
+                @Html.ToSelect("form-control", string.Empty, "State", options, Model.OneModel.State)
             </div>
         </div>
     </div>

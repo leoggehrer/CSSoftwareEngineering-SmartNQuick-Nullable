@@ -59,19 +59,19 @@ namespace SmartNQuick.Logic.Controllers.Business
         protected virtual async Task LoadAnotherAsync(E entity, int masterId)
         {
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
-            var qyr = await AnotherEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
+            var qyr = await AnotherEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             if (qyr.Any())
             {
                 if (AnotherEntityController.IsTransient)
                 {
-                    var another = await AnotherEntityController.GetByIdAsync(qyr.ElementAt(0).Id).ConfigureAwait(false);
+                    var another = await AnotherEntityController.GetEntityByIdAsync(qyr.ElementAt(0).Id).ConfigureAwait(false);
 
-                    entity.AnotherEntity.CopyProperties(another);
+                    entity.AnotherEntity = another;
                 }
                 else
                 {
-                    entity.AnotherEntity.CopyProperties(qyr.ElementAt(0));
+                    entity.AnotherEntity = qyr.ElementAt(0);
                 }
             }
             else
@@ -110,12 +110,12 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             E result;
-            var oneEntity = await OneEntityController.GetByIdAsync(id).ConfigureAwait(false);
+            var oneEntity = await OneEntityController.GetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (oneEntity != null)
             {
                 result = new E();
-                result.OneItem.CopyProperties(oneEntity);
+                result.OneEntity = oneEntity;
                 await LoadAnotherAsync(result, oneEntity.Id).ConfigureAwait(false);
             }
             else

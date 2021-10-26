@@ -11,8 +11,8 @@ namespace SmartNQuick.AspMvc.Models
         public virtual TOneModel OneModel { get; } = new TOneModel();
         public virtual TOne OneItem => OneModel;
 
-        public virtual TAnotherModel AnotherEntity { get; } = new TAnotherModel();
-        public virtual TAnother AnotherItem => AnotherEntity;
+        public virtual TAnotherModel AnotherModel { get; } = new TAnotherModel();
+        public virtual TAnother AnotherItem => AnotherModel;
 
         public override int Id { get => OneModel.Id; set => OneModel.Id = value; }
         public byte[] RowVersion

@@ -33,7 +33,7 @@
         </div>
     }
 
-    <form asp-action="Edit">
+    <form asp-action="Edit" method="post">
         @if (Model.HasError)
         {
             <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
@@ -41,11 +41,11 @@
         <input asp-for="Id" type="hidden" />
         <input asp-for="RowVersion" type="hidden" />
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_IdentityEdit", Model.OneItem)
+            @await Html.PartialAsync("_IdentityEdit", Model)
         </div>
 
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_UserEdit", Model.AnotherItem)
+            @await Html.PartialAsync("_UserEdit", Model)
         </div>
 
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })

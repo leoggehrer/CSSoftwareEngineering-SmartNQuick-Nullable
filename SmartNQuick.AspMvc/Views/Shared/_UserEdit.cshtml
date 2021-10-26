@@ -4,7 +4,7 @@
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Language
-    @model SmartNQuick.AspMvc.Models.Persistence.Account.User
+    @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -13,19 +13,19 @@
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
 
     <div class="row">
+        <input asp-for="AnotherModel.Id" type="hidden" />
+        <input asp-for="AnotherModel.RowVersion" type="hidden" />
         <div class="col-md-8">
-            <input name="UserId" type="hidden" value="@Model.Id" />
-            <input asp-for="IdentityId" type="hidden" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.Firstname))</label>
-                <input asp-for="@Model.Firstname" class="form-control" />
-                <span asp-validation-for="Firstname" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.AnotherModel.Firstname))</label>
+                <input asp-for="AnotherModel.Firstname" class="form-control" />
+                <span asp-validation-for="AnotherModel.Firstname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">@translateFor(nameof(Model.Lastname))</label>
-                <input asp-for="Lastname" class="form-control" />
-                <span asp-validation-for="Lastname" class="text-danger"></span>
+                <label class="control-label">@translateFor(nameof(Model.AnotherModel.Lastname))</label>
+                <input asp-for="AnotherModel.Lastname" class="form-control" />
+                <span asp-validation-for="AnotherModel.Lastname" class="text-danger"></span>
             </div>
         </div>
     </div>
