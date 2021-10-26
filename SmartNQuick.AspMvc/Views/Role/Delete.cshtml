@@ -6,7 +6,7 @@
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
+    @model SmartNQuick.AspMvc.Models.Persistence.Account.Role
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -33,30 +33,31 @@
         </div>
     }
 
-    <form asp-action="Edit">
+    <form asp-action="Delete">
         @if (Model.HasError)
         {
             <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
         }
-        <input asp-for="Id" type="hidden" />
-        <input asp-for="RowVersion" type="hidden" />
-        <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_IdentityEdit", Model.OneItem)
-        </div>
-
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd())
-
-        <div style="margin-top: 1em;">
-            <h4>Rolen</h4>
-            @await Html.PartialAsync("_RoleListEdit", Model.ManyItems)
-        </div>
+        else
+        {
+            <h3>@translate("Are you sure you want to delete this?")</h3>
+        }
+        <p></p>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @translateFor(Html.DisplayNameFor(model => model.Designation))
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Designation)
+            </dd>
+            <dt class="col-sm-3">
+                @translateFor(Html.DisplayNameFor(model => model.Description))
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = "Delete", SubmitCss = "btn btn-danger" })
     </form>
 }
 #endif
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        await Html.RenderPartialAsync("_EditScriptsPartial");
-    }
-}

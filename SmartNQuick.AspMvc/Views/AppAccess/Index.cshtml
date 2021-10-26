@@ -11,7 +11,7 @@
     var action = ViewContext.RouteData.Values["action"].ToString();
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translateFor(action);
+    var title = translateFor(controller);
 
     ViewData["Title"] = title;
 
@@ -92,6 +92,5 @@
             }
         </tbody>
     </table>
-
 }
 #endif

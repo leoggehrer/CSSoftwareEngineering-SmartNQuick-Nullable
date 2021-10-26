@@ -168,7 +168,7 @@ Nach dem Ausführen vom SolutionCopier (*sc.Copy(sourcePath, targetPath)*) befind
 - QnSTravelCount.AspMvc
 - ...
 
-Im Projekt 'SmartNQuick' sind alle Code-Teile, welche als Basis-Code in andere Projekte verwendet werden können, mit einem Label '//@QnSBaseCode' markiert. Dieser Label wird im Zielprojekt mit dem Label '//@QnSCodeCopy' ersetzt. Das hat den Vorteil, dass Änderungen im Framework auf die bereits bestehenden Projekte übertragen werden können (nähere Informationen dazu gibt es später).  
+Im Projekt 'SmartNQuick' sind alle Code-Teile, welche als Basis-Code in andere Projekte verwendet werden können, mit einem Label '//@BaseCode' markiert. Dieser Label wird im Zielprojekt mit dem Label '//@CodeCopy' ersetzt. Das hat den Vorteil, dass Änderungen im Framework auf die bereits bestehenden Projekte übertragen werden können (nähere Informationen dazu gibt es später).  
 
 ### Anpassen des Projektes  
 

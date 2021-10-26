@@ -1,0 +1,27 @@
+@*@BaseCode*@
+#if ACCOUNT_ON
+@{
+    @using SmartNQuick.AspMvc.Modules.Language
+    @model SmartNQuick.AspMvc.Models.Persistence.Account.Role
+
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+
+    <dl class="row">
+        <dt class="col-sm-3">
+            @translateFor(Html.DisplayNameFor(model => model.Designation))
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Designation)
+        </dd>
+        <dt class="col-sm-3">
+            @translateFor(Html.DisplayNameFor(model => model.Description))
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+}
+#endif

@@ -1,0 +1,44 @@
+@*@BaseCode*@
+#if ACCOUNT_ON
+@{
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor(action);
+
+    ViewData["Title"] = title;
+
+    <h1>@title</h1>
+
+    <div class="d-flex bg-transparent">
+        <div class="p-sm-2 mr-auto">
+            <h4>@translate(controller)</h4>
+        </div>
+        <div class="p-sm-2">
+            <a asp-action="Index" class="btn btn-outline-dark" style="min-width: 8em;">@translateFor("Back to List")</a>
+        </div>
+        <div class="p-sm-2">
+            @Html.ActionLink(translateFor("Edit"), "Edit", new { id = Model.Id }, new { @class = "btn btn-secondary", style = "min-width: 8em;" })
+        </div>
+    </div>
+    <hr />
+
+    <div style="margin-top: 1em;">
+        @await Html.PartialAsync("_IdentityDetails", Model.AnotherItem)
+    </div>
+
+    <div style="margin-top: 2em;">
+        <h4>@translateFor("User")</h4>
+        <hr />
+        @await Html.PartialAsync("_UserDetails", Model.AnotherItem)
+    </div>
+}
+#endif

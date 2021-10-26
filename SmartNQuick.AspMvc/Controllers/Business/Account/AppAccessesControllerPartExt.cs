@@ -1,13 +1,15 @@
 ﻿//@BaseCode
 //MdStart
-/*
+#if ACCOUNT_ON
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Model = SmartNQuick.AspMvc.Models.Business.Account.AppAccess;
-using Contract = SmartNQuick.Contracts.Business.Account.IAppAccess;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
 using Microsoft.AspNetCore.Http;
+using CommonBase.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {
@@ -38,9 +40,8 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         public async Task<IActionResult> EditAsync(int id, string error = null)
         {
             using var ctrl = CreateController();
-            using var ctrlRole = Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
             var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
-            var model = ConvertTo<Model, Contract>(entity);
+            var model = ToModel(entity);
 
             model.ActionError = error;
             await LoadRolesAsync(model).ConfigureAwait(false);
@@ -52,14 +53,14 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         [ActionName("Edit")]
         public async Task<IActionResult> EditAsync(int id, Identity identityModel, IFormCollection formCollection)
         {
-            using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
+            using var ctrl = CreateController();
             async Task<IActionResult> CreateFailedAsync(Identity identity, string error)
             {
                 var entity = await ctrl.CreateAsync().ConfigureAwait(false);
 
-                entity.FirstItem.CopyProperties(identity);
+                entity.OneItem.CopyProperties(identity);
 
-                var model = ConvertTo<Model, Contract>(entity);
+                var model = ToModel(entity);
 
                 model.ActionError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
@@ -69,9 +70,9 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             {
                 var entity = await ctrl.GetByIdAsync(identity.Id).ConfigureAwait(false);
 
-                entity.FirstItem.CopyProperties(identity);
+                entity.OneItem.CopyProperties(identity);
 
-                var model = ConvertTo<Model, Contract>(entity);
+                var model = ToModel(entity);
 
                 model.ActionError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
@@ -79,10 +80,10 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             }
             async Task UpdateRolesAsync(Model model)
             {
-                using var ctrlRole = Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
+                using var ctrlRole = Adapters.Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
                 var roles = await ctrlRole.GetAllAsync().ConfigureAwait(false);
 
-                model.ClearSecondItems();
+                model.ClearManyItems();
                 foreach (var item in formCollection.Where(l => l.Key.StartsWith("Assigned")))
                 {
                     var roleId = item.Key.ToInt();
@@ -90,7 +91,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                     if (role != null)
                     {
-                        model.AddSecondItem(role);
+                        model.AddManyItem(role);
                     }
                 }
             }
@@ -112,8 +113,8 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                 {
                     var entity = await ctrl.CreateAsync().ConfigureAwait(false);
 
-                    entity.FirstItem.CopyProperties(identityModel);
-                    var model = ConvertTo<Model, Contract>(entity);
+                    entity.OneItem.CopyProperties(identityModel);
+                    var model = ToModel(entity);
 
                     await UpdateRolesAsync(model).ConfigureAwait(false);
                     var result = await ctrl.InsertAsync(model).ConfigureAwait(false);
@@ -124,8 +125,8 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                 {
                     var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-                    var model = ConvertTo<Model, Contract>(entity);
-                    model.FirstItem.CopyProperties(identityModel);
+                    var model = ToModel(entity);
+                    model.OneItem.CopyProperties(identityModel);
                     await UpdateRolesAsync(model).ConfigureAwait(false);
                     await ctrl.UpdateAsync(model).ConfigureAwait(false);
                 }
@@ -134,11 +135,11 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             {
                 if (identityModel.Id == 0)
                 {
-                    return await CreateFailedAsync(identityModel, GetExceptionError(ex)).ConfigureAwait(false);
+                    return await CreateFailedAsync(identityModel, ex.GetError()).ConfigureAwait(false);
                 }
                 else
                 {
-                    return await EditFailedAsync(identityModel, GetExceptionError(ex)).ConfigureAwait(false);
+                    return await EditFailedAsync(identityModel, ex.GetError()).ConfigureAwait(false);
                 }
             }
             return RedirectToAction("Edit", new { id });
@@ -147,20 +148,20 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         [ActionName("Details")]
         public async Task<IActionResult> DetailsAsync(int id)
         {
-            using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
+            using var ctrl = CreateController();
             var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-            return View(entity != null ? ConvertTo<Model, Contract>(entity) : entity);
+            return View(entity != null ? ToModel(entity) : entity);
         }
 
         // GET: /Delete/5
         [ActionName("Delete")]
         public async Task<ActionResult> DeleteAsync(int id, string error = null)
         {
-            using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
-            using var ctrlRole = Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
+            using var ctrl = CreateController();
+            using var ctrlRole = Adapters.Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
             var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
-            var model = ConvertTo<Model, Contract>(entity);
+            var model = ToModel(entity);
 
             model.ActionError = error;
             return View(model);
@@ -174,7 +175,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         {
             try
             {
-                using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
+                using var ctrl = CreateController();
 
                 await ctrl.DeleteAsync(id).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index));
@@ -186,15 +187,15 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         }
 
 
-        #region Export and Import
-        protected override string[] CsvHeader => new string[] { "Id", "FirstItem.Name", "FirstItem.Email", "FirstItem.Password", "FirstItem.AccessFailedCount", "FirstItem.EnableJwtAuth", "RoleList" };
+#region Csv and Import
+        protected override string[] CsvHeader => new string[] { "Id", "OneItem.Name", "OneItem.Email", "OneItem.Password", "OneItem.AccessFailedCount", "OneItem.EnableJwtAuth", "RoleList" };
 
-        [ActionName("Export")]
-        public async Task<FileResult> ExportAsync()
+        [ActionName("Csv")]
+        public async Task<FileResult> CsvAsync()
         {
             var fileName = "AppAccess.csv";
-            using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
-            var entities = (await ctrl.GetAllAsync().ConfigureAwait(false)).Select(e => ConvertTo<Model, Contract>(e));
+            using var ctrl = CreateController();
+            var entities = (await ctrl.GetAllAsync().ConfigureAwait(false)).Select(e => ToModel(e));
 
             return ExportDefault(CsvHeader, entities, fileName);
         }
@@ -202,7 +203,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         [ActionName("Import")]
         public ActionResult ImportAsync(string error = null)
         {
-            var model = new Models.Modules.Export.ImportProtocol() { BackController = ControllerName, ActionError = error };
+            var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName, ActionError = error };
 
             return View(model);
         }
@@ -212,39 +213,39 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         public async Task<IActionResult> ImportAsync()
         {
             var index = 0;
-            var model = new Models.Modules.Export.ImportProtocol() { BackController = ControllerName };
-            var logInfos = new List<Models.Modules.Export.ImportLog>();
+            var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName };
+            var logInfos = new List<Models.Modules.Csv.ImportLog>();
             var importModels = ImportDefault<Model>(CsvHeader);
-            using var ctrl = Factory.Create<Contract>(SessionWrapper.SessionToken);
+            using var ctrl = CreateController();
 
             foreach (var item in importModels)
             {
                 index++;
                 try
                 {
-                    if (item.Action == Models.Modules.Export.ImportAction.Insert)
+                    if (item.Action == Models.Modules.Csv.ImportAction.Insert)
                     {
                         var entity = await ctrl.CreateAsync();
 
                         CopyModels(CsvHeader, item.Model, entity);
-                        item.Model.SecondEntities.ForEach(e => entity.AddSecondItem(e));
+                        item.Model.ManyEntities.ForEach(e => entity.AddManyItem(e));
                         await ctrl.InsertAsync(entity);
                     }
-                    else if (item.Action == Models.Modules.Export.ImportAction.Update)
+                    else if (item.Action == Models.Modules.Csv.ImportAction.Update)
                     {
                         var entity = await ctrl.GetByIdAsync(item.Id);
 
                         CopyModels(CsvHeader, item.Model, entity);
-                        entity.ClearSecondItems();
-                        item.Model.SecondEntities.ForEach(e => entity.AddSecondItem(e));
+                        entity.ClearManyItems();
+                        item.Model.ManyEntities.ForEach(e => entity.AddManyItem(e));
 
                         await ctrl.UpdateAsync(entity);
                     }
-                    else if (item.Action == Models.Modules.Export.ImportAction.Delete)
+                    else if (item.Action == Models.Modules.Csv.ImportAction.Delete)
                     {
                         await ctrl.DeleteAsync(item.Id);
                     }
-                    logInfos.Add(new Models.Modules.Export.ImportLog
+                    logInfos.Add(new Models.Modules.Csv.ImportLog
                     {
                         IsError = false,
                         Prefix = $"Line: {index} - {item.Action}",
@@ -253,7 +254,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                 }
                 catch (Exception ex)
                 {
-                    logInfos.Add(new Models.Modules.Export.ImportLog
+                    logInfos.Add(new Models.Modules.Csv.ImportLog
                     {
                         IsError = true,
                         Prefix = $"Line: {index} - {item.Action}",
@@ -264,19 +265,19 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             model.LogInfos = logInfos;
             return View(model);
         }
-        #endregion Export and Import
+#endregion Csv and Import
 
-        #region Helpers
+#region Helpers
         private async Task LoadRolesAsync(Model model)
         {
             model.CheckArgument(nameof(model));
 
-            using var ctrlRole = Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
+            using var ctrlRole = Adapters.Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
             var roles = await ctrlRole.GetAllAsync().ConfigureAwait(false);
 
             foreach (var item in roles)
             {
-                var assigned = model.SecondEntities.SingleOrDefault(r => r.Id == item.Id);
+                var assigned = model.ManyEntities.SingleOrDefault(r => r.Id == item.Id);
 
                 if (assigned != null)
                 {
@@ -287,12 +288,12 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                     var role = new Models.Persistence.Account.Role();
 
                     role.CopyProperties(item);
-                    model.SecondEntities.Add(role);
+                    model.ManyEntities.Add(role);
                 }
             }
         }
-        #endregion Helpers
+#endregion Helpers
     }
 }
+#endif
 //MdEnd
-*/

@@ -6,7 +6,7 @@
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
+    @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -41,15 +41,14 @@
         <input asp-for="Id" type="hidden" />
         <input asp-for="RowVersion" type="hidden" />
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_IdentityEdit", Model.OneItem)
+            @await Html.PartialAsync("_IdentityEdit", Model.AnotherItem)
+        </div>
+
+        <div style="margin-top: 1em;">
+            @await Html.PartialAsync("_UserEdit", Model.AnotherItem)
         </div>
 
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd())
-
-        <div style="margin-top: 1em;">
-            <h4>Rolen</h4>
-            @await Html.PartialAsync("_RoleListEdit", Model.ManyItems)
-        </div>
     </form>
 }
 #endif
