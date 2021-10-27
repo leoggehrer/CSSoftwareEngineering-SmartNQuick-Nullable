@@ -1,4 +1,6 @@
-﻿namespace SmartNQuick.Contracts.Modules.Common
+﻿//@BaseCode
+//MdStart
+namespace SmartNQuick.Contracts.Modules.Common
 {
     /// <summary>
     /// Source: http://www.lingoes.net/en/translator/langcode.htm
@@ -11,3 +13,4 @@
         Tr = 4,
     }
 }
+//MdEnd

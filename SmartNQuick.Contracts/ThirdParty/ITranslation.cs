@@ -1,4 +1,6 @@
-﻿using SmartNQuick.Contracts.Modules.Common;
+﻿//@BaseCode
+//MdStart
+using SmartNQuick.Contracts.Modules.Common;
 
 namespace SmartNQuick.Contracts.ThirdParty
 {
@@ -11,3 +13,4 @@ namespace SmartNQuick.Contracts.ThirdParty
         string Value { get; set; }
     }
 }
+//MdEnd
