@@ -34,12 +34,13 @@
     }
 
     <form asp-action="Edit" method="post">
-        @if (Model.HasError)
-        {
-            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
-        }
         <input asp-for="Id" type="hidden" />
         <input asp-for="RowVersion" type="hidden" />
+        <input asp-for="OneModel.Id" type="hidden" />
+        <input asp-for="OneModel.RowVersion" type="hidden" />
+        <input asp-for="AnotherModel.Id" type="hidden" />
+        <input asp-for="AnotherModel.RowVersion" type="hidden" />
+
         <div style="margin-top: 1em;">
             @await Html.PartialAsync("_IdentityEdit", Model)
         </div>

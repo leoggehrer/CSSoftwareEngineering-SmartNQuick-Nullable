@@ -24,33 +24,27 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         partial void Constructing();
         partial void Constructed();
 
-        [ActionName("Create")]
-        public async Task<IActionResult> CreateAsync(string error = null)
+        protected override IActionResult ReturnCreateView(Model model)
         {
-            using var ctrl = CreateController();
-            var entity = await ctrl.CreateAsync().ConfigureAwait(false);
-            var model = ToModel(entity);
+            SessionWrapper.SetStringValue(StaticLiterals.RedirectControllerKey, ControllerName);
 
-            model.ActionError = error;
-            await LoadRolesAsync(model).ConfigureAwait(false);
-            return View("Edit", model);
+            return RedirectToAction("Create", "Identities");
         }
 
         [ActionName("Edit")]
-        public async Task<IActionResult> EditAsync(int id, string error = null)
+        public override async Task<IActionResult> EditAsync(int id)
         {
             using var ctrl = CreateController();
             var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
             var model = ToModel(entity);
 
-            model.ActionError = error;
             await LoadRolesAsync(model).ConfigureAwait(false);
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("Edit")]
+        [ActionName("EditRoles")]
         public async Task<IActionResult> EditAsync(int id, Identity identityModel, IFormCollection formCollection)
         {
             using var ctrl = CreateController();
@@ -64,7 +58,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                 model.ActionError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
-                return View("Edit", model);
+                return View("EditRoles", model);
             }
             async Task<IActionResult> EditFailedAsync(Identity identity, string error)
             {
@@ -76,7 +70,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                 model.ActionError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
-                return View("Edit", model);
+                return View("EditRoles", model);
             }
             async Task UpdateRolesAsync(Model model)
             {
@@ -126,7 +120,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                     var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
                     var model = ToModel(entity);
-                    model.OneItem.CopyProperties(identityModel);
+
                     await UpdateRolesAsync(model).ConfigureAwait(false);
                     await ctrl.UpdateAsync(model).ConfigureAwait(false);
                 }
@@ -142,7 +136,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                     return await EditFailedAsync(identityModel, ex.GetError()).ConfigureAwait(false);
                 }
             }
-            return RedirectToAction("Edit", new { id });
+            return RedirectToAction("Index");
         }
 
         [ActionName("Details")]

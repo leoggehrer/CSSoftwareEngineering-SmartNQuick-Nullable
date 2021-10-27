@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -12,7 +13,7 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
-    var ignoreProperties = new string[] { "Id", "RowVersion", "ActionError" };
+    var hiddenProperties = new string[] { "Id", "RowVersion" };
 
     ViewData["Title"] = title;
 
@@ -33,20 +34,16 @@
     }
 
     <form asp-action="Edit" method="post">
-        <div class="row">
-            <div class="col-md-4">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                @foreach (var item in Model.GetType().GetProperties().Where(p => p.CanWrite && ignoreProperties.Any(e => e.Equals(p.Name)) == false))
-                {
-                    <div class="form-group">
-                        <label class="control-label" for="@item.Name">@item.Name</label>
-                        <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" />
-                        <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
-                    </div>
-                }
-            </div>
-        </div>
+        @foreach (var item in Model.GetType().GetAllInterfacePropertyInfos())
+        {
+            if (hiddenProperties.Any(e => e.Equals(item.Name)))
+            {
+                <input type="hidden" id="@item.Name" asp-for="@item.Name" value="@item.GetValue(Model)" />
+            }
+        }
+        @await Html.PartialAsync("_EditModel", Model)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })
     </form>

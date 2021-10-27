@@ -16,6 +16,7 @@
     var title = translateFor(action);
 
     ViewData["Title"] = title;
+    ViewBag.IgnoreProperties = new string[] { "IdentityId" };
 
     <h1>@title</h1>
 
@@ -32,24 +33,23 @@
             @ErrorHandler.GetLastErrorAndClear()
         </div>
     }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            @translateFor("Should the entry be deleted?")
+        </div>
+    }
 
     <form asp-action="Delete" method="post">
-        @if (Model.HasError)
-        {
-            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
-        }
-        else
-        {
-            <h3>@translate("Are you sure you want to delete this?")</h3>
-        }
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_IdentityDetails", Model.OneItem)
+            @await Html.PartialAsync("_DisplayModel", Model.OneItem)
         </div>
 
+        <hr />
+
         <div style="margin-top: 1em;">
-            <hr />
             <h4>@translateFor("User")</h4>
-            @await Html.PartialAsync("_UserDetails", Model.AnotherItem)
+            @await Html.PartialAsync("_DisplayModel", Model.AnotherItem)
         </div>
 
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Delete"), BackText = translateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })

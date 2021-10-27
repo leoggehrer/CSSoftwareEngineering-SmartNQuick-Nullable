@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Persistence.Account
 {
-    partial class IdentityController
+    internal partial class IdentityController
     {
         private static void CheckInsertEntity(Identity entity)
         {
@@ -50,9 +50,17 @@ namespace SmartNQuick.Logic.Controllers.Persistence.Account
 
             return base.BeforeInsertAsync(entity);
         }
-        protected override Task<Identity> BeforeUpdateAsync(Identity entity)
+        protected override async Task<Identity> BeforeUpdateAsync(Identity entity)
         {
             CheckUpdateEntity(entity);
+
+            var oldEntity = await GetEntityByIdAsync(entity.Id).ConfigureAwait(false);
+
+            if (oldEntity != null)
+            {
+                entity.Guid = oldEntity.Guid;
+            }
+
             if (entity.Password.HasContent())
             {
                 var (Hash, Salt) = AccountManager.CreatePasswordHash(entity.Password);
@@ -60,7 +68,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence.Account
                 entity.PasswordHash = Hash;
                 entity.PasswordSalt = Salt;
             }
-            return base.BeforeUpdateAsync(entity);
+            return await base.BeforeUpdateAsync(entity).ConfigureAwait(false);
         }
 
         public Task<Identity> GetValidIdentityByEmail(string email)

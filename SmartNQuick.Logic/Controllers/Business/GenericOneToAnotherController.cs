@@ -114,8 +114,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             if (oneEntity != null)
             {
-                result = new E();
-                result.OneEntity = oneEntity;
+                result = new E
+                {
+                    OneEntity = oneEntity
+                };
                 await LoadAnotherAsync(result, oneEntity.Id).ConfigureAwait(false);
             }
             else

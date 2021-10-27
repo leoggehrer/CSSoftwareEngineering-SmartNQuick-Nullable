@@ -1,0 +1,45 @@
+﻿@*@BaseCode*@
+@{
+    @using CommonBase.Extensions
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var ignoreProperties = new List<string> { "Id", "RowVersion", "ActionError" };
+
+    if (ViewBag.IgnoreProperties is string[] moreIgnore)
+    {
+        ignoreProperties.AddRange(moreIgnore);
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            @foreach (var item in Model.GetType().GetAllInterfacePropertyInfos())
+            {
+                if (ignoreProperties.Any(e => e.Equals(item.Name)) == false)
+                {
+                    if (item.CanRead && item.CanWrite)
+                    {
+                        <div class="form-group">
+                            <label class="control-label" for="@item.Name">@item.Name</label>
+                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" />
+                            <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
+                        </div>
+                    }
+                    else if (item.CanRead)
+                    {
+                        <div class="form-group">
+                            <label class="control-label" for="@item.Name">@item.Name</label>
+                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" readonly="readonly" />
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+}

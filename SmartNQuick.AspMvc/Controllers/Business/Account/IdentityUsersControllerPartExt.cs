@@ -13,6 +13,11 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {
     public partial class IdentityUsersController
     {
+        protected override IActionResult ReturnCreateView(Model model)
+        {
+            return RedirectToAction("Create", "Identities");
+        }
+
         #region Export and Import
         protected override string[] CsvHeader => new string[] 
         {
