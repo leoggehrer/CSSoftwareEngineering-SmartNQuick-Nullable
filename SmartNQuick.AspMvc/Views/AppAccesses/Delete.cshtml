@@ -1,6 +1,5 @@
 @*@BaseCode*@
 @*#if ACCOUNT_ON*@
-@*
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
@@ -15,6 +14,7 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
+    var displayOneViewModel = new DisplayViewModel(Model.OneModel, ViewBag);
 
     ViewData["Title"] = title;
 
@@ -42,7 +42,7 @@
 
     <form asp-action="Delete" method="post">
         <div style="margin-top: 1em;">
-            @await Html.PartialAsync("_DisplayModel", Model.OneItem)
+            @await Html.PartialAsync("_DisplayModel", displayOneViewModel)
         </div>
 
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Delete"), BackText = translateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
@@ -52,11 +52,10 @@
         <h4>Rolen</h4>
         @foreach (var item in Model.ManyEntities)
         {
-            ViewBag.IgnoreProperties = new string[] { "Description" };
+            var displayManyViewModel = new DisplayViewModel(item, null, new string[] { "Description" }, null);
 
-            @await Html.PartialAsync("_DisplayModel", item)
+            @await Html.PartialAsync("_DisplayModel", displayManyViewModel)
         }
     </div>
 }
-*@
 @*#endif*@

@@ -1,6 +1,5 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -13,7 +12,9 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
-    var hiddenProperties = new string[] { "Id", "RowVersion" };
+    var displayViewModel = new DisplayViewModel(Model, ViewBag.HiddenNames as string[], 
+                                                       ViewBag.IgnoreNames as string[],
+                                                       ViewBag.DisplayNames as string[]);
 
     ViewData["Title"] = title;
 
@@ -40,12 +41,9 @@
     }
 
     <form asp-action="Delete">
-        @foreach (var item in Model.GetType().GetAllInterfacePropertyInfos())
+        @foreach (var item in displayViewModel.HiddenProperties)
         {
-            if (hiddenProperties.Any(e => e.Equals(item.Name)))
-            {
-                <input type="hidden" id="@item.Name" asp-for="@item.Name" value="@item.GetValue(Model)" />
-            }
+            <input type="hidden" id="@item.Name" asp-for="@item.Name" value="@displayViewModel.GetValue(item)" />
         }
         @await Html.PartialAsync("_DisplayModel", Model)
         <hr />

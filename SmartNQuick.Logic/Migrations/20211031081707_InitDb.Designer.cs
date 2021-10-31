@@ -10,7 +10,7 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
-    [Migration("20211026093710_InitDb")]
+    [Migration("20211031081707_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -392,6 +392,91 @@ namespace SmartNQuick.Logic.Migrations
                     b.HasIndex("Title");
 
                     b.ToTable("Track", "MusicStore");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.EditForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte?>("ByteNullable")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("ByteValue")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("CheckBox")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("CheckBoxNullable")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DateNullable")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateTimeNullable")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTimeValue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateValue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("DoubleNullable")
+                        .HasColumnType("float");
+
+                    b.Property<double>("DoubleValue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("EnumState")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IntegerNullable")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IntegerValue")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<short?>("ShortNullable")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("ShortValue")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("TextArea")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("TextAreaReadonly")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("TextBox")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("TextBoxRequired")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<TimeSpan?>("TimeSpanNullable")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("TimeSpanValue")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EditForm", "Test");
                 });
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Access", b =>

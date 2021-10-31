@@ -13,6 +13,9 @@ namespace SmartNQuick.Logic.Migrations
             migrationBuilder.EnsureSchema(
                 name: "MusicStore");
 
+            migrationBuilder.EnsureSchema(
+                name: "Test");
+
             migrationBuilder.CreateTable(
                 name: "Artist",
                 schema: "MusicStore",
@@ -26,6 +29,41 @@ namespace SmartNQuick.Logic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Artist", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EditForm",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TextBox = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    TextArea = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    TextBoxRequired = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TextAreaReadonly = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EnumState = table.Column<int>(type: "int", nullable: false),
+                    CheckBox = table.Column<bool>(type: "bit", nullable: false),
+                    CheckBoxNullable = table.Column<bool>(type: "bit", nullable: true),
+                    ByteValue = table.Column<byte>(type: "tinyint", nullable: false),
+                    ByteNullable = table.Column<byte>(type: "tinyint", nullable: true),
+                    ShortValue = table.Column<short>(type: "smallint", nullable: false),
+                    ShortNullable = table.Column<short>(type: "smallint", nullable: true),
+                    IntegerValue = table.Column<int>(type: "int", nullable: false),
+                    IntegerNullable = table.Column<int>(type: "int", nullable: true),
+                    DoubleValue = table.Column<double>(type: "float", nullable: false),
+                    DoubleNullable = table.Column<double>(type: "float", nullable: true),
+                    TimeSpanValue = table.Column<TimeSpan>(type: "time", nullable: false),
+                    TimeSpanNullable = table.Column<TimeSpan>(type: "time", nullable: true),
+                    DateValue = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateNullable = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateTimeValue = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeNullable = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EditForm", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,6 +428,10 @@ namespace SmartNQuick.Logic.Migrations
             migrationBuilder.DropTable(
                 name: "ActionLog",
                 schema: "Account");
+
+            migrationBuilder.DropTable(
+                name: "EditForm",
+                schema: "Test");
 
             migrationBuilder.DropTable(
                 name: "IdentityXRole",

@@ -19,6 +19,9 @@ namespace SmartNQuick.AspMvc.Modules.Handler
             {
                 if (string.IsNullOrEmpty(lastError) == false)
                 {
+                    if (errorList.Count >= 10)
+                        errorList.RemoveAt(0);
+
                     errorList.Add(lastError);
                 }
                 lastError = value;

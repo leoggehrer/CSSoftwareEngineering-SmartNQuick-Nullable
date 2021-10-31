@@ -1,6 +1,5 @@
 @*@BaseCode*@
 @*#if ACCOUNT_ON*@
-@*
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
@@ -55,7 +54,6 @@
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })
     </form>
 }
-*@
 @*#endif*@
 
 @section Scripts {

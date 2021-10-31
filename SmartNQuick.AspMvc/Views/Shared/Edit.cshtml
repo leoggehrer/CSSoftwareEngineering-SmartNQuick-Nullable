@@ -1,11 +1,10 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model SmartNQuick.AspMvc.Models.VersionModel
 
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -13,7 +12,7 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
-    var hiddenProperties = new string[] { "Id", "RowVersion" };
+    var editViewModel = new EditViewModel(Model, ViewBag);
 
     ViewData["Title"] = title;
 
@@ -36,11 +35,19 @@
     <form asp-action="Edit" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @foreach (var item in Model.GetType().GetAllInterfacePropertyInfos())
+        @foreach (var item in editViewModel.HiddenProperties)
         {
-            if (hiddenProperties.Any(e => e.Equals(item.Name)))
+            if (item.Name.Equals(nameof(Model.Id)))
             {
-                <input type="hidden" id="@item.Name" asp-for="@item.Name" value="@item.GetValue(Model)" />
+                <input type="hidden" asp-for="Id" />
+            }
+            else if (item.Name.Equals(nameof(Model.RowVersion)))
+            {
+                <input type="hidden" asp-for="RowVersion" />
+            }
+            else
+            {
+                <input type="hidden" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)?.ToString()" />
             }
         }
         @await Html.PartialAsync("_EditModel", Model)

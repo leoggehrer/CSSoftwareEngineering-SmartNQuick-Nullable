@@ -1,0 +1,13 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Modules.View
+    @model SmartNQuick.AspMvc.Models.Persistence.Test.EditForm
+
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
+
+    if (viewBagWrapper.DisplayProperty.Name.Equals("CheckBox"))
+    {
+        viewBagWrapper.Handled = true;
+        <input type="checkbox" asp-for="CheckBox" />
+    }
+}

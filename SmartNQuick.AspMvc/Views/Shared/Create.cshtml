@@ -12,6 +12,7 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
+    var editViewModel = new EditViewModel(Model, ViewBag);
 
     ViewData["Title"] = title;
 

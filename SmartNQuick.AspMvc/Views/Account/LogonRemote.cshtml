@@ -1,6 +1,5 @@
 @*@BaseCode*@
 @*#if ACCOUNT_ON*@
-@*
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
@@ -59,10 +58,6 @@
                                 @translateFor("Sign in")
                             </button>
                         }
-                        @if (Model.HasError)
-                        {
-                            <span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true">@translate(Model.ActionError)</span>
-                        }
                     </div>
                 </div>
             </div>
@@ -70,5 +65,4 @@
     </div>
 
 }
-*@
 @*#endif*@

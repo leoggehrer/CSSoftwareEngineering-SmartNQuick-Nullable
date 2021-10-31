@@ -45,7 +45,10 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         [ActionName("Import")]
         public ActionResult ImportAsync(string error = null)
         {
-            var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName, ActionError = error };
+            var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName };
+
+            if (error.HasContent())
+                LastError = error;
 
             return View(model);
         }

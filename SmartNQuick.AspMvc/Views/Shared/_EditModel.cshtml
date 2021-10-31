@@ -1,8 +1,9 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -10,34 +11,39 @@
     var action = ViewContext.RouteData.Values["action"].ToString();
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var ignoreProperties = new List<string> { "Id", "RowVersion", "ActionError" };
-
-    if (ViewBag.IgnoreProperties is string[] moreIgnore)
-    {
-        ignoreProperties.AddRange(moreIgnore);
-    }
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
+    var editViewModel = new EditViewModel(Model, ViewBag);
 
     <div class="row">
         <div class="col-md-6">
-            @foreach (var item in Model.GetType().GetAllInterfacePropertyInfos())
+            @foreach (var item in editViewModel.DisplayProperties)
             {
-                if (ignoreProperties.Any(e => e.Equals(item.Name)) == false)
+                if (item.CanRead && item.CanWrite)
                 {
-                    if (item.CanRead && item.CanWrite)
-                    {
-                        <div class="form-group">
-                            <label class="control-label" for="@item.Name">@item.Name</label>
-                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" />
+                    viewBagWrapper.Handled = false;
+                    viewBagWrapper.DisplayProperty = item;
+                    <div class="form-group">
+                        <label class="control-label" for="@item.Name">@translateFor(editViewModel.GetLabel(item))</label>
+                        @await Html.PartialAsync("_EditControl", Model)
+                        @if (viewBagWrapper.Handled.GetValueOrDefault() == false)
+                        {
+                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" />
                             <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
-                        </div>
-                    }
-                    else if (item.CanRead)
-                    {
-                        <div class="form-group">
-                            <label class="control-label" for="@item.Name">@item.Name</label>
-                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@item.GetValue(Model)" readonly="readonly" />
-                        </div>
-                    }
+                        }
+                    </div>
+                }
+                else if (item.CanRead)
+                {
+                    viewBagWrapper.Handled = false;
+                    viewBagWrapper.DisplayProperty = item;
+                    <div class="form-group">
+                        <label class="control-label" for="@item.Name">@translateFor(editViewModel.GetLabel(item))</label>
+                        @await Html.PartialAsync("_EditControl", Model)
+                        @if (viewBagWrapper.Handled.GetValueOrDefault() == false)
+                        {
+                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" readonly="readonly" />
+                        }
+                    </div>
                 }
             }
         </div>
