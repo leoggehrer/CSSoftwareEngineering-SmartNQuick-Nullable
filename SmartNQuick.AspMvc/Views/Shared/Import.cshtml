@@ -1,0 +1,68 @@
+@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using Microsoft.AspNetCore.Mvc.Rendering
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model SmartNQuick.AspMvc.Models.Modules.Csv.ImportProtocol
+
+    var sessionWrapper = new SessionWrapper(Context.Session);
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translate("Import");
+
+    ViewData["Title"] = title;
+
+    <h1>@title</h1>
+
+    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastErrorAndClear()
+        </div>
+    }
+
+    <form id="form" asp-action="Import" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label">@translate("Importfile")</label>
+            <input asp-for="FilePath" class="form-control-file btn btn-outline-secondary" type="file" />
+        </div>
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translate("Import"), BackController = Model.BackController, BackAction = Model.BackAction })
+    </form>
+
+    <div id="progress" class="progress" style="visibility: hidden;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+    </div>
+
+    @if (Model.LogInfos != null)
+    {
+        foreach (var logInfo in Model.LogInfos)
+        {
+            string text = $"{logInfo.Prefix}: {logInfo.Text}";
+            <dl class="dl-horizontal">
+                @if (logInfo.IsError)
+                {
+                    <dd style="color: red;">@text</dd>
+                }
+                else
+                {
+                    <dd>@text</dd>
+                }
+            </dl>
+        }
+    }
+}
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#form").submit(function () {
+                $('#progress').css({ visibility: "visible" });
+            });
+        });
+    </script>
+}
