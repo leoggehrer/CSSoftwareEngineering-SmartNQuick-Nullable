@@ -1,8 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    @using SmartNQuick.AspMvc.Modules.Language
+
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor("Home Page");
+    var text = translate("Welcome to the HTL-Leonding");
+
+    ViewData["Title"] = title;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">@text</h1>
+    <img src="~/img/informatik_ai.jpg" class="img-fluid" />
+    <p></p>
+    <p>Learn about <a href="https://www.htl-leonding.at/">computer science</a>.</p>
+    <p>Where?</p>
+    <p><strong>with us.</strong></p>
 </div>

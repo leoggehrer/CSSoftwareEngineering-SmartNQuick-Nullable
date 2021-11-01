@@ -1,0 +1,52 @@
+﻿Id;AppName;KeyLanguage;Key;ValueLanguage;Value
+0;SmartNQuick;En;PortalMenu.Home;De;Home
+0;SmartNQuick;En;PortalMenu.Privacy;De;Privat
+0;SmartNQuick;En;LoginMenu.Logon;De;Anmelden
+0;SmartNQuick;En;LoginMenu.Logout;De;Abmelden
+0;SmartNQuick;En;LoginMenu.Access-Authorization;De;Zugriffe
+0;SmartNQuick;En;LoginMenu.Identity-User;De;Benutzer
+0;SmartNQuick;En;LoginMenu.Role-Management;De;Role-Verwaltung
+0;SmartNQuick;En;LoginMenu.Change password;De;Kennwort ändern
+0;SmartNQuick;En;LoginMenu.Reset password;De;Kennwort zurücksetzen
+0;SmartNQuick;En;Account.Logon;De;Anmeldung
+0;SmartNQuick;En;Please provide your user credentials to proceed:;De;Geben Sie bitte die Benutzerdaten ein
+0;SmartNQuick;En;Forgot your password?;De;Kennwort vergessen?
+0;SmartNQuick;En;Account.Email;De;Email
+0;SmartNQuick;En;Account.Password;De;Kennwort
+0;SmartNQuick;En;AppAccesses.AppAccesses;De;Zugriffe
+0;SmartNQuick;En;AppAccesses.Create New;De;Eintrag erstellen
+0;SmartNQuick;En;AppAccesses.Export;De;Export
+0;SmartNQuick;En;AppAccesses.Import;De;Import
+0;SmartNQuick;En;AppAccesses.Name;De;Name
+0;SmartNQuick;En;AppAccesses.Email;De;Email
+0;SmartNQuick;En;AppAccesses.EnableJwtAuth;De;Jwt-Freigabe
+0;SmartNQuick;En;AppAccesses.ManyItems;De;ManyItems
+0;SmartNQuick;En;AppAccesses.AccessFailedCount;De;Falsche Anmeldungen
+0;SmartNQuick;En;AppAccesses.State;De;State
+0;SmartNQuick;En;AppAccesses.Edit;De;Bearbeiten
+0;SmartNQuick;En;AppAccesses.Delete;De;Löschen
+0;SmartNQuick;En;IdentityUsers.IdentityUsers;De;Benutzer
+0;SmartNQuick;En;IdentityUsers.Create New;De;Eintrag erstellen
+0;SmartNQuick;En;IdentityUsers.Export;De;Export
+0;SmartNQuick;En;IdentityUsers.Import;De;Import
+0;SmartNQuick;En;IdentityUsers.Name;De;Name
+0;SmartNQuick;En;IdentityUsers.Email;De;Email
+0;SmartNQuick;En;IdentityUsers.Lastname;De;Nachname
+0;SmartNQuick;En;IdentityUsers.Firstname;De;Vorname
+0;SmartNQuick;En;IdentityUsers.EnableJwtAuth;De;
+0;SmartNQuick;En;IdentityUsers.AccessFailedCount;De;Jwt-Freigabe
+0;SmartNQuick;En;IdentityUsers.State;De;State
+0;SmartNQuick;En;IdentityUsers.Edit;De;Bearbeiten
+0;SmartNQuick;En;IdentityUsers.Delete;De;Löschen
+0;SmartNQuick;En;Roles.Roles;De;Rolen
+0;SmartNQuick;En;Roles.Create New;De;Eintrag erstellen
+0;SmartNQuick;En;Roles.Designation;De;Bezeichnung
+0;SmartNQuick;En;Roles.Description;De;Beschreibung
+0;SmartNQuick;En;Account.ChangePassword;De;Kennwort ändern
+0;SmartNQuick;En;You are logged in as;De;Angemeldet als
+0;SmartNQuick;En;Account;De;Konto
+0;SmartNQuick;En;Account.OldPassword;De;Altes Kennwort
+0;SmartNQuick;En;Account.NewPassword;De;Neues Kennwort
+0;SmartNQuick;En;Account.ConfirmPassword;De;Kennwort bestätigen
+0;SmartNQuick;En;Account.ResetPassword;De;Kennwort zurücksetzen
+0;SmartNQuick;En;Reset Password Form;De;Kennwort zurücksetzen

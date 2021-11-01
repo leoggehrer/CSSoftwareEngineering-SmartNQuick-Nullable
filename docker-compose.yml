@@ -25,9 +25,43 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SmartNQuickDb; User Id=sa;Password=passme!1234
+      - ASPNETCORE_TRANSLATIONSERVER=http://snqtranslator.webapi/api
     ports:
       - "32790:80"
-      - "443"
+      - "453"
+    depends_on:
+      - dbserver
+      - snqtranslator.webapi
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  snqtranslator.webapi:
+    image: "snqtranslatorwebapi"
+    container_name: snqtranslator.webapi
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SnQtranslatorDb; User Id=sa;Password=passme!1234
+    ports:
+      - "32775:80"
+      - "463"
+    depends_on:
+      - dbserver
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  snqtranslator.aspmvc:
+    image: "snqtranslatoraspmvc"
+    container_name: snqtranslator.aspmvc
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_CONNECTIONSTRING=Data Source=dbserver; Database=SnQtranslatorDb; User Id=sa;Password=passme!1234
+    ports:
+      - "32780:80"
+      - "473"
     depends_on:
       - dbserver
     volumes:

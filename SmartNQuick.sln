@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMeSave.md = ReadMeSave.md
 		SyncProjects.drawio = SyncProjects.drawio
 		SyncProjects.png = SyncProjects.png
+		Translations.csv = Translations.csv
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.WebApi", "SmartNQuick.WebApi\SmartNQuick.WebApi.csproj", "{DEEE04A7-6F3B-4372-9125-CE9EFD989B0C}"

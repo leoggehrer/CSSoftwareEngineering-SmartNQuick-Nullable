@@ -2,8 +2,14 @@
 //MdStart
 
 using CommonBase.Extensions;
+using CommonBase.Modules.Configuration;
+using SmartNQuick.AspMvc.Models.ThirdParty;
+using SmartNQuick.AspMvc.Modules.Handler;
+using SmartNQuick.Contracts.Modules.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Modules.Language
 {
@@ -28,10 +34,61 @@ namespace SmartNQuick.AspMvc.Modules.Language
         private static Translator instance = null;
         public static Translator Instance => instance ??= new Translator();
 
+        public DateTime? LastLoad { get; private set; }
+        public LanguageCode KeyLanguage => LanguageCode.En;
+        public LanguageCode ValueLanguage => LanguageCode.De;
+        
         protected List<Models.ThirdParty.Translation> translations = new ();
         protected virtual void LoadTranslations()
         {
+            bool LoadTranslationsFromServer(List<Translation> translations)
+            {
+                var result = false;
+                var translationServer = AppSettings.Configuration[StaticLiterals.EnvironmentTranslationServerKey];
 
+                if (translationServer.HasContent())
+                {
+                    var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.ITranslation>(translationServer);
+                    var predicate = $"{nameof(Translation.AppName)} == \"{nameof(SmartNQuick)}\" AND {nameof(Translation.KeyLanguage)} == \"{KeyLanguage}\" AND {nameof(Translation.ValueLanguage)} == \"{ValueLanguage}\"";
+
+                    try
+                    {
+                        var qry = Task.Run(async () =>
+                        {
+                            return await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
+                        }).Result;
+
+                        translations.Clear();
+                        translations.AddRange(qry.Select(e => Translation.Create(e)));
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorHandler.LastError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
+                        System.Diagnostics.Debug.WriteLine(ErrorHandler.LastError);
+                    }
+                }
+                return result;
+            };
+
+            if (LastLoad.HasValue == false)
+            {
+                LoadTranslationsFromServer(translations);
+                LastLoad = DateTime.Now;
+            }
+            else
+            {
+#if DEBUG
+                LoadTranslationsFromServer(translations);
+                LastLoad = DateTime.Now;
+#else
+                if ((DateTime.Now - LastLoad.Value).TotalMinutes > 60)
+                {
+                    LoadTranslationsFromServer(translations);
+                    LastLoad = DateTime.Now;
+                }
+#endif
+            }
         }
         protected virtual string Translate(string key)
         {
@@ -41,6 +98,7 @@ namespace SmartNQuick.AspMvc.Modules.Language
         {
             key.CheckArgument(nameof(key));
 
+            LoadTranslations();
             var result = defaultValue;
             var translation = translations.FirstOrDefault(e => e.Key.Equals(key));
 
@@ -50,6 +108,11 @@ namespace SmartNQuick.AspMvc.Modules.Language
             }
             else
             {
+#if DEBUG
+                var csvTranslation = $"Translation;{nameof(SmartNQuick)};{KeyLanguage};{key};{ValueLanguage};";
+
+                System.Diagnostics.Debug.WriteLine(csvTranslation);
+#endif
                 var splitKey = key.Split(".");
 
                 if (splitKey.Length == 2)

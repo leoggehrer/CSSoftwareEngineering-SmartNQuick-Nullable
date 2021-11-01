@@ -1,0 +1,33 @@
+﻿@{
+    @using SmartNQuick.AspMvc.Modules.Language
+
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    Func<string, string> translate = Translator.TranslateIt;
+    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var title = translateFor("Contact");
+
+    ViewData["Title"] = title;
+}
+
+<div class="text-center">
+    <img src="~/img/kontakt.jpg" class="img-fluid" />
+    <p></p>
+</div>
+
+<!-- Impressum
+================================================== -->
+<div class="bs-docs-section">
+    <h1 id="contact">@translate("Contact infomation")</h1>
+    <hr />
+    <address>
+        <strong>HTL-Leonding</strong><br>
+        Limesstraße 12-14<br>
+        A-4060 Leonding<br>
+        <abbr title="@translateFor("Phonenumber")">Tel.</abbr> +43 732 67 33 68 – 0
+        <br />
+        <abbr title="@translateFor("Email-Adresse")>Email</abbr> <a href="mailto:office@htl-leonding.ac.at">office(at)htl-leinding.ac.at</a>
+        <br />
+        <abbr title="@translateFor("Schoolnumber")">Schulkennzahl:</abbr>410427<br>
+    </address>
+</div>

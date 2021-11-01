@@ -12,7 +12,6 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(controller);
-    var indexViewModel = new IndexViewModel(Model, ViewBag);
 
     ViewData["Title"] = title;
 
@@ -26,6 +25,8 @@
     }
     else
     {
+        var indexViewModel = new IndexViewModel(Model, ViewBag);
+
         <p style="margin-top: 1em;">
             <a asp-action="Create" class="btn btn-outline-secondary">@translateFor("Create New")</a>
         </p>
