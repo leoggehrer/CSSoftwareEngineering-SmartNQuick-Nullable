@@ -13,12 +13,22 @@ namespace SolutionPreprocessorHelper.ConApp
 {
     internal partial class Program
     {
-        private static string[] Directives { get; } = new string[]
+        #region Class-Constructors
+        static Program()
         {
-            "ACCOUNT_ON",
-            "LOGGING_OFF",
-            "REVISION_OFF"
-        };
+            ClassConstructing();
+            Directives = new string[]
+            {
+                "ACCOUNT_OFF",
+                "LOGGING_OFF",
+                "REVISION_OFF"
+            };
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+        #endregion Class-Constructors
+        private static string[] Directives { get; set; }
 
         private static void Main(/*string[] args*/)
         {

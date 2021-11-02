@@ -1,11 +1,22 @@
 ﻿//@BaseCode
+//MdStart
 using System;
 
 namespace SmartNQuick.ConApp
 {
-	partial class Program
+    internal partial class Program
     {
-        static void Main(/*string[] args*/)
+        #region Class-Constructors
+        static Program()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+        #endregion Class-Constructors
+
+        private static void Main(/*string[] args*/)
         {
             Console.WriteLine("SmartNQuick");
             Console.WriteLine(DateTime.Now);
@@ -20,3 +31,4 @@ namespace SmartNQuick.ConApp
         static partial void AfterRun();
     }
 }
+//MdEnd
