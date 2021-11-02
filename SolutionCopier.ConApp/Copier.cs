@@ -39,7 +39,7 @@ namespace SolutionCopier.ConApp
             ,"\\node_modules\\"
             ,"\\Migrations\\"
         };
-        private static string[] CopyExtensions { get; } = new string[]
+        private static string[] ReplaceExtensions { get; } = new string[]
         {
             ".asax"
             ,".config"
@@ -57,23 +57,22 @@ namespace SolutionCopier.ConApp
             ,".xml"
             ,".razor"
             ,".md"
-            ,".cd"
-            ,".jpg"
-            ,".png"
             ,".template"
         };
         private static string[] SolutionExtenions { get; } = new string[]
         {
-            ".png",
-            ".drawio",
-            ".md",
-            ".txt",
-            ".csv",
-            ".json",
-            ".xlsx",
-            ".docx",
-            ".pdf",
-            ".yml",
+            ".jpg"
+            ,".png"
+            ,".drawio"
+            ,".md"
+            ,".txt"
+            ,".csv"
+            ,".json"
+            ,".xlsx"
+            ,".docx"
+            ,".pdf"
+            ,".yml"
+            ,".cd"
         };
         private List<string> Extensions { get; } = new List<string>();
         private List<string> ProjectGuids { get; } = new List<string>();
@@ -333,7 +332,7 @@ namespace SolutionCopier.ConApp
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
             var sourceFiles = new DirectoryInfo(sourceDirectory).GetFiles("*", SearchOption.AllDirectories)
                                                                 .Where(f => IgnoreFileFolders.Any(i => f.FullName.ToLower().Contains(i.ToLower())) == false
-                                                                         && (f.Name.Equals("dockerfile", StringComparison.CurrentCultureIgnoreCase) || CopyExtensions.Any(i => i.Equals(Path.GetExtension(f.Name)))));
+                                                                         && (f.Name.Equals("dockerfile", StringComparison.CurrentCultureIgnoreCase) || ReplaceExtensions.Any(i => i.Equals(Path.GetExtension(f.Name)))));
 
             foreach (var sourceFile in sourceFiles)
             {
@@ -372,7 +371,7 @@ namespace SolutionCopier.ConApp
 
                 File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);
             }
-            else if (CopyExtensions.SingleOrDefault(i => i.Equals(extension, StringComparison.CurrentCultureIgnoreCase)) != null)
+            else if (ReplaceExtensions.SingleOrDefault(i => i.Equals(extension, StringComparison.CurrentCultureIgnoreCase)) != null)
             {
                 var targetLines = new List<string>();
                 var sourceLines = File.ReadAllLines(sourceFilePath, Encoding.Default);
