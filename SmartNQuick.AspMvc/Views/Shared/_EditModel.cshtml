@@ -27,8 +27,15 @@
                         @await Html.PartialAsync("_EditControl", Model)
                         @if (viewBagWrapper.Handled.GetValueOrDefault() == false)
                         {
-                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" />
-                            <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
+                            if (item.PropertyType.IsEnum)
+                            {
+                                @Html.DropDownList(item.Name, Html.GetEnumSelectList(item.PropertyType), null, new { @class = "form-control" })
+                            }
+                            else
+                            {
+                                <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" />
+                                <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
+                            }
                         }
                     </div>
                 }
