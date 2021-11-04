@@ -32,11 +32,13 @@ namespace SolutionDockerBuilder.ConApp
         private static void Main(/*string[] args*/)
         {
             bool running = false;
+            var path = GetCurrentSolutionPath();
 
+            path = ChangePath(path);
             do
             {
                 var input = string.Empty;
-                var dockerfiles = PrintHeader();
+                var dockerfiles = PrintHeader(path);
 
                 Console.Write($"Build [1..{dockerfiles.Count() + 1}|X]?: ");
                 input = Console.ReadLine().ToLower();
@@ -52,9 +54,7 @@ namespace SolutionDockerBuilder.ConApp
                     {
                         if (number == dockerfiles.Count() + 1)
                         {
-                            var solutionPath = GetCurrentSolutionPath();
-
-                            BuildDockerfiles(solutionPath);
+                            BuildDockerfiles(path);
                         }
                         else if (number > 0 && number <= dockerfiles.Count())
                         {
@@ -74,11 +74,10 @@ namespace SolutionDockerBuilder.ConApp
             } while (running);
         }
 
-        private static IEnumerable<string> PrintHeader()
+        private static string ChangePath(string path)
         {
-            int index = 0;
-            var result = new List<string>();
-            var solutionPath = GetCurrentSolutionPath();
+            var result = path;
+            var input = string.Empty;
 
             Console.Clear();
             Console.SetCursorPosition(0, 0);
@@ -86,7 +85,31 @@ namespace SolutionDockerBuilder.ConApp
             Console.WriteLine("==========================================");
             Console.WriteLine();
 
-            foreach (var dockerfile in GetDockerfiles(solutionPath))
+			Console.WriteLine($"Cuurent path: {path}");
+			Console.Write("Do you want to change the path [y|Y]?: ");
+            input = Console.ReadLine();
+            if (input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+			{
+				Console.Write("Path: ");
+                result = Console.ReadLine();
+			}
+            return result;
+        }
+
+        private static IEnumerable<string> PrintHeader(string path)
+        {
+            int index = 0;
+            var result = new List<string>();
+
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine($"{nameof(SolutionDockerBuilder)}:");
+            Console.WriteLine("==========================================");
+            Console.WriteLine();
+			Console.WriteLine($"Path: {path}");
+			Console.WriteLine();
+
+            foreach (var dockerfile in GetDockerfiles(path))
             {
                 var dockerfileInfo = new FileInfo(dockerfile);
                 var directoryName = dockerfileInfo.Directory.Name;
