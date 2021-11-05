@@ -92,7 +92,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateEntityFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -125,7 +125,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateEntityFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -160,7 +160,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateEntityFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -186,7 +186,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateEntityFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "PartB", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "Navigation", StaticLiterals.CSharpFileExtension),
             };
             result.Add($"partial class {typeName}");
             result.Add("{");
@@ -288,7 +288,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateEntityFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Entities", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateEntityNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");

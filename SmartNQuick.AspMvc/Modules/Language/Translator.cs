@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SmartNQuick.AspMvc.Modules.Language
 {
     public partial class Translator
-	{
+    {
         static Translator()
         {
             ClassConstructing();
@@ -34,11 +34,12 @@ namespace SmartNQuick.AspMvc.Modules.Language
         private static Translator instance = null;
         public static Translator Instance => instance ??= new Translator();
 
+        public bool HasLoaded => LastLoad.HasValue;
         public DateTime? LastLoad { get; private set; }
         public LanguageCode KeyLanguage => LanguageCode.En;
         public LanguageCode ValueLanguage => LanguageCode.De;
-        
-        protected List<Models.ThirdParty.Translation> translations = new ();
+
+        protected List<Models.ThirdParty.Translation> translations = new();
         protected virtual void LoadTranslations()
         {
             bool LoadTranslationsFromServer(List<Translation> translations)
@@ -78,17 +79,17 @@ namespace SmartNQuick.AspMvc.Modules.Language
             }
             else
             {
-#if DEBUG
-                LoadTranslationsFromServer(translations);
-                LastLoad = DateTime.Now;
-#else
                 if ((DateTime.Now - LastLoad.Value).TotalMinutes > 60)
                 {
                     LoadTranslationsFromServer(translations);
                     LastLoad = DateTime.Now;
                 }
-#endif
             }
+        }
+        public virtual void ReloadTranslation()
+        {
+            LastLoad = null;
+            LoadTranslations();
         }
         protected virtual string Translate(string key)
         {

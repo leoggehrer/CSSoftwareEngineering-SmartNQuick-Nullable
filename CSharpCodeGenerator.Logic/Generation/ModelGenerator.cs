@@ -104,7 +104,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -137,7 +137,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -171,7 +171,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -204,7 +204,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Models", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Models", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -237,7 +237,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, "Models", "PartA", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, "Models", "Inheritance", StaticLiterals.CSharpFileExtension),
             };
             result.Source.Add($"partial class {CreateModelNameFromInterface(type)} : {GetBaseClassByContract(type)}");
             result.Source.Add("{");
@@ -325,7 +325,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "PartD", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "OneDeligate", StaticLiterals.CSharpFileExtension),
             };
             CreateModelAttributes(type, result.Source);
             result.Add($"public partial class {modelName}");

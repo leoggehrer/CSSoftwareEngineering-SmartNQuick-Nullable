@@ -34,6 +34,7 @@ namespace SolutionCodeComparsion.ConApp
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQConfigurator"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQContact"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTradingCompany"),
+                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMusicStore"),
             };
             Paths.Add(SourcePath, targetPaths);
             // End: SmartNQuick-Projects
@@ -124,6 +125,7 @@ namespace SolutionCodeComparsion.ConApp
             foreach (var path in Paths)
             {
                 Console.WriteLine($"Source: {path.Key}");
+                Console.WriteLine();
                 foreach (var target in path.Value)
                 {
                     Console.WriteLine($"\t -> {target}");
