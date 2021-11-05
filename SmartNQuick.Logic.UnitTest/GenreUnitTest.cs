@@ -1,11 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmartNQuick.Contracts.Persistence.MusicStore;
+using SmartNQuick.Contracts.Persistence.UnitTest;
 using System;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.UnitTest
 {
-	[TestClass]
+    [TestClass]
 	public class GenreUnitTest
 	{
 		private static SmartNQuick.Contracts.Client.IControllerAccess<IGenre> CreateController()

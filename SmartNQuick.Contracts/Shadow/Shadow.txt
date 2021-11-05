@@ -1,0 +1,3 @@
+﻿In diesem Ordner werden alle Shadow-Entitäten definiert. 
+Die Schnittstellen der Shadow-Entitäten muessen von der Schnittstellen 
+'IShaadow' und 'ICopyable<IEntity>' abgeleitet sein.
