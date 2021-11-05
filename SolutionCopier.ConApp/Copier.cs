@@ -12,7 +12,7 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 namespace SolutionCopier.ConApp
 {
     internal partial class Copier
-	{
+    {
         private static char Separator => ';';
         public static Action<string> Logger { get; set; } = s => System.Diagnostics.Debug.WriteLine(s);
 
@@ -54,10 +54,32 @@ namespace SolutionCopier.ConApp
             ,".sln"
             ,".tt"
             ,".txt"
+            ,".csv"
             ,".xml"
             ,".razor"
             ,".md"
             ,".template"
+        };
+        private static string[] ProjectExtensions { get; } = new string[]
+        {
+            ".asax"
+            ,".config"
+            ,".cs"
+            ,".cshtml"
+            ,".csproj"
+            ,".css"
+            ,".html"
+            ,".js"
+            ,".json"
+            ,".less"
+            ,".tt"
+            ,".txt"
+            ,".xml"
+            ,".razor"
+            ,".md"
+            ,".template"
+            ,".jpg"
+            ,".png"
         };
         private static string[] SolutionExtenions { get; } = new string[]
         {
@@ -332,7 +354,7 @@ namespace SolutionCopier.ConApp
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
             var sourceFiles = new DirectoryInfo(sourceDirectory).GetFiles("*", SearchOption.AllDirectories)
                                                                 .Where(f => IgnoreFileFolders.Any(i => f.FullName.ToLower().Contains(i.ToLower())) == false
-                                                                         && (f.Name.Equals("dockerfile", StringComparison.CurrentCultureIgnoreCase) || ReplaceExtensions.Any(i => i.Equals(Path.GetExtension(f.Name)))));
+                                                                         && (f.Name.Equals("dockerfile", StringComparison.CurrentCultureIgnoreCase) || ProjectExtensions.Any(i => i.Equals(Path.GetExtension(f.Name)))));
 
             foreach (var sourceFile in sourceFiles)
             {
@@ -402,7 +424,7 @@ namespace SolutionCopier.ConApp
                         targetLine = targetLine.Replace(CommonStaticLiterals.BaseCodeLabel, CommonStaticLiterals.CodeCopyLabel);
                         targetLines.Add(targetLine);
                     }
-                    File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.Default);
+                    File.WriteAllLines(targetFilePath, targetLines.ToArray(), Encoding.UTF8);
                 }
             }
             else if (File.Exists(targetFilePath) == false)

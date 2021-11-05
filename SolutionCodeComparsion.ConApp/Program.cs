@@ -204,7 +204,7 @@ namespace SolutionCodeComparsion.ConApp
                 cpyLines.AddRange(File.ReadAllLines(sourceFilePath, Encoding.Default)
                                    .Skip(1)
                                    .Select(i => i.Replace(sourceSolutionName, targetSolutionName)));
-                File.WriteAllLines(targetFilePath, cpyLines.ToArray(), Encoding.Default);
+                File.WriteAllLines(targetFilePath, cpyLines.ToArray(), Encoding.UTF8);
             }
             return result;
         }
