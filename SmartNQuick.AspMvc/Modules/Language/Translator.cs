@@ -65,8 +65,8 @@ namespace SmartNQuick.AspMvc.Modules.Language
                     }
                     catch (Exception ex)
                     {
-                        ErrorHandler.LastError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
-                        System.Diagnostics.Debug.WriteLine(ErrorHandler.LastError);
+                        ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
+                        System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                     }
                 }
                 return result;

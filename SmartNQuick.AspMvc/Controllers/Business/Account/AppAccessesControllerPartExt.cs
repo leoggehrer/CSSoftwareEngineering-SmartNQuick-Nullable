@@ -56,7 +56,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                 var model = ToModel(entity);
 
-                LastError = error;
+                LastViewError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
                 return View("EditRoles", model);
             }
@@ -68,7 +68,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                 var model = ToModel(entity);
 
-                LastError = error;
+                LastViewError = error;
                 await LoadRolesAsync(model).ConfigureAwait(false);
                 return View("EditRoles", model);
             }
@@ -158,7 +158,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             var model = ToModel(entity);
 
             if (error.HasContent())
-                LastError = error;
+                LastViewError = error;
 
             return View(model);
         }
@@ -210,7 +210,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName };
 
             if (error.HasContent())
-                LastError = error;
+                LastViewError = error;
 
             return View(model);
         }

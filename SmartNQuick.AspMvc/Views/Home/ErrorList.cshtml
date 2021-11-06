@@ -6,7 +6,16 @@
 
 <h1>ErrorList</h1>
 
-@foreach (var item in ErrorHandler.GetErrors())
+<h2>View-Errors</h2>
+@foreach (var item in ErrorHandler.GetViewErrors())
+{
+    <div class="alert alert-danger" role="alert">
+        @item
+    </div>
+}
+
+<h2>Logic-Errors</h2>
+@foreach (var item in ErrorHandler.GetLogicErrors())
 {
     <div class="alert alert-danger" role="alert">
         @item

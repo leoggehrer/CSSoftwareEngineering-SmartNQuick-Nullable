@@ -95,7 +95,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterIndex(models);
@@ -117,12 +117,12 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                     model = await CreateModelAsync().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterCreate(model);
@@ -172,11 +172,11 @@ namespace SmartNQuick.AspMvc.Controllers
                     var entity = await ctrl.InsertAsync(model).ConfigureAwait(false);
 
                     model.CopyProperties(entity);
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterInsertModel(model);
@@ -204,11 +204,11 @@ namespace SmartNQuick.AspMvc.Controllers
                 try
                 {
                     model = await EditModelAsync(id).ConfigureAwait(false);
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterEdit(model);
@@ -257,11 +257,11 @@ namespace SmartNQuick.AspMvc.Controllers
                     var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
 
                     model.CopyProperties(entity);
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterUpdateModel(model);
@@ -292,11 +292,11 @@ namespace SmartNQuick.AspMvc.Controllers
                     var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
                     model = ToModel(entity);
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterDelete(model);
@@ -325,11 +325,11 @@ namespace SmartNQuick.AspMvc.Controllers
                     using var ctrl = CreateController();
 
                     await ctrl.DeleteAsync(id).ConfigureAwait(false);
-                    LastError = string.Empty;
+                    LastViewError = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                 }
             }
             AfterDeleteModel(id);

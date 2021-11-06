@@ -48,7 +48,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             var model = new Models.Modules.Csv.ImportProtocol() { BackController = ControllerName };
 
             if (error.HasContent())
-                LastError = error;
+                LastViewError = error;
 
             return View(model);
         }

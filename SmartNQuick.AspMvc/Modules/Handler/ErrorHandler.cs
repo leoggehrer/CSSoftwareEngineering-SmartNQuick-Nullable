@@ -9,41 +9,66 @@ namespace SmartNQuick.AspMvc.Modules.Handler
 {
     public static class ErrorHandler
     {
-        private static string lastError;
-        private static readonly List<string> errorList = new();
+        private static string lastViewError;
+        private static readonly List<string> viewErrorList = new();
+        private static string lastLogicError;
+        private static readonly List<string> logicErrorList = new();
 
-        public static string LastError
+        public static bool HasViewError => string.IsNullOrEmpty(LastViewError) == false;
+        public static string LastViewError
         {
-            get => lastError;
+            get => lastViewError;
             set
             {
-                if (string.IsNullOrEmpty(lastError) == false)
+                if (string.IsNullOrEmpty(lastViewError) == false)
                 {
-                    if (errorList.Count >= 10)
-                        errorList.RemoveAt(0);
+                    if (viewErrorList.Count >= 10)
+                        viewErrorList.RemoveAt(0);
 
-                    errorList.Add(lastError);
+                    viewErrorList.Add(lastViewError);
                 }
-                lastError = value;
+                lastViewError = value;
             }
         }
-        public static bool HasError => string.IsNullOrEmpty(LastError) == false;
+        public static bool HasLogicError => string.IsNullOrEmpty(lastLogicError) == false;
+        public static string LastLogicError
+        {
+            get => lastLogicError;
+            set
+            {
+                if (string.IsNullOrEmpty(lastLogicError) == false)
+                {
+                    if (logicErrorList.Count >= 10)
+                        logicErrorList.RemoveAt(0);
+
+                    logicErrorList.Add(lastLogicError);
+                }
+                lastLogicError = value;
+            }
+        }
+
         public static void Clear()
         {
-            lastError = null;
-            errorList.Clear();
+            lastViewError = null;
+            viewErrorList.Clear();
+            logicErrorList.Clear();
         }
-        public static string GetLastErrorAndClear()
+        public static string GetLastViewErrorAndClear()
         {
-            var result = LastError;
+            var result = LastViewError;
 
-            LastError = null;
+            LastViewError = null;
             return result;
         }
-        public static IEnumerable<string> GetErrors()
+        public static IEnumerable<string> GetViewErrors()
         {
-            return errorList;
+            return viewErrorList;
         }
+        public static IEnumerable<string> GetLogicErrors()
+        {
+            return logicErrorList;
+        }
+
         #region ExceptionExtension
         public static string GetFullError(this Exception source)
         {

@@ -16,17 +16,15 @@ namespace SmartNQuick.AspMvc.Controllers
 {
     public class MvcController : Controller
 	{
-        private string lastError;
-        protected virtual string LastError
+        protected virtual string LastViewError
         {
-            get => lastError;
+            get => Modules.Handler.ErrorHandler.LastViewError;
             set
             {
-                lastError = value;
-                Modules.Handler.ErrorHandler.LastError = value;
+                Modules.Handler.ErrorHandler.LastViewError = value;
             }
         }
-        protected bool HasError => string.IsNullOrEmpty(LastError) == false;
+        protected bool HasError => string.IsNullOrEmpty(LastViewError) == false;
 
         #region SessionWrapper
         public bool IsSessionAvailable => HttpContext?.Session != null;

@@ -18,10 +18,10 @@
 
     <h1>@title</h1>
 
-    @if (string.IsNullOrEmpty(ErrorHandler.LastError) == false)
+    @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
     {
         <div class="alert alert-danger" role="alert">
-            @ErrorHandler.GetLastErrorAndClear()
+            @ErrorHandler.GetLastViewErrorAndClear()
         </div>
     }
 

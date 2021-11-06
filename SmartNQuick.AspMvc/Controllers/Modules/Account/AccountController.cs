@@ -45,7 +45,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 SessionWrapper.ReturnUrl = returnUrl;
                 if (error.HasContent())
-                    LastError = error;
+                    LastViewError = error;
             }
             AfterLogon(viewModel, ref viewName);
             return View(viewName, viewModel);
@@ -89,7 +89,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                     return View(viewModel);
                 }
             }
@@ -117,7 +117,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 SessionWrapper.ReturnUrl = returnUrl;
                 if (error.HasContent())
-                    LastError = error;
+                    LastViewError = error;
             }
             AfterLogonRemote(viewModel, ref viewName);
             return View(viewName, viewModel);
@@ -147,7 +147,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                     return View(viewModel);
                 }
             }
@@ -235,7 +235,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LastError = ex.GetError();
+                    LastViewError = ex.GetError();
                     return View("ChangePassword", viewModel);
                 }
             }
@@ -293,7 +293,7 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             catch (Exception ex)
             {
-                LastError = ex.GetError();
+                LastViewError = ex.GetError();
                 return View("ResetPassword", viewModel);
             }
             AfterDoResetPassword(viewModel, ref viewName);
@@ -315,7 +315,7 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHandler.LastError = ex.GetError();
+                ErrorHandler.LastViewError = ex.GetError();
                 throw;
             }
         }
@@ -335,7 +335,7 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHandler.LastError = ex.GetError();
+                ErrorHandler.LastViewError = ex.GetError();
                 throw;
             }
         }
