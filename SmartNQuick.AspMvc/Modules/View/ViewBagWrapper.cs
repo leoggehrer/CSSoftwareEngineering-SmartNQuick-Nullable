@@ -1,6 +1,8 @@
 ﻿//@BaseCode
 //MdStart
 
+using SmartNQuick.AspMvc.Models.Modules.View;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Modules.View
@@ -13,10 +15,10 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
-        public bool? Handled
+        public bool Handled
         {
-            get => ViewBag.Handled as bool?;
-            set => ViewBag.Handle = value;
+            get => ViewBag.Handled != null ? (bool)ViewBag.Handled : false;
+            set => ViewBag.Handled = value;
         }
         public PropertyInfo DisplayProperty
         {
@@ -37,6 +39,28 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get => ViewBag.DisplayNames as string[];
             set => ViewBag.DisplayNames = value;
+        }
+
+        public ViewModelCreator ViewModelCreator
+        {
+            get => ViewBag.ViewModelCreator as ViewModelCreator;
+            set => ViewBag.ViewModelCreator = value;
+        }
+
+        public IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, dynamic viewBag)
+        {
+            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewName, models, viewBag) 
+                                            : new ViewModelCreator().CreateIndexViewModel(viewName, models, viewBag);
+        }
+        public EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        {
+            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewName, model, viewBag)
+                                            : new ViewModelCreator().CreateEditViewModel(viewName, model, viewBag);
+        }
+        public EditViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        {
+            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewName, model, viewBag)
+                                            : new ViewModelCreator().CreateDisplayViewModel(viewName, model, viewBag);
         }
     }
 }

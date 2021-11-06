@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+using SmartNQuick.AspMvc.Modules.View;
 using System.Collections;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace SmartNQuick.AspMvc.Models
 {
     public class ModelObject
 	{
+        public ViewBagWrapper ViewBagInfo { get; set; }
         protected static bool IsEqualsWith(object obj1, object obj2)
         {
             bool result = false;

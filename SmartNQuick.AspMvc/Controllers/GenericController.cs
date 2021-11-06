@@ -2,6 +2,7 @@
 //MdStart
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,12 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual Task<TModel> BeforeViewAsync(TModel model, Action action) => Task.FromResult(model);
         protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, Action action) => Task.FromResult(models);
 
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            ViewBag.ViewModelCreator = new Modules.View.ViewModelCreator();
+
+            base.OnActionExecuted(context);
+        }
         [HttpGet]
         [ActionName("Index")]
         public virtual async Task<IActionResult> IndexAsync()

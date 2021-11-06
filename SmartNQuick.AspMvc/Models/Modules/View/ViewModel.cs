@@ -11,13 +11,14 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
     {
         public List<string> HiddenNames { get; } = new List<string>()
         {
-            "Id",
-            "RowVersion",
+            nameof(IdentityModel.Id),
+            nameof(VersionModel.RowVersion),
         };
         public List<string> IgnoreNames { get; } = new List<string>()
         {
-            "Id", 
-            "RowVersion", 
+            nameof(IdentityModel.Id),
+            nameof(VersionModel.RowVersion),
+            nameof(ModelObject.ViewBagInfo)
         };
         public List<string> DisplayNames { get; } = new List<string>()
         {
