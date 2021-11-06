@@ -3,17 +3,17 @@
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @using SmartNQuick.AspMvc.Models.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
     var action = ViewContext.RouteData.Values["action"].ToString();
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var editViewModel = new EditViewModel(Model, ViewBag);
-    
-    Model.ViewBagInfo = new ViewBagWrapper(ViewBag);
+    var editViewModel = viewBagWrapper.CreateEditViewModel(controller, Model);
+
+    Model.ViewBagInfo = viewBagWrapper;
 
     <div class="row">
         <div class="col-md-6">

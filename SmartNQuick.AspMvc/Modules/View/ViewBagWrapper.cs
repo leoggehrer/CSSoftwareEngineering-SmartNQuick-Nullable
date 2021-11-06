@@ -47,20 +47,20 @@ namespace SmartNQuick.AspMvc.Modules.View
             set => ViewBag.ViewModelCreator = value;
         }
 
-        public IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, dynamic viewBag)
+        public IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewName, models, viewBag) 
-                                            : new ViewModelCreator().CreateIndexViewModel(viewName, models, viewBag);
+            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewName, models, this) 
+                                            : new ViewModelCreator().CreateIndexViewModel(viewName, models, this);
         }
-        public EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        public EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewName, model, viewBag)
-                                            : new ViewModelCreator().CreateEditViewModel(viewName, model, viewBag);
+            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewName, model, this)
+                                            : new ViewModelCreator().CreateEditViewModel(viewName, model, this);
         }
-        public EditViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        public DisplayViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewName, model, viewBag)
-                                            : new ViewModelCreator().CreateDisplayViewModel(viewName, model, viewBag);
+            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewName, model, this)
+                                            : new ViewModelCreator().CreateDisplayViewModel(viewName, model, this);
         }
     }
 }

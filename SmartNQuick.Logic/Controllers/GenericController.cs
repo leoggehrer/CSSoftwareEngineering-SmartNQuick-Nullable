@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartNQuick.Logic.Modules.Exception;
+using System.Linq.Expressions;
+using System;
 #if ACCOUNT_ON
 using System.Reflection;
 #endif
@@ -27,6 +29,7 @@ namespace SmartNQuick.Logic.Controllers
 
         #region Properties
         public abstract bool IsTransient { get; }
+        public virtual int MaxPageSize { get; } = 500;
         #endregion Properties
 
         #region Instance-Constructors
@@ -133,6 +136,25 @@ namespace SmartNQuick.Logic.Controllers
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
         internal abstract Task<E> ExecuteGetEntityByIdAsync(int id);
+        public virtual async Task<IEnumerable<C>> GetPageListAsync(int pageIndex, int pageSize)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
+#endif
+
+            return await GetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+        }
+        internal virtual async Task<IEnumerable<E>> GetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize);
 
         public virtual async Task<IEnumerable<C>> GetAllAsync()
         {
@@ -150,6 +172,31 @@ namespace SmartNQuick.Logic.Controllers
         }
         internal abstract Task<IEnumerable<E>> ExecuteGetEntityAllAsync();
 
+        public virtual async Task<IEnumerable<C>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
+#endif
+            return await QueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+        }
+        internal virtual async Task<IEnumerable<E>> QueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            var result = await ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize);
+
+        internal virtual async Task<IEnumerable<E>> QueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
+        {
+            var result = await ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize);
+
         public virtual async Task<IEnumerable<C>> QueryAllAsync(string predicate)
         {
 #if ACCOUNT_ON
@@ -164,6 +211,14 @@ namespace SmartNQuick.Logic.Controllers
             result = BeforeReturn(result);
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
+        internal virtual async Task<IEnumerable<E>> QueryEntityAllAsync(Expression<Func<E, bool>> predicate)
+        {
+            var result = await ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate);
         internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate);
         #endregion Query
 

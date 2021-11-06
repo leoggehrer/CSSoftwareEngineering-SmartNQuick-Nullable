@@ -7,10 +7,9 @@ namespace SmartNQuick.AspMvc.Modules.View
 {
     public partial class ViewModelCreator
     {
-        public virtual IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, dynamic viewBag)
+        public virtual IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper)
         {
             var handled = false;
-            var viewBagWrapper = new ViewBagWrapper(viewBag);
             IndexViewModel result = null;
 
             BeforeCreateIndexViewModel(viewName, models, viewBagWrapper, ref result, ref handled);
@@ -24,10 +23,9 @@ namespace SmartNQuick.AspMvc.Modules.View
         partial void BeforeCreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper, ref IndexViewModel result, ref bool handled);
         partial void AfterCreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper, IndexViewModel result);
 
-        public virtual DisplayViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        public virtual DisplayViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model, ViewBagWrapper viewBagWrapper)
         {
             var handled = false;
-            var viewBagWrapper = new ViewBagWrapper(viewBag);
             DisplayViewModel result = null;
 
             BeforeCreateDisplayViewModel(viewName, model, viewBagWrapper, ref result, ref handled);
@@ -41,10 +39,9 @@ namespace SmartNQuick.AspMvc.Modules.View
         partial void BeforeCreateDisplayViewModel(string viewName, Models.IdentityModel model, ViewBagWrapper viewBagWrapper, ref DisplayViewModel result, ref bool handled);
         partial void AfterCreateDisplayViewModel(string viewName, Models.IdentityModel model, ViewBagWrapper viewBagWrapper, DisplayViewModel result);
 
-        public virtual EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model, dynamic viewBag)
+        public virtual EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model, ViewBagWrapper viewBagWrapper)
         {
             var handled = false;
-            var viewBagWrapper = new ViewBagWrapper(viewBag);
             EditViewModel result = null;
 
             BeforeCreateEditViewModel(viewName, model, viewBagWrapper, ref result, ref handled);

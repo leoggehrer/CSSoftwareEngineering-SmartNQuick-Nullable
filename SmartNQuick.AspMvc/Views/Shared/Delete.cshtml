@@ -3,20 +3,21 @@
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
     @using SmartNQuick.AspMvc.Models.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
     var action = ViewContext.RouteData.Values["action"].ToString();
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor(action);
-    var displayViewModel = new DisplayViewModel(Model, ViewBag.HiddenNames as string[], 
-                                                       ViewBag.IgnoreNames as string[],
-                                                       ViewBag.DisplayNames as string[]);
+    var displayViewModel = viewBagWrapper.CreateDisplayViewModel(controller, Model);
 
     ViewData["Title"] = title;
+    Model.ViewBagInfo = viewBagWrapper;
 
     <h1>@title</h1>
 

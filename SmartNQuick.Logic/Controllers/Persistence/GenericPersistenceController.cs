@@ -1,9 +1,14 @@
 ﻿//@BaseCode
 //MdStart
+using CommonBase.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using SmartNQuick.Logic.Modules.Exception;
 
 namespace SmartNQuick.Logic.Controllers.Persistence
 {
@@ -27,7 +32,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         public override bool IsTransient => false;
 
         public DbSet<E> Set() => Context.Set<C, E>();
-        internal IQueryable<E> QueryableSet() => Context.Set<C, E>();
+        internal IQueryable<E> QueryableSet() => Context.QueryableSet<C, E>();
 
         protected GenericPersistenceController(DataContext.IContext context) : base(context)
         {
@@ -52,13 +57,76 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         {
             return Context.GetByIdAsync<C, E>(id);
         }
-        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
-            return Context.GetAllAsync<C, E>();
+            int idx = 0, qryCount;
+            var result = new List<E>();
+            do
+            {
+                var qry = await QueryableSet().Skip(idx++ * MaxPageSize)
+                                              .Take(MaxPageSize)
+                                              .ToArrayAsync()
+                                              .ConfigureAwait(false);
+
+                qryCount = result.AddRangeAndCount(qry);
+            } while (qryCount == MaxPageSize);
+            return result;
         }
         internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             return Context.QueryAllAsync<C, E>(predicate);
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate)
+        {
+            int idx = 0, qryCount;
+            var result = new List<E>();
+            do
+            {
+                var qry = await QueryableSet().Where(predicate)
+                                              .Skip(idx++ * MaxPageSize)
+                                              .Take(MaxPageSize)
+                                              .ToArrayAsync()
+                                              .ConfigureAwait(false);
+
+                qryCount = result.AddRangeAndCount(qry);
+            } while (qryCount == MaxPageSize);
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await QueryableSet().Skip(pageIndex * pageSize)
+                                             .Take(pageSize)
+                                             .ToArrayAsync()
+                                             .ConfigureAwait(false);
+
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await QueryableSet().Where(predicate)
+                                             .Skip(pageIndex * pageSize)
+                                             .Take(pageSize)
+                                             .ToArrayAsync()
+                                             .ConfigureAwait(false);
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await QueryableSet().Where(predicate)
+                                             .Skip(pageIndex * pageSize)
+                                             .Take(pageSize)
+                                             .ToArrayAsync()
+                                             .ConfigureAwait(false);
+            return result;
         }
         #endregion Query
 

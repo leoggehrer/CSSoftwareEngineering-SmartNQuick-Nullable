@@ -26,7 +26,7 @@
     }
     else
     {
-        var indexViewModel = viewBagWrapper.CreateIndexViewModel(controller, Model, ViewBag);
+        var indexViewModel = viewBagWrapper.CreateIndexViewModel(controller, Model);
 
         <p style="margin-top: 1em;">
             <a asp-action="Create" class="btn btn-outline-secondary">@translateFor("Create New")</a>
@@ -47,6 +47,7 @@
             <tbody>
                 @foreach (var model in indexViewModel.Models)
                 {
+                    model.ViewBagInfo = viewBagWrapper;
                     <tr>
                         @foreach (var displayItem in indexViewModel.DisplayProperties)
                         {
