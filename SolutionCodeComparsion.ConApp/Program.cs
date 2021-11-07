@@ -21,14 +21,9 @@ namespace SolutionCodeComparsion.ConApp
 
             UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             SourcePath = GetCurrentSolutionPath();
-            Paths = new Dictionary<string, string[]>();
-			SourceLabels = new Dictionary<string, string[]>
-			{
-				{ SourcePath, new string[] { CommonStaticLiterals.BaseCodeLabel } }
-			};
 
-			// Project: SmartNQuick-Projects
-			var targetPaths = new string[]
+            // Project: SmartNQuick-Projects
+            TargetPaths = new string[]
             {
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTranslator"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQConfigurator"),
@@ -36,7 +31,6 @@ namespace SolutionCodeComparsion.ConApp
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTradingCompany"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMusicStore"),
             };
-            Paths.Add(SourcePath, targetPaths);
             // End: SmartNQuick-Projects
             ClassConstructed();
         }
@@ -46,58 +40,48 @@ namespace SolutionCodeComparsion.ConApp
         private static string HomePath { get; set; }
         private static string UserPath { get; set; }
         private static string SourcePath { get; set; }
-        private static Dictionary<string, string[]> Paths { get; set; }
-        private static Dictionary<string, string[]> SourceLabels { get; set; }
+        private static string[] TargetPaths { get; set; }
         private static string[] SearchPatterns => CommonStaticLiterals.SourceFileExtensions.Split('|');
+        private static readonly string[] SourceLabels = new string[] { CommonStaticLiterals.BaseCodeLabel };
         private static readonly string[] TargetLabels = new string[] { CommonStaticLiterals.CodeCopyLabel };
 
         private static void Main(/*string[] args*/)
         {
-            string input;
-            string queryMsg = "Copy [y|n]?: ";
+            bool running = false;
 
-            PrintHeader();
-            Console.Write(queryMsg);
-            input = Console.ReadLine();
-            while (input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+            do
             {
-                PrintHeader();
-                PrintBusyProgress();
+                var input = string.Empty;
+                PrintHeader(SourcePath, TargetPaths);
 
-                foreach (var path in Paths)
+                Console.Write($"Balancing [1..{TargetPaths.Count() + 1}|X...Quit]?: ");
+                input = Console.ReadLine().ToLower();
+                PrintBusyProgress();
+                running = input.Equals("x") == false;
+                if (running)
                 {
-                    // Delete all QnSCopyCode files
-                    foreach (var targetPath in path.Value)
+                    var numbers = input.Trim()
+                                       .Split(',').Where(s => Int32.TryParse(s, out int n))
+                                       .Select(s => Int32.Parse(s))
+                                       .ToArray();
+
+                    foreach (var number in numbers)
                     {
-                        foreach (var searchPattern in SearchPatterns)
+                        if (number == TargetPaths.Count() + 1)
                         {
-                            var targetCodeFiles = GetSourceCodeFiles(targetPath, searchPattern, TargetLabels);
-                            foreach (var targetCodeFile in targetCodeFiles)
+                            foreach (var item in TargetLabels)
                             {
-                                File.Delete(targetCodeFile);
+                                BalancingSolutions(SourcePath, SourceLabels, TargetPaths, TargetLabels);
                             }
                         }
-                    }
-                    // Copy all QnSBasCode files
-                    foreach (var searchPattern in SearchPatterns)
-                    {
-                        var sourceLabels = SourceLabels[path.Key];
-                        var sourceCodeFiles = GetSourceCodeFiles(path.Key, searchPattern, sourceLabels);
-
-                        foreach (var targetPath in path.Value)
+                        else if (number > 0 && number <= TargetPaths.Count())
                         {
-                            foreach (var sourceCodeFile in sourceCodeFiles)
-                            {
-                                SynchronizeSourceCodeFile(path.Key, sourceCodeFile, targetPath, sourceLabels, TargetLabels);
-                            }
+                            BalancingSolutions(SourcePath, SourceLabels, new string[] { TargetPaths[number - 1] }, TargetLabels);
                         }
                     }
                 }
                 runBusyProgress = false;
-                PrintHeader();
-                Console.Write(queryMsg);
-                input = Console.ReadLine();
-            }
+            } while (running);
         }
 
         private static bool runBusyProgress = false;
@@ -114,24 +98,51 @@ namespace SolutionCodeComparsion.ConApp
                 }
             });
         }
-
-        private static void PrintHeader()
+        private static void PrintHeader(string sourcePath, string[] targetPaths)
         {
+            var index = 0;
             Console.Clear();
             Console.SetCursorPosition(0, 0);
             Console.WriteLine($"{nameof(SolutionCodeComparsion)}:");
             Console.WriteLine("==========================================");
             Console.WriteLine();
-            foreach (var path in Paths)
+            Console.WriteLine($"Source: {sourcePath}");
+            Console.WriteLine();
+            foreach (var target in targetPaths)
             {
-                Console.WriteLine($"Source: {path.Key}");
-                Console.WriteLine();
-                foreach (var target in path.Value)
+                Console.WriteLine($"   Adjustment for: [{++index,2}] {target}");
+            }
+            Console.WriteLine($"   Adjustment for: [{++index,2}] ALL");
+            Console.WriteLine();
+        }
+
+        private static void BalancingSolutions(string sourcePath, string[] sourceLabels, IEnumerable<string> targetPaths, string[] targetLabels)
+        {
+            // Delete all CopyCode files
+            foreach (var targetPath in targetPaths)
+            {
+                foreach (var searchPattern in SearchPatterns)
                 {
-                    Console.WriteLine($"\t -> {target}");
+                    var targetCodeFiles = GetSourceCodeFiles(targetPath, searchPattern, targetLabels);
+                    foreach (var targetCodeFile in targetCodeFiles)
+                    {
+                        File.Delete(targetCodeFile);
+                    }
                 }
             }
-            Console.WriteLine();
+            // Copy all BaseCode files
+            foreach (var searchPattern in SearchPatterns)
+            {
+                var sourceCodeFiles = GetSourceCodeFiles(sourcePath, searchPattern, sourceLabels);
+
+                foreach (var targetPath in targetPaths)
+                {
+                    foreach (var sourceCodeFile in sourceCodeFiles)
+                    {
+                        SynchronizeSourceCodeFile(sourcePath, sourceCodeFile, targetPath, sourceLabels, targetLabels);
+                    }
+                }
+            }
         }
         private static IEnumerable<string> GetSourceCodeFiles(string path, string searchPattern, string[] labels)
         {

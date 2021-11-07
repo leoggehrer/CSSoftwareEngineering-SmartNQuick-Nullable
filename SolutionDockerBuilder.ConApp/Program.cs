@@ -40,7 +40,7 @@ namespace SolutionDockerBuilder.ConApp
                 var input = string.Empty;
                 var dockerfiles = PrintHeader(path);
 
-                Console.Write($"Build [1..{dockerfiles.Count() + 1}|X]?: ");
+                Console.Write($"Build [1..{dockerfiles.Count() + 1}|X...Quit]?: ");
                 input = Console.ReadLine().ToLower();
 
                 running = input.Equals("x") == false;

@@ -1,5 +1,4 @@
 @*@BaseCode*@
-@*#if ACCOUNT_ON*@
 @{
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Language
@@ -12,12 +11,13 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@translateFor("Home")</a>
         </li>
+@*#if ACCOUNT_ON*@
         @if (sessionWrapper.LoginSession != null)
         {
         }
+@*#endif*@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">@translateFor("Contact")</a>
         </li>
     </ul>
 }
-@*#endif*@
