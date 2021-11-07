@@ -1,4 +1,6 @@
-﻿using System;
+﻿//@BaseCode
+//MdStart
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,6 +20,10 @@ namespace SmartNQuick.Contracts.Client
         /// Indicates whether it is a business controller.
         /// </summary>
         bool IsTransient { get; }
+        /// <summary>
+        /// Gets the max page size.
+        /// </summary>
+        int MaxPageSize { get; }
         #endregion Properties
 
         #region Async-Methods
@@ -45,11 +51,27 @@ namespace SmartNQuick.Contracts.Client
         /// <returns>All interfaces of the entity collection.</returns>
         Task<IEnumerable<T>> GetAllAsync();
         /// <summary>
+        /// Gets a subset of items from the repository.
+        /// </summary>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>Subset in accordance with the parameters.</returns>
+        Task<IEnumerable<T>> GetPageListAsync(int pageIndex, int pageSize);
+
+        /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>The filter result.</returns>
         Task<IEnumerable<T>> QueryAllAsync(string predicate);
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>The filter result.</returns>
+        Task<IEnumerable<T>> QueryPageListAsync(string predicate, int pageIndex, int pageSize);
 
         /// <summary>
         /// Creates a new element of type T.
@@ -99,3 +121,4 @@ namespace SmartNQuick.Contracts.Client
         #endregion Async-Methods
     }
 }
+//MdEnd

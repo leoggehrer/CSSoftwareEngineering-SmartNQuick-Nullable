@@ -10,16 +10,16 @@ namespace SmartNQuick.Contracts.Client
     public partial interface IAdapterAccess<T> : IDisposable
     {
         #region Properties
-        /// <summary>
-        /// Gets the max page size.
-        /// </summary>
-        int MaxPageSize { get; }
 #if ACCOUNT_ON
         /// <summary>
         /// Sets the authorization token.
         /// </summary>
         string SessionToken { set; }
 #endif
+        /// <summary>
+        /// Gets the max page size.
+        /// </summary>
+        int MaxPageSize { get; }
         #endregion Properties
 
         #region Async-Methods
@@ -46,6 +46,13 @@ namespace SmartNQuick.Contracts.Client
         /// </summary>
         /// <returns>All interfaces of the entity collection.</returns>
         Task<IEnumerable<T>> GetAllAsync();
+        /// <summary>
+        /// Gets a subset of items from the repository.
+        /// </summary>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>Subset in accordance with the parameters.</returns>
+        Task<IEnumerable<T>> GetPageListAsync(int pageIndex, int pageSize);
 
         /// <summary>
         /// Filters a sequence of values based on a predicate.
@@ -53,6 +60,14 @@ namespace SmartNQuick.Contracts.Client
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>The filter result.</returns>
         Task<IEnumerable<T>> QueryAllAsync(string predicate);
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>The filter result.</returns>
+        Task<IEnumerable<T>> QueryPageListAsync(string predicate, int pageIndex, int pageSize);
 
         /// <summary>
         /// Creates a new element of type T.

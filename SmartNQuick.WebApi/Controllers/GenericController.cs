@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.WebApi.Controllers
 {
-    public abstract class GenericController<I, M> : ApiControllerBase, IDisposable
+	public abstract class GenericController<I, M> : ApiControllerBase, IDisposable
         where I : Contracts.IIdentifiable
         where M : Transfer.Models.IdentityModel, I, Contracts.ICopyable<I>, new()
     {
@@ -36,13 +36,20 @@ namespace SmartNQuick.WebApi.Controllers
 			return Task.Run(() => Logic.Factory.Create<I>());
 		}
 #endif
-
 		protected M ToModel(I entity)
 		{
 			var result = new M();
 
 			result.CopyProperties(entity);
 			return result;
+		}
+
+		[HttpGet("/api/[controller]/MaxPageSize")]
+		public async Task<int> GetMaxPageSizeAsync()
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+
+			return ctrl.MaxPageSize;
 		}
 
 		[HttpGet("/api/[controller]/Count")]
@@ -59,6 +66,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return await ctrl.CountByAsync(predicate).ConfigureAwait(false);
 		}
+
 		[HttpGet("/api/[controller]/{id}")]
 		public async Task<M> GetByIdAsync(int id)
 		{
@@ -75,11 +83,28 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return result.Select(e => ToModel(e));
 		}
+		[HttpGet("/api/[controller]/{index}/{size}")]
+		public async Task<IEnumerable<M>> GetPageListAsync(int index, int size)
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.GetPageListAsync(index, size).ConfigureAwait(false);
+
+			return result.Select(e => ToModel(e));
+		}
+
 		[HttpGet("/api/[controller]/Query/{predicate}")]
 		public async Task<IEnumerable<M>> QueryAllBy(string predicate)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var result = await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
+
+			return result.Select(e => ToModel(e));
+		}
+		[HttpGet("/api/[controller]/{predicate}/{index}/{size}")]
+		public async Task<IEnumerable<M>> QueryPageListAsync(string predicate, int index, int size)
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.QueryPageListAsync(predicate, index, size).ConfigureAwait(false);
 
 			return result.Select(e => ToModel(e));
 		}
@@ -113,6 +138,7 @@ namespace SmartNQuick.WebApi.Controllers
 			result.AddRange(entities.Select(e => ToModel(e)));
 			return result.AsQueryable();
 		}
+
 		[HttpPut("/api/[controller]")]
 		public async Task<M> PutAsync([FromBody]M model)
 		{
@@ -133,6 +159,7 @@ namespace SmartNQuick.WebApi.Controllers
 			result.AddRange(entities.Select(e => ToModel(e)));
 			return result.AsQueryable();
 		}
+
 		[HttpDelete("/api/[controller]/{id}")]
 		public async Task DeleteAsync(int id)
 		{

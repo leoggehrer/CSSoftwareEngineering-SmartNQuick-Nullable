@@ -154,26 +154,6 @@ namespace SmartNQuick.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
-        public async Task<IEnumerable<TContract>> GetPageListAsync(int pageIndex, int pageSize)
-        {
-            using var client = GetClient(BaseUri);
-            var response = await client.GetAsync($"{ExtUri}/{pageIndex}/{pageSize}").ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
-            }
-            else
-            {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
-
-                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
-                throw new AdapterException((int)response.StatusCode, errorMessage);
-            }
-        }
         public async Task<IEnumerable<TContract>> GetAllAsync()
         {
             using var client = GetClient(BaseUri);
@@ -206,6 +186,26 @@ namespace SmartNQuick.Adapters.Service
             //} while (qryCount > 0 && qryCount % pageSize == 0);
             //return result;
         }
+        public async Task<IEnumerable<TContract>> GetPageListAsync(int pageIndex, int pageSize)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{ExtUri}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
 
         public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
         {
@@ -227,6 +227,27 @@ namespace SmartNQuick.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
+        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{ExtUri}/{predicate}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
+
         public async Task<TContract> CreateAsync()
         {
             using var client = GetClient(BaseUri);

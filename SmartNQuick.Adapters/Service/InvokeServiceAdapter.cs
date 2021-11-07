@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-
 #if ACCOUNT_ON
 using SmartNQuick.Adapters.Exceptions;
 using SmartNQuick.Transfer.Models.Modules.Account;
