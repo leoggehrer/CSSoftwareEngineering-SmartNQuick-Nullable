@@ -23,6 +23,8 @@ namespace SmartNQuick.AspMvc.Modules.Language
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
+        private bool Reload { get; set; } = false;
+
         private Translator()
         {
             Constructing();
@@ -31,15 +33,16 @@ namespace SmartNQuick.AspMvc.Modules.Language
         }
         partial void Constructing();
         partial void Constructed();
+
         private static Translator instance = null;
         public static Translator Instance => instance ??= new Translator();
 
         public bool HasLoaded => LastLoad.HasValue;
         public DateTime? LastLoad { get; private set; }
-        public LanguageCode KeyLanguage => LanguageCode.En;
-        public LanguageCode ValueLanguage => LanguageCode.De;
+        public LanguageCode KeyLanguage { get; set; } = LanguageCode.En;
+        public LanguageCode ValueLanguage { get; set; } = LanguageCode.De;
 
-        protected List<Models.ThirdParty.Translation> translations = new();
+        protected List<Translation> translations = new();
         protected virtual void LoadTranslations()
         {
             bool LoadTranslationsFromServer(List<Translation> translations)
@@ -72,6 +75,12 @@ namespace SmartNQuick.AspMvc.Modules.Language
                 return result;
             };
 
+            if (Reload)
+            {
+                Reload = false;
+                LoadTranslationsFromServer(translations);
+                LastLoad = DateTime.Now;
+            }
             if (LastLoad.HasValue == false)
             {
                 LoadTranslationsFromServer(translations);
@@ -88,7 +97,7 @@ namespace SmartNQuick.AspMvc.Modules.Language
         }
         public virtual void ReloadTranslation()
         {
-            LastLoad = null;
+            Reload = true;
             LoadTranslations();
         }
         protected virtual string Translate(string key)
@@ -131,6 +140,23 @@ namespace SmartNQuick.AspMvc.Modules.Language
                 }
             }
             return result;
+        }
+
+        public static void ChangeKeyLanguage(LanguageCode languageCode)
+        {
+            if (Instance.KeyLanguage != languageCode)
+            {
+                Instance.Reload = true;
+                Instance.KeyLanguage = languageCode;
+            }
+        }
+        public static void ChangeValueLanguage(LanguageCode languageCode)
+        {
+            if (Instance.ValueLanguage != languageCode)
+            {
+                Instance.Reload = true;
+                Instance.ValueLanguage = languageCode;
+            }
         }
 
         public static string TranslateIt(string key) => Instance.Translate(key);
