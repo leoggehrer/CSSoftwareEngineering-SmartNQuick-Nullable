@@ -139,14 +139,14 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             return RedirectToAction("Index");
         }
 
-        [ActionName("Details")]
-        public async Task<IActionResult> DetailsAsync(int id)
-        {
-            using var ctrl = CreateController();
-            var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
+        //[ActionName("Details")]
+        //public async Task<IActionResult> DetailsAsync(int id)
+        //{
+        //    using var ctrl = CreateController();
+        //    var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
 
-            return View(entity != null ? ToModel(entity) : entity);
-        }
+        //    return View(entity != null ? ToModel(entity) : entity);
+        //}
 
         // GET: /Delete/5
         [ActionName("Delete")]

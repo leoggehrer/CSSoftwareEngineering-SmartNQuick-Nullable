@@ -20,6 +20,7 @@ namespace SmartNQuick.AspMvc.Controllers
             Create,
             Edit,
             Delete,
+            Details,
         }
 
         static GenericController()
@@ -81,6 +82,26 @@ namespace SmartNQuick.AspMvc.Controllers
 
             base.OnActionExecuted(context);
         }
+
+        protected virtual async Task<TModel> GetModelAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeGetModel(ref model, ref handled);
+            if (handled == false)
+            {
+                using var ctrl = CreateController();
+                var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
+
+                model = ToModel(entity);
+            }
+            AfterGetModel(model);
+            return model;
+        }
+        partial void BeforeGetModel(ref TModel model, ref bool handled);
+        partial void AfterGetModel(TModel model);
+
         [HttpGet]
         [ActionName("Index")]
         public virtual async Task<IActionResult> IndexAsync()
@@ -248,6 +269,38 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeEditModel(ref TModel model, ref bool handled);
         partial void AfterEditModel(TModel model);
+
+        [HttpGet]
+        [ActionName("Details")]
+        public virtual async Task<IActionResult> DetailsAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeDetails(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterEdit(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, Action.Details);
+                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnDetailsView(model);
+        }
+        partial void BeforeDetails(ref TModel model, ref bool handled);
+        partial void AfterDetails(TModel model);
+        protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", model);
 
         [HttpPost]
         [ActionName("Edit")]

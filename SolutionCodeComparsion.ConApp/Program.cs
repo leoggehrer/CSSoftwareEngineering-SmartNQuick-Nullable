@@ -30,6 +30,7 @@ namespace SolutionCodeComparsion.ConApp
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQContact"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTradingCompany"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMusicStore"),
+                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQHtmlStore"),
             };
             // End: SmartNQuick-Projects
             ClassConstructed();
@@ -54,7 +55,7 @@ namespace SolutionCodeComparsion.ConApp
                 var input = string.Empty;
                 PrintHeader(SourcePath, TargetPaths);
 
-                Console.Write($"Balancing [1..{TargetPaths.Count() + 1}|X...Quit]?: ");
+                Console.Write($"Balancing [1..{TargetPaths.Length + 1}|X...Quit]?: ");
                 input = Console.ReadLine().ToLower();
                 PrintBusyProgress();
                 running = input.Equals("x") == false;
@@ -67,14 +68,14 @@ namespace SolutionCodeComparsion.ConApp
 
                     foreach (var number in numbers)
                     {
-                        if (number == TargetPaths.Count() + 1)
+                        if (number == TargetPaths.Length + 1)
                         {
                             foreach (var item in TargetLabels)
                             {
                                 BalancingSolutions(SourcePath, SourceLabels, TargetPaths, TargetLabels);
                             }
                         }
-                        else if (number > 0 && number <= TargetPaths.Count())
+                        else if (number > 0 && number <= TargetPaths.Length)
                         {
                             BalancingSolutions(SourcePath, SourceLabels, new string[] { TargetPaths[number - 1] }, TargetLabels);
                         }

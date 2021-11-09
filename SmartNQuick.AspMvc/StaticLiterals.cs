@@ -6,6 +6,7 @@ namespace SmartNQuick.AspMvc
 	{
 		public static string RedirectControllerKey => nameof(RedirectControllerKey);
 		public static string EnvironmentTranslationServerKey => "ASPNETCORE_TRANSLATIONSERVER";
+		public static string EnvironmentStaticPageServerKey => "ASPNETCORE_STATICPAGESERVER";
 	}
 }
 //MdEnd
