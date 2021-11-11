@@ -20,7 +20,6 @@
     ViewData["Title"] = title;
 
     <hr />
-
     <div class="vertical-flex-center">
         <div class="container-fluid">
             <div class="row">
@@ -34,8 +33,9 @@
                 <div class="col-sm-8 offset-2 text-center">
                     <div class="account-wall">
                         <span class="profile-img text-center">
-                            <i class="fas fa-user"></i>
+                            <i class="fa fa-user"></i>
                         </span>
+                        <p></p>
                         @using (Html.BeginForm("Logon", "Account", new { returnUrl = "" }, FormMethod.Post, null, new { @class = "form-signin", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
