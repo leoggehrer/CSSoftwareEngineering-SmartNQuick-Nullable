@@ -2,6 +2,7 @@
 //MdStart
 
 using SmartNQuick.AspMvc.Models.Modules.View;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -45,6 +46,27 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get => ViewBag.ViewModelCreator as ViewModelCreator;
             set => ViewBag.ViewModelCreator = value;
+        }
+
+        public Func<string, string> Translate
+        {
+            get
+            {
+                var result = ViewBag.Translate as Func<string, string>;
+
+                return result != null ? result : s => s;
+            }
+            set => ViewBag.Translate = value;
+        }
+        public Func<string, string> TranslateFor
+        {
+            get
+            {
+                var result = ViewBag.TranslateFor as Func<string, string>;
+
+                return result != null ? result : s => s;
+            }
+            set => ViewBag.TranslateFor = value;
         }
 
         public IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models)

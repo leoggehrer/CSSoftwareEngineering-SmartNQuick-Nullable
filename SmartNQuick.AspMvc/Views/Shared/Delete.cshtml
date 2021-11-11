@@ -11,19 +11,18 @@
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
     var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translateFor(action);
     var displayViewModel = viewBagWrapper.CreateDisplayViewModel(controller, Model);
 
-    ViewData["Title"] = title;
-    Model.ViewBagInfo = viewBagWrapper;
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.TranslateFor = pn => viewBagWrapper.Translate($"{controller}.{pn}");
 
-    <h1>@title</h1>
+    Model.ViewBagInfo = viewBagWrapper;
+    ViewData["Title"] = viewBagWrapper.Translate(controller);
+    <h1>@ViewData["Title"]</h1>
 
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@translate(controller)</h4>
+            <h4>@viewBagWrapper.Translate(controller)</h4>
         </div>
     </div>
     <hr />
@@ -37,7 +36,7 @@
     else
     {
         <div class="alert alert-danger" role="alert">
-            @translateFor("Should the entry be deleted?")
+            @viewBagWrapper.TranslateFor("Should the entry be deleted?")
         </div>
     }
 
@@ -48,6 +47,6 @@
         }
         @await Html.PartialAsync("_DisplayModel", Model)
         <hr />
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Delete"), BackText = translateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>
 }

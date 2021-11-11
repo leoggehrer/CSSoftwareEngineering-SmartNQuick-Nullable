@@ -9,26 +9,26 @@
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData.Values["controller"].ToString();
     var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var editViewModel = viewBagWrapper.CreateEditViewModel(controller, Model);
 
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.TranslateFor = pn => viewBagWrapper.Translate($"{controller}.{pn}");
     Model.ViewBagInfo = viewBagWrapper;
 
-    <div class="row">
-        <div class="col-md-6">
-            @foreach (var item in editViewModel.DisplayProperties)
-            {
-                if (item.CanRead && item.CanWrite)
-                {
-                    Model.ViewBagInfo.Handled = false;
-                    Model.ViewBagInfo.DisplayProperty = item;
-                    <div class="form-group">
-                        <label class="control-label" for="@item.Name">@translateFor(editViewModel.GetLabel(item))</label>
-                        @await Html.PartialAsync("_EditControl", Model)
-                        @if (Model.ViewBagInfo.Handled == false)
-                        {
-                            if (item.PropertyType.IsEnum)
+    @foreach (var item in editViewModel.DisplayProperties)
+    {
+        Model.ViewBagInfo.Handled = false;
+        Model.ViewBagInfo.DisplayProperty = item;
+        @await Html.PartialAsync("_EditControl", Model)
+        if (Model.ViewBagInfo.Handled == false)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    @if (item.CanRead && item.CanWrite)
+                    {
+                        <div class="form-group">
+                            <label class="control-label" for="@item.Name">@viewBagWrapper.TranslateFor(editViewModel.GetLabel(item))</label>
+                            @if (item.PropertyType.IsEnum)
                             {
                                 @Html.DropDownList(item.Name, Html.GetEnumSelectList(item.PropertyType), null, new { @class = "form-control" })
                             }
@@ -37,23 +37,18 @@
                                 <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" />
                                 <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
                             }
-                        }
-                    </div>
-                }
-                else if (item.CanRead)
-                {
-                    Model.ViewBagInfo.Handled = false;
-                    Model.ViewBagInfo.DisplayProperty = item;
-                    <div class="form-group">
-                        <label class="control-label" for="@item.Name">@translateFor(editViewModel.GetLabel(item))</label>
-                        @await Html.PartialAsync("_EditControl", Model)
-                        @if (Model.ViewBagInfo.Handled == false)
-                        {
+                        </div>
+                    }
+                    else if (item.CanRead)
+                    {
+                        <div class="form-group">
+                            <label class="control-label" for="@item.Name">@viewBagWrapper.TranslateFor(editViewModel.GetLabel(item))</label>
                             <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" readonly="readonly" />
-                        }
-                    </div>
-                }
-            }
-        </div>
-    </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
 }
+

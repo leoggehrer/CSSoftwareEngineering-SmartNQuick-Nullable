@@ -12,7 +12,7 @@
     var action = ViewContext.RouteData.Values["action"].ToString();
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translate("Import");
+    var title = translateFor("Import");
 
     ViewData["Title"] = title;
 
