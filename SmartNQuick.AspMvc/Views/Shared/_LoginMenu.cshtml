@@ -15,7 +15,8 @@
     var mnuRoleMngr = translateFor("Role-Management");
     var mnuPwdChange = translateFor("Change password");
     var mnuPwdReset = translateFor("Reset password");
-    var mnuReloadTranslation = translateFor("Reload translations");
+    var mnuReloadTranslations = translateFor("Reload translations");
+    var mnuExportNoTranslations = translateFor("Export no translations");
     var mnuUser = string.Empty;
 
     if (sessionWrapper.LoginSession != null)
@@ -59,8 +60,9 @@
                         }
                         @if (Translator.Instance.HasLoaded)
                         {
-                            <li class="dropdown-item">@Html.ActionLink(mnuReloadTranslation, "ReloadTranslation", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li class="dropdown-item">@Html.ActionLink(mnuReloadTranslations, "ReloadTranslations", "Translations", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         }
+                            <li class="dropdown-item">@Html.ActionLink(mnuExportNoTranslations, "ExportNoTranslations", "Translations", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         <li class="dropdown-item"><a href="javascript:document.getElementById('logoutForm').submit()">@mnuLogout<i style="margin-left: 1em;" class="fas fa-sign-out-alt"></i></a></li>
                     </ul>
                 </li>

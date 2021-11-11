@@ -37,12 +37,16 @@ namespace SmartNQuick.AspMvc.Modules.Language
         private static Translator instance = null;
         public static Translator Instance => instance ??= new Translator();
 
+        protected List<Translation> translations = new();
+        protected List<Translation> noTranslations = new();
+
         public bool HasLoaded => LastLoad.HasValue;
         public DateTime? LastLoad { get; private set; }
         public LanguageCode KeyLanguage { get; set; } = LanguageCode.En;
         public LanguageCode ValueLanguage { get; set; } = LanguageCode.De;
 
-        protected List<Translation> translations = new();
+        public IEnumerable<Translation> NoTranslations => noTranslations;
+
         protected virtual void LoadTranslations()
         {
             bool LoadTranslationsFromServer(List<Translation> translations)
@@ -50,6 +54,7 @@ namespace SmartNQuick.AspMvc.Modules.Language
                 var result = false;
                 var translationServer = AppSettings.Configuration[StaticLiterals.EnvironmentTranslationServerKey];
 
+                noTranslations.Clear();
                 if (translationServer.HasContent())
                 {
                     var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.ITranslation>(translationServer);
@@ -95,7 +100,7 @@ namespace SmartNQuick.AspMvc.Modules.Language
                 }
             }
         }
-        public virtual void ReloadTranslation()
+        public virtual void ReloadTranslations()
         {
             Reload = true;
             LoadTranslations();
@@ -118,11 +123,8 @@ namespace SmartNQuick.AspMvc.Modules.Language
             }
             else
             {
-#if DEBUG
-                var csvTranslation = $"Translation;{nameof(SmartNQuick)};{KeyLanguage};{key};{ValueLanguage};";
+                AppendNoTranslation(key);
 
-                System.Diagnostics.Debug.WriteLine(csvTranslation);
-#endif
                 var splitKey = key.Split(".");
 
                 if (splitKey.Length == 2)
@@ -136,10 +138,28 @@ namespace SmartNQuick.AspMvc.Modules.Language
                     else if (defaultValue == key)
                     {
                         result = splitKey[1];
+                        AppendNoTranslation(splitKey[1]);
                     }
                 }
             }
             return result;
+        }
+
+        protected void AppendNoTranslation(string key)
+        {
+            var item = noTranslations.SingleOrDefault(t => t.Key.Equals(key) && t.KeyLanguage == KeyLanguage);
+
+            if (item == null)
+            {
+                noTranslations.Add(new Translation
+                {
+                    AppName = nameof(SmartNQuick),
+                    KeyLanguage = KeyLanguage,
+                    Key = key,
+                    ValueLanguage = ValueLanguage,
+                    Value = default
+                });
+            }
         }
 
         public static void ChangeKeyLanguage(LanguageCode languageCode)

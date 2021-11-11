@@ -62,10 +62,10 @@ namespace SmartNQuick.ConApp
         {
             if (Login == null)
             {
-                Task.Run(async() =>
+                Task.Run(async () =>
                 {
                     var accMngr = new AccountManager();
-                    
+
                     Login = await accMngr.LogonAsync(AppEmail, AppPwd);
                 }).Wait();
             }
