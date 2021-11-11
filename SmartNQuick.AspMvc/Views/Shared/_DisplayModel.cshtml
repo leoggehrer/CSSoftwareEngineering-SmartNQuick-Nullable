@@ -5,13 +5,14 @@
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    var displayViewModel = viewBagWrapper.CreateDisplayViewModel(controller, Model);
 
     viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.TranslateFor = pn => viewBagWrapper.Translate($"{controller}.{pn}");
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+
     Model.ViewBagInfo = viewBagWrapper;
+
+    var displayViewModel = viewBagWrapper.CreateDisplayViewModel(Model);
 
     @foreach (var item in displayViewModel.DisplayProperties)
     {

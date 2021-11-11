@@ -7,13 +7,17 @@
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    var editViewModel = viewBagWrapper.CreateEditViewModel(controller, Model);
 
     viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.TranslateFor = pn => viewBagWrapper.Translate($"{controller}.{pn}");
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+
     Model.ViewBagInfo = viewBagWrapper;
+    ViewData["Title"] = viewBagWrapper.Title;
+    <h1>@ViewData["Title"]</h1>
+
+    Model.ViewBagInfo = viewBagWrapper;
+    var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
 
     @foreach (var item in editViewModel.DisplayProperties)
     {

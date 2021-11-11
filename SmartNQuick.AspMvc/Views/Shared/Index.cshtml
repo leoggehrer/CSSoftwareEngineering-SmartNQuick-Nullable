@@ -8,13 +8,12 @@
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
 
     viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.TranslateFor = pn => viewBagWrapper.Translate($"{controller}.{pn}");
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    ViewData["Title"] = viewBagWrapper.Translate(controller);
+    ViewData["Title"] = viewBagWrapper.Title;
     <h1>@ViewData["Title"]</h1>
 
     @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
@@ -25,7 +24,7 @@
     }
     else
     {
-        var indexViewModel = viewBagWrapper.CreateIndexViewModel(controller, Model);
+        var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
 
         <p style="margin-top: 1em;">
             <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create New")</a>
