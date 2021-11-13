@@ -1,0 +1,18 @@
+﻿@*@BaseCode*@
+@{
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var viewBagWrapper = Model.ViewBagInfo;
+    var property = viewBagWrapper.DisplayProperty;
+    var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label" for="@property.Name">@viewBagWrapper.TranslateFor(editViewModel.GetLabel(property))</label>
+                @await Html.PartialAsync("_EditControl", Model)
+            </div>
+        </div>
+    </div>
+    viewBagWrapper.Handled = true;
+}

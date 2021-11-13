@@ -1,35 +1,14 @@
 ﻿@*@BaseCode*@
 @{
-    @using SmartNQuick.AspMvc.Modules.Language
-    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-
-    Model.ViewBagInfo = viewBagWrapper;
-
+    var viewBagWrapper = Model.ViewBagInfo;
     var displayViewModel = viewBagWrapper.CreateDisplayViewModel(Model);
 
     @foreach (var item in displayViewModel.DisplayProperties)
     {
         Model.ViewBagInfo.Handled = false;
         Model.ViewBagInfo.DisplayProperty = item;
-
-        <dl class="row">
-            <dt class="col-sm-2">
-                @viewBagWrapper.TranslateFor(displayViewModel.GetLabel(item))
-            </dt>
-            <dd class="col-sm-10">
-                @await Html.PartialAsync("_DisplayControl", Model)
-                @if (Model.ViewBagInfo.Handled == false)
-                {
-                    @displayViewModel.GetDisplayValue(item)
-                }
-            </dd>
-        </dl>
+        @await Html.PartialAsync("_DisplayGroup", Model)
     }
 }

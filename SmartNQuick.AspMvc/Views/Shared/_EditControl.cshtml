@@ -1,4 +1,28 @@
 ﻿@*@BaseCode*@
 @{
     @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var viewBagWrapper = Model.ViewBagInfo;
+    var property = viewBagWrapper.DisplayProperty;
+    var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
+
+    @if (property.CanRead && property.CanWrite)
+    {
+        @if (property.PropertyType.IsEnum)
+        {
+            @Html.DropDownList(property.Name, Html.GetEnumSelectList(property.PropertyType), null, new { @class = "form-control" })
+        }
+        else
+        {
+            <input class="form-control" type="text" id="@property.Name" name="@property.Name" value="@editViewModel.GetValue(property)" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="@property.Name" data-valmsg-replace="true"></span>
+        }
+    }
+    else if (property.CanRead)
+    {
+        <div class="form-group">
+            <input class="form-control" type="text" id="@property.Name" name="@property.Name" value="@editViewModel.GetValue(property)" readonly="readonly" />
+        </div>
+    }
+    viewBagWrapper.Handled = true;
 }

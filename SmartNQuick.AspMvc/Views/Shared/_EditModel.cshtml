@@ -1,58 +1,15 @@
 ﻿@*@BaseCode*@
 @{
-    @using SmartNQuick.AspMvc.Modules.Language
-    @using SmartNQuick.AspMvc.Modules.Session
-    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
-
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-
-    Model.ViewBagInfo = viewBagWrapper;
-    ViewData["Title"] = viewBagWrapper.Title;
-    <h1>@ViewData["Title"]</h1>
-
-    Model.ViewBagInfo = viewBagWrapper;
+    var viewBagWrapper = Model.ViewBagInfo;
     var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
 
     @foreach (var item in editViewModel.DisplayProperties)
     {
         Model.ViewBagInfo.Handled = false;
         Model.ViewBagInfo.DisplayProperty = item;
-        @await Html.PartialAsync("_EditControl", Model)
-        if (Model.ViewBagInfo.Handled == false)
-        {
-            <div class="row">
-                <div class="col-md-6">
-                    @if (item.CanRead && item.CanWrite)
-                    {
-                        <div class="form-group">
-                            <label class="control-label" for="@item.Name">@viewBagWrapper.TranslateFor(editViewModel.GetLabel(item))</label>
-                            @if (item.PropertyType.IsEnum)
-                            {
-                                @Html.DropDownList(item.Name, Html.GetEnumSelectList(item.PropertyType), null, new { @class = "form-control" })
-                            }
-                            else
-                            {
-                                <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" />
-                                <span class="text-danger field-validation-valid" data-valmsg-for="@item.Name" data-valmsg-replace="true"></span>
-                            }
-                        </div>
-                    }
-                    else if (item.CanRead)
-                    {
-                        <div class="form-group">
-                            <label class="control-label" for="@item.Name">@viewBagWrapper.TranslateFor(editViewModel.GetLabel(item))</label>
-                            <input class="form-control" type="text" id="@item.Name" name="@item.Name" value="@editViewModel.GetValue(item)" readonly="readonly" />
-                        </div>
-                    }
-                </div>
-            </div>
-        }
+        @await Html.PartialAsync("_EditGroup", Model)
     }
 }
 
