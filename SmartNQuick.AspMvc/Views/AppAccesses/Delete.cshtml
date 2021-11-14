@@ -11,19 +11,20 @@
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translateFor(action);
 
-    ViewData["Title"] = title;
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model.GetType();
 
-    <h1>@title</h1>
+    Model.ViewBagInfo = viewBagWrapper;
+    Model.OneModel.ViewBagInfo = viewBagWrapper;
+    ViewData["Title"] = viewBagWrapper.Title;
+    <h1>@ViewData["Title"]</h1>
 
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@translate(controller)</h4>
+            <h4>@viewBagWrapper.TranslateFor("Edit")</h4>
         </div>
     </div>
     <hr />
@@ -37,7 +38,7 @@
     else
     {
         <div class="alert alert-danger" role="alert">
-            @translateFor("Should the entry be deleted?")
+            @viewBagWrapper.TranslateFor("Should the entry be deleted?")
         </div>
     }
 
@@ -46,13 +47,14 @@
             @await Html.PartialAsync("_DisplayModel", Model.OneModel)
         </div>
 
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Delete"), BackText = translateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>
 
     <div style="margin-top: 1em;">
         <h4>Rolen</h4>
         @foreach (var item in Model.ManyModels)
         {
+            item.ViewBagInfo = viewBagWrapper;
             viewBagWrapper.DisplayNames = new string[] { "Designation" };
 
             @await Html.PartialAsync("_DisplayModel", item)

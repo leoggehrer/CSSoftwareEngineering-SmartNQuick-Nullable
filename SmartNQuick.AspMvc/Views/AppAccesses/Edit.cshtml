@@ -6,22 +6,25 @@
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Models.Modules.View
+    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
 
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translateFor(action);
 
-    ViewData["Title"] = title;
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model.GetType();
 
-    <h1>@title</h1>
+    Model.ViewBagInfo = viewBagWrapper;
+    Model.OneModel.ViewBagInfo = viewBagWrapper;
+    ViewData["Title"] = viewBagWrapper.Title;
+    <h1>@ViewData["Title"]</h1>
 
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@translate(controller)</h4>
+            <h4>@viewBagWrapper.TranslateFor("Edit")</h4>
         </div>
     </div>
     <hr />
@@ -42,7 +45,7 @@
         </div>
         <div class="d-flex bg-transparent">
             <div class="mr-auto p-sm-2">
-                <a asp-controller="IdentityUsers" asp-action="Edit" asp-route-id="@Model.OneItem.Id" class="btn btn-outline-secondary">@translateFor("Edit")</a>
+                <a asp-controller="IdentityUsers" asp-action="Edit" asp-route-id="@Model.OneItem.Id" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Edit")</a>
             </div>
         </div>
 
@@ -51,7 +54,7 @@
             @await Html.PartialAsync("_RoleListEdit", Model.ManyItems)
         </div>
         <hr />
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = translateFor("Save"), BackText = translateFor("Back to List") })
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Save"), BackText = viewBagWrapper.TranslateFor("Back to List") })
     </form>
 }
 @*#endif*@
