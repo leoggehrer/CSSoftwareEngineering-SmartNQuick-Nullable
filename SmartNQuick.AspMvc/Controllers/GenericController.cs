@@ -14,9 +14,10 @@ namespace SmartNQuick.AspMvc.Controllers
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : TContract, new()
     {
-        protected enum Action
+        public enum Action
         {
             Index,
+            Display,
             Create,
             Edit,
             Delete,
@@ -41,13 +42,18 @@ namespace SmartNQuick.AspMvc.Controllers
 
         protected virtual Contracts.Client.IAdapterAccess<TContract> CreateController()
         {
+            return CreateController<TContract>();
+        }
+        protected virtual Contracts.Client.IAdapterAccess<T> CreateController<T>() 
+            where T : Contracts.IIdentifiable, Contracts.ICopyable<T>
+        {
             var handled = false;
-            var result = default(Contracts.Client.IAdapterAccess<TContract>);
+            var result = default(Contracts.Client.IAdapterAccess<T>);
 
             BeforeCreateController(ref result, ref handled);
             if (handled == false)
             {
-                result = Adapters.Factory.Create<TContract>();
+                result = Adapters.Factory.Create<T>();
 #if ACCOUNT_ON
                 result.SessionToken = SessionWrapper?.SessionToken;
 #endif
@@ -55,8 +61,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterCreateController(result);
             return result;
         }
-        partial void BeforeCreateController(ref Contracts.Client.IAdapterAccess<TContract> controller, ref bool handled);
-        partial void AfterCreateController(Contracts.Client.IAdapterAccess<TContract> controller);
+        partial void BeforeCreateController<T>(ref Contracts.Client.IAdapterAccess<T> controller, ref bool handled);
+        partial void AfterCreateController<T>(Contracts.Client.IAdapterAccess<T> controller);
 
         protected bool FromCreateToEdit { get; set; } = false;
         protected bool FromEditToIndex { get; set; } = true;

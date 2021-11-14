@@ -1,0 +1,70 @@
+﻿@*@BaseCode*@
+@{
+    static bool IsInstanceOfGenericType(Type genericType, object instance)
+    {
+        Type type = instance.GetType();
+        while (type != null)
+        {
+            if (type.IsGenericType &&
+                type.GetGenericTypeDefinition() == genericType)
+            {
+                return true;
+            }
+            type = type.BaseType;
+        }
+        return false;
+    }
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
+    var sessionWrapper = new SessionWrapper(Context.Session);
+
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model.GetType();
+
+    ViewData["Title"] = viewBagWrapper.Title;
+    <h1>@viewBagWrapper.Title</h1>
+
+    @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastViewErrorAndClear()
+        </div>
+    }
+    else
+    {
+        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+        {
+            <p style="margin-top: 1em;">
+                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create new...")</a>
+            </p>
+        }
+        @if (IsInstanceOfGenericType(typeof(OneToManyModel<,,,>), Model))
+        {
+            var oneProperty = Model.GetType().GetProperty("OneModel");
+            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
+            var manyProperty = Model.GetType().GetProperty("ManyModels");
+            var manyModels = manyProperty?.GetValue(Model);
+
+            if (oneModel != null)
+            {
+                oneModel.ViewBagInfo = viewBagWrapper;
+                @await Html.PartialAsync("_DisplayModel", oneModel)
+            }
+            if (manyModels != null)
+            {
+                <h2>@viewBagWrapper.TranslateFor("Details")</h2>
+                @await Html.PartialAsync("_IndexList", manyModels)
+            }
+        }
+    }
+    <hr />
+    @await Html.PartialAsync("_Back", new BackCmd() { BackText = viewBagWrapper.TranslateFor("Back to List") })
+}

@@ -1,6 +1,7 @@
 ﻿//@BaseCode
 //MdStart
 
+using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Models.Modules.View;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,35 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
+        public EditMode EditMode
+        {
+            get
+            {
+                var result = EditMode.Insert | EditMode.Edit | EditMode.Delete;
+
+                if (ViewBag.EditMode != null)
+                {
+                    result = ViewBag.EditMode;
+                }
+                return result;
+            }
+            set => ViewBag.EditMode = value;
+        }
+        public CommandMode CommandMode
+        {
+            get
+            {
+                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Remove;
+
+                if (ViewBag.CommandMode != null)
+                {
+                    result = ViewBag.CommandMode;
+                }
+                return result;
+            }
+            set => ViewBag.CommandMode = value;
+        }
+
         public string Title => Translate(Controller);
         public string Controller
         {
@@ -27,7 +57,12 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.Action as string;
             set => ViewBag.Action = value;
         }
-
+        public Type ViewType
+        {
+            get => ViewBag.ViewType as Type;
+            set => ViewBag.ViewType = value;
+        }
+        public string ViewTypeName => ViewType?.FullName;
         public bool Handled
         {
             get => ViewBag.Handled != null ? (bool)ViewBag.Handled : false;
@@ -74,30 +109,30 @@ namespace SmartNQuick.AspMvc.Modules.View
 
         public IndexViewModel CreateIndexViewModel(IEnumerable<Models.IdentityModel> models)
         {
-            return CreateIndexViewModel(Controller, models);
+            return CreateIndexViewModel(ViewTypeName, models);
         }
-        public IndexViewModel CreateIndexViewModel(string viewName, IEnumerable<Models.IdentityModel> models)
+        public IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewName, models, this) 
-                                            : new ViewModelCreator().CreateIndexViewModel(viewName, models, this);
+            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewTypeName, models, this) 
+                                            : new ViewModelCreator().CreateIndexViewModel(viewTypeName, models, this);
         }
         public EditViewModel CreateEditViewModel(Models.IdentityModel model)
         {
-            return CreateEditViewModel(Controller, model);
+            return CreateEditViewModel(ViewTypeName, model);
         }
-        public EditViewModel CreateEditViewModel(string viewName, Models.IdentityModel model)
+        public EditViewModel CreateEditViewModel(string viewTypeName, Models.IdentityModel model)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewName, model, this)
-                                            : new ViewModelCreator().CreateEditViewModel(viewName, model, this);
+            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewTypeName, model, this)
+                                            : new ViewModelCreator().CreateEditViewModel(viewTypeName, model, this);
         }
         public DisplayViewModel CreateDisplayViewModel(Models.IdentityModel model)
         {
-            return CreateDisplayViewModel(Controller, model);
+            return CreateDisplayViewModel(ViewTypeName, model);
         }
-        public DisplayViewModel CreateDisplayViewModel(string viewName, Models.IdentityModel model)
+        public DisplayViewModel CreateDisplayViewModel(string viewTypeName, Models.IdentityModel model)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewName, model, this)
-                                            : new ViewModelCreator().CreateDisplayViewModel(viewName, model, this);
+            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewTypeName, model, this)
+                                            : new ViewModelCreator().CreateDisplayViewModel(viewTypeName, model, this);
         }
     }
 }

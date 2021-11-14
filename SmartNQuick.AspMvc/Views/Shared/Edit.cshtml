@@ -13,6 +13,7 @@
     viewBagWrapper.Translate = Translator.TranslateIt;
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model.GetType();
 
     Model.ViewBagInfo = viewBagWrapper;
     ViewData["Title"] = viewBagWrapper.Title;

@@ -12,9 +12,10 @@
     viewBagWrapper.Translate = Translator.TranslateIt;
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model.GetType();
 
     ViewData["Title"] = viewBagWrapper.Title;
-    <h1>@ViewData["Title"]</h1>
+    <h1>@viewBagWrapper.Title</h1>
 
     @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
     {
@@ -24,42 +25,12 @@
     }
     else
     {
-        var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
-
-        <p style="margin-top: 1em;">
-            <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create new...")</a>
-        </p>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    @foreach (var item in indexViewModel.DisplayProperties)
-                    {
-                        <th>
-                            @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
-                        </th>
-                    }
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var model in indexViewModel.Models)
-                {
-                    model.ViewBagInfo = viewBagWrapper;
-                    <tr>
-                        @foreach (var displayItem in indexViewModel.DisplayProperties)
-                        {
-                            <td>
-                                @indexViewModel.GetDisplayValue(model, displayItem)
-                            </td>
-                        }
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = model.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = model.Id })
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+        {
+            <p style="margin-top: 1em;">
+                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create new...")</a>
+            </p>
+        }
+        @await Html.PartialAsync("_IndexList", Model)
     }
 }

@@ -9,31 +9,31 @@ Zur Umsetzung des Projektes wird DotNetCore (5.0 und höher) als Framework, die 
 
 In diese Dokumentation werden unterschiedlichste Begriffe verwendet. In der nachfolgenden Tabelle werden die wichtigsten Begriffe zusammengefasst und erläutert:
 
-|Begriff|Bedeutung|Synonym(e)
-|---|---|---
-|**Solution**|Ist der Zusammenschluss von verschiedenen Teilprojekten zu einer Gesamtlösung.|Gesamtlösung, Lösung, Projekt
-|**Domain Solution**|Hier ist eine Gesamtlösung gemeint, welches für einen bestimmten Problembereich eine Lösung darstellt.|Problemlösung, Projekt
-|**Teilprojekt**|Ist die Zusammenstellung von Klassen und/oder Algorithmen, welches eine logische Einheit für die Lösungen bestimmter Teilprobleme bildet.|Teillösung, Projekteinheit, Projekt
-|**Projekttyp**|Unter Projekttyp wird die physikalische Beschaffenheit eines Projektes bezeichnet. Es gibt zwei grundlegende Typen von Projekten. Zum einen gibt es einen wiederverwendbaren und zum anderen einen ausführbaren Projekttyp. <br>**Als Regel gilt:**<br> Alle Programmteile werden in wiederverwendbare Projekte implementiert. Die ausführbaren Einheiten dienen nur als Startprojekte und leiten die Anfragen an die wiederverwendbaren Projekt-Komponenten weiter.|Bibliothekstyp, Consolentyp
-|**Libray**|Kennzeichnet einen wiederverwendbaren Projekttyp.|Bibliothek
-|**Console**|Kennzeichnet einen ausführbaren Projekttyp. Dieser Typ startet eine Konsole für die Ausführung.|Konsole
-|**Host**|Dieser Typ kennzeichnet ein ausführbares Projekt, welches zum Starten den IIS verwendet oder im Modus 'selfhosting' gestartet werden kann.|Web-Application 
-|**Abhängigkeit**|Die Abhängikeit beschreibt die Beziehungen von Projekten untereinander. Benötigt ein Projekt Funktionalitäten aus einem andern Projekt, so wird eine Projektreferenz zum anderen Projekt benötigt.|Projektreferenz, Referenz, Dependency, Projektverweis
+|Begriff|Bedeutung|Synonym(e)|
+|---|---|---|
+|**Solution**|Ist der Zusammenschluss von verschiedenen Teilprojekten zu einer Gesamtlösung.|Gesamtlösung, Lösung, Projekt|
+|**Domain Solution**|Hier ist eine Gesamtlösung gemeint, welches für einen bestimmten Problembereich eine Lösung darstellt.|Problemlösung, Projekt|
+|**Teilprojekt**|Ist die Zusammenstellung von Klassen und/oder Algorithmen, welches eine logische Einheit für die Lösungen bestimmter Teilprobleme bildet.|Teillösung, Projekteinheit, Projekt|
+|**Projekttyp**|Unter Projekttyp wird die physikalische Beschaffenheit eines Projektes bezeichnet. Es gibt zwei grundlegende Typen von Projekten. Zum einen gibt es einen wiederverwendbaren und zum anderen einen ausführbaren Projekttyp. <br>**Als Regel gilt:**<br> Alle Programmteile werden in wiederverwendbare Projekte implementiert. Die ausführbaren Einheiten dienen nur als Startprojekte und leiten die Anfragen an die wiederverwendbaren Projekt-Komponenten weiter.|Bibliothekstyp, Consolentyp|
+|**Libray**|Kennzeichnet einen wiederverwendbaren Projekttyp.|Bibliothek|
+|**Console**|Kennzeichnet einen ausführbaren Projekttyp. Dieser Typ startet eine Konsole für die Ausführung.|Konsole|
+|**Host**|Dieser Typ kennzeichnet ein ausführbares Projekt, welches zum Starten den IIS verwendet oder im Modus 'selfhosting' gestartet werden kann.|Web-Application |
+|**Abhängigkeit**|Die Abhängikeit beschreibt die Beziehungen von Projekten untereinander. Benötigt ein Projekt Funktionalitäten aus einem andern Projekt, so wird eine Projektreferenz zum anderen Projekt benötigt.|Projektreferenz, Referenz, Dependency, Projektverweis|
 
 ## Framework
 Die Struktur des Frameworks besteht aus unterschiedlichen Teilprojekten und sind in einer Gesamtlösung (im Kontext von Visual Studio ist das eine Solution) zusammengefasst. Eine Erläuterung der einzelnen Projekte, deren Typ und die Abhängigkeit finden sie in der folgenden Tabelle:
 
-|Projekt|Beschreibung|Typ|Abhängigkeit
+|Projekt|Beschreibung|Typ|Abhängigkeit|
 |---|---|---|---|
-|**CommonBase**|In diesem Projekt werden alle Hilfsfunktionen und allgemeine Erweiterungen zusammengefasst. Diese sind unabhängig vom Problembereich und können auch in andere Domän-Projekte wiederverwendet werden.|Library|keine
-|**SmartNQuick.Contracts**|In diesem Projekt werden alle für das System notwendigen Schnittstellen und Enumerationen implementiert.|Library|CommonBase
-|**SmartNQuick.Logic**|Dieses Projekt beinhaltet den vollständigen Datenzugriff, die gesamte Geschäftslogik und stellt somit den zentralen Baustein des Systems dar.|Library|CommonBase, SmartNQuick.Contracts
-|**SmartNQuick.Transfer**|In diesem Projekt werden alle Transferobjekte für den Datenaustausch, zwischen den einzelnen Schichten, verwaltet.|Library|CommonBase, SmartNQuick.Contracts
-|**SmartNQuick.WebApi**|In diesem Projekt ist die REST-Schnittstelle implementiert. Diese Modul stellt eine API (Aplication Programming Interface) für den Zugriff auf das System über das Netzwerk zur Verfügung.|Host|CommonBase, SmartNQuick.Transfer, SmartNQuick.Logic
-|**SmartNQuick.Adapters**|In diesem Projekt ist der Zugriff auf die Logik abstrahiert. Das bedeutet, dass der Zugriff auf die Geschäftslogik direkt oder über die REST-Schnittstelle erfolgen kann. Für dieses Modul ist die Schnittstelle 'IAdapterAccess\<T\>' im Schnittstellen-Projekt implementiert. Nähere Details dazu finden sich im Kapitel 'Kommunikation der Layer'.|Library|CommonBase, SmartNQuick.Contracts, SmartNQuick.Logic, SmartNQuick.Transfer
-|**SmartNQuick.ConApp**|Dieses Projekt dient als Initial-Anwendung zum Erstellen der Datenbank, das Anlegen von Anmeldedaten falls die Authentifizierung aktiv ist und zum Importieren von bestehenden Daten. Nach der Initialisierung wird diese Anwendung kaum verwendet.|Console|SmartNQuick.Adapters, SmartNQuick.Contracts , SmartNQuick.Logic
-|**SmartNQuick.AspMvc**|Diese Projekt beinhaltet die Basisfunktionen für eine AspWeb-Anwendung und kann als Vorlage für die Entwicklung einer einer AspWeb-Anwendung mit dem SmartNQuick Framework verwendet werden.|Host|CommonBase, SmartNQuick.Contracts, SmartNQuick.Adapter
-|**SmartNQuick.XxxYyy**|Es folgen noch weitere Vorlagen von Client-Anwendungen wie Angular, Blazor und mobile Apps. Zum jetzigen Zeitpunkt existiert nur die AspMvc-Anwendung. Die Erstellung und Beschreibung der anderen Client-Anwendungen erfolgt zu einem späteren Zeitpunk.|Host|CommonBase, SmartNQuick.Contracts, SmartNQuick.Adapter.
+|**CommonBase**|In diesem Projekt werden alle Hilfsfunktionen und allgemeine Erweiterungen zusammengefasst. Diese sind unabhängig vom Problembereich und können auch in andere Domän-Projekte wiederverwendet werden.|Library|keine|
+|**SmartNQuick.Contracts**|In diesem Projekt werden alle für das System notwendigen Schnittstellen und Enumerationen implementiert.|Library|CommonBase|
+|**SmartNQuick.Logic**|Dieses Projekt beinhaltet den vollständigen Datenzugriff, die gesamte Geschäftslogik und stellt somit den zentralen Baustein des Systems dar.|Library|CommonBase, SmartNQuick.Contracts|
+|**SmartNQuick.Transfer**|In diesem Projekt werden alle Transferobjekte für den Datenaustausch, zwischen den einzelnen Schichten, verwaltet.|Library|CommonBase, SmartNQuick.Contracts|
+|**SmartNQuick.WebApi**|In diesem Projekt ist die REST-Schnittstelle implementiert. Diese Modul stellt eine API (Aplication Programming Interface) für den Zugriff auf das System über das Netzwerk zur Verfügung.|Host|CommonBase, SmartNQuick.Transfer, SmartNQuick.Logic|
+|**SmartNQuick.Adapters**|In diesem Projekt ist der Zugriff auf die Logik abstrahiert. Das bedeutet, dass der Zugriff auf die Geschäftslogik direkt oder über die REST-Schnittstelle erfolgen kann. Für dieses Modul ist die Schnittstelle 'IAdapterAccess\<T\>' im Schnittstellen-Projekt implementiert. Nähere Details dazu finden sich im Kapitel 'Kommunikation der Layer'.|Library|CommonBase, SmartNQuick.Contracts, SmartNQuick.Logic, SmartNQuick.Transfer|
+|**SmartNQuick.ConApp**|Dieses Projekt dient als Initial-Anwendung zum Erstellen der Datenbank, das Anlegen von Anmeldedaten falls die Authentifizierung aktiv ist und zum Importieren von bestehenden Daten. Nach der Initialisierung wird diese Anwendung kaum verwendet.|Console|SmartNQuick.Adapters, SmartNQuick.Contracts , SmartNQuick.Logic|
+|**SmartNQuick.AspMvc**|Diese Projekt beinhaltet die Basisfunktionen für eine AspWeb-Anwendung und kann als Vorlage für die Entwicklung einer einer AspWeb-Anwendung mit dem SmartNQuick Framework verwendet werden.|Host|CommonBase, SmartNQuick.Contracts, SmartNQuick.Adapter|
+|**SmartNQuick.XxxYyy**|Es folgen noch weitere Vorlagen von Client-Anwendungen wie Angular, Blazor und mobile Apps. Zum jetzigen Zeitpunkt existiert nur die AspMvc-Anwendung. Die Erstellung und Beschreibung der anderen Client-Anwendungen erfolgt zu einem späteren Zeitpunk.|Host|CommonBase, SmartNQuick.Contracts, SmartNQuick.Adapter.|
 
 ### Kommunikation der Layer
 
@@ -84,10 +84,10 @@ Mit diesem Konzept der *partiellen Klassen* und *partiellen Methoden* kann das S
 
 Die Projekte für die Code-Generierung sind in der folgenden Tabelle zusammengefasst:  
 
-|Projekt|Beschreibung|Typ|Abhängigkeit
+|Projekt|Beschreibung|Typ|Abhängigkeit|
 |---|---|---|---|
-|**CSharpCodeGenerator.Logic**|In diesem Projekt ist die Logik für Code-Generierung implementiert. Als Ergebnis der Generierung liefert der Generator den generierten Quellcode in einer Datenklasse (*IEnumerable&lt;IGeneratedItem&gt;*). Somit gibt es auch die Möglichkeit, die Generierung als Service anzubieten. Diese Option wird in einem späteren Kapitelt behandelt.|Library|CommonBase
-|**CSharpCodeGenerator.ConApp**|Dieses Projekt ist die Ausführungseinheit für die Code-Generierung. Die Ergebnisse der Generierung werden in das Dateisystem geschrieben. Falls das Schnittstellen-Projekt aufgrund einer Änderung neu Kompiliert werden muss, wird über ein 'PostBuild-Event' die Ausführung dieses Projekt aktiviert.|Console|CommonBase, CSharpCodeGenerator.Logic
+|**CSharpCodeGenerator.Logic**|In diesem Projekt ist die Logik für Code-Generierung implementiert. Als Ergebnis der Generierung liefert der Generator den generierten Quellcode in einer Datenklasse (*IEnumerable&lt;IGeneratedItem&gt;*). Somit gibt es auch die Möglichkeit, die Generierung als Service anzubieten. Diese Option wird in einem späteren Kapitelt behandelt.|Library|CommonBase|
+|**CSharpCodeGenerator.ConApp**|Dieses Projekt ist die Ausführungseinheit für die Code-Generierung. Die Ergebnisse der Generierung werden in das Dateisystem geschrieben. Falls das Schnittstellen-Projekt aufgrund einer Änderung neu Kompiliert werden muss, wird über ein 'PostBuild-Event' die Ausführung dieses Projekt aktiviert.|Console|CommonBase, CSharpCodeGenerator.Logic|
 
 ### Code-Generierungs-Prozess
 Der Generierungs-Prozess soll mit der nachfolgenden Abbildung veranschaulicht werden.

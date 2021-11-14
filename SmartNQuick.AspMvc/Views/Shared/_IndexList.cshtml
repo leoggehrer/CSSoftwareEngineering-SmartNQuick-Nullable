@@ -1,0 +1,73 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Modules.Handler
+    @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
+    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
+    var sessionWrapper = new SessionWrapper(Context.Session);
+
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+
+    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
+
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var item in indexViewModel.DisplayProperties)
+                {
+                    <th>
+                        @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
+                    </th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in indexViewModel.Models)
+            {
+                var cmdCounter = 0;
+
+                model.ViewBagInfo = viewBagWrapper;
+                <tr>
+                    @foreach (var displayItem in indexViewModel.DisplayProperties)
+                    {
+                        <td>
+                            @indexViewModel.GetDisplayValue(model, displayItem)
+                        </td>
+                    }
+                    <td>
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+                        {
+                            if (cmdCounter++ > 0)
+                            {
+                                @Html.Raw(" | ")
+                            }
+                            @Html.ActionLink(viewBagWrapper.TranslateFor("Edit"), "Edit", new { id = model.Id })
+                        }
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
+                        {
+                            if (cmdCounter++ > 0)
+                            {
+                                @Html.Raw(" | ")
+                            }
+                            @Html.ActionLink(viewBagWrapper.TranslateFor("Details"), "Details", new { id = model.Id })
+                        }
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
+                        {
+                            if (cmdCounter++ > 0)
+                            {
+                                @Html.Raw(" | ")
+                            }
+                            @Html.ActionLink(viewBagWrapper.TranslateFor("Delete"), "Delete", new { id = model.Id })
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -235,7 +235,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                         var entity = await ctrl.CreateAsync();
 
                         CopyModels(CsvHeader, item.Model, entity);
-                        item.Model.ManyEntities.ForEach(e => entity.AddManyItem(e));
+                        item.Model.ManyModels.ForEach(e => entity.AddManyItem(e));
                         await ctrl.InsertAsync(entity);
                     }
                     else if (item.Action == Models.Modules.Csv.ImportAction.Update)
@@ -244,7 +244,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                         CopyModels(CsvHeader, item.Model, entity);
                         entity.ClearManyItems();
-                        item.Model.ManyEntities.ForEach(e => entity.AddManyItem(e));
+                        item.Model.ManyModels.ForEach(e => entity.AddManyItem(e));
 
                         await ctrl.UpdateAsync(entity);
                     }
@@ -284,7 +284,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
             foreach (var item in roles)
             {
-                var assigned = model.ManyEntities.SingleOrDefault(r => r.Id == item.Id);
+                var assigned = model.ManyModels.SingleOrDefault(r => r.Id == item.Id);
 
                 if (assigned != null)
                 {
@@ -295,7 +295,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
                     var role = new Models.Persistence.Account.Role();
 
                     role.CopyProperties(item);
-                    model.ManyEntities.Add(role);
+                    model.ManyModels.Add(role);
                 }
             }
         }
