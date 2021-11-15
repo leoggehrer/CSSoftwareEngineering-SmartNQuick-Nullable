@@ -2,7 +2,6 @@
 //MdStart
 using CommonBase.Extensions;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
@@ -28,27 +27,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             model.CheckArgument(nameof(model));
 
             Model = model;
-            Init();
         }
-        private void Init()
-        {
-            foreach (var item in ModelType.GetAllInterfacePropertyInfos())
-            {
-                if (item.CanRead && HiddenNames.Any(e => e.Equals(item.Name)))
-                {
-                    HiddenProperties.Add(item);
-                }
-                if ((item.CanRead || item.CanWrite) && DisplayNames.Any(e => e.Equals(item.Name)))
-                {
-                    DisplayProperties.Add(item);
-                }
-                else if ((item.CanRead || item.CanWrite) && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
-                {
-                    DisplayProperties.Add(item);
-                }
-            }
-        }
-
         public virtual object GetValue(PropertyInfo propertyInfo)
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));

@@ -35,7 +35,7 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get
             {
-                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Remove;
+                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Remove | CommandMode.ShowDetails;
 
                 if (ViewBag.CommandMode != null)
                 {

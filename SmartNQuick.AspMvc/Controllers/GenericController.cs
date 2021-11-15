@@ -3,6 +3,7 @@
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SmartNQuick.AspMvc.Models.Modules.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,6 @@ namespace SmartNQuick.AspMvc.Controllers
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
         where TModel : TContract, new()
     {
-        public enum Action
-        {
-            Index,
-            Display,
-            Create,
-            Edit,
-            Delete,
-            Details,
-        }
-
         static GenericController()
         {
             ClassConstructing();
@@ -77,10 +68,10 @@ namespace SmartNQuick.AspMvc.Controllers
             result.CopyProperties(entity);
             return result;
         }
-        protected virtual TModel BeforeView(TModel model, Action action) => model;
-        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, Action action) => models;
-        protected virtual Task<TModel> BeforeViewAsync(TModel model, Action action) => Task.FromResult(model);
-        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, Action action) => Task.FromResult(models);
+        protected virtual TModel BeforeView(TModel model, ActionMode action) => model;
+        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action) => models;
+        protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action) => Task.FromResult(model);
+        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action) => Task.FromResult(models);
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -124,8 +115,8 @@ namespace SmartNQuick.AspMvc.Controllers
                     var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
 
                     models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, Action.Index);
-                    models = await BeforeViewAsync(models, Action.Index).ConfigureAwait(false);
+                    models = BeforeView(models, ActionMode.Index);
+                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -162,8 +153,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterCreate(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Create);
-                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Create);
+                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnCreateView(model);
         }
@@ -216,8 +207,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterInsertModel(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Create);
-                model = await BeforeViewAsync(model, Action.Create).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Create);
+                model = await BeforeViewAsync(model, ActionMode.Create).ConfigureAwait(false);
             }
             return ReturnAfterCreate(HasError, model);
         }
@@ -248,8 +239,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterEdit(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Edit);
-                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Edit);
+                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnEditView(model);
         }
@@ -299,8 +290,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterEdit(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Details);
-                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Details);
+                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnDetailsView(model);
         }
@@ -333,8 +324,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterUpdateModel(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Edit);
-                model = await BeforeViewAsync(model, Action.Edit).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Edit);
+                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
             }
             return ReturnAfterEdit(HasError, model);
         }
@@ -368,8 +359,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterDelete(model);
             if (HasError == false)
             {
-                model = BeforeView(model, Action.Delete);
-                model = await BeforeViewAsync(model, Action.Delete).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.Delete);
+                model = await BeforeViewAsync(model, ActionMode.Delete).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnDeleteView(model);
         }
