@@ -531,12 +531,14 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 if (CanCreate(nameof(CreateAspMvcControllers), type))
                 {
-                    result.Add(CreateAspMvcController(type));
+                    var isPublic = contractsProject.BusinessTypes.Any(t => t == type) == false;
+
+                    result.Add(CreateAspMvcController(type, isPublic));
                 }
             }
             return result;
         }
-        private Contracts.IGeneratedItem CreateAspMvcController(Type type)
+        private Contracts.IGeneratedItem CreateAspMvcController(Type type, bool isPublic)
         {
             var entityName = CreateEntityNameFromInterface(type);
             var subNameSpace = CreateSubNamespaceFromType(type);
@@ -556,7 +558,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"using TModel = {modelType};");
 
             CreateAspMvcControllerAttributes(type, result.Source);
-            result.Add($"public partial class {controllerName}Controller : AspMvc.Controllers.GenericController<TContract, TModel>");
+            result.Add($"{(isPublic ? "public " : string.Empty)}partial class {controllerName}Controller : AspMvc.Controllers.GenericController<TContract, TModel>");
             result.Add("{");
 
             result.Add("}");

@@ -921,27 +921,6 @@ namespace CommonBase.Extensions
             return result;
         }
 
-        public static string CreatePluralWord(this string wordInSingular)
-        {
-            string result = wordInSingular;
-
-            if (wordInSingular.IsWord())
-            {
-                if (wordInSingular.EndsWith("y"))
-                {
-                    result = $"{wordInSingular[0..^1]}ies";
-                }
-                else if (wordInSingular.EndsWith("s"))
-                {
-                    result = $"{wordInSingular}es";
-                }
-                else
-                {
-                    result = $"{wordInSingular}s";
-                }
-            }
-            return result;
-        }
         private static bool IsWord(this string text)
         {
             var result = text.IsNullOrEmpty() == false;
@@ -949,6 +928,43 @@ namespace CommonBase.Extensions
             for (int i = 0; result && i < text.Length; i++)
             {
                 result = char.IsLetter(text[i]);
+            }
+            return result;
+        }
+        public static string CreatePluralWord(this string wordInSingular)
+        {
+            string result = wordInSingular;
+
+            if (wordInSingular.IsWord())
+            {
+                if (wordInSingular.EndsWith("y", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular[0..^1]}ies";
+                }
+                else if (wordInSingular.EndsWith("h", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular}es";
+                }
+                else if (wordInSingular.EndsWith("x", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular}es";
+                }
+                else if (wordInSingular.EndsWith("f", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular[0..^1]}ves";
+                }
+                else if (wordInSingular.EndsWith("ss", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular}es";
+                }
+                else if (wordInSingular.EndsWith("s", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result = $"{wordInSingular}";
+                }
+                else
+                {
+                    result = $"{wordInSingular}s";
+                }
             }
             return result;
         }
