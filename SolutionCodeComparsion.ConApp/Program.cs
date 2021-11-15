@@ -49,6 +49,11 @@ namespace SolutionCodeComparsion.ConApp
 
         private static void Main(/*string[] args*/)
         {
+            DoBalancing();
+        }
+
+        private static void DoBalancing()
+        {
             bool running = false;
 
             do
@@ -86,6 +91,7 @@ namespace SolutionCodeComparsion.ConApp
             } while (running);
         }
 
+        private static bool canBusyPrint = true;
         private static bool runBusyProgress = false;
         private static void PrintBusyProgress()
         {
@@ -95,7 +101,10 @@ namespace SolutionCodeComparsion.ConApp
             {
                 while (runBusyProgress)
                 {
-                    Console.Write(".");
+                    if (canBusyPrint)
+                    {
+                        Console.Write(".");
+                    }
                     await Task.Delay(250).ConfigureAwait(false);
                 }
             });
@@ -112,36 +121,63 @@ namespace SolutionCodeComparsion.ConApp
             Console.WriteLine();
             foreach (var target in targetPaths)
             {
-                Console.WriteLine($"   Adjustment for: [{++index,2}] {target}");
+                Console.WriteLine($"   Balancing for: [{++index,2}] {target}");
             }
-            Console.WriteLine($"   Adjustment for: [{++index,2}] ALL");
+            Console.WriteLine($"   Balancing for: [{++index,2}] ALL");
+            Console.WriteLine();
+
+            if (Directory.Exists(sourcePath) == false)
+            {
+                Console.WriteLine($"Source-Path '{sourcePath}' not exists");
+            }
+            foreach (var item in targetPaths)
+            {
+                if (Directory.Exists(item) == false)
+                {
+                    Console.WriteLine($"   Target-Path '{item}' not exists");
+                }
+            }
             Console.WriteLine();
         }
 
         private static void BalancingSolutions(string sourcePath, string[] sourceLabels, IEnumerable<string> targetPaths, string[] targetLabels)
         {
-            // Delete all CopyCode files
-            foreach (var targetPath in targetPaths)
+            var sourcePathExists = Directory.Exists(sourcePath);
+
+            if (sourcePathExists)
             {
-                foreach (var searchPattern in SearchPatterns)
+                var targetPathsExists = new List<string>();
+
+                foreach (var item in targetPaths)
                 {
-                    var targetCodeFiles = GetSourceCodeFiles(targetPath, searchPattern, targetLabels);
-                    foreach (var targetCodeFile in targetCodeFiles)
+                    if (Directory.Exists(item))
                     {
-                        File.Delete(targetCodeFile);
+                        targetPathsExists.Add(item);
                     }
                 }
-            }
-            // Copy all BaseCode files
-            foreach (var searchPattern in SearchPatterns)
-            {
-                var sourceCodeFiles = GetSourceCodeFiles(sourcePath, searchPattern, sourceLabels);
-
-                foreach (var targetPath in targetPaths)
+                // Delete all CopyCode files
+                foreach (var targetPath in targetPathsExists)
                 {
-                    foreach (var sourceCodeFile in sourceCodeFiles)
+                    foreach (var searchPattern in SearchPatterns)
                     {
-                        SynchronizeSourceCodeFile(sourcePath, sourceCodeFile, targetPath, sourceLabels, targetLabels);
+                        var targetCodeFiles = GetSourceCodeFiles(targetPath, searchPattern, targetLabels);
+                        foreach (var targetCodeFile in targetCodeFiles)
+                        {
+                            File.Delete(targetCodeFile);
+                        }
+                    }
+                }
+                // Copy all BaseCode files
+                foreach (var searchPattern in SearchPatterns)
+                {
+                    var sourceCodeFiles = GetSourceCodeFiles(sourcePath, searchPattern, sourceLabels);
+
+                    foreach (var targetPath in targetPathsExists)
+                    {
+                        foreach (var sourceCodeFile in sourceCodeFiles)
+                        {
+                            SynchronizeSourceCodeFile(sourcePath, sourceCodeFile, targetPath, sourceLabels, targetLabels);
+                        }
                     }
                 }
             }
