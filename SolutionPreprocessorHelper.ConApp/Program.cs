@@ -157,15 +157,15 @@ namespace SolutionPreprocessorHelper.ConApp
                     {
                         if (tag.StartTagIndex > startIndex)
                         {
-                            hasChanged = true;
                             result += text.Partialstring(startIndex, tag.StartTagIndex - 1);
                             result += tag.StartTag;
-                            if (tag.InnerText.StartsWith("@*"))
+                            if (tag.InnerText.Trim().StartsWith("@*"))
                             {
                                 result += tag.InnerText;
                             }
                             else
                             {
+                                hasChanged = true;
                                 result += Environment.NewLine + "@*";
                                 result += tag.InnerText;
                                 result += "*@" + Environment.NewLine;
@@ -205,12 +205,12 @@ namespace SolutionPreprocessorHelper.ConApp
                     {
                         if (tag.StartTagIndex > startIndex)
                         {
-                            hasChanged = true;
                             result += text.Partialstring(startIndex, tag.StartTagIndex - 1);
                             result += tag.StartTag;
                             var innerText = tag.InnerText.Trim(Environment.NewLine.ToCharArray());
-                            if (innerText.StartsWith("@*") && innerText.EndsWith("*@"))
+                            if (innerText.Trim().StartsWith("@*") && innerText.Trim().EndsWith("*@"))
                             {
+                                hasChanged = true;
                                 result += innerText.Partialstring(2, innerText.Length - 5);
                                 result += Environment.NewLine;
                             }
