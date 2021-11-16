@@ -3,12 +3,16 @@
 @*#if ACCOUNT_ON*@
 @{
     @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.Business.Account.IdentityUser
 
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
+    var sessionWrapper = new SessionWrapper(Context.Session);
+
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
     <tr>
         <td>
@@ -33,8 +37,18 @@
             @Html.DisplayFor(modelItem => Model.OneItem.State)
         </td>
         <td>
-            @Html.ActionLink(translateFor("Edit"), "Edit", new { id = Model.Id }) |
-            @Html.ActionLink(translateFor("Delete"), "Delete", new { id = Model.Id })
+            @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+            {
+                <a type="button" href="@($"/{viewBagWrapper.Controller}/EDit/{Model.Id}")" class="btn btn-outline-primary btn-sm" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
+            }
+            @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
+            {
+                <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{Model.Id}")" class="btn btn-outline-secondary btn-sm" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+            }
+            @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
+            {
+                <a type="button" href="@($"/{viewBagWrapper.Controller}/Delete/{Model.Id}")" class="btn btn-outline-danger btn-sm" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            }
         </td>
     </tr>
 }

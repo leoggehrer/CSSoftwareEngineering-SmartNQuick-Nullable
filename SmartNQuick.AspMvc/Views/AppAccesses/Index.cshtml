@@ -4,30 +4,31 @@
     @using Microsoft.AspNetCore.Mvc.Rendering
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.View
     @model IEnumerable<SmartNQuick.AspMvc.Models.Business.Account.AppAccess>
 
+    var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
-    var controller = ViewContext.RouteData.Values["controller"].ToString();
-    var action = ViewContext.RouteData.Values["action"].ToString();
-    Func<string, string> translate = Translator.TranslateIt;
-    Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
-    var title = translateFor(controller);
 
-    ViewData["Title"] = title;
+    viewBagWrapper.Translate = Translator.TranslateIt;
+    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagWrapper.ViewType = Model != null ? Model.GetType() : null;
 
-    <h1>@title</h1>
+    ViewData["Title"] = viewBagWrapper.Title;
+    <h1>@viewBagWrapper.Title</h1>
 
     @if (sessionWrapper.IsAuthenticated && sessionWrapper.HasRole("SysAdmin", "AppAdmin"))
     {
         <div class="d-flex bg-transparent">
             <div class="mr-auto p-sm-2">
-                <a asp-action="Create" class="btn btn-outline-secondary">@translateFor("Create New")</a>
+                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create New")</a>
             </div>
             <div class="p-sm-2">
-                <a asp-action="Export" class="btn btn-outline-secondary">@translateFor("Export")</a>
+                <a asp-action="Export" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Export")</a>
             </div>
             <div class="p-sm-2">
-                <a asp-action="Import" class="btn btn-outline-primary">@translateFor("Import")</a>
+                <a asp-action="Import" class="btn btn-outline-primary">@viewBagWrapper.TranslateFor("Import")</a>
             </div>
         </div>
     }
@@ -36,22 +37,22 @@
         <thead>
             <tr>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.OneItem.Name))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.Name))
                 </th>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.OneItem.Email))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.Email))
                 </th>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.OneItem.EnableJwtAuth))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.EnableJwtAuth))
                 </th>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.ManyItems))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.ManyItems))
                 </th>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.OneItem.AccessFailedCount))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.AccessFailedCount))
                 </th>
                 <th>
-                    @translateFor(Html.DisplayNameFor(model => model.OneItem.State))
+                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.State))
                 </th>
                 <th></th>
             </tr>
@@ -84,8 +85,18 @@
                         @Html.DisplayFor(modelItem => item.OneItem.State)
                     </td>
                     <td>
-                        @Html.ActionLink(translateFor("Edit"), "Edit", new { id = item.Id }) |
-                        @Html.ActionLink(translateFor("Delete"), "Delete", new { id = item.Id })
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+                        {
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/EDit/{item.Id}")" class="btn btn-outline-primary btn-sm" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        }
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
+                        {
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{item.Id}")" class="btn btn-outline-secondary btn-sm" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+                        }
+                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
+                        {
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Delete/{item.Id}")" class="btn btn-outline-danger btn-sm" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        }
                     </td>
                 </tr>
             }

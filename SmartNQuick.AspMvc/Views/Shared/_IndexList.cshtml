@@ -30,8 +30,6 @@
         <tbody>
             @foreach (var model in indexViewModel.Models)
             {
-                var cmdCounter = 0;
-
                 model.ViewBagInfo = viewBagWrapper;
                 <tr>
                     @foreach (var displayItem in indexViewModel.DisplayProperties)
@@ -43,27 +41,15 @@
                     <td>
                         @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
                         {
-                            if (cmdCounter++ > 0)
-                            {
-                                @Html.Raw(" | ")
-                            }
-                            @Html.ActionLink(viewBagWrapper.TranslateFor("Edit"), "Edit", new { id = model.Id })
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/EDit/{model.Id}")" class="btn btn-outline-primary btn-sm" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
                         }
                         @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
                         {
-                            if (cmdCounter++ > 0)
-                            {
-                                @Html.Raw(" | ")
-                            }
-                            @Html.ActionLink(viewBagWrapper.TranslateFor("Details"), "Details", new { id = model.Id })
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{model.Id}")" class="btn btn-outline-secondary btn-sm" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
                         }
                         @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
                         {
-                            if (cmdCounter++ > 0)
-                            {
-                                @Html.Raw(" | ")
-                            }
-                            @Html.ActionLink(viewBagWrapper.TranslateFor("Delete"), "Delete", new { id = model.Id })
+                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Delete/{model.Id}")" class="btn btn-outline-danger btn-sm" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         }
                     </td>
                 </tr>
