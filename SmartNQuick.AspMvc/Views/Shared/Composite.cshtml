@@ -1,19 +1,6 @@
 ﻿@*@BaseCode*@
 @{
-    static bool IsInstanceOfGenericType(Type genericType, object instance)
-    {
-        Type type = instance.GetType();
-        while (type != null)
-        {
-            if (type.IsGenericType &&
-                type.GetGenericTypeDefinition() == genericType)
-            {
-                return true;
-            }
-            type = type.BaseType;
-        }
-        return false;
-    }
+    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
@@ -46,7 +33,7 @@
                 <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create new...")</a>
             </p>
         }
-        @if (IsInstanceOfGenericType(typeof(CompositeModel<,,,,,>), Model))
+        @if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
         {
             var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
             var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;

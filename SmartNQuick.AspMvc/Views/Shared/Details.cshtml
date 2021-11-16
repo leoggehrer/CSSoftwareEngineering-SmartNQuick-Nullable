@@ -1,19 +1,6 @@
 ﻿@*@BaseCode*@
 @{
-    static bool IsInstanceOfGenericType(Type genericType, object instance)
-    {
-        Type type = instance.GetType();
-        while (type != null)
-        {
-            if (type.IsGenericType &&
-                type.GetGenericTypeDefinition() == genericType)
-            {
-                return true;
-            }
-            type = type.BaseType;
-        }
-        return false;
-    }
+    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -48,7 +35,7 @@
     }
     else
     {
-        @if (IsInstanceOfGenericType(typeof(OneToAnotherModel<,,,>), Model))
+        @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
         {
             var oneProperty = Model.GetType().GetProperty("OneModel");
             var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
@@ -66,7 +53,7 @@
                 @await Html.PartialAsync("_DisplayModel", anotherModel)
             }
         }
-        else if (IsInstanceOfGenericType(typeof(OneToManyModel<,,,>), Model))
+        else if (Model.GetType().IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
         {
             var oneProperty = Model.GetType().GetProperty("OneModel");
             var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
@@ -84,7 +71,7 @@
                 @await Html.PartialAsync("_IndexList", manyModels)
             }
         }
-        else if (IsInstanceOfGenericType(typeof(CompositeModel<,,,,,>), Model))
+        else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
         {
             var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
             var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
