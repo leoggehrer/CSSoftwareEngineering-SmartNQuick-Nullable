@@ -1,0 +1,19 @@
+﻿@*@BaseCode*@
+@{
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    var viewBagWrapper = Model.ViewBagInfo;
+
+    @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+    {
+        <a type="button" href="@($"/{viewBagWrapper.Controller}/EDit/{Model.Id}")" class="btn btn-outline-primary btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
+    }
+    @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
+    {
+        <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{Model.Id}")" class="btn btn-outline-secondary btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+    }
+    @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
+    {
+        <a type="button" href="@($"/{viewBagWrapper.Controller}/Delete/{Model.Id}")" class="btn btn-outline-danger btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
+    }
+}

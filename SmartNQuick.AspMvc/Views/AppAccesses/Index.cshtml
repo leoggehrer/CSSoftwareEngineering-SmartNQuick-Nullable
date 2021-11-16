@@ -60,6 +60,8 @@
         <tbody>
             @foreach (var item in Model)
             {
+                item.ViewBagInfo = viewBagWrapper;
+
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.OneItem.Name)
@@ -85,18 +87,7 @@
                         @Html.DisplayFor(modelItem => item.OneItem.State)
                     </td>
                     <td>
-                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
-                        {
-                            <a type="button" href="@($"/{viewBagWrapper.Controller}/EDit/{item.Id}")" class="btn btn-outline-primary btn-sm" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                        }
-                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
-                        {
-                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{item.Id}")" class="btn btn-outline-secondary btn-sm" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
-                        }
-                        @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
-                        {
-                            <a type="button" href="@($"/{viewBagWrapper.Controller}/Delete/{item.Id}")" class="btn btn-outline-danger btn-sm" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                        }
+                        @await Html.PartialAsync("_CommandControl", item)
                     </td>
                 </tr>
             }
