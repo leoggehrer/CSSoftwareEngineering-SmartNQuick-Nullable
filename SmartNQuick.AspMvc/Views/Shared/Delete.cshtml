@@ -39,7 +39,6 @@
             @viewBagWrapper.TranslateFor("Should the entry be deleted?")
         </div>
     }
-    var displayViewModel = viewBagWrapper.CreateDisplayViewModel(Model);
 
     <form asp-action="Delete">
         @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
@@ -61,7 +60,7 @@
         else
         {
             Model.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_EditModel", Model)
+            @await Html.PartialAsync("_DisplayModel", Model)
         }
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
