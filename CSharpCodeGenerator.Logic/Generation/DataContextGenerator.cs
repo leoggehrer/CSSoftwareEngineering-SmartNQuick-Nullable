@@ -97,7 +97,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var contractsProject = ContractsProject.Create(SolutionProperties);
 
             #region Generate DbSet<E> Set<I, E>()
-            result.Add("partial void GetDbSet<I, E>(ref DbSet<E> dbSet) where E : class");
+            result.Add("partial void GetDbSet<C, E>(ref DbSet<E> dbSet) where E : class");
             result.Add("{");
 
             foreach (var type in contractsProject.PersistenceTypes)
@@ -107,11 +107,11 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                 if (first)
                 {
-                    result.Add($"if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"if (typeof(C) == typeof({type.FullName}))");
                 }
                 else
                 {
-                    result.Add($"else if (typeof(I) == typeof({type.FullName}))");
+                    result.Add($"else if (typeof(C) == typeof({type.FullName}))");
                 }
                 result.Add("{");
                 result.Add($"dbSet = {entityNameSet} as DbSet<E>;");

@@ -58,7 +58,7 @@ namespace SmartNQuick.Logic.DataContext
 			return result;
 		}
 
-		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class;
+		partial void GetDbSet<C, E>(ref DbSet<E> dbSet) where E : class;
 
 		public Task<int> CountAsync<C, E>()
 			where C : IIdentifiable

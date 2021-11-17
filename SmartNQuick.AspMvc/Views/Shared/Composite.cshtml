@@ -60,6 +60,37 @@
                 @await Html.PartialAsync("_DisplayModel", anotherModel)
             }
         }
+        else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+        {
+            var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
+            var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
+            var oneProperty = Model.GetType().GetProperty("OneModel");
+            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
+            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
+            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
+
+            if (connectorModel != null)
+            {
+                viewBagWrapper.ItemPrefix = "ConnectorModel";
+                <h2>@viewBagWrapper.TranslateFor("ConnectorModel")</h2>
+                connectorModel.ViewBagInfo = viewBagWrapper;
+                @await Html.PartialAsync("_EditModel", connectorModel)
+            }
+            if (oneModel != null)
+            {
+                viewBagWrapper.ItemPrefix = "OneModel";
+                oneModel.ViewBagInfo = viewBagWrapper;
+                <h2>@viewBagWrapper.TranslateFor("OneModel")</h2>
+                @await Html.PartialAsync("_EditModel", oneModel)
+            }
+            if (anotherModel != null)
+            {
+                viewBagWrapper.ItemPrefix = "AnotherModel";
+                anotherModel.ViewBagInfo = viewBagWrapper;
+                <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
+                @await Html.PartialAsync("_EditModel", anotherModel)
+            }
+        }
     }
     <hr />
     @await Html.PartialAsync("_Back", new BackCmd() { BackText = viewBagWrapper.TranslateFor("Back to List") })
