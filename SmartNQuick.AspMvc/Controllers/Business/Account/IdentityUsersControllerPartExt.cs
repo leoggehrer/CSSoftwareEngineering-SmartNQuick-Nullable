@@ -3,6 +3,7 @@
 #if ACCOUNT_ON
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using SmartNQuick.AspMvc.Modules.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,30 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {
     public partial class IdentityUsersController
     {
-        protected override IActionResult ReturnCreateView(Model model)
+        public override Task<IActionResult> CreateAsync()
         {
-            return RedirectToAction("Create", "Identities");
+            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+
+            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.OneModel.Guid)}" };
+            viewBagWrapper.HiddenNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
+            return base.CreateAsync();
+        }
+        public override Task<IActionResult> EditAsync(int id)
+        {
+            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+
+            viewBagWrapper.HiddenNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
+            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
+            return base.EditAsync(id);
         }
 
+        public override Task<IActionResult> ViewDeleteAsync(int id)
+        {
+            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+
+            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
+            return base.ViewDeleteAsync(id);
+        }
         #region Export and Import
         protected override string[] CsvHeader => new string[] 
         {

@@ -1,8 +1,10 @@
 ﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
+using SmartNQuick.AspMvc.Modules.View;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
@@ -11,23 +13,40 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
     {
         public IEnumerable<IdentityModel> Models { get; init; }
         public override Type ModelType => Models.GetType().GetGenericArguments()[0];
-        public IndexViewModel(IEnumerable<IdentityModel> models)
-            : this(models, null, null, null)
-        {
-        }
-        public IndexViewModel(IEnumerable<IdentityModel> models,dynamic viewBag)
-            : this(models, viewBag.HiddenNames as string[],
-                           viewBag.IgnoreNames as string[],
-                           viewBag.DisplayNames as string[])
-        {
-        }
-        public IndexViewModel(IEnumerable<IdentityModel> models, string[] hiddenNames, string[] ignoreNames, string[] displayNames)
-            : base(hiddenNames, ignoreNames, displayNames)
+
+        public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models)
+            : base(viewBagWrapper)
         {
             models.CheckArgument(nameof(models));
 
             Models = models;
         }
+
+        private List<PropertyInfo> displayProperties = null;
+        public virtual IEnumerable<PropertyInfo> DisplayProperties
+        {
+            get
+            {
+                if (displayProperties == null)
+                {
+                    displayProperties = new List<PropertyInfo>();
+
+                    foreach (var item in ModelType.GetAllInterfacePropertyInfos())
+                    {
+                        if (item.CanRead && DisplayNames.Any(e => e.Equals(item.Name)))
+                        {
+                            displayProperties.Add(item);
+                        }
+                        else if (item.CanRead && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
+                        {
+                            displayProperties.Add(item);
+                        }
+                    }
+                }
+                return displayProperties;
+            }
+        }
+
         public virtual object GetValue(object model, PropertyInfo propertyInfo)
         {
             model.CheckArgument(nameof(model));

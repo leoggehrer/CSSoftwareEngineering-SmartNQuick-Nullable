@@ -15,7 +15,7 @@ namespace SmartNQuick.AspMvc.Modules.View
             BeforeCreateIndexViewModel(viewTypeName, models, viewBagWrapper, ref result, ref handled);
             if (handled == false)
             {
-                result = new IndexViewModel(models, viewBagWrapper.HiddenNames, viewBagWrapper.IgnoreNames, viewBagWrapper.DisplayNames);
+                result = new IndexViewModel(viewBagWrapper, models);
             }
             AfterCreateIndexViewModel(viewTypeName, models, viewBagWrapper, result);
             return result;
@@ -31,7 +31,7 @@ namespace SmartNQuick.AspMvc.Modules.View
             BeforeCreateDisplayViewModel(viewTypeName, model, viewBagWrapper, ref result, ref handled);
             if (handled == false)
             {
-                result = new DisplayViewModel(model, viewBagWrapper.HiddenNames, viewBagWrapper.IgnoreNames, viewBagWrapper.DisplayNames);
+                result = new DisplayViewModel(viewBagWrapper, model);
             }
             AfterCreateDisplayViewModel(viewTypeName, model, viewBagWrapper, result);
             return result;
@@ -47,7 +47,7 @@ namespace SmartNQuick.AspMvc.Modules.View
             BeforeCreateEditViewModel(viewTypeName, model, viewBagWrapper, ref result, ref handled);
             if (handled == false)
             {
-                result = new EditViewModel(model, viewBagWrapper.HiddenNames, viewBagWrapper.IgnoreNames, viewBagWrapper.DisplayNames);
+                result = new EditViewModel(viewBagWrapper, model);
             }
             AfterCreateEditViewModel(viewTypeName, model, viewBagWrapper, result);
             return result;

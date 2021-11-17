@@ -10,18 +10,18 @@
     {
         @if (property.PropertyType.IsEnum)
         {
-            @Html.DropDownList(property.Name, Html.GetEnumSelectList(property.PropertyType), null, new { @class = "form-control" })
+            @Html.DropDownList(editViewModel.GetName(property), Html.GetEnumSelectList(property.PropertyType), editViewModel.GetDisplayValue(property), new { @class = "form-control" })
         }
         else
         {
-            <input class="form-control" type="text" id="@property.Name" name="@property.Name" value="@editViewModel.GetValue(property)" />
-            <span class="text-danger field-validation-valid" data-valmsg-for="@property.Name" data-valmsg-replace="true"></span>
+            <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="@editViewModel.GetName(property)" data-valmsg-replace="true"></span>
         }
     }
     else if (property.CanRead)
     {
         <div class="form-group">
-            <input class="form-control" type="text" id="@property.Name" name="@property.Name" value="@editViewModel.GetValue(property)" readonly="readonly" />
+            <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" readonly="readonly" />
         </div>
     }
     viewBagWrapper.Handled = true;

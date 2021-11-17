@@ -1,7 +1,9 @@
 ﻿//@BaseCode
 //MdStart
 using CommonBase.Extensions;
+using SmartNQuick.AspMvc.Modules.View;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
@@ -11,22 +13,21 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         public IdentityModel Model { get; init; }
         public override Type ModelType => Model.GetType();
 
-        public EditViewModel(IdentityModel model)
-            : this(model, null, null, null)
-        {
-        }
-        public EditViewModel(IdentityModel model, dynamic viewBag)
-            : this(model, viewBag.HiddenNames as string[],
-                          viewBag.IgnoreNames as string[],
-                          viewBag.DisplayNames as string[])
-        {
-        }
-        public EditViewModel(IdentityModel model, string[] hiddenNames, string[] ignoreNames, string[] displayNames)
-            : base(hiddenNames, ignoreNames, displayNames)
+        public EditViewModel(ViewBagWrapper viewBagWrapper, IdentityModel model)
+            : base(viewBagWrapper)
         {
             model.CheckArgument(nameof(model));
 
             Model = model;
+        }
+
+        public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
+        {
+            return GetHiddenProperties(ModelType);
+        }
+        public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
+        {
+            return GetDisplayProperties(ModelType);
         }
         public virtual object GetValue(PropertyInfo propertyInfo)
         {

@@ -68,11 +68,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.Handled != null ? (bool)ViewBag.Handled : false;
             set => ViewBag.Handled = value;
         }
-        public PropertyInfo DisplayProperty
-        {
-            get => ViewBag.DisplayProperty as PropertyInfo;
-            set => ViewBag.DisplayProperty = value;
-        }
         public string[] HiddenNames
         {
             get => ViewBag.HiddenNames as string[];
@@ -87,6 +82,16 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get => ViewBag.DisplayNames as string[];
             set => ViewBag.DisplayNames = value;
+        }
+        public PropertyInfo DisplayProperty
+        {
+            get => ViewBag.DisplayProperty as PropertyInfo;
+            set => ViewBag.DisplayProperty = value;
+        }
+        public string ItemPrefix
+        {
+            get => ViewBag.ItemPrefix as string;
+            set => ViewBag.ItemPrefix = value;
         }
 
         public ViewModelCreator ViewModelCreator

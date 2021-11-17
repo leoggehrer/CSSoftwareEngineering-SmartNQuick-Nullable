@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -41,11 +42,27 @@
     var displayViewModel = viewBagWrapper.CreateDisplayViewModel(Model);
 
     <form asp-action="Delete">
-        @foreach (var item in displayViewModel.HiddenProperties)
+        @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
         {
-            <input type="hidden" id="@item.Name" asp-for="@item.Name" value="@displayViewModel.GetValue(item)" />
+            var oneProperty = Model.GetType().GetProperty("OneModel");
+            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
+            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
+            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
+            var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
+
+            viewBagWrapper.ItemPrefix = "OneModel";
+            oneModel.ViewBagInfo = viewBagWrapper;
+            @await Html.PartialAsync("_DisplayModel", oneModel)
+
+            viewBagWrapper.ItemPrefix = "AnotherModel";
+            anotherModel.ViewBagInfo = viewBagWrapper;
+            @await Html.PartialAsync("_DisplayModel", anotherModel)
         }
-        @await Html.PartialAsync("_DisplayModel", Model)
+        else
+        {
+            Model.ViewBagInfo = viewBagWrapper;
+            @await Html.PartialAsync("_EditModel", Model)
+        }
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>
