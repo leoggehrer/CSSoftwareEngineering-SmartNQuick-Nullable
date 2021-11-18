@@ -35,41 +35,55 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             ViewBagWrapper = viewBagWrapper;
 
-            if (viewBagWrapper.HiddenNames != null)
-                HiddenNames.AddRange(viewBagWrapper.HiddenNames);
-
-            if (viewBagWrapper.IgnoreNames != null)
-                IgnoreNames.AddRange(viewBagWrapper.IgnoreNames);
-
-            if (viewBagWrapper.DisplayNames != null)
-                DisplayNames.AddRange(viewBagWrapper.DisplayNames);
+            HiddenNames.AddRange(viewBagWrapper.HiddenNames);
+            IgnoreNames.AddRange(viewBagWrapper.IgnoreNames);
+            DisplayNames.AddRange(viewBagWrapper.DisplayNames);
         }
 
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties(Type type)
         {
             type.CheckArgument(nameof(type));
 
-            return HiddenNames.Select(n => type.GetProperty(n)).Where(p => p != null && p.CanRead).ToArray();
+            return HiddenNames.Select(n => ViewBagWrapper.GetMapping(n))
+                              .Select(n => type.GetProperty(n))
+                              .Where(p => p != null && p.CanRead)
+                              .ToArray();
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties(Type type)
         {
             type.CheckArgument(nameof(type));
 
             var result = new List<PropertyInfo>();
+            var typeProperties = type.GetAllPropertyInfos();
 
             foreach (var item in type.GetAllInterfacePropertyInfos())
             {
-                if (item.CanRead && DisplayNames.Any(e => e.Equals(item.Name)))
+                var property = default(PropertyInfo);
+                var mapName = ViewBagWrapper.GetMapping(item.Name);
+
+                if (mapName.Equals(item.Name) == false)
                 {
-                    result.Add(item);
+                    property = typeProperties.FirstOrDefault(p => p.Name.Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                    if (property != null)
+                    {
+                        ViewBagWrapper.AddMappingProperty(mapName, item);
+                    }
                 }
-                else if (item.CanRead && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
+
+                property ??= item;
+
+                if (property.CanRead && DisplayNames.Any(e => e.Equals(property.Name)))
                 {
-                    result.Add(item);
+                    result.Add(property);
+                }
+                else if (property.CanRead && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
+                {
+                    result.Add(property);
                 }
             }
             return result;
         }
+
         public virtual string GetId(PropertyInfo propertyInfo)
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));

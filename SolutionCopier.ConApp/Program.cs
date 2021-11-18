@@ -82,7 +82,7 @@ namespace SolutionCopier.ConApp
 			int endPos = AppContext.BaseDirectory
 								   .IndexOf($"{nameof(SolutionCopier)}", StringComparison.CurrentCultureIgnoreCase);
 
-			return AppContext.BaseDirectory.Substring(0, endPos);
+			return AppContext.BaseDirectory[..endPos];
 		}
 	}
 }

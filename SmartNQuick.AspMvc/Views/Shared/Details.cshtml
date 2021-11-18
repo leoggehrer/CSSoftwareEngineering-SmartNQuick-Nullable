@@ -68,7 +68,7 @@
             if (manyModels != null)
             {
                 <h2>@viewBagWrapper.TranslateFor("Details")</h2>
-                @await Html.PartialAsync("_IndexList", manyModels)
+                @await Html.PartialAsync("_DisplayList", manyModels)
             }
         }
         else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))

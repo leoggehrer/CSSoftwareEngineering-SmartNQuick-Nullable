@@ -291,7 +291,7 @@ namespace SmartNQuick.AspMvc.Controllers
             if (HasError == false)
             {
                 model = BeforeView(model, ActionMode.Details);
-                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
+                model = await BeforeViewAsync(model, ActionMode.Details).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnDetailsView(model);
         }

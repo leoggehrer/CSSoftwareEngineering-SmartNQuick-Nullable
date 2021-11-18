@@ -18,7 +18,7 @@
     <table class="table">
         <thead>
             <tr>
-                @foreach (var item in indexViewModel.DisplayProperties)
+                @foreach (var item in indexViewModel.GetDisplayProperties())
                 {
                     <th>
                         @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
@@ -31,7 +31,7 @@
             {
                 model.ViewBagInfo = viewBagWrapper;
                 <tr>
-                    @foreach (var displayItem in indexViewModel.DisplayProperties)
+                    @foreach (var displayItem in indexViewModel.GetDisplayProperties())
                     {
                         <td>
                             @indexViewModel.GetDisplayValue(model, displayItem)

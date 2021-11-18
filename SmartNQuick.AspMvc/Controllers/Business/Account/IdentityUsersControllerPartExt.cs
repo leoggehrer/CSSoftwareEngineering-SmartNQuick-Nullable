@@ -3,6 +3,7 @@
 #if ACCOUNT_ON
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
 using System.Collections.Generic;
@@ -14,30 +15,29 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {
     public partial class IdentityUsersController
     {
-        public override Task<IActionResult> CreateAsync()
+        protected override Model BeforeView(Model model, ActionMode action)
         {
             var viewBagWrapper = new ViewBagWrapper(ViewBag);
 
-            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.OneModel.Guid)}" };
-            viewBagWrapper.HiddenNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
-            return base.CreateAsync();
+            if (action == ActionMode.Create)
+            {
+                viewBagWrapper.AddIgnoreHidden(nameof(Model.OneModel.Guid));
+            }
+            viewBagWrapper.AddIgnoreHidden(nameof(Model.AnotherModel.IdentityId));
+            return base.BeforeView(model, action);
         }
-        public override Task<IActionResult> EditAsync(int id)
+        protected override IEnumerable<Model> BeforeView(IEnumerable<Model> models, ActionMode action)
         {
             var viewBagWrapper = new ViewBagWrapper(ViewBag);
 
-            viewBagWrapper.HiddenNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
-            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
-            return base.EditAsync(id);
+            if (action == ActionMode.Create)
+            {
+                viewBagWrapper.AddIgnoreHidden(nameof(Model.OneModel.Guid));
+            }
+            viewBagWrapper.HiddenNames.Add(nameof(Model.AnotherModel.IdentityId));
+            return base.BeforeView(models, action);
         }
 
-        public override Task<IActionResult> ViewDeleteAsync(int id)
-        {
-            var viewBagWrapper = new ViewBagWrapper(ViewBag);
-
-            viewBagWrapper.IgnoreNames = new string[] { $"{nameof(Model.AnotherModel.IdentityId)}" };
-            return base.ViewDeleteAsync(id);
-        }
         #region Export and Import
         protected override string[] CsvHeader => new string[] 
         {

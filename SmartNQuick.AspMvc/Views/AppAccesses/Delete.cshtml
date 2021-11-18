@@ -55,7 +55,7 @@
         @foreach (var item in Model.ManyModels)
         {
             item.ViewBagInfo = viewBagWrapper;
-            viewBagWrapper.DisplayNames = new string[] { "Designation" };
+            viewBagWrapper.DisplayNames.Add("Designation");
 
             @await Html.PartialAsync("_DisplayModel", item)
         }

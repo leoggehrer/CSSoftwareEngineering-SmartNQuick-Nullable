@@ -22,29 +22,18 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             Models = models;
         }
 
-        private List<PropertyInfo> displayProperties = null;
-        public virtual IEnumerable<PropertyInfo> DisplayProperties
+        private IEnumerable<PropertyInfo> displayProperties = null;
+        public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
         {
-            get
+            return GetHiddenProperties(ModelType);
+        }
+        public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
+        {
+            if (displayProperties == null)
             {
-                if (displayProperties == null)
-                {
-                    displayProperties = new List<PropertyInfo>();
-
-                    foreach (var item in ModelType.GetAllInterfacePropertyInfos())
-                    {
-                        if (item.CanRead && DisplayNames.Any(e => e.Equals(item.Name)))
-                        {
-                            displayProperties.Add(item);
-                        }
-                        else if (item.CanRead && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
-                        {
-                            displayProperties.Add(item);
-                        }
-                    }
-                }
-                return displayProperties;
+                displayProperties = GetDisplayProperties(ModelType);
             }
+            return displayProperties;
         }
 
         public virtual object GetValue(object model, PropertyInfo propertyInfo)
