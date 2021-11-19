@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SmartNQuick.Contracts;
 using System;

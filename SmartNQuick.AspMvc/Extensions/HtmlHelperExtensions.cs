@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using CommonBase.Extensions;
 
 namespace SmartNQuick.AspMvc.Extensions
 {

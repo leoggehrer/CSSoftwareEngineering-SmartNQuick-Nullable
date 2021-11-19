@@ -1,24 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
-      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="CommonBase.Extensions" />
+	</ItemGroup>
 
 </Project>

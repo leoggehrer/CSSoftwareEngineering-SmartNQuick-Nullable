@@ -1,15 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SmartNQuick.Contracts\SmartNQuick.Contracts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="CommonBase.Extensions" />
+	</ItemGroup>
 
 </Project>

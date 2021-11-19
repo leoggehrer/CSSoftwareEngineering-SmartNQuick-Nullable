@@ -4,7 +4,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using CommonBase.Extensions;
 using SmartNQuick.AspMvc.Models.Modules.Account;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
 using SmartNQuick.AspMvc.Modules.Handler;

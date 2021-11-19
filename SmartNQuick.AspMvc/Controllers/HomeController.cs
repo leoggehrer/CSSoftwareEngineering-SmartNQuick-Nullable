@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartNQuick.AspMvc.Models;
-using SmartNQuick.AspMvc.Modules.Language;
 using System.Diagnostics;
 
 namespace SmartNQuick.AspMvc.Controllers

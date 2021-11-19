@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
 using Microsoft.AspNetCore.Http;
-using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
 using Model = SmartNQuick.AspMvc.Models.Business.Account.AppAccess;

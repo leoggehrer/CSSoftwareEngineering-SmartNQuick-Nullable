@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 //MdStart
 #if ACCOUNT_ON
-using CommonBase.Extensions;
 using SmartNQuick.Logic.Controllers;
 using SmartNQuick.Logic.Modules.Account;
 using SmartNQuick.Logic.Modules.Exception;

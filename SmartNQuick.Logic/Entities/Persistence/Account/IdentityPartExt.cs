@@ -1,7 +1,6 @@
 //@BaseCode
 //MdStart
 #if ACCOUNT_ON
-using CommonBase;
 
 namespace SmartNQuick.Logic.Entities.Persistence.Account
 {

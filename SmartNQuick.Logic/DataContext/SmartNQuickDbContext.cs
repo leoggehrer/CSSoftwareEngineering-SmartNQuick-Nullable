@@ -1,5 +1,4 @@
 ﻿//@BaseCode
-using CommonBase.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SmartNQuick.Contracts;
 using SmartNQuick.Logic.Entities;

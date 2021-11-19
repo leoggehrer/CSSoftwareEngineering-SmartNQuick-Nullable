@@ -17,4 +17,9 @@
 		<Exec Command="ECHO ON&#xD;&#xA;cd ..&#xD;&#xA;cd CSharpCodeGenerator.ConApp&#xD;&#xA;REM dotnet run &quot;-path&quot; $(ProjectDir)$(OutDir)&#xD;&#xA;dotnet build CSharpCodeGenerator.ConApp.csproj&#xD;&#xA;cd $(OutDir)&#xD;&#xA;CSharpCodeGenerator.ConApp.exe" />
 	</Target>
 
+	<ItemGroup>
+		<Using Include="CommonBase.Extensions" />
+		<Using Include="CommonBase.Attributes"/>
+	</ItemGroup>
+
 </Project>

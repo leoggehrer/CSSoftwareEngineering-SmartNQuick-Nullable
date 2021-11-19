@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using SmartNQuick.Logic.Modules.Exception;
 using System.Collections.Generic;
 using System.Linq;

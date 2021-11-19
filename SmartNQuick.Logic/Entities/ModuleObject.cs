@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using System;
 
 namespace SmartNQuick.Logic.Entities

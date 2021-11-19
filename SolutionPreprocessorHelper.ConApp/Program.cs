@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using CSharpCodeGenerator.Logic;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 //MdStart
 #if ACCOUNT_ON
-using CommonBase.Attributes;
 using System;
 
 namespace SmartNQuick.Contracts.Persistence.Account

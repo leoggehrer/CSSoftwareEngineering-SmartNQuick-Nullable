@@ -1,5 +1,4 @@
 ﻿//@Ignore
-using CommonBase.Attributes;
 using System;
 
 namespace SmartNQuick.Contracts.Persistence.Test

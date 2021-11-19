@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using Microsoft.Extensions.Configuration;
 
 namespace SmartNQuick.Logic.Modules.Configuration

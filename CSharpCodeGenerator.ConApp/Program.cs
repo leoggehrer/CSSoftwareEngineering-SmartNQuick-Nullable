@@ -2,11 +2,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using CommonBase.Extensions;
 
 namespace CSharpCodeGenerator.ConApp
 {
-	class Program
+    class Program
 	{
 		static void Main(string[] args)
 		{

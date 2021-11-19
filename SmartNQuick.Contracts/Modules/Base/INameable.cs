@@ -1,5 +1,4 @@
 ﻿//@Ignore
-using CommonBase.Attributes;
 
 namespace SmartNQuick.Contracts.Modules.Base
 {

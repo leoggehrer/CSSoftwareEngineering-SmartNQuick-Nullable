@@ -1,24 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <UserSecretsId>2b969d77-7695-4038-aa87-ada9ff58eaa1</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+		<UserSecretsId>2b969d77-7695-4038-aa87-ada9ff58eaa1</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
-    <ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
+		<ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="CommonBase.Extensions" />
+	</ItemGroup>
 
 </Project>
