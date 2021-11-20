@@ -19,7 +19,7 @@
 
 	<ItemGroup>
 		<Using Include="CommonBase.Extensions" />
-		<Using Include="CommonBase.Attributes"/>
+		<Using Include="CommonBase.Attributes" />
 	</ItemGroup>
 
 </Project>

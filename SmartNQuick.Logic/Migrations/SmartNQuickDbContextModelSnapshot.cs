@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartNQuick.Logic.DataContext;
 
+#nullable disable
+
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
@@ -15,16 +17,18 @@ namespace SmartNQuick.Logic.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Access", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("IdentityId")
                         .HasColumnType("int");
@@ -52,8 +56,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
@@ -86,8 +91,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -142,8 +148,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("IdentityId")
                         .HasColumnType("int");
@@ -169,8 +176,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("IdentityId")
                         .HasColumnType("int");
@@ -209,8 +217,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
@@ -238,8 +247,9 @@ namespace SmartNQuick.Logic.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Firstname")
                         .HasMaxLength(64)
@@ -265,139 +275,48 @@ namespace SmartNQuick.Logic.Migrations
                     b.ToTable("User", "Account");
                 });
 
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Album", b =>
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Detail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ArtistId")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
-
-                    b.HasIndex("Title")
-                        .IsUnique();
-
-                    b.ToTable("Album", "MusicStore");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Artist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Artist", "MusicStore");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("MasterId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Genre", "MusicStore");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Track", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AlbumId")
+                    b.Property<int>("State")
                         .HasColumnType("int");
-
-                    b.Property<long>("Bytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Composer")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Milliseconds")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
-
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AlbumId");
+                    b.HasIndex("MasterId");
 
-                    b.HasIndex("GenreId");
-
-                    b.HasIndex("Title");
-
-                    b.ToTable("Track", "MusicStore");
+                    b.ToTable("Detail", "Test");
                 });
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.EditForm", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<byte?>("ByteNullable")
                         .HasColumnType("tinyint");
@@ -477,6 +396,62 @@ namespace SmartNQuick.Logic.Migrations
                     b.ToTable("EditForm", "Test");
                 });
 
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Master", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Master", "Test");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.UnitTest.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Genre", "UnitTest");
+                });
+
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Access", b =>
                 {
                     b.HasOne("SmartNQuick.Logic.Entities.Persistence.Account.Identity", "Identity")
@@ -540,34 +515,15 @@ namespace SmartNQuick.Logic.Migrations
                     b.Navigation("Identity");
                 });
 
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Album", b =>
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Detail", b =>
                 {
-                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.MusicStore.Artist", "Artist")
-                        .WithMany("Albums")
-                        .HasForeignKey("ArtistId")
+                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.Test.Master", "Master")
+                        .WithMany("Details")
+                        .HasForeignKey("MasterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Artist");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Track", b =>
-                {
-                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.MusicStore.Album", "Album")
-                        .WithMany("Tracks")
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.MusicStore.Genre", "Genre")
-                        .WithMany("Tracks")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Album");
-
-                    b.Navigation("Genre");
+                    b.Navigation("Master");
                 });
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Account.Identity", b =>
@@ -588,19 +544,9 @@ namespace SmartNQuick.Logic.Migrations
                     b.Navigation("IdentityXRoles");
                 });
 
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Album", b =>
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Master", b =>
                 {
-                    b.Navigation("Tracks");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Artist", b =>
-                {
-                    b.Navigation("Albums");
-                });
-
-            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.MusicStore.Genre", b =>
-                {
-                    b.Navigation("Tracks");
+                    b.Navigation("Details");
                 });
 #pragma warning restore 612, 618
         }

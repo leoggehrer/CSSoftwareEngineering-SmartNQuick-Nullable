@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -13,32 +14,49 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
+    var indexViewModel = default(IndexViewModel);
 
-    <table class="table">
-        <thead>
-            <tr>
-                @foreach (var item in indexViewModel.GetDisplayProperties())
-                {
-                    <th>
-                        @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
-                    </th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var model in indexViewModel.Models)
-            {
-                model.ViewBagInfo = viewBagWrapper;
+    if (Model is IEnumerable<IMasterDetails> mds)
+    {
+        var models = mds.Select(m => m.Master);
+
+        if (models.Any())
+        {
+            indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
+        }
+    }
+    else
+    {
+        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
+    }
+
+    if (indexViewModel != null)
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    @foreach (var displayItem in indexViewModel.GetDisplayProperties())
+                    @foreach (var item in indexViewModel.GetDisplayProperties())
                     {
-                        <td>
-                            @indexViewModel.GetDisplayValue(model, displayItem)
-                        </td>
+                        <th>
+                            @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
+                        </th>
                     }
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var model in indexViewModel.Models)
+                {
+                    model.ViewBagInfo = viewBagWrapper;
+                    <tr>
+                        @foreach (var displayItem in indexViewModel.GetDisplayProperties())
+                        {
+                            <td>
+                                @indexViewModel.GetDisplayValue(model, displayItem)
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }

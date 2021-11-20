@@ -82,7 +82,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         protected virtual async Task LoadDetailsAsync(E entity, int masterId)
         {
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
-            var query = await ManyEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
+            var query = await ManyEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             entity.ClearManyItems();
             foreach (var item in query)
@@ -130,12 +130,12 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             E result;
-            var oneEntity = await OneEntityController.GetByIdAsync(id).ConfigureAwait(false);
+            var oneEntity = await OneEntityController.ExecuteGetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (oneEntity != null)
             {
                 result = new E();
-                result.OneItem.CopyProperties(oneEntity);
+                result.OneEntity = oneEntity;
                 await LoadDetailsAsync(result, oneEntity.Id).ConfigureAwait(false);
             }
             else
@@ -146,13 +146,13 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var result = new List<E>();
-            var query = await OneEntityController.GetAllAsync().ConfigureAwait(false);
+            var query = await OneEntityController.ExecuteGetEntityAllAsync().ConfigureAwait(false);
 
             foreach (var item in query)
             {
                 var entity = new E();
 
-                entity.OneItem.CopyProperties(item);
+                entity.OneEntity = item;
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -162,13 +162,13 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
-            var query = await OneEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
+            var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
                 var entity = new E();
 
-                entity.OneItem.CopyProperties(item);
+                entity.OneEntity = item;
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);

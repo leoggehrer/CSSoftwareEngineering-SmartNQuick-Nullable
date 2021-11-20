@@ -1,6 +1,5 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -35,74 +34,8 @@
     }
     else
     {
-        @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
-        {
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-
-            if (oneModel != null)
-            {
-                oneModel.ViewBagInfo = viewBagWrapper;
-                @await Html.PartialAsync("_DisplayModel", oneModel)
-            }
-            if (anotherModel != null)
-            {
-                anotherModel.ViewBagInfo = viewBagWrapper;
-                @await Html.PartialAsync("_DisplayModel", anotherModel)
-            }
-        }
-        else if (Model.GetType().IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
-        {
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var manyProperty = Model.GetType().GetProperty("ManyModels");
-            var manyModels = manyProperty?.GetValue(Model);
-
-            if (oneModel != null)
-            {
-                oneModel.ViewBagInfo = viewBagWrapper;
-                @await Html.PartialAsync("_DisplayModel", oneModel)
-            }
-            if (manyModels != null)
-            {
-                <h2>@viewBagWrapper.TranslateFor("Details")</h2>
-                @await Html.PartialAsync("_DisplayList", manyModels)
-            }
-        }
-        else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
-        {
-            var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
-            var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-
-            if (connectorModel != null)
-            {
-                connectorModel.ViewBagInfo = viewBagWrapper;
-                @await Html.PartialAsync("_DisplayModel", connectorModel)
-            }
-            if (oneModel != null)
-            {
-                oneModel.ViewBagInfo = viewBagWrapper;
-                <h2>@viewBagWrapper.TranslateFor("OneModel")</h2>
-                @await Html.PartialAsync("_DisplayModel", oneModel)
-            }
-            if (anotherModel != null)
-            {
-                anotherModel.ViewBagInfo = viewBagWrapper;
-                <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
-                @await Html.PartialAsync("_DisplayModel", anotherModel)
-            }
-        }
-        else
-        {
-            Model.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_DisplayModel", Model)
-        }
+        Model.ViewBagInfo = viewBagWrapper;
+        @await Html.PartialAsync("_Display", Model)
     }
     <hr />
     @await Html.PartialAsync("_Back", new BackCmd() { BackText = viewBagWrapper.TranslateFor("Back to List") })

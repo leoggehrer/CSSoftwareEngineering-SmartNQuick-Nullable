@@ -4,13 +4,17 @@
 
     var viewBagWrapper = Model.ViewBagInfo;
 
+    @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.CreateDetail) > 0)
+    {
+        <a type="button" href="@($"/{viewBagWrapper.Controller}/Create")" class="btn btn-outline-secondary btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Create")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+    }
     @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
     {
         <a type="button" href="@($"/{viewBagWrapper.Controller}/Edit/{Model.Id}")" class="btn btn-outline-primary btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
     }
     @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.ShowDetails) > 0)
     {
-        <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{Model.Id}")" class="btn btn-outline-secondary btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+        <a type="button" href="@($"/{viewBagWrapper.Controller}/Details/{Model.Id}")" class="btn btn-outline-dark btn-sm" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
     }
     @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Remove) > 0)
     {

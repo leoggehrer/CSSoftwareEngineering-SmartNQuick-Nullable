@@ -1,6 +1,5 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -41,27 +40,7 @@
     }
 
     <form asp-action="Delete">
-        @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
-        {
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-            var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
-
-            viewBagWrapper.ItemPrefix = "OneModel";
-            oneModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_DisplayModel", oneModel)
-
-            viewBagWrapper.ItemPrefix = "AnotherModel";
-            anotherModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_DisplayModel", anotherModel)
-        }
-        else
-        {
-            Model.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_DisplayModel", Model)
-        }
+        @await Html.PartialAsync("_Display", Model)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>

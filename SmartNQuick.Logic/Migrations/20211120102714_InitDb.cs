@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace SmartNQuick.Logic.Migrations
 {
     public partial class InitDb : Migration
@@ -11,25 +13,10 @@ namespace SmartNQuick.Logic.Migrations
                 name: "Account");
 
             migrationBuilder.EnsureSchema(
-                name: "MusicStore");
-
-            migrationBuilder.EnsureSchema(
                 name: "Test");
 
-            migrationBuilder.CreateTable(
-                name: "Artist",
-                schema: "MusicStore",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Artist", x => x.Id);
-                });
+            migrationBuilder.EnsureSchema(
+                name: "UnitTest");
 
             migrationBuilder.CreateTable(
                 name: "EditForm",
@@ -68,7 +55,7 @@ namespace SmartNQuick.Logic.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Genre",
-                schema: "MusicStore",
+                schema: "UnitTest",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -105,6 +92,23 @@ namespace SmartNQuick.Logic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Master",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    State = table.Column<int>(type: "int", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Master", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Role",
                 schema: "Account",
                 columns: table => new
@@ -118,29 +122,6 @@ namespace SmartNQuick.Logic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Album",
-                schema: "MusicStore",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ArtistId = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Album", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Album_Artist_ArtistId",
-                        column: x => x.ArtistId,
-                        principalSchema: "MusicStore",
-                        principalTable: "Artist",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,6 +225,31 @@ namespace SmartNQuick.Logic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Detail",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MasterId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    State = table.Column<int>(type: "int", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Detail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Detail_Master_MasterId",
+                        column: x => x.MasterId,
+                        principalSchema: "Test",
+                        principalTable: "Master",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IdentityXRole",
                 schema: "Account",
                 columns: table => new
@@ -273,41 +279,6 @@ namespace SmartNQuick.Logic.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Track",
-                schema: "MusicStore",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AlbumId = table.Column<int>(type: "int", nullable: false),
-                    GenreId = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
-                    Composer = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
-                    Milliseconds = table.Column<long>(type: "bigint", nullable: false),
-                    Bytes = table.Column<long>(type: "bigint", nullable: false),
-                    UnitPrice = table.Column<double>(type: "float", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Track", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Track_Album_AlbumId",
-                        column: x => x.AlbumId,
-                        principalSchema: "MusicStore",
-                        principalTable: "Album",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Track_Genre_GenreId",
-                        column: x => x.GenreId,
-                        principalSchema: "MusicStore",
-                        principalTable: "Genre",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Access_IdentityId",
                 schema: "Account",
@@ -328,28 +299,14 @@ namespace SmartNQuick.Logic.Migrations
                 column: "IdentityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Album_ArtistId",
-                schema: "MusicStore",
-                table: "Album",
-                column: "ArtistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Album_Title",
-                schema: "MusicStore",
-                table: "Album",
-                column: "Title",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Artist_Name",
-                schema: "MusicStore",
-                table: "Artist",
-                column: "Name",
-                unique: true);
+                name: "IX_Detail_MasterId",
+                schema: "Test",
+                table: "Detail",
+                column: "MasterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Genre_Name",
-                schema: "MusicStore",
+                schema: "UnitTest",
                 table: "Genre",
                 column: "Name",
                 unique: true);
@@ -394,24 +351,6 @@ namespace SmartNQuick.Logic.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Track_AlbumId",
-                schema: "MusicStore",
-                table: "Track",
-                column: "AlbumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Track_GenreId",
-                schema: "MusicStore",
-                table: "Track",
-                column: "GenreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Track_Title",
-                schema: "MusicStore",
-                table: "Track",
-                column: "Title");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_User_IdentityId",
                 schema: "Account",
                 table: "User",
@@ -430,8 +369,16 @@ namespace SmartNQuick.Logic.Migrations
                 schema: "Account");
 
             migrationBuilder.DropTable(
+                name: "Detail",
+                schema: "Test");
+
+            migrationBuilder.DropTable(
                 name: "EditForm",
                 schema: "Test");
+
+            migrationBuilder.DropTable(
+                name: "Genre",
+                schema: "UnitTest");
 
             migrationBuilder.DropTable(
                 name: "IdentityXRole",
@@ -442,32 +389,20 @@ namespace SmartNQuick.Logic.Migrations
                 schema: "Account");
 
             migrationBuilder.DropTable(
-                name: "Track",
-                schema: "MusicStore");
-
-            migrationBuilder.DropTable(
                 name: "User",
                 schema: "Account");
+
+            migrationBuilder.DropTable(
+                name: "Master",
+                schema: "Test");
 
             migrationBuilder.DropTable(
                 name: "Role",
                 schema: "Account");
 
             migrationBuilder.DropTable(
-                name: "Album",
-                schema: "MusicStore");
-
-            migrationBuilder.DropTable(
-                name: "Genre",
-                schema: "MusicStore");
-
-            migrationBuilder.DropTable(
                 name: "Identity",
                 schema: "Account");
-
-            migrationBuilder.DropTable(
-                name: "Artist",
-                schema: "MusicStore");
         }
     }
 }

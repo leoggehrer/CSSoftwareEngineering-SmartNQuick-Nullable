@@ -187,10 +187,19 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             return CreateIndexViewModel(ViewTypeName, models);
         }
+        public IndexViewModel CreateIndexViewModel(IEnumerable<Models.IdentityModel> models, Type elementType)
+        {
+            return CreateIndexViewModel(ViewTypeName, models, elementType);
+        }
         public IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models)
         {
             return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewTypeName, models, this) 
                                             : new ViewModelCreator().CreateIndexViewModel(viewTypeName, models, this);
+        }
+        public IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, Type elementType)
+        {
+            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewTypeName, models, elementType, this)
+                                            : new ViewModelCreator().CreateIndexViewModel(viewTypeName, models, elementType, this);
         }
 
         public EditViewModel CreateEditViewModel(Models.IdentityModel model)

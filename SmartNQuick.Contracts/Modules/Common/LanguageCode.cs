@@ -7,10 +7,11 @@ namespace SmartNQuick.Contracts.Modules.Common
     /// </summary>
     public enum LanguageCode
     {
-        De = 1,
-        En = 2,
-        Fr = 3,
-        Tr = 4,
+        De = 1,     // German
+        En = 2,     // Englisch
+        Es = 3,     // Spanisch
+        Fr = 4,     // Französisch
+        Tr = 5,     // Ttürkisch
     }
 }
 //MdEnd

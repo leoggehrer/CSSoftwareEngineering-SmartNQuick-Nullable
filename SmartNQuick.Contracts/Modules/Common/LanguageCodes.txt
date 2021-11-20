@@ -1,0 +1,186 @@
+﻿Afar	aa	aar	afar
+Abkhazian	ab	abk	abkhaze
+Avestan	ae	ave	avestique
+Afrikaans	af	afr	afrikaans
+Akan	ak	aka	akan
+Amharic	am	amh	amharique
+Aragonese	an	arg	aragonais
+Arabic	ar	ara	arabe
+Assamese	as	asm	assamais
+Avaric	av	ava	avar
+Aymara	ay	aym	aymara
+Azerbaijani	az	aze	azéri
+Bashkir	ba	bak	bachkir
+Belarusian	be	bel	biélorusse
+Bulgarian	bg	bul	bulgare
+Bihari languages	bh	bih	langues biharis
+Bislama	bi	bis	bichlamar
+Bambara	bm	bam	bambara
+Bengali	bn	ben	bengali
+Tibetan	bo	tib	tibétain
+Breton	br	bre	breton
+Bosnian	bs	bos	bosniaque
+Catalan; Valencian	ca	cat	catalan; valencien
+Chechen	ce	che	tchétchène
+Chamorro	ch	cha	chamorro
+Corsican	co	cos	corse
+Cree	cr	cre	cree
+Czech	cs	cze	tchèque
+Church Slavic; Slavonic;
+Old Bulgarian	cu	chu	slavon d'église; slavon liturgique;
+vieux bulgare
+Chuvash	cv	chv	tchouvache
+Welsh	cy	wel	gallois
+Danish	da	dan	danois
+German	de	ger	allemand
+Divehi; Dhivehi; Maldivian	dv	div	maldivien
+Dzongkha	dz	dzo	dzongkha
+Ewe	ee	ewe	éwé
+Greek, Modern (1453-)	el	gre	grec moderne (après 1453)
+English	en	eng	anglais
+Esperanto	eo	epo	espéranto
+Spanish; Castilian	es	spa	espagnol; castillan
+Estonian	et	est	estonien
+Basque	eu	baq	basque
+Persian	fa	per	persan
+Fulah	ff	ful	peul
+Finnish	fi	fin	finnois
+Fijian	fj	fij	fidjien
+Faroese	fo	fao	féroïen
+French	fr	fre	français
+Western Frisian	fy	fry	frison occidental
+Irish	ga	gle	irlandais
+Gaelic; Scottish Gaelic	gd	gla	gaélique; gaélique écossais
+Galician	gl	glg	galicien
+Guarani	gn	grn	guarani
+Gujarati	gu	guj	goudjrati
+Manx	gv	glv	manx; mannois
+Hausa	ha	hau	haoussa
+Hebrew	he	heb	hébreu
+Hindi	hi	hin	hindi
+Hiri Motu	ho	hmo	hiri motu
+Croatian	hr	hrv	croate
+Haitian; Haitian Creole	ht	hat	haïtien; créole haïtien
+Hungarian	hu	hun	hongrois
+Armenian	hy	arm	arménien
+Herero	hz	her	herero
+Interlingua	ia	ina	interlingua
+Indonesian	id	ind	indonésien
+Interlingue; Occidental	ie	ile	interlingue
+Igbo	ig	ibo	igbo
+Sichuan Yi; Nuosu	ii	iii	yi de Sichuan
+Inupiaq	ik	ipk	inupiaq
+Ido	io	ido	ido
+Icelandic	is	ice	islandais
+Italian	it	ita	italien
+Inuktitut	iu	iku	inuktitut
+Japanese	ja	jpn	japonais
+Javanese	jv	jav	javanais
+Georgian	ka	geo	géorgien
+Kongo	kg	kon	kongo
+Kikuyu; Gikuyu	ki	kik	kikuyu
+Kuanyama; Kwanyama	kj	kua	kuanyama; kwanyama
+Kazakh	kk	kaz	kazakh
+Kalaallisut; Greenlandic	kl	kal	groenlandais
+Central Khmer	km	khm	khmer central
+Kannada	kn	kan	kannada
+Korean	ko	kor	coréen
+Kanuri	kr	kau	kanouri
+Kashmiri	ks	kas	kashmiri
+Kurdish	ku	kur	kurde
+Komi	kv	kom	kom
+Cornish	kw	cor	cornique
+Kirghiz; Kyrgyz	ky	kir	kirghiz
+Latin	la	lat	latin
+Luxembourgish; Letzeburgesch	lb	ltz	luxembourgeois
+Ganda	lg	lug	ganda
+Limburgan; Limburger; Limburgish	li	lim	limbourgeois
+Lingala	ln	lin	lingala
+Lao	lo	lao	lao
+Lithuanian	lt	lit	lituanien
+Luba-Katanga	lu	lub	luba-katanga
+Latvian	lv	lav	letton
+Malagasy	mg	mlg	malgache
+Marshallese	mh	mah	marshall
+Maori	mi	mao	maori
+Macedonian	mk	mac	macédonien
+Malayalam	ml	mal	malayalam
+Mongolian	mn	mon	mongol
+Marathi	mr	mar	marathe
+Malay	ms	may	malais
+Maltese	mt	mlt	maltais
+Burmese	my	bur	birman
+Nauru	na	nau	nauruan
+Norwegian Bokmål	nb	nob	norvégien bokmål
+Ndebele, North; North Ndebele	nd	nde	ndébélé du Nord
+Nepali	ne	nep	népalais
+Ndonga	ng	ndo	ndonga
+Dutch; Flemish	nl	dut	néerlandais; flamand
+Norwegian Nynorsk	nn	nno	norvégien nynorsk; nynorsk, norvégien
+Norwegian	no	nor	norvégien
+Ndebele, South; South Ndebele	nr	nbl	ndébélé du Sud
+Navajo; Navaho	nv	nav	navaho
+Chichewa; Chewa; Nyanja	ny	nya	chichewa; chewa; nyanja
+Occitan (post 1500)	oc	oci	occitan (après 1500)
+Ojibwa	oj	oji	ojibwa
+Oromo	om	orm	galla
+Oriya	or	ori	oriya
+Ossetian; Ossetic	os	oss	ossète
+Panjabi; Punjabi	pa	pan	pendjabi
+Pali	pi	pli	pali
+Polish	pl	pol	polonais
+Pushto; Pashto	ps	pus	pachto
+Portuguese	pt	por	portugais
+Quechua	qu	que	quechua
+Romansh	rm	roh	romanche
+Rundi	rn	run	rundi
+Romanian; Moldavian; Moldovan	ro	rum	roumain; moldave
+Russian	ru	rus	russe
+Kinyarwanda	rw	kin	rwanda
+Sanskrit	sa	san	sanskrit
+Sardinian	sc	srd	sarde
+Sindhi	sd	snd	sindhi
+Northern Sami	se	sme	sami du Nord
+Sango	sg	sag	sango
+Sinhala; Sinhalese	si	sin	singhalais
+Slovak	sk	slo	slovaque
+Slovenian	sl	slv	slovène
+Samoan	sm	smo	samoan
+Shona	sn	sna	shona
+Somali	so	som	somali
+Albanian	sq	alb	albanais
+Serbian	sr	srp	serbe
+Swati	ss	ssw	swati
+Sotho, Southern	st	sot	sotho du Sud
+Sundanese	su	sun	soundanais
+Swedish	sv	swe	suédois
+Swahili	sw	swa	swahili
+Tamil	ta	tam	tamoul
+Telugu	te	tel	télougou
+Tajik	tg	tgk	tadjik
+Thai	th	tha	thaï
+Tigrinya	ti	tir	tigrigna
+Turkmen	tk	tuk	turkmène
+Tagalog	tl	tgl	tagalog
+Tswana	tn	tsn	tswana
+Tonga (Tonga Islands)	to	ton	tongan (Îles Tonga)
+Turkish	tr	tur	turc
+Tsonga	ts	tso	tsonga
+Tatar	tt	tat	tatar
+Twi	tw	twi	twi
+Tahitian	ty	tah	tahitien
+Uighur; Uyghur	ug	uig	ouïgour
+Ukrainian	uk	ukr	ukrainien
+Urdu	ur	urd	ourdou
+Uzbek	uz	uzb	ouszbek
+Venda	ve	ven	venda
+Vietnamese	vi	vie	vietnamien
+Volapük	vo	vol	volapük
+Walloon	wa	wln	wallon
+Wolof	wo	wol	wolof
+Xhosa	xh	xho	xhosa
+Yiddish	yi	yid	yiddish
+Yoruba	yo	yor	yoruba
+Zhuang; Chuang	za	zha	zhuang; chuang
+Chinese	zh	chi	chinois
+Zulu	zu	zul	zoulou

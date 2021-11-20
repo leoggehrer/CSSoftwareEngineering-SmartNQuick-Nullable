@@ -1,6 +1,5 @@
 ﻿@*@BaseCode*@
 @{
-    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -35,58 +34,7 @@
 
     <form asp-action="Edit" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
-        {
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-            var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
-
-            viewBagWrapper.ItemPrefix = "OneModel";
-            oneModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_EditModel", oneModel)
-
-            viewBagWrapper.ItemPrefix = "AnotherModel";
-            anotherModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_EditModel", anotherModel)
-        }
-        else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
-        {
-            var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
-            var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
-            var oneProperty = Model.GetType().GetProperty("OneModel");
-            var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-            var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-            var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-
-            if (connectorModel != null)
-            {
-                viewBagWrapper.ItemPrefix = "ConnectorModel";
-                <h2>@viewBagWrapper.TranslateFor("ConnectorModel")</h2>
-                connectorModel.ViewBagInfo = viewBagWrapper;
-                @await Html.PartialAsync("_EditModel", connectorModel)
-            }
-            if (oneModel != null)
-            {
-                viewBagWrapper.ItemPrefix = "OneModel";
-                oneModel.ViewBagInfo = viewBagWrapper;
-                <h2>@viewBagWrapper.TranslateFor("OneModel")</h2>
-                @await Html.PartialAsync("_EditModel", oneModel)
-            }
-            if (anotherModel != null)
-            {
-                viewBagWrapper.ItemPrefix = "AnotherModel";
-                anotherModel.ViewBagInfo = viewBagWrapper;
-                <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
-                @await Html.PartialAsync("_EditModel", anotherModel)
-            }
-        }
-        else
-        {
-            Model.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_EditModel", Model)
-        }
+        @await Html.PartialAsync("_CreateEdit", Model)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Save"), BackText = viewBagWrapper.TranslateFor("Back to List") })
     </form>
@@ -94,6 +42,7 @@
 
 @section Scripts {
     @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-}
+

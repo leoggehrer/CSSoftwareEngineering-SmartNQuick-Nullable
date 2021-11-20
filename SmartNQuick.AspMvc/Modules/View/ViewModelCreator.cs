@@ -1,6 +1,7 @@
 ﻿//@BaseCode
 //MdStart
 using SmartNQuick.AspMvc.Models.Modules.View;
+using System;
 using System.Collections.Generic;
 
 namespace SmartNQuick.AspMvc.Modules.View
@@ -22,6 +23,22 @@ namespace SmartNQuick.AspMvc.Modules.View
         }
         partial void BeforeCreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper, ref IndexViewModel result, ref bool handled);
         partial void AfterCreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper, IndexViewModel result);
+
+        public virtual IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, Type elementType, ViewBagWrapper viewBagWrapper)
+        {
+            var handled = false;
+            IndexViewModel result = null;
+
+            BeforeCreateIndexViewModel(viewTypeName, models, elementType, viewBagWrapper, ref result, ref handled);
+            if (handled == false)
+            {
+                result = new IndexViewModel(viewBagWrapper, models, elementType);
+            }
+            AfterCreateIndexViewModel(viewTypeName, models, elementType, viewBagWrapper, result);
+            return result;
+        }
+        partial void BeforeCreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, Type elementType, ViewBagWrapper viewBagWrapper, ref IndexViewModel result, ref bool handled);
+        partial void AfterCreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, Type elementType, ViewBagWrapper viewBagWrapper, IndexViewModel result);
 
         public virtual DisplayViewModel CreateDisplayViewModel(string viewTypeName, Models.IdentityModel model, ViewBagWrapper viewBagWrapper)
         {

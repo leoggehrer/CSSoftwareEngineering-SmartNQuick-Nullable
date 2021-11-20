@@ -1,22 +1,17 @@
 ﻿//@BaseCode
 //MdStart
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartNQuick.AspMvc.Models
 {
-    public abstract partial class OneToManyModel<TOne, TOneModel, TMany, TManyModel> : IdentityModel
+    public abstract partial class OneToManyModel<TOne, TOneModel, TMany, TManyModel> : IdentityModel, IMasterDetails
         where TOne : Contracts.IIdentifiable
         where TOneModel : IdentityModel, Contracts.ICopyable<TOne>, TOne, new()
         where TMany : Contracts.IIdentifiable
         where TManyModel : IdentityModel, Contracts.ICopyable<TMany>, TMany, new()
     {
-        public virtual TOneModel OneModel { get; } = new TOneModel();
-        public virtual TOne OneItem => OneModel;
-
-        public virtual List<TManyModel> ManyModels { get; } = new List<TManyModel>();
-        public virtual IEnumerable<TMany> ManyItems => ManyModels as IEnumerable<TMany>;
-
         public override int Id { get => OneModel.Id; set => OneModel.Id = value; }
         public byte[] RowVersion
         {
@@ -35,6 +30,12 @@ namespace SmartNQuick.AspMvc.Models
                     ve.RowVersion = value;
             }
         }
+
+        public virtual TOneModel OneModel { get; } = new TOneModel();
+        public virtual TOne OneItem => OneModel;
+
+        public virtual List<TManyModel> ManyModels { get; } = new List<TManyModel>();
+        public virtual IEnumerable<TMany> ManyItems => ManyModels as IEnumerable<TMany>;
 
         public virtual void ClearManyItems()
         {
@@ -64,6 +65,11 @@ namespace SmartNQuick.AspMvc.Models
                 ManyModels.Remove(removeDetail);
             }
         }
+
+        public IdentityModel Master => OneModel;
+        public Type MasterType => typeof(TOneModel);
+        public IEnumerable<IdentityModel> Details => ManyModels;
+        public Type DetailType => typeof(TManyModel);
     }
 }
 //MdEnd

@@ -31,6 +31,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         string Hint { get; set; }
         string Error { get; set; }
         #endregion Properties
+
 # if ACCOUNT_ON
         #region Authentication
         Models.Persistence.Account.LoginSession LoginSession { get; set; }
