@@ -70,6 +70,11 @@ namespace SmartNQuick.AspMvc.Models
         public Type MasterType => typeof(TOneModel);
         public IEnumerable<IdentityModel> Details => ManyModels;
         public Type DetailType => typeof(TManyModel);
+
+        public void ClearDetails() => ClearManyItems();
+        public IdentityModel CreateDetail() => new TManyModel();
+        public void AddDetail(IdentityModel model) => ManyModels.Add(model as TManyModel);
+        public void RemoveDetail(IdentityModel model) => ManyModels.Remove(model as TManyModel);
     }
 }
 //MdEnd

@@ -32,7 +32,7 @@ namespace SmartNQuick.AspMvc.Models
             }
             set
             {
-                if (value != null)
+                if (string.IsNullOrEmpty(value) == false)
                 {
                     string[] data = value.Split('.');
                     Byte[] ts = new byte[data.Length];

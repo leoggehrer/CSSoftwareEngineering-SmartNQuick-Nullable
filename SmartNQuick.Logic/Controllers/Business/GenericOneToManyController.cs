@@ -216,7 +216,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
 
             entity.OneEntity = await OneEntityController.UpdateEntityAsync(entity.OneEntity).ConfigureAwait(false);
-            foreach (var item in entity.ManyEntities)
+            foreach (var item in entity.ManyEntities.Eject())
             {
                 if (item.Id == 0)
                 {
@@ -228,13 +228,18 @@ namespace SmartNQuick.Logic.Controllers.Business
                     }
                     var insDetail = await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
 
-                    item.CopyProperties(insDetail);
+                    entity.ManyItems.Add(insDetail);
                 }
                 else
                 {
-                    var updDetail = await ManyEntityController.UpdateEntityAsync(item).ConfigureAwait(false);
+                    var updEntity = await ManyEntityController.GetEntityByIdAsync(item.Id).ConfigureAwait(false);
 
-                    item.CopyProperties(updDetail);
+                    if (updEntity != null)
+                    {
+                        updEntity.CopyProperties(item);
+                        updEntity = await ManyEntityController.UpdateEntityAsync(updEntity).ConfigureAwait(false);
+                        entity.ManyItems.Add(updEntity);
+                    }
                 }
             }
             return entity;

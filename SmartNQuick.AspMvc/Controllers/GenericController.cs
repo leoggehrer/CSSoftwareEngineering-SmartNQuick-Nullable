@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SmartNQuick.AspMvc.Models.Modules.Common;
@@ -34,7 +35,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             return CreateController<TContract>();
         }
-        protected virtual Contracts.Client.IAdapterAccess<T> CreateController<T>() 
+        protected virtual Contracts.Client.IAdapterAccess<T> CreateController<T>()
             where T : Contracts.IIdentifiable, Contracts.ICopyable<T>
         {
             var handled = false;
@@ -153,7 +154,7 @@ namespace SmartNQuick.AspMvc.Controllers
             if (HasError == false)
             {
                 model = BeforeView(model, ActionMode.Create);
-                model = await BeforeViewAsync(model, ActionMode.Edit).ConfigureAwait(false);
+                model = await BeforeViewAsync(model, ActionMode.Create).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnCreateView(model);
         }
@@ -216,6 +217,81 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnAfterCreate(bool hasError, TModel model) => hasError ? View("Create", model) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
 
         [HttpGet]
+        [ActionName("CreateDetail")]
+        public virtual async Task<IActionResult> CreateDetailAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeCreateDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterCreateDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(model);
+        }
+        partial void BeforeCreateDetail(ref TModel model, ref bool handled);
+        partial void AfterCreateDetail(TModel model);
+        protected virtual IActionResult ReturnCreateDetailView(TModel model) => View("CreateDetail", model);
+
+        [HttpPost]
+        [ActionName("CreateDetail")]
+        public virtual async Task<IActionResult> AddDetailAsync(int id, IFormCollection formCollection)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeAddDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    if (model is Models.IMasterDetails mds)
+                    {
+                        var detail = mds.CreateDetail();
+
+                        SetModelValues(detail, nameof(ActionMode.CreateDetail), formCollection);
+                        mds.AddDetail(detail);
+
+                        using var ctrl = CreateController();
+                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
+
+                        model.CopyProperties(entity);
+                    }
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterAddDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(model);
+        }
+        partial void BeforeAddDetail(ref TModel model, ref bool handled);
+        partial void AfterAddDetail(TModel model);
+
+        [HttpGet]
         [ActionName("Edit")]
         public virtual async Task<IActionResult> EditAsync(int id)
         {
@@ -265,38 +341,6 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeEditModel(ref TModel model, ref bool handled);
         partial void AfterEditModel(TModel model);
-
-        [HttpGet]
-        [ActionName("Details")]
-        public virtual async Task<IActionResult> DetailsAsync(int id)
-        {
-            var handled = false;
-            var model = default(TModel);
-
-            BeforeDetails(ref model, ref handled);
-            if (handled == false)
-            {
-                try
-                {
-                    model = await GetModelAsync(id).ConfigureAwait(false);
-                    LastViewError = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    LastViewError = ex.GetError();
-                }
-            }
-            AfterEdit(model);
-            if (HasError == false)
-            {
-                model = BeforeView(model, ActionMode.Details);
-                model = await BeforeViewAsync(model, ActionMode.Details).ConfigureAwait(false);
-            }
-            return HasError ? RedirectToAction("Index") : ReturnDetailsView(model);
-        }
-        partial void BeforeDetails(ref TModel model, ref bool handled);
-        partial void AfterDetails(TModel model);
-        protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", model);
 
         [HttpPost]
         [ActionName("Edit")]
@@ -401,6 +445,68 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void BeforeDeleteModel(int id, ref bool handled);
         partial void AfterDeleteModel(int id);
         protected virtual IActionResult ReturnAfterDelete(bool hasError, TModel model) => hasError ? View("Delete", model) : RedirectToAction("Index");
+
+        [HttpGet]
+        [ActionName("Details")]
+        public virtual async Task<IActionResult> DetailsAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeDetails(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterEdit(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.Details);
+                model = await BeforeViewAsync(model, ActionMode.Details).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnDetailsView(model);
+        }
+        partial void BeforeDetails(ref TModel model, ref bool handled);
+        partial void AfterDetails(TModel model);
+        protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", model);
+
+        protected static void SetModelValues(object model, string prefix, IFormCollection formCollection)
+        {
+            model.CheckArgument(nameof(model));
+            formCollection.CheckArgument(nameof(formCollection));
+
+            foreach (var pi in model.GetType().GetProperties().Where(pi => pi.CanWrite))
+            {
+                string key = $"{prefix}.{pi.Name}";
+
+                if (formCollection.Keys.Contains(key))
+                {
+                    if (pi.PropertyType.IsEnum)
+                    {
+                        if (Int32.TryParse(formCollection[key].FirstOrDefault(), out int enumVal))
+                        {
+                            object value = Enum.Parse(pi.PropertyType, enumVal.ToString());
+
+                            pi.SetValue(model, value);
+                        }
+                    }
+                    else
+                    {
+                        object value = Convert.ChangeType(formCollection[key].FirstOrDefault(), pi.PropertyType);
+
+                        pi.SetValue(model, value);
+                    }
+                }
+            }
+        }
     }
 }
 //MdEnd

@@ -8,13 +8,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
 
         Create = 1,
         Edit = 2 * Create,
-        Remove = 2 * Edit,
+        Delete = 2 * Edit,
 
-        CreateDetail = 2 * Remove,
+        CreateDetail = 2 * Delete,
         EditDetail = 2 * CreateDetail,
-        RemoveDetail = 2 * EditDetail,
+        DeleteDetail = 2 * EditDetail,
 
-        ShowDetails = 2 * RemoveDetail,
+        Details = 2 * DeleteDetail,
     }
 }
 //MdEnd

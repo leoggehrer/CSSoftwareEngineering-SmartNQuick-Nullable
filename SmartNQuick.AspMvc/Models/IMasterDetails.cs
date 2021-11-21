@@ -11,6 +11,10 @@ namespace SmartNQuick.AspMvc.Models
         Type MasterType { get; }
         IEnumerable<IdentityModel> Details { get; }
         Type DetailType { get; }
+        void ClearDetails();
+        IdentityModel CreateDetail();
+        void AddDetail(IdentityModel model);
+        void RemoveDetail(IdentityModel model);
     }
 }
-//MdEnd
+//MdEndhttps://localhost:44387/img/informatik_ai.jpg

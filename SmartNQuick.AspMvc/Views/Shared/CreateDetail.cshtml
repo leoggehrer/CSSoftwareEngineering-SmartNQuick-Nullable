@@ -5,7 +5,7 @@
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model SmartNQuick.AspMvc.Models.IMasterDetails
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -14,6 +14,12 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
     viewBagWrapper.ViewType = Model.GetType();
+
+    Model.Master.ViewBagInfo = viewBagWrapper;
+    var detailModel = Model.CreateDetail();
+    detailModel.ViewBagInfo = viewBagWrapper;
+    viewBagWrapper.HiddenNames.Add($"{Model.MasterType.Name}Id");
+    viewBagWrapper.IgnoreNames.Add($"{Model.MasterType.Name}Id");
 
     ViewData["Title"] = viewBagWrapper.Title;
     <h1>@ViewData["Title"]</h1>
@@ -32,9 +38,13 @@
         </div>
     }
 
-    <form asp-action="Create" method="post">
+    @await Html.PartialAsync("_DisplayModel", Model.Master)
+    <hr />
+
+    viewBagWrapper.ItemPrefix = viewBagWrapper.Action;
+    <form asp-action="CreateDetail" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @await Html.PartialAsync("_CreateEdit", Model)
+        @await Html.PartialAsync("_EditModel", detailModel)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Save"), BackText = viewBagWrapper.TranslateFor("Back to List") })
     </form>

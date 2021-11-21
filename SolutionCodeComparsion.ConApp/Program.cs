@@ -32,6 +32,7 @@ namespace SolutionCodeComparsion.ConApp
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMusicStore"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQHtmlStore"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQSongContest"),
+                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMenu"),
                 Path.Combine(UserPath, @"source\repos\HtlLeo\AustroSoftAG\SnQAustroSoftBaseData"),
             };
             // End: SmartNQuick-Projects
