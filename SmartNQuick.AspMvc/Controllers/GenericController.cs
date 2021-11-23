@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using System;
 using System.Collections.Generic;
@@ -279,9 +280,21 @@ namespace SmartNQuick.AspMvc.Controllers
                 try
                 {
                     using var ctrl = CreateController();
-                    var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
 
-                    model.CopyProperties(entity);
+                    if (model is IMasterDetails mds)
+                    {
+                        var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+
+                        entity.CopyFrom(mds.Master);
+                        entity = await ctrl.UpdateAsync(entity).ConfigureAwait(false);
+                        model.CopyProperties(entity);
+                    }
+                    else
+                    {
+                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
+
+                        model.CopyProperties(entity);
+                    }
                     LastViewError = string.Empty;
                 }
                 catch (Exception ex)
@@ -737,6 +750,14 @@ namespace SmartNQuick.AspMvc.Controllers
                     else if (pi.PropertyType == typeof(string))
                     {
                         pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : formValue);
+                    }
+                    else if (pi.PropertyType == typeof(DateTime))
+                    {
+                        pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : System.DateTime.Parse(formValue));
+                    }
+                    else if (pi.PropertyType == typeof(Nullable<DateTime>))
+                    {
+                        pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : System.DateTime.Parse(formValue));
                     }
                     else
                     {

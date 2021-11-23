@@ -63,29 +63,39 @@ namespace SolutionCodeComparsion.ConApp
                 var input = string.Empty;
                 PrintHeader(SourcePath, TargetPaths);
 
-                Console.Write($"Balancing [1..{TargetPaths.Length + 1}|X...Quit]?: ");
+                Console.Write($"Balancing [1..{TargetPaths.Length}|X...Quit]: ");
                 input = Console.ReadLine().ToLower();
                 PrintBusyProgress();
                 running = input.Equals("x") == false;
                 if (running)
                 {
-                    var numbers = input.Trim()
-                                       .Split(',').Where(s => Int32.TryParse(s, out int n))
-                                       .Select(s => Int32.Parse(s))
-                                       .ToArray();
-
-                    foreach (var number in numbers)
+                    if (input.Equals("a"))
                     {
-                        if (number == TargetPaths.Length + 1)
+                        foreach (var item in TargetLabels)
                         {
-                            foreach (var item in TargetLabels)
-                            {
-                                BalancingSolutions(SourcePath, SourceLabels, TargetPaths, TargetLabels);
-                            }
+                            BalancingSolutions(SourcePath, SourceLabels, TargetPaths, TargetLabels);
                         }
-                        else if (number > 0 && number <= TargetPaths.Length)
+                    }
+                    else
+                    {
+                        var numbers = input.Trim()
+                                           .Split(',').Where(s => Int32.TryParse(s, out int n))
+                                           .Select(s => Int32.Parse(s))
+                                           .ToArray();
+
+                        foreach (var number in numbers)
                         {
-                            BalancingSolutions(SourcePath, SourceLabels, new string[] { TargetPaths[number - 1] }, TargetLabels);
+                            if (number == TargetPaths.Length + 1)
+                            {
+                                foreach (var item in TargetLabels)
+                                {
+                                    BalancingSolutions(SourcePath, SourceLabels, TargetPaths, TargetLabels);
+                                }
+                            }
+                            else if (number > 0 && number <= TargetPaths.Length)
+                            {
+                                BalancingSolutions(SourcePath, SourceLabels, new string[] { TargetPaths[number - 1] }, TargetLabels);
+                            }
                         }
                     }
                 }
@@ -125,7 +135,7 @@ namespace SolutionCodeComparsion.ConApp
             {
                 Console.WriteLine($"   Balancing for: [{++index,2}] {target}");
             }
-            Console.WriteLine($"   Balancing for: [{++index,2}] ALL");
+            Console.WriteLine("   Balancing for: [ a] ALL");
             Console.WriteLine();
 
             if (Directory.Exists(sourcePath) == false)
