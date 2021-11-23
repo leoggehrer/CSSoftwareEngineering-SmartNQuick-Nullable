@@ -217,81 +217,6 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnAfterCreate(bool hasError, TModel model) => hasError ? View("Create", model) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
 
         [HttpGet]
-        [ActionName("CreateDetail")]
-        public virtual async Task<IActionResult> CreateDetailAsync(int id)
-        {
-            var handled = false;
-            var model = default(TModel);
-
-            BeforeCreateDetail(ref model, ref handled);
-            if (handled == false)
-            {
-                try
-                {
-                    LastViewError = string.Empty;
-                    model = await GetModelAsync(id).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    LastViewError = ex.GetError();
-                }
-            }
-            AfterCreateDetail(model);
-            if (HasError == false)
-            {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
-            }
-            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(model);
-        }
-        partial void BeforeCreateDetail(ref TModel model, ref bool handled);
-        partial void AfterCreateDetail(TModel model);
-        protected virtual IActionResult ReturnCreateDetailView(TModel model) => View("CreateDetail", model);
-
-        [HttpPost]
-        [ActionName("CreateDetail")]
-        public virtual async Task<IActionResult> AddDetailAsync(int id, IFormCollection formCollection)
-        {
-            var handled = false;
-            var model = default(TModel);
-
-            BeforeAddDetail(ref model, ref handled);
-            if (handled == false)
-            {
-                try
-                {
-                    model = await GetModelAsync(id).ConfigureAwait(false);
-                    if (model is Models.IMasterDetails mds)
-                    {
-                        var detail = mds.CreateDetail();
-
-                        SetModelValues(detail, nameof(ActionMode.CreateDetail), formCollection);
-                        mds.AddDetail(detail);
-
-                        using var ctrl = CreateController();
-                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
-
-                        model.CopyProperties(entity);
-                    }
-                    LastViewError = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    LastViewError = ex.GetError();
-                }
-            }
-            AfterAddDetail(model);
-            if (HasError == false)
-            {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
-            }
-            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(model);
-        }
-        partial void BeforeAddDetail(ref TModel model, ref bool handled);
-        partial void AfterAddDetail(TModel model);
-
-        [HttpGet]
         [ActionName("Edit")]
         public virtual async Task<IActionResult> EditAsync(int id)
         {
@@ -478,29 +403,344 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterDetails(TModel model);
         protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", model);
 
-        protected static void SetModelValues(object model, string prefix, IFormCollection formCollection)
+        #region Detail actions
+        [HttpGet]
+        [ActionName("CreateDetail")]
+        public virtual async Task<IActionResult> CreateDetailAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeCreateDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var createManyMethod = model.GetType().GetMethod("CreateManyModel");
+                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as Models.IdentityModel;
+
+                        masterDetailModel.Master = oneModel;
+                        masterDetailModel.Detail = manyModel;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterCreateDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(masterDetailModel);
+        }
+        partial void BeforeCreateDetail(ref TModel model, ref bool handled);
+        partial void AfterCreateDetail(TModel model);
+        protected virtual IActionResult ReturnCreateDetailView(Models.MasterDetailModel model) => View("CreateDetail", model);
+
+        [HttpPost]
+        [ActionName("CreateDetail")]
+        public virtual async Task<IActionResult> AddDetailAsync(int id, IFormCollection formCollection)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeAddDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var createManyMethod = model.GetType().GetMethod("CreateManyModel");
+                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as Models.IdentityModel;
+                        var addManyMethod = model.GetType().GetMethod("AddManyItem");
+
+                        masterDetailModel.Master = oneModel;
+                        masterDetailModel.Detail = manyModel;
+                        SetModelValues(masterDetailModel.Detail, nameof(Models.MasterDetailModel.Detail), formCollection);
+                        addManyMethod?.Invoke(model, new object[] { masterDetailModel.Detail });
+
+                        using var ctrl = CreateController();
+                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
+
+                        model.CopyProperties(entity);
+                    }
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterAddDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
+        }
+        partial void BeforeAddDetail(ref TModel model, ref bool handled);
+        partial void AfterAddDetail(TModel model);
+
+        [HttpGet]
+        [ActionName("EditDetail")]
+        public virtual async Task<IActionResult> EditDetailAsync(int id, int detailId)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeEditDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var getManyMethod = model.GetType().GetMethod("GetManyModelById");
+                        var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+
+                        masterDetailModel.Master = oneModel;
+                        masterDetailModel.Detail = manyModel;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterEditDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnEditDetailView(masterDetailModel);
+        }
+        partial void BeforeEditDetail(ref TModel model, ref bool handled);
+        partial void AfterEditDetail(TModel model);
+        protected virtual IActionResult ReturnEditDetailView(Models.MasterDetailModel model) => View("EditDetail", model);
+
+        [HttpPost]
+        [ActionName("EditDetail")]
+        public virtual async Task<IActionResult> EditDetailAsync(int id, IFormCollection formCollection)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeUpdateDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var getManyMethod = model.GetType().GetMethod("GetManyModelById");
+
+                        if (GetObjectId(nameof(Models.MasterDetailModel.Detail), formCollection, out int detailId))
+                        {
+                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+
+                            masterDetailModel.Master = oneModel;
+                            masterDetailModel.Detail = manyModel;
+                            SetModelValues(masterDetailModel.Detail, nameof(Models.MasterDetailModel.Detail), formCollection);
+                        }
+
+                        using var ctrl = CreateController();
+                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
+
+                        model.CopyProperties(entity);
+                    }
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterUpdateDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
+        }
+        partial void BeforeUpdateDetail(ref TModel model, ref bool handled);
+        partial void AfterUpdateDetail(TModel model);
+
+        [HttpGet]
+        [ActionName("DeleteDetail")]
+        public virtual async Task<IActionResult> ViewDeleteDetailAsync(int id, int detailId)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeViewDeleteDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var getManyMethod = model.GetType().GetMethod("GetManyModelById");
+                        var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+
+                        masterDetailModel.Master = oneModel;
+                        masterDetailModel.Detail = manyModel;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterViewDeleteDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnDeleteDetailView(masterDetailModel);
+        }
+        partial void BeforeViewDeleteDetail(ref TModel model, ref bool handled);
+        partial void AfterViewDeleteDetail(TModel model);
+        protected virtual IActionResult ReturnDeleteDetailView(Models.MasterDetailModel model) => View("DeleteDetail", model);
+
+        [HttpPost]
+        [ActionName("DeleteDetail")]
+        public virtual async Task<IActionResult> DeleteDetailAsync(int id, IFormCollection formCollection)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new Models.MasterDetailModel();
+
+            BeforeDeleteDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var removeManyMethod = model.GetType().GetMethod("RemoveManyModel");
+
+                        if (GetObjectId(nameof(Models.MasterDetailModel.Detail), formCollection, out int detailId))
+                        {
+                            var getManyMethod = model.GetType().GetMethod("GetManyModelById");
+                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+
+                            removeManyMethod?.Invoke(model, new object[] { detailId });
+
+                            masterDetailModel.Master = oneModel;
+                            masterDetailModel.Detail = manyModel;
+                        }
+
+                        using var ctrl = CreateController();
+                        var entity = await ctrl.UpdateAsync(model).ConfigureAwait(false);
+
+                        model.CopyProperties(entity);
+                    }
+                    LastViewError = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterDeleteDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+            }
+            return HasError ? ReturnDeleteDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
+        }
+        partial void BeforeDeleteDetail(ref TModel model, ref bool handled);
+        partial void AfterDeleteDetail(TModel model);
+        #endregion Detail actions
+
+        public static bool GetObjectId(string prefix, IFormCollection formCollection, out int id)
+        {
+            formCollection.CheckArgument(nameof(formCollection));
+
+            var result = false;
+            var formKey = $"{prefix}.Id";
+
+            if (formCollection.Keys.Contains(formKey))
+            {
+                var formValue = formCollection[formKey].FirstOrDefault();
+
+                result = Int32.TryParse(formValue, out id);
+            }
+            else
+            {
+                id = 0;
+            }
+            return result;
+        }
+        public static void SetModelValues(object model, string prefix, IFormCollection formCollection)
         {
             model.CheckArgument(nameof(model));
             formCollection.CheckArgument(nameof(formCollection));
 
             foreach (var pi in model.GetType().GetProperties().Where(pi => pi.CanWrite))
             {
-                string key = $"{prefix}.{pi.Name}";
+                var formKey = $"{prefix}.{pi.Name}";
 
-                if (formCollection.Keys.Contains(key))
+                if (formCollection.Keys.Contains(formKey))
                 {
+                    var formValue = formCollection[formKey].FirstOrDefault();
+
                     if (pi.PropertyType.IsEnum)
                     {
-                        if (Int32.TryParse(formCollection[key].FirstOrDefault(), out int enumVal))
+                        if (Int32.TryParse(formValue, out int enumVal))
                         {
                             object value = Enum.Parse(pi.PropertyType, enumVal.ToString());
 
                             pi.SetValue(model, value);
                         }
                     }
+                    else if (pi.PropertyType == typeof(string))
+                    {
+                        pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : formValue);
+                    }
                     else
                     {
-                        object value = Convert.ChangeType(formCollection[key].FirstOrDefault(), pi.PropertyType);
+                        object value = Convert.ChangeType(formValue, pi.PropertyType);
 
                         pi.SetValue(model, value);
                     }

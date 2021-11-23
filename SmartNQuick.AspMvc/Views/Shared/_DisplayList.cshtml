@@ -41,6 +41,7 @@
                             @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
                         </th>
                     }
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +55,9 @@
                                 @indexViewModel.GetDisplayValue(model, displayItem)
                             </td>
                         }
+                        <td>
+                            @await Html.PartialAsync("_CommandControl", model)
+                        </td>
                     </tr>
                 }
             </tbody>

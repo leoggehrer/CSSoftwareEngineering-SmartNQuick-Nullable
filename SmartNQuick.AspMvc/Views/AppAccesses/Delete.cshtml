@@ -42,7 +42,7 @@
         </div>
     }
 
-    <form asp-action="Delete" method="post">
+    <form asp-action="@viewBagWrapper.Action" method="post">
         <div style="margin-top: 1em;">
             @await Html.PartialAsync("_DisplayModel", Model.OneModel)
         </div>

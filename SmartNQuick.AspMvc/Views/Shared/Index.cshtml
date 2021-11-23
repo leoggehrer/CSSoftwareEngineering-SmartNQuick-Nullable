@@ -28,7 +28,7 @@
         @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
         {
             <p style="margin-top: 1em;">
-                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create new...")</a>
+                <a asp-action="Create" class="btn btn-outline-success">@viewBagWrapper.TranslateFor("Create new...")</a>
             </p>
         }
         @await Html.PartialAsync("_IndexList", Model)

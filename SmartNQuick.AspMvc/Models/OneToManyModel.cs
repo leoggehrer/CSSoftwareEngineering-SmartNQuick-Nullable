@@ -37,28 +37,40 @@ namespace SmartNQuick.AspMvc.Models
         public virtual List<TManyModel> ManyModels { get; } = new List<TManyModel>();
         public virtual IEnumerable<TMany> ManyItems => ManyModels as IEnumerable<TMany>;
 
-        public virtual void ClearManyItems()
-        {
-            ManyModels.Clear();
-        }
         public virtual TMany CreateManyItem()
         {
             return new TManyModel();
         }
-        public virtual void AddManyItem(TMany secondItem)
+        public virtual void AddManyItem(TMany manyItem)
         {
-            secondItem.CheckArgument(nameof(secondItem));
+            manyItem.CheckArgument(nameof(manyItem));
 
             var newDetail = new TManyModel();
 
-            newDetail.CopyProperties(secondItem);
+            newDetail.CopyProperties(manyItem);
             ManyModels.Add(newDetail);
         }
-        public virtual void RemoveManyItem(TMany secondItem)
+        public virtual void RemoveManyItem(TMany manyItem)
         {
-            secondItem.CheckArgument(nameof(secondItem));
+            manyItem.CheckArgument(nameof(manyItem));
 
-            var removeDetail = ManyModels.FirstOrDefault(i => i.Id == secondItem.Id);
+            var removeDetail = ManyModels.FirstOrDefault(i => i.Id == manyItem.Id);
+
+            if (removeDetail != null)
+            {
+                ManyModels.Remove(removeDetail);
+            }
+        }
+
+        public virtual void ClearManyItems()
+        {
+            ManyModels.Clear();
+        }
+        public virtual TManyModel CreateManyModel() => new TManyModel();
+        public virtual TManyModel GetManyModelById(int id) => ManyModels.FirstOrDefault(x => x.Id == id);
+        public void RemoveManyModel(int id)
+        {
+            var removeDetail = ManyModels.FirstOrDefault(i => i.Id == id);
 
             if (removeDetail != null)
             {

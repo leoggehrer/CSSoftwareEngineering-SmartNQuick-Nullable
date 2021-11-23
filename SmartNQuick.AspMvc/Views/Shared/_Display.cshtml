@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -22,6 +23,7 @@
         var anotherProperty = Model.GetType().GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
 
+        viewBagWrapper.ModelType = ModelType.OneToAnother;
         if (oneModel != null)
         {
             oneModel.ViewBagInfo = viewBagWrapper;
@@ -40,14 +42,26 @@
         var manyProperty = Model.GetType().GetProperty("ManyModels");
         var manyModels = manyProperty?.GetValue(Model);
 
+        viewBagWrapper.ModelType = ModelType.MasterDetail;
+        viewBagWrapper.ParentModel = oneModel;
         if (oneModel != null)
         {
             oneModel.ViewBagInfo = viewBagWrapper;
             @await Html.PartialAsync("_DisplayModel", oneModel)
+
+            if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+            {
+                <p style="margin-top: 1em;">
+                    <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-success">@viewBagWrapper.TranslateFor("Create new detail...")</a>
+                </p>
+            }
         }
+
         if (manyModels is IEnumerable<IdentityModel> details && details.Any())
         {
-            <h2>@viewBagWrapper.TranslateFor("Details")</h2>
+            viewBagWrapper.HiddenNames.Add($"{oneModel.GetType().Name}Id");
+            viewBagWrapper.IgnoreNames.Add($"{oneModel.GetType().Name}Id");
+
             @await Html.PartialAsync("_DisplayList", manyModels)
         }
     }
@@ -60,6 +74,7 @@
         var anotherProperty = Model.GetType().GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
 
+        viewBagWrapper.ModelType = ModelType.Composite;
         if (connectorModel != null)
         {
             connectorModel.ViewBagInfo = viewBagWrapper;
@@ -80,6 +95,7 @@
     }
     else
     {
+        viewBagWrapper.ModelType = ModelType.Single;
         Model.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_DisplayModel", Model)
     }

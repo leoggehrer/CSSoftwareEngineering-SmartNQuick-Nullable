@@ -39,7 +39,7 @@
         </div>
     }
 
-    <form asp-action="Delete">
+    <form asp-action="@viewBagWrapper.Action">
         @await Html.PartialAsync("_Display", Model)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })

@@ -17,6 +17,20 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
+        public ModelType ModelType
+        {
+            get
+            {
+                var result = ModelType.Single;
+
+                if (ViewBag.ModelType != null)
+                {
+                    result = ViewBag.ModelType;
+                }
+                return result;
+            }
+            set => ViewBag.ModelType = value;
+        }
         public EditMode EditMode
         {
             get
@@ -35,7 +49,7 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get
             {
-                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Delete | CommandMode.Details;
+                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Delete | CommandMode.Details | CommandMode.CreateDetail | CommandMode.EditDetail | CommandMode.DeleteDetail;
 
                 if (ViewBag.CommandMode != null)
                 {
@@ -44,6 +58,11 @@ namespace SmartNQuick.AspMvc.Modules.View
                 return result;
             }
             set => ViewBag.CommandMode = value;
+        }
+        public object ParentModel
+        {
+            get => ViewBag.ParentModel as object;
+            set => ViewBag.ParentModel = value;
         }
 
         public string Title => Translate(Controller);

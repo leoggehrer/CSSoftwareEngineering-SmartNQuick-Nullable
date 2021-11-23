@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.Common;
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
@@ -24,10 +25,12 @@
         {
             indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
         }
+        viewBagWrapper.ModelType = ModelType.MasterDetail;
         viewBagWrapper.CommandMode |= SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.CreateDetail;
     }
     else
     {
+        viewBagWrapper.ModelType = ModelType.Single;
         indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
     }
 
