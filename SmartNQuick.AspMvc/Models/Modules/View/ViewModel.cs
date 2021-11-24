@@ -16,6 +16,10 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             nameof(IdentityModel.Id),
             nameof(VersionModel.RowVersionString),
         };
+        public IEnumerable<string> AllHiddenNames
+        {
+            get { return HiddenNames.Union(ViewBagWrapper.HiddenNames).Distinct(); }
+        }
         public List<string> IgnoreNames { get; } = new List<string>()
         {
             nameof(IdentityModel.Id),
@@ -23,30 +27,46 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             nameof(VersionModel.RowVersionString),
             nameof(ModelObject.ViewBagInfo)
         };
+        public IEnumerable<string> AllIgnoreNames
+        {
+            get { return IgnoreNames.Union(ViewBagWrapper.IgnoreNames).Distinct(); }
+        }
         public List<string> DisplayNames { get; } = new List<string>()
         {
         };
+        public IEnumerable<string> AllDisplayNames
+        {
+            get { return DisplayNames.Union(ViewBagWrapper.DisplayNames).Distinct(); }
+        }
 
         public abstract Type ModelType { get; }
         protected ViewModel(ViewBagWrapper viewBagWrapper)
         {
             viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
 
+            Constructing();
             ViewBagWrapper = viewBagWrapper;
-
-            HiddenNames.AddRange(viewBagWrapper.HiddenNames);
-            IgnoreNames.AddRange(viewBagWrapper.IgnoreNames);
-            DisplayNames.AddRange(viewBagWrapper.DisplayNames);
+            Constructed();
         }
+        partial void Constructing();
+        partial void Constructed();
 
+        public void AddIgnoreHidden(string name)
+        {
+            if (IgnoreNames.Contains(name) == false)
+                IgnoreNames.Add(name);
+
+            if (HiddenNames.Contains(name) == false)
+                HiddenNames.Add(name);
+        }
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties(Type type)
         {
             type.CheckArgument(nameof(type));
 
-            return HiddenNames.Select(n => ViewBagWrapper.GetMapping(n))
-                              .Select(n => type.GetProperty(n))
-                              .Where(p => p != null && p.CanRead)
-                              .ToArray();
+            return AllHiddenNames.Select(n => ViewBagWrapper.GetMapping(n))
+                                 .Select(n => type.GetProperty(n))
+                                 .Where(p => p != null && p.CanRead)
+                                 .ToArray();
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties(Type type)
         {
@@ -71,11 +91,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
                 property ??= item;
 
-                if (property.CanRead && DisplayNames.Any(e => e.Equals(property.Name)))
+                if (property.CanRead && AllDisplayNames.Any(e => e.Equals(property.Name)))
                 {
                     result.Add(property);
                 }
-                else if (property.CanRead && DisplayNames.Count == 0 && IgnoreNames.Any(e => e.Equals(item.Name)) == false)
+                else if (property.CanRead && AllDisplayNames.Any() == false && AllIgnoreNames.Any(e => e.Equals(item.Name)) == false)
                 {
                     result.Add(property);
                 }

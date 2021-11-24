@@ -281,12 +281,16 @@ namespace SmartNQuick.AspMvc.Controllers
                 {
                     using var ctrl = CreateController();
 
-                    if (model is IMasterDetails mds)
+                    if (model is IMasterDetails modelMasterDetail)
                     {
                         var entity = await ctrl.GetByIdAsync(model.Id).ConfigureAwait(false);
+                        var entityModel = ToModel(entity);
 
-                        entity.CopyFrom(mds.Master);
-                        entity = await ctrl.UpdateAsync(entity).ConfigureAwait(false);
+                        if (entityModel is IMasterDetails entityMasterDetail)
+                        {
+                            entityMasterDetail.Master.CopyFrom(modelMasterDetail.Master);
+                            entity = await ctrl.UpdateAsync(entityModel).ConfigureAwait(false);
+                        }
                         model.CopyProperties(entity);
                     }
                     else

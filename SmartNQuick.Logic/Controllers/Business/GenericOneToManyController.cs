@@ -228,7 +228,7 @@ namespace SmartNQuick.Logic.Controllers.Business
                     }
                     var insDetail = await ManyEntityController.InsertEntityAsync(item).ConfigureAwait(false);
 
-                    entity.ManyItems.Add(insDetail);
+                    entity.ManyEntities.Add(insDetail);
                 }
                 else
                 {
@@ -238,7 +238,7 @@ namespace SmartNQuick.Logic.Controllers.Business
                     {
                         updEntity.CopyProperties(item);
                         updEntity = await ManyEntityController.UpdateEntityAsync(updEntity).ConfigureAwait(false);
-                        entity.ManyItems.Add(updEntity);
+                        entity.ManyEntities.Add(updEntity);
                     }
                 }
             }

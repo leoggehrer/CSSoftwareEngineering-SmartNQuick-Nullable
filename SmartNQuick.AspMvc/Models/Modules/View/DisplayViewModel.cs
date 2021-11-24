@@ -17,8 +17,12 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             model.CheckArgument(nameof(model));
 
+            Constructing();
             Model = model;
+            Constructed();
         }
+        partial void Constructing();
+        partial void Constructed();
 
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
         {

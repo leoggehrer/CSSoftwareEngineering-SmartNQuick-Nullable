@@ -20,7 +20,9 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             models.CheckArgument(nameof(models));
 
+            Constructing();
             Models = models;
+            Constructed();
         }
         public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models, Type elementType)
             : base(viewBagWrapper)
@@ -28,9 +30,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             models.CheckArgument(nameof(models));
             elementType.CheckArgument(nameof(elementType));
 
+            Constructing();
             Models = models;
             modelType = elementType;
+            Constructed();
         }
+        partial void Constructing();
+        partial void Constructed();
 
         private IEnumerable<PropertyInfo> displayProperties = null;
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties()

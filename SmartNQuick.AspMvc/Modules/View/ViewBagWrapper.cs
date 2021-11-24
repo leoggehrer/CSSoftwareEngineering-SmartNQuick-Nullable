@@ -176,8 +176,11 @@ namespace SmartNQuick.AspMvc.Modules.View
         }
         public void AddIgnoreHidden(string name)
         {
-            IgnoreNames.Add(name);
-            HiddenNames.Add(name);
+            if (IgnoreNames.Contains(name) == false)
+                IgnoreNames.Add(name);
+
+            if (HiddenNames.Contains(name) == false)
+                HiddenNames.Add(name);
         }
 
         public bool GetMappingProperty(string key, out PropertyInfo propertyInfo)
