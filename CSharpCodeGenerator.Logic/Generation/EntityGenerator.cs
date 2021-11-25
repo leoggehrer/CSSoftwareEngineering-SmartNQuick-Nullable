@@ -248,10 +248,12 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                                 if (data.Length == 2)
                                 {
+                                    var propHelper = new ContractPropertyHelper(pi);
                                     var otherFullName = GeneratorObject.CreateEntityFullNameFromInterface(other);
+                                    var navigationName = propHelper.NavigationName.GetValueOrDefault(data[1]);
 
                                     result.Add(($"[System.ComponentModel.DataAnnotations.Schema.ForeignKey(\"{pi.Name}\")]"));
-                                    result.Add(($"public {otherFullName} {data[1]} " + "{ get; set; }"));
+                                    result.Add(($"public {otherFullName} {navigationName} " + "{ get; set; }"));
                                 }
                             }
                         }

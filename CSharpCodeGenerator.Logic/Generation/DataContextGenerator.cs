@@ -226,7 +226,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                     }
                     if (contractPropertyHelper.DefaultValueSql.HasContent())
                     {
-                        innerResult.Add($".HasDefaulValueSql(\"{contractPropertyHelper.DefaultValueSql}\")");
+                        innerResult.Add($".HasDefaultValueSql(\"{contractPropertyHelper.DefaultValueSql}\")");
                     }
 
                     if (innerResult.Count > 0)
