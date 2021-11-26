@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using SmartNQuick.AspMvc.Extensions;
+using System.Linq;
 
 namespace SmartNQuick.AspMvc.Modules.Session
 {
@@ -101,6 +102,64 @@ namespace SmartNQuick.AspMvc.Modules.Session
             }
         }
         #endregion Properties
+
+        #region Page-Properties
+        public void SetSearchFilter(string controllerName, string value)
+        {
+            SetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}", value);
+        }
+        public string GetSearchFilter(string controllerName)
+        {
+            return GetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}");
+        }
+        public void SetFilterPredicate(string controllerName, string value)
+        {
+            SetStringValue($"{StaticLiterals.FilterPredicateKeyPrefix}{controllerName}", value);
+        }
+        public string GetFilterPredicate(string controllerName)
+        {
+            return GetStringValue($"{StaticLiterals.FilterPredicateKeyPrefix}{controllerName}");
+        }
+
+        public void SetPageCount(string controllerName, int value)
+        {
+            SetIntValue($"{StaticLiterals.PageCountKeyPrefix}{controllerName}", value);
+        }
+        public int GetPageCount(string controllerName)
+        {
+            return GetIntValue($"{StaticLiterals.PageCountKeyPrefix}{controllerName}");
+        }
+
+        public void SetPageSizes(string controllerName, int[] values)
+        {
+            SetValue($"{StaticLiterals.PageSizesKeyPrefix}{controllerName}", values);
+        }
+        public int[] GetPageSizes(string controllerName)
+        {
+            var result = GetValue($"{StaticLiterals.PageSizesKeyPrefix}{controllerName}") as int[];
+
+            return result == null ? StaticLiterals.DefaultPageSizes : result;
+        }
+
+        public void SetPageSize(string controllerName, int value)
+        {
+            SetIntValue($"{StaticLiterals.PageSizeKeyPrefix}{controllerName}", value);
+        }
+        public int GetPageSize(string controllerName)
+        {
+            int result = GetIntValue($"{StaticLiterals.PageSizeKeyPrefix}{controllerName}");
+
+            return result == 0 ? StaticLiterals.DefaultPageSizes.Min() : result;
+        }
+        public void SetPageIndex(string controllerName, int value)
+        {
+            SetIntValue($"{StaticLiterals.PageIndexKeyPrefix}{controllerName}", value);
+        }
+        public int GetPageIndex(string controllerName)
+        {
+            return GetIntValue($"{StaticLiterals.PageIndexKeyPrefix}{controllerName}");
+        }
+        #endregion Page-Properties
 
 #if ACCOUNT_ON
         #region Authentication

@@ -31,6 +31,7 @@
                 <a asp-action="Create" class="btn btn-outline-success">@viewBagWrapper.TranslateFor("Create new...")</a>
             </p>
         }
-        @await Html.PartialAsync("_IndexList", Model)
+        @await Html.PartialAsync("_PagerControl")
+        @await Html.PartialAsync("_CardList", Model)
     }
 }

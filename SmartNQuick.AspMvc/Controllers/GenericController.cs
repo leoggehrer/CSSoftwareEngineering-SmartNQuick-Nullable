@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+using CommonBase.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -113,8 +114,15 @@ namespace SmartNQuick.AspMvc.Controllers
                 try
                 {
                     using var ctrl = CreateController();
-                    var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
+                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
+                    var pageIndex = SessionWrapper.GetPageIndex(ControllerName);
+                    var pageSize = SessionWrapper.GetPageSize(ControllerName);
+                    var entities = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
+                    pageIndex = pageIndex * pageSize > pageCount ? 0 : pageIndex;
+                    SessionWrapper.SetPageCount(ControllerName, pageCount);
+                    SessionWrapper.SetPageIndex(ControllerName, pageIndex);
+                    SessionWrapper.SetPageSize(ControllerName, pageSize);
                     models = entities.Select(e => ToModel(e));
                     models = BeforeView(models, ActionMode.Index);
                     models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
@@ -130,6 +138,75 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void BeforeIndex(ref IEnumerable<TModel> models, ref bool handled);
         partial void AfterIndex(IEnumerable<TModel> models);
         protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models) => View("Index", models);
+
+        [HttpGet]
+        [ActionName("IndexByPageIndex")]
+        public virtual async Task<IActionResult> IndexByPageIndexAsync(int pageIndex, int pageSize)
+        {
+            var handled = false;
+            var models = default(IEnumerable<TModel>);
+
+            BeforeIndexByPageIndex(pageIndex, pageSize, ref models, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    using var ctrl = CreateController();
+                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
+                    var entities = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+                    pageIndex = pageIndex * pageSize > pageCount ? 0 : pageIndex;
+                    SessionWrapper.SetPageCount(ControllerName, pageCount);
+                    SessionWrapper.SetPageIndex(ControllerName, pageIndex);
+                    SessionWrapper.SetPageSize(ControllerName, pageSize);
+                    models = entities.Select(e => ToModel(e));
+                    models = BeforeView(models, ActionMode.Index);
+                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterIndexByPageIndex(models);
+            return ReturnIndexView(models);
+        }
+        partial void BeforeIndexByPageIndex(int pageIndex, int pageSize, ref IEnumerable<TModel> models, ref bool handled);
+        partial void AfterIndexByPageIndex(IEnumerable<TModel> models);
+
+        [HttpGet]
+        [ActionName("IndexByPageSize")]
+        public virtual async Task<IActionResult> IndexByPageSizeAsync(int pageSize)
+        {
+            var handled = false;
+            var models = default(IEnumerable<TModel>);
+
+            BeforeIndexByPageSize(pageSize, ref models, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    using var ctrl = CreateController();
+                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
+                    var entities = await ctrl.GetPageListAsync(0, pageSize).ConfigureAwait(false);
+
+                    SessionWrapper.SetPageCount(ControllerName, pageCount);
+                    SessionWrapper.SetPageIndex(ControllerName, 0);
+                    SessionWrapper.SetPageSize(ControllerName, pageSize);
+                    models = entities.Select(e => ToModel(e));
+                    models = BeforeView(models, ActionMode.Index);
+                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterIndexByPageSize(models);
+            return ReturnIndexView(models);
+        }
+        partial void BeforeIndexByPageSize(int pageSize, ref IEnumerable<TModel> models, ref bool handled);
+        partial void AfterIndexByPageSize(IEnumerable<TModel> models);
 
         [HttpGet]
         [ActionName("Create")]
@@ -762,6 +839,20 @@ namespace SmartNQuick.AspMvc.Controllers
                     else if (pi.PropertyType == typeof(Nullable<DateTime>))
                     {
                         pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : System.DateTime.Parse(formValue));
+                    }
+                    else if (pi.PropertyType == typeof(Guid))
+                    {
+                        if (Guid.TryParse(formValue, out Guid guidVal))
+                        {
+                            pi.SetValue(model, guidVal);
+                        }
+                    }
+                    else if (pi.PropertyType == typeof(Nullable<Guid>))
+                    {
+                        if (string.IsNullOrEmpty(formValue) == false && Guid.TryParse(formValue, out Guid guidVal))
+                        {
+                            pi.SetValue(model, guidVal);
+                        }
                     }
                     else
                     {

@@ -1,6 +1,7 @@
 ﻿//@BaseCode
 //MdStart
 #if ACCOUNT_ON
+using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Modules.View;
@@ -38,9 +39,9 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         }
 
         #region Export and Import
-        protected override string[] CsvHeader => new string[] 
+        protected override string[] CsvHeader => new string[]
         {
-            "Id", 
+            "Id",
             $"{nameof(Model.AnotherItem)}.Id",
             $"{nameof(Model.OneItem)}.Name",
             $"{nameof(Model.OneItem)}.Email",
@@ -48,7 +49,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
             $"{nameof(Model.AnotherItem)}.Lastname",
             $"{nameof(Model.OneItem)}.Password",
             $"{nameof(Model.OneItem)}.AccessFailedCount",
-            $"{nameof(Model.OneItem)}.EnableJwtAuth" 
+            $"{nameof(Model.OneItem)}.EnableJwtAuth"
         };
 
         [ActionName("Export")]

@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+using CommonBase.Extensions;
 using CommonBase.Modules.Configuration;
 using SmartNQuick.AspMvc.Models.ThirdParty;
 using SmartNQuick.AspMvc.Modules.Handler;

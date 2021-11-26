@@ -32,7 +32,25 @@ namespace SmartNQuick.AspMvc.Modules.Session
         string Error { get; set; }
         #endregion Properties
 
-# if ACCOUNT_ON
+        #region Page properties
+        void SetSearchFilter(string controllerName, string value);
+        string GetSearchFilter(string controllerName);
+        void SetFilterPredicate(string controllerName, string value);
+        string GetFilterPredicate(string controllerName);
+
+        void SetPageCount(string controllerName, int value);
+        int GetPageCount(string controllerName);
+
+        void SetPageSizes(string controllerName, int[] values);
+        int[] GetPageSizes(string controllerName);
+
+        void SetPageSize(string controllerName, int value);
+        int GetPageSize(string controllerName);
+        void SetPageIndex(string controllerName, int value);
+        int GetPageIndex(string controllerName);
+        #endregion Page properties
+
+#if ACCOUNT_ON
         #region Authentication
         Models.Persistence.Account.LoginSession LoginSession { get; set; }
         string SessionToken => LoginSession?.SessionToken;

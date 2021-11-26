@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using Model = SmartNQuick.AspMvc.Models.Business.Account.AppAccess;
+using CommonBase.Extensions;
 
 namespace SmartNQuick.AspMvc.Controllers.Business.Account
 {

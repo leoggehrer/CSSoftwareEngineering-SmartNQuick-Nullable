@@ -3,6 +3,7 @@
 #if ACCOUNT_ON
 using System;
 using System.Threading.Tasks;
+using CommonBase.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SmartNQuick.AspMvc.Models.Modules.Account;
 using SmartNQuick.AspMvc.Models.Persistence.Account;

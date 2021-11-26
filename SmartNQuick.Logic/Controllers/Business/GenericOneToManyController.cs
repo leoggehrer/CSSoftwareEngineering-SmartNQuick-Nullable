@@ -159,10 +159,42 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneEntity = item;
+                await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
             var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneEntity = item;
+                await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
