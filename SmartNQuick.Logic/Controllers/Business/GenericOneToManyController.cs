@@ -82,14 +82,14 @@ namespace SmartNQuick.Logic.Controllers.Business
         protected virtual async Task LoadDetailsAsync(E entity, int masterId)
         {
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
-            var query = await ManyEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+            var query = await ManyEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             entity.ClearManyItems();
             foreach (var item in query)
             {
                 if (ManyEntityController.IsTransient)
                 {
-                    var manyEntity = await ManyEntityController.GetByIdAsync(item.Id).ConfigureAwait(false);
+                    var manyEntity = await ManyEntityController.GetEntityByIdAsync(item.Id).ConfigureAwait(false);
 
                     entity.AddManyItem(manyEntity);
                 }
@@ -103,7 +103,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             var result = new List<TManyEntity>();
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
-            var query = await ManyEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
+            var query = await ManyEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -118,11 +118,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         #region Count
         internal override Task<int> ExecuteCountAsync()
         {
-            return OneEntityController.CountAsync();
+            return OneEntityController.ExecuteCountAsync();
         }
         internal override Task<int> ExecuteCountByAsync(string predicate)
         {
-            return OneEntityController.CountByAsync(predicate);
+            return OneEntityController.ExecuteCountByAsync(predicate);
         }
         #endregion Count
 
@@ -130,7 +130,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
             E result;
-            var oneEntity = await OneEntityController.ExecuteGetEntityByIdAsync(id).ConfigureAwait(false);
+            var oneEntity = await OneEntityController.GetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (oneEntity != null)
             {
@@ -146,7 +146,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var result = new List<E>();
-            var query = await OneEntityController.ExecuteGetEntityAllAsync().ConfigureAwait(false);
+            var query = await OneEntityController.GetEntityAllAsync().ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -162,7 +162,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             var result = new List<E>();
-            var query = await OneEntityController.ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+            var query = await OneEntityController.GetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -178,7 +178,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
-            var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+            var query = await OneEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -194,7 +194,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             var result = new List<E>();
-            var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+            var query = await OneEntityController.QueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -243,7 +243,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
                 if (exitsItem == null)
                 {
-                    await ManyEntityController.DeleteAsync(item.Id).ConfigureAwait(false);
+                    await ManyEntityController.DeleteEntityAsync(exitsItem).ConfigureAwait(false);
                 }
             }
 

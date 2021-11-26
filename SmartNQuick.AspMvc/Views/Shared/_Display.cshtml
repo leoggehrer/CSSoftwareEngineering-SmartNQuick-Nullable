@@ -63,7 +63,7 @@
             viewBagWrapper.HiddenNames.Add($"{oneModel.GetType().Name}Id");
             viewBagWrapper.IgnoreNames.Add($"{oneModel.GetType().Name}Id");
 
-            @await Html.PartialAsync("_DisplayList", manyModels)
+            @await Html.PartialAsync("_CardList", manyModels)
         }
     }
     else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))

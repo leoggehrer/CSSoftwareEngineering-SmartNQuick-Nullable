@@ -1,4 +1,4 @@
-﻿@*@BaseCode*@
+@*@BaseCode*@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.Common;
     @using SmartNQuick.AspMvc.Models.Modules.View
@@ -46,9 +46,28 @@
                         <li class="list-group-item"><strong>@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))</strong><p>@indexViewModel.GetDisplayValue(model, item)</p></li>
                     }
                 </ul>
-                <div class="card-body">
-                    @await Html.PartialAsync("_CommandControl", model)
-                </div>
+@*#if ACCOUNT_ON*@
+                @{
+                    @if (sessionWrapper.LoginSession != null)
+                    {
+                        <div class="card-body">
+                            @await Html.PartialAsync("_CommandControl", model)
+                        </div>
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("_CardBody", model)
+                    }
+                }
+@*#endif*@
+
+@*#if ACCOUNT_OFF*@
+@*
+@{
+                    @await Html.PartialAsync("_CardBody", Model)
+}
+*@
+@*#endif*@
             </div>
         }
     }

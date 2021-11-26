@@ -82,7 +82,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             var result = new List<TAnotherEntity>();
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
-            var query = await AnotherEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
+            var query = await AnotherEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -243,9 +243,9 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             if (entity.AnotherEntity.Id > 0)
             {
-                await AnotherEntityController.DeleteAsync(entity.AnotherEntity.Id).ConfigureAwait(false);
+                await AnotherEntityController.DeleteEntityAsync(entity.AnotherEntity).ConfigureAwait(false);
             }
-            await OneEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
+            await OneEntityController.DeleteEntityAsync(entity.OneEntity).ConfigureAwait(false);
             return entity;
         }
         #endregion Delete

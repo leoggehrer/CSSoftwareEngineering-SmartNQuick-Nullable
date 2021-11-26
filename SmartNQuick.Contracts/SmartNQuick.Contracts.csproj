@@ -12,8 +12,11 @@
 		<ProjectReference Include="..\CommonBase\CommonBase.csproj" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="True">
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="True">
 		<Exec Command="ECHO ON&#xD;&#xA;cd ..&#xD;&#xA;cd SolutionPreprocessorHelper.ConApp&#xD;&#xA;REM dotnet run &quot;-path&quot; $(ProjectDir)$(OutDir)&#xD;&#xA;dotnet build SolutionPreprocessorHelper.ConApp.csproj&#xD;&#xA;cd $(OutDir)&#xD;&#xA;SolutionPreprocessorHelper.ConApp.exe" />
+	</Target>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="True">
 		<Exec Command="ECHO ON&#xD;&#xA;cd ..&#xD;&#xA;cd CSharpCodeGenerator.ConApp&#xD;&#xA;REM dotnet run &quot;-path&quot; $(ProjectDir)$(OutDir)&#xD;&#xA;dotnet build CSharpCodeGenerator.ConApp.csproj&#xD;&#xA;cd $(OutDir)&#xD;&#xA;CSharpCodeGenerator.ConApp.exe" />
 	</Target>
 
