@@ -43,7 +43,13 @@
                 <ul class="list-group list-group-flush">
                     @foreach (var item in indexViewModel.GetDisplayProperties())
                     {
-                        <li class="list-group-item"><strong>@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))</strong><p>@indexViewModel.GetDisplayValue(model, item)</p></li>
+                        model.ViewBagInfo.Handled = false;
+                        model.ViewBagInfo.DisplayProperty = item;
+                        @await Html.PartialAsync("_CardItem", model)
+                        @if (model.ViewBagInfo.Handled == false)
+                        {
+                            <li class="list-group-item"><strong>@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))</strong><p>@indexViewModel.GetDisplayValue(model, item)</p></li>
+                        }
                     }
                 </ul>
 @*#if ACCOUNT_ON*@

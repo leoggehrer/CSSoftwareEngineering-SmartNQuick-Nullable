@@ -45,7 +45,13 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_EditModel", Model.Detail)
         <hr />
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Save"), BackText = viewBagWrapper.TranslateFor("Back to List") })
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() 
+        { 
+            SubmitText = viewBagWrapper.TranslateFor("Save"), 
+            BackText = viewBagWrapper.TranslateFor("Back to List"),
+            BackAction = "Details",
+            BackRouteValues = new { id = Model.Master.Id }
+        })
     </form>
 }
 

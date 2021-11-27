@@ -5,32 +5,28 @@
 
     var viewBagWrapper = Model.ViewBagInfo;
 
-    if (viewBagWrapper.ModelType == ModelType.Single
-        || (viewBagWrapper.ModelType == ModelType.MasterDetail && viewBagWrapper.Action.Equals(nameof(ActionMode.Index))))
+    if (viewBagWrapper.ParentModel == null)
     {
-        if (viewBagWrapper.Action.StartsWith("Index"))
+        @if ((viewBagWrapper.CommandMode & CommandMode.Edit) > 0)
         {
-            @if ((viewBagWrapper.CommandMode & CommandMode.Edit) > 0)
-            {
-                var action = Url.Action(nameof(CommandMode.Edit), viewBagWrapper.Controller, new { @id = Model.Id });
+            var action = Url.Action(nameof(CommandMode.Edit), viewBagWrapper.Controller, new { @id = Model.Id });
 
-                <a type="button" href="@action" class="btn btn-outline-primary" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
-            }
-            @if ((viewBagWrapper.CommandMode & CommandMode.Details) > 0)
-            {
-                var action = Url.Action(nameof(CommandMode.Details), viewBagWrapper.Controller, new { @id = Model.Id });
+            <a type="button" href="@action" class="btn btn-outline-primary" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
+        }
+        @if ((viewBagWrapper.CommandMode & CommandMode.Details) > 0)
+        {
+            var action = Url.Action(nameof(CommandMode.Details), viewBagWrapper.Controller, new { @id = Model.Id });
 
-                <a type="button" href="@action" class="btn btn-outline-dark" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
-            }
-            @if ((viewBagWrapper.CommandMode & CommandMode.Delete) > 0)
-            {
-                var action = Url.Action(nameof(CommandMode.Delete), viewBagWrapper.Controller, new { @id = Model.Id });
+            <a type="button" href="@action" class="btn btn-outline-dark" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+        }
+        @if ((viewBagWrapper.CommandMode & CommandMode.Delete) > 0)
+        {
+            var action = Url.Action(nameof(CommandMode.Delete), viewBagWrapper.Controller, new { @id = Model.Id });
 
-                <a type="button" href="@action" class="btn btn-outline-danger" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
-            }
+            <a type="button" href="@action" class="btn btn-outline-danger" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
         }
     }
-    else if (viewBagWrapper.ModelType == ModelType.MasterDetail)
+    else
     {
         var master = viewBagWrapper.ParentModel as IdentityModel;
 
