@@ -150,7 +150,7 @@ namespace SmartNQuick.AspMvc.Modules.Language
             }
             else
             {
-                AppendNoTranslation(key);
+                AppendNoTranslation(key, result);
 
                 var splitKey = key.Split(".");
 
@@ -165,14 +165,14 @@ namespace SmartNQuick.AspMvc.Modules.Language
                     else if (defaultValue == key)
                     {
                         result = splitKey[1];
-                        AppendNoTranslation(splitKey[1]);
+                        AppendNoTranslation(splitKey[1], result);
                     }
                 }
             }
             return result;
         }
 
-        protected void AppendNoTranslation(string key)
+        protected void AppendNoTranslation(string key, string value)
         {
             var item = noTranslations.SingleOrDefault(t => t.Key.Equals(key) && t.KeyLanguage == KeyLanguage);
 
@@ -180,11 +180,11 @@ namespace SmartNQuick.AspMvc.Modules.Language
             {
                 noTranslations.Add(new Translation
                 {
-                    AppName = nameof(SmartNQuick),
+                    AppName = AppName,
                     KeyLanguage = KeyLanguage,
                     Key = key,
                     ValueLanguage = ValueLanguage,
-                    Value = default
+                    Value = value
                 });
             }
         }
