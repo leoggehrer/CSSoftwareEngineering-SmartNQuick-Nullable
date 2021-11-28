@@ -1,0 +1,40 @@
+Index
+	-> _PagerControl
+	-> _CardList
+		-> _CardItem
+		-> _CommandControl
+		||
+		-> _CardBody
+
+
+Create
+	-> _CreateEdit
+		-> _EditModel	// for one model
+		-> _EditModel	// for another model
+		||
+		_EditModel		// for one to many model
+		||
+		-> _EditModel	// for connect model
+		-> _EditModel	// for one model
+		-> _EditModel	// for another model
+		||
+		-> _EditModel	// for a single model
+	-> _SubmitBack
+
+
+Edit
+	-> _CreateEdit
+		-> _EditModel	// for one model
+		-> _EditModel	// for another model
+		||
+		_EditModel		// for one to many model
+		||
+		-> _EditModel	// for connect model
+		-> _EditModel	// for one model
+		-> _EditModel	// for another model
+		||
+		-> _EditModel	// for a single model
+	-> _SubmitBack
+
+Delete
+	-> _Display

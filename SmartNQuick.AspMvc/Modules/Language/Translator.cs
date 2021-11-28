@@ -24,6 +24,9 @@ namespace SmartNQuick.AspMvc.Modules.Language
         static partial void ClassConstructed();
 
         private bool Reload { get; set; } = false;
+        private string appName = nameof(SmartNQuick);
+        private LanguageCode keyLanguage = LanguageCode.En;
+        private LanguageCode valueLanguage = LanguageCode.De;
 
         private Translator()
         {
@@ -42,10 +45,33 @@ namespace SmartNQuick.AspMvc.Modules.Language
 
         public bool HasLoaded => LastLoad.HasValue;
         public DateTime? LastLoad { get; private set; }
-        public string AppName { get; private set; } = nameof(SmartNQuick);
-        public LanguageCode KeyLanguage { get; private set; } = LanguageCode.En;
-        public LanguageCode ValueLanguage { get; private set; } = LanguageCode.De;
-
+        public string AppName 
+        {
+            get => appName; 
+            set
+            {
+                Reload = appName != value;
+                appName = value;
+            }
+        }
+        public LanguageCode KeyLanguage 
+        {
+            get => keyLanguage;
+            set
+            {
+                Reload = keyLanguage != value;
+                keyLanguage = value;
+            }
+        }
+        public LanguageCode ValueLanguage 
+        {
+            get => valueLanguage;
+            set
+            {
+                Reload = valueLanguage != value;
+                valueLanguage = value;
+            }
+        }
         public IEnumerable<Translation> NoTranslations => noTranslations;
 
         protected virtual void LoadTranslations()
@@ -163,29 +189,21 @@ namespace SmartNQuick.AspMvc.Modules.Language
             }
         }
 
+        public static Translator Create()
+        {
+            return new Translator();
+        }
         public static void ChangeAppName(string appName)
         {
-            if (Instance.AppName != appName)
-            {
-                Instance.Reload = true;
-                Instance.AppName = appName;
-            }
+            Instance.AppName = appName;
         }
         public static void ChangeKeyLanguage(LanguageCode languageCode)
         {
-            if (Instance.KeyLanguage != languageCode)
-            {
-                Instance.Reload = true;
-                Instance.KeyLanguage = languageCode;
-            }
+            Instance.KeyLanguage = languageCode;
         }
         public static void ChangeValueLanguage(LanguageCode languageCode)
         {
-            if (Instance.ValueLanguage != languageCode)
-            {
-                Instance.Reload = true;
-                Instance.ValueLanguage = languageCode;
-            }
+            Instance.ValueLanguage = languageCode;
         }
 
         public static string TranslateIt(string key) => Instance.Translate(key);

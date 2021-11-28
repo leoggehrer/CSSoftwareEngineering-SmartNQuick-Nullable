@@ -21,12 +21,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CreateProject.png = CreateProject.png
 		DevelopmentStepByStep.md = DevelopmentStepByStep.md
 		docker-compose.yml = docker-compose.yml
-		Index.txt = Index.txt
 		ReadMe.md = ReadMe.md
 		ReadMeSave.md = ReadMeSave.md
 		SyncProjects.drawio = SyncProjects.drawio
 		SyncProjects.png = SyncProjects.png
 		Translations.csv = Translations.csv
+		ViewToPartialViews.txt = ViewToPartialViews.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNQuick.WebApi", "SmartNQuick.WebApi\SmartNQuick.WebApi.csproj", "{DEEE04A7-6F3B-4372-9125-CE9EFD989B0C}"
