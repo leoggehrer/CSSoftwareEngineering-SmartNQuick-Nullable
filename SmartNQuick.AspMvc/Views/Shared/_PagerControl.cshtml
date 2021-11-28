@@ -42,12 +42,12 @@
     @if (pageCount > pageSize)
     {
         <nav class="navbar">
-            <div class="nav-item" style="min-width: 175px;" data-toggle="tooltip" title="@viewBagWrapper.Translate("PageIndex")">
-                <a class="btn btn-outline-secondary dropdown-toggle" name="pageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
                     @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
                     <span class="caret"></span>
-                </a>
-                <div class="dropdown-menu">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
                     @for (int index = 0; index <= maxPageIndex; index++)
                     {
                         string action = Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(index));
@@ -127,12 +127,12 @@
                 </li>
             </ul>
 
-            <div class="nav-item pull-right" style="margin-left: 0px;" data-toggle="tooltip" title="@viewBagWrapper.Translate(" PageSize")">
-                <a class="btn btn-outline-secondary dropdown-toggle" name="pageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageSize")">
                     @pageSize
                     <span class="caret"></span>
-                </a>
-                <div class="dropdown-menu">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownPageSize">
                     @foreach (int size in sessionWrapper.GetPageSizes(viewBagWrapper.Controller))
                     {
                         string action = Url.Action(pageSizeAction, viewBagWrapper.Controller, new { pageSize = size });
