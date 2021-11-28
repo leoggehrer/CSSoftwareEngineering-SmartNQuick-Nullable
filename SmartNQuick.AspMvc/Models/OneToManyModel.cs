@@ -88,6 +88,15 @@ namespace SmartNQuick.AspMvc.Models
         public IdentityModel CreateDetail() => new TManyModel();
         public void AddDetail(IdentityModel model) => ManyModels.Add(model as TManyModel);
         public void RemoveDetail(IdentityModel model) => ManyModels.Remove(model as TManyModel);
+        public void RemoveDetailById(int id)
+        {
+            var manyModel = ManyModels.FirstOrDefault(e => e.Id == id);
+            
+            if (manyModel != null)
+            {
+                ManyModels.Remove(manyModel);
+            }
+        }
     }
 }
 //MdEnd

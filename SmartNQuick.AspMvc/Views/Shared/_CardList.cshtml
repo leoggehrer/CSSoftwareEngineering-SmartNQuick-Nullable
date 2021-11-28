@@ -41,20 +41,24 @@
             model.ViewBagInfo = viewBagWrapper;
             <div class="card" style="margin-bottom: 0.5em;">
                 <ul class="list-group list-group-flush">
-                    @foreach (var item in indexViewModel.GetDisplayProperties())
-                    {
-                        model.ViewBagInfo.Handled = false;
-                        model.ViewBagInfo.DisplayProperty = item;
-                        @await Html.PartialAsync("_CardItem", model)
-                        @if (model.ViewBagInfo.Handled == false)
+                    <li class="list-group-item">
+                        @foreach (var item in indexViewModel.GetDisplayProperties())
                         {
-                            <li class="list-group-item"><strong>@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))</strong><p>@indexViewModel.GetDisplayValue(model, item)</p></li>
+                            model.ViewBagInfo.Handled = false;
+                            model.ViewBagInfo.DisplayProperty = item;
+                            @await Html.PartialAsync("_CardItem", model)
+                            @if (model.ViewBagInfo.Handled == false)
+                            {
+                                <strong>@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))</strong>
+
+                                <p>@indexViewModel.GetDisplayValue(model, item)</p>
+                            }
                         }
-                    }
+                    </li>
                 </ul>
 @*#if ACCOUNT_ON*@
                 @{
-                    @if (sessionWrapper.LoginSession != null)
+                    @if (sessionWrapper.LoginSession != null && viewBagWrapper.Action.Equals(ActionMode.Delete.ToString()) == false)
                     {
                         <div class="card-body">
                             @await Html.PartialAsync("_CommandControl", model)

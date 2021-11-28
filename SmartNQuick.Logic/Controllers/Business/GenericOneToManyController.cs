@@ -243,7 +243,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
                 if (exitsItem == null)
                 {
-                    await ManyEntityController.DeleteEntityAsync(exitsItem).ConfigureAwait(false);
+                    await ManyEntityController.DeleteEntityAsync(item).ConfigureAwait(false);
                 }
             }
 

@@ -33,6 +33,7 @@
         viewBagWrapper.ItemPrefix = "AnotherModel";
         anotherModel.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", anotherModel)
+        <hr />
     }
     else if (Model.GetType().IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
     {
@@ -46,10 +47,7 @@
         viewBagWrapper.ItemPrefix = "OneModel";
         oneModel.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", oneModel)
-
-        //viewBagWrapper.ItemPrefix = "AnotherModel";
-        //manyModels.ViewBagInfo = viewBagWrapper;
-        //@await Html.PartialAsync("_EditModel", manyModels)
+        <hr />
     }
     else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
     {
@@ -82,11 +80,13 @@
             <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
             @await Html.PartialAsync("_EditModel", anotherModel)
         }
+        <hr />
     }
     else
     {
         viewBagWrapper.ModelType = ModelType.Single;
         Model.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", Model)
+        <hr />
     }
 }

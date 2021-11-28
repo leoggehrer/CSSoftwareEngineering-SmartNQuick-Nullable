@@ -15,6 +15,7 @@ namespace SmartNQuick.AspMvc.Models
         IdentityModel CreateDetail();
         void AddDetail(IdentityModel model);
         void RemoveDetail(IdentityModel model);
+        void RemoveDetailById(int id);
     }
 }
-//MdEndhttps://localhost:44387/img/informatik_ai.jpg
+//MdEnd

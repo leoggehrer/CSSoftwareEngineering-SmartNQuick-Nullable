@@ -50,16 +50,21 @@
             oneModel.ViewBagInfo = viewBagWrapper;
             @await Html.PartialAsync("_DisplayModel", oneModel)
 
-            if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Edit) > 0)
+            @if (viewBagWrapper.Action.Equals(ActionMode.Delete.ToString()) == false && (viewBagWrapper.CommandMode & CommandMode.Edit) > 0)
             {
-                <p style="margin-top: 1em;">
-                    <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-success">@viewBagWrapper.TranslateFor("Create new detail...")</a>
-                </p>
+                <div class="row">
+                    <div class="col-md-12 d-flex">
+                        <div class="ml-auto">
+                            <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-dark" title="@viewBagWrapper.TranslateFor("Create new detail...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
             }
         }
 
         if (manyModels is IEnumerable<IdentityModel> details && details.Any())
         {
+            <hr />
             viewBagWrapper.HiddenNames.Add($"{oneModel.GetType().Name}Id");
             viewBagWrapper.IgnoreNames.Add($"{oneModel.GetType().Name}Id");
 
@@ -99,5 +104,6 @@
         viewBagWrapper.ModelType = ModelType.Single;
         Model.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_DisplayModel", Model)
+        <hr />
     }
 }

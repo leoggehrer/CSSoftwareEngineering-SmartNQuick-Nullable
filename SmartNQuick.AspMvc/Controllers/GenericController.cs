@@ -504,7 +504,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeCreateDetail(ref model, ref handled);
             if (handled == false)
@@ -517,9 +517,9 @@ namespace SmartNQuick.AspMvc.Controllers
                     if (model != null)
                     {
                         var oneProperty = model.GetType().GetProperty("OneModel");
-                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
-                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as Models.IdentityModel;
+                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as IdentityModel;
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
@@ -540,7 +540,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeCreateDetail(ref TModel model, ref bool handled);
         partial void AfterCreateDetail(TModel model);
-        protected virtual IActionResult ReturnCreateDetailView(Models.MasterDetailModel model) => View("CreateDetail", model);
+        protected virtual IActionResult ReturnCreateDetailView(MasterDetailModel model) => View("CreateDetail", model);
 
         [HttpPost]
         [ActionName("CreateDetail")]
@@ -548,7 +548,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeAddDetail(ref model, ref handled);
             if (handled == false)
@@ -559,9 +559,9 @@ namespace SmartNQuick.AspMvc.Controllers
                     if (model != null)
                     {
                         var oneProperty = model.GetType().GetProperty("OneModel");
-                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
-                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as Models.IdentityModel;
+                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as IdentityModel;
                         var addManyMethod = model.GetType().GetMethod("AddManyItem");
 
                         masterDetailModel.Master = oneModel;
@@ -598,7 +598,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeEditDetail(ref model, ref handled);
             if (handled == false)
@@ -611,9 +611,9 @@ namespace SmartNQuick.AspMvc.Controllers
                     if (model != null)
                     {
                         var oneProperty = model.GetType().GetProperty("OneModel");
-                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var getManyMethod = model.GetType().GetMethod("GetManyModelById");
-                        var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+                        var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
@@ -634,7 +634,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeEditDetail(ref TModel model, ref bool handled);
         partial void AfterEditDetail(TModel model);
-        protected virtual IActionResult ReturnEditDetailView(Models.MasterDetailModel model) => View("EditDetail", model);
+        protected virtual IActionResult ReturnEditDetailView(MasterDetailModel model) => View("EditDetail", model);
 
         [HttpPost]
         [ActionName("EditDetail")]
@@ -642,7 +642,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeUpdateDetail(ref model, ref handled);
             if (handled == false)
@@ -653,12 +653,12 @@ namespace SmartNQuick.AspMvc.Controllers
                     if (model != null)
                     {
                         var oneProperty = model.GetType().GetProperty("OneModel");
-                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var getManyMethod = model.GetType().GetMethod("GetManyModelById");
 
                         if (GetObjectId(nameof(Models.MasterDetailModel.Detail), formCollection, out int detailId))
                         {
-                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
 
                             masterDetailModel.Master = oneModel;
                             masterDetailModel.Detail = manyModel;
@@ -694,7 +694,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeViewDeleteDetail(ref model, ref handled);
             if (handled == false)
@@ -730,7 +730,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeViewDeleteDetail(ref TModel model, ref bool handled);
         partial void AfterViewDeleteDetail(TModel model);
-        protected virtual IActionResult ReturnDeleteDetailView(Models.MasterDetailModel model) => View("DeleteDetail", model);
+        protected virtual IActionResult ReturnDeleteDetailView(MasterDetailModel model) => View("DeleteDetail", model);
 
         [HttpPost]
         [ActionName("DeleteDetail")]
@@ -738,7 +738,7 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             var handled = false;
             var model = default(TModel);
-            var masterDetailModel = new Models.MasterDetailModel();
+            var masterDetailModel = new MasterDetailModel();
 
             BeforeDeleteDetail(ref model, ref handled);
             if (handled == false)
@@ -749,13 +749,13 @@ namespace SmartNQuick.AspMvc.Controllers
                     if (model != null)
                     {
                         var oneProperty = model.GetType().GetProperty("OneModel");
-                        var oneModel = oneProperty?.GetValue(model) as Models.IdentityModel;
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var removeManyMethod = model.GetType().GetMethod("RemoveManyModel");
 
-                        if (GetObjectId(nameof(Models.MasterDetailModel.Detail), formCollection, out int detailId))
+                        if (GetObjectId(nameof(MasterDetailModel.Detail), formCollection, out int detailId))
                         {
                             var getManyMethod = model.GetType().GetMethod("GetManyModelById");
-                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as Models.IdentityModel;
+                            var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
 
                             removeManyMethod?.Invoke(model, new object[] { detailId });
 
@@ -836,7 +836,7 @@ namespace SmartNQuick.AspMvc.Controllers
                     {
                         pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : System.DateTime.Parse(formValue));
                     }
-                    else if (pi.PropertyType == typeof(Nullable<DateTime>))
+                    else if (pi.PropertyType == typeof(DateTime?))
                     {
                         pi.SetValue(model, string.IsNullOrEmpty(formValue) ? null : System.DateTime.Parse(formValue));
                     }
@@ -847,7 +847,7 @@ namespace SmartNQuick.AspMvc.Controllers
                             pi.SetValue(model, guidVal);
                         }
                     }
-                    else if (pi.PropertyType == typeof(Nullable<Guid>))
+                    else if (pi.PropertyType == typeof(Guid?))
                     {
                         if (string.IsNullOrEmpty(formValue) == false && Guid.TryParse(formValue, out Guid guidVal))
                         {

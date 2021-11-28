@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using CommonBase.Extensions
     @using SmartNQuick.AspMvc.Modules.StaticPage
     @using SmartNQuick.AspMvc.Modules.Language
 
@@ -8,7 +9,8 @@
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor("Contact");
-    var htmlItem = StaticPageService.GetPageContent($"{controller}.{action}");
+    var pageKey = $"{controller}.{action}";
+    var htmlItem = StaticPageService.GetPageContent(pageKey);
 
     ViewData["Title"] = title;
 }
@@ -19,24 +21,28 @@
 }
 else
 {
-    <div class="text-center" style="margin-top: -200px; margin-bottom: 10px;">
-        <img src="~/img/kontakt.jpg" class="img-fluid" />
-    </div>
+    var imgSrc = StaticPageService.GetPartialContent($"{pageKey}.img.src", "/img/kontakt.jpg");
 
-    <!-- Impressum
-    ================================================== -->
-    <div class="bs-docs-section">
-        <h1 id="contact">@translate("Contact information")</h1>
-        <hr />
-        <address>
-            <strong>HTL-Leonding</strong><br>
-            Limesstraße 12-14<br>
-            A-4060 Leonding<br>
-            <abbr title="@translateFor("Phonenumber")">Tel.</abbr> +43 732 67 33 68 – 0
-            <br />
-            <abbr title="@translateFor("Email-Adresse")">Email</abbr> <a href="mailto:office@htl-leonding.ac.at">office(at)htl-leonding.ac.at</a>
-            <br />
-            <abbr title="@translateFor("Schoolnumber")">Schulkennzahl:</abbr>410427<br>
-        </address>
+    <div class="card" style="margin-bottom: 1em; border: none;">
+        @if (imgSrc.HasContent())
+        {
+            <img class="card-img-top" src="@imgSrc" alt="Item image">
+        }
+        <div class="card-body">
+            <div class="bs-docs-section">
+                <h1 id="contact">@translate("Contact information")</h1>
+                <hr />
+                <address>
+                    <strong>HTL-Leonding</strong><br>
+                    Limesstraße 12-14<br>
+                    A-4060 Leonding<br>
+                    <abbr title="@translateFor("Phonenumber")">Tel.</abbr> +43 732 67 33 68 – 0
+                    <br />
+                    <abbr title="@translateFor("Email-Adresse")">Email</abbr> <a href="mailto:office@htl-leonding.ac.at">office(at)htl-leonding.ac.at</a>
+                    <br />
+                    <abbr title="@translateFor("Schoolnumber")">Schulkennzahl:</abbr>410427<br>
+                </address>
+            </div>
+        </div>
     </div>
 }
