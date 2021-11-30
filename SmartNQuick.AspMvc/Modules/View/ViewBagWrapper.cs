@@ -93,6 +93,11 @@ namespace SmartNQuick.AspMvc.Modules.View
             set => ViewBag.ViewModelCreator = value;
         }
 
+        public int Index
+        {
+            get => ViewBag.Index != null ? (int)ViewBag.Index : 0;
+            set => ViewBag.Index = value;
+        }
         public bool Handled
         {
             get => ViewBag.Handled != null ? (bool)ViewBag.Handled : false;

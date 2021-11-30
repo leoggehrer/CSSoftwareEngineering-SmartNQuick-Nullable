@@ -6,6 +6,7 @@
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
+    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -42,25 +43,30 @@
     @if (pageCount > pageSize)
     {
         <nav class="navbar">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
-                    @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
-                    <span class="caret"></span>
+            <div class="btn-group" role="group" aria-label="Button group filter and page index">
+                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+                    <i class="fa fa-filter"></i>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
-                    @for (int index = 0; index <= maxPageIndex; index++)
-                    {
-                        string action = Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(index));
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
+                        @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
+                        <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
+                        @for (int index = 0; index <= maxPageIndex; index++)
+                        {
+                            string action = Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(index));
 
-                        if (index == pageIndex)
-                        {
-                            <a class="dropdown-item active" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
+                            if (index == pageIndex)
+                            {
+                                <a class="dropdown-item active" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
+                            }
                         }
-                        else
-                        {
-                            <a class="dropdown-item" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
-                        }
-                    }
+                    </div>
                 </div>
             </div>
 
@@ -127,25 +133,49 @@
                 </li>
             </ul>
 
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageSize")">
-                    @pageSize
-                    <span class="caret"></span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownPageSize">
-                    @foreach (int size in sessionWrapper.GetPageSizes(viewBagWrapper.Controller))
-                    {
-                        string action = Url.Action(pageSizeAction, viewBagWrapper.Controller, new { pageSize = size });
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageSize")">
+                        @pageSize
+                        <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownPageSize">
+                        @foreach (int size in sessionWrapper.GetPageSizes(viewBagWrapper.Controller))
+                        {
+                            string action = Url.Action(pageSizeAction, viewBagWrapper.Controller, new { pageSize = size });
 
-                        if (size == pageSize)
-                        {
-                            <a class="dropdown-item active" href="@action">@size</a>
+                            if (size == pageSize)
+                            {
+                                <a class="dropdown-item active" href="@action">@size</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="@action">@size</a>
+                            }
                         }
-                        else
-                        {
-                            <a class="dropdown-item" href="@action">@size</a>
-                        }
-                    }
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseFilter">
+                <div class="card card-body">
+                    @await Html.PartialAsync("_FilterControl", Model)
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar">
+            <div class="btn-group" role="group" aria-label="Button group filter">
+                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
+
+            <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseFilter">
+                <div class="card card-body">
+                    @await Html.PartialAsync("_FilterControl", Model)
                 </div>
             </div>
         </nav>

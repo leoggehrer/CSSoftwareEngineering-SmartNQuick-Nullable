@@ -1,0 +1,29 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
+
+    var viewBagWrapper = Model.ViewBagInfo;
+    var indexViewModel = Model.IndexViewModel;
+    var index = viewBagWrapper.Index;
+    var property = viewBagWrapper.DisplayProperty;
+    var fieldOperations = Model.GetFieldOperations();
+    var typeOperations = Model.GetTypeOperations(property);
+
+    <div class="form-group row">
+        <div class="col-sm-2">
+            @if (index > 0)
+            {
+                @Html.DropDownList("fieldOperation", fieldOperations, null, new { @class = "form-control" })
+            }
+        </div>
+        <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(property))</label>
+        <div class="col-sm-2">
+            @Html.DropDownList("typeOperation", typeOperations, null, new { @class = "form-control" })
+        </div>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="@indexViewModel.GetId(property)" />
+        </div>
+    </div>
+    viewBagWrapper.Handled = true;
+}

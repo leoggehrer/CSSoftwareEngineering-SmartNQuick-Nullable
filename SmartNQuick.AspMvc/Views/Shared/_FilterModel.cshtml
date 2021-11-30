@@ -1,0 +1,20 @@
+﻿@*@BaseCode*@
+@{
+    @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
+
+    var index = 0;
+    var viewBagWrapper = Model.ViewBagInfo;
+    var indexViewModel = Model.IndexViewModel;
+
+    @foreach (var property in indexViewModel.GetDisplayProperties())
+    {
+        if (property.CanRead)
+        {
+            Model.ViewBagInfo.Index = index++;
+            Model.ViewBagInfo.Handled = false;
+            Model.ViewBagInfo.DisplayProperty = property;
+            @await Html.PartialAsync("_FilterGroup", Model)
+        }
+    }
+}
+

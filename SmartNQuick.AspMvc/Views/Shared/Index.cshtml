@@ -36,7 +36,7 @@
     }
     else
     {
-        @await Html.PartialAsync("_PagerControl")
+        @await Html.PartialAsync("_PagerControl", Model)
         @await Html.PartialAsync("_CardList", Model)
     }
 }
