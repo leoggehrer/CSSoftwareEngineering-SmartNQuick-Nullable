@@ -23,6 +23,8 @@
     var prvCss = pageIndex == 0 ? "page-item disabled" : "page-item";
     var nxtCss = (pageIndex + 1) * pageSize >= pageCount ? "page-item disabled" : "page-item";
     var maxPageIndex = pageCount / pageSize;
+    var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
+    var filterText = filterValues?.Count > 0 ? "*" : string.Empty;
 
     if (pageCount % pageSize == 0)
     {
@@ -45,7 +47,7 @@
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter and page index">
                 <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
-                    <i class="fa fa-filter"></i>
+                    <i class="fa fa-filter">@filterText</i>
                 </button>
                 <div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
@@ -164,12 +166,28 @@
             </div>
         </nav>
     }
+    else if (pageCount == 0)
+    {
+        <nav class="navbar">
+            <div class="btn-group" role="group" aria-label="Button group filter">
+                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+                    <i class="fa fa-filter">@filterText</i>
+                </button>
+            </div>
+
+            <div class="collapse.show w-100" style="margin-top: 0.5em;" id="collapseFilter">
+                <div class="card card-body">
+                    @await Html.PartialAsync("_FilterControl", Model)
+                </div>
+            </div>
+        </nav>
+    }
     else
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter">
                 <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
-                    <i class="fa fa-filter"></i>
+                    <i class="fa fa-filter">@filterText</i>
                 </button>
             </div>
 

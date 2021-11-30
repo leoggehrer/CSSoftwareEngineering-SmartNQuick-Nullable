@@ -125,8 +125,30 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual void SetSessionFilterValues(FilterValues filterValues)
         {
             SessionWrapper.SetFilterValues(ControllerName, filterValues);
+        }
+        protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize)
+        {
+            var result = default(IEnumerable<TContract>);
+            var filterValue = SessionWrapper.GetFilterValues(ControllerName);
+            var predicate = filterValue?.CreatePredicate();
 
-            var fv = SessionWrapper.GetFilterValues(ControllerName);
+            if (predicate.HasContent())
+            {
+                using var ctrl = CreateController();
+                var pageCount = await ctrl.CountByAsync(predicate).ConfigureAwait(false);
+
+                SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
+                result = await ctrl.QueryPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+            }
+            else
+            {
+                using var ctrl = CreateController();
+                var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
+
+                SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
+                result = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+            }
+            return result;
         }
 
         [HttpPost]
@@ -141,17 +163,13 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    using var ctrl = CreateController();
                     var filterValues = CreateFilterValues(formCollection);
-                    var predicate = filterValues.CreatePredicate();
-                    var pageCount = await ctrl.CountByAsync(predicate).ConfigureAwait(false);
                     var pageIndex = 0;
                     var pageSize = SessionWrapper.GetPageSize(ControllerName);
 
                     SetSessionFilterValues(filterValues);
-                    SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
 
-                    var entities = await ctrl.QueryPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
                     models = entities.Select(e => ToModel(e));
                     models = BeforeView(models, ActionMode.Index);
@@ -178,14 +196,10 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    using var ctrl = CreateController();
-                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
                     var pageIndex = SessionWrapper.GetPageIndex(ControllerName);
                     var pageSize = SessionWrapper.GetPageSize(ControllerName);
 
-                    SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
-
-                    var entities = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
                     models = entities.Select(e => ToModel(e));
                     models = BeforeView(models, ActionMode.Index);
@@ -215,12 +229,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    using var ctrl = CreateController();
-                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
-
-                    SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
-
-                    var entities = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
                     models = entities.Select(e => ToModel(e));
                     models = BeforeView(models, ActionMode.Index);
@@ -249,13 +258,9 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    using var ctrl = CreateController();
-                    var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
                     var pageIndex = 0;
 
-                    SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
-
-                    var entities = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
                     models = entities.Select(e => ToModel(e));
                     models = BeforeView(models, ActionMode.Index);

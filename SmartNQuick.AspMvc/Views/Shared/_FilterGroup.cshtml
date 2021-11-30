@@ -1,27 +1,37 @@
 ﻿@*@BaseCode*@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.View
+    @using SmartNQuick.AspMvc.Modules.Session
     @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
 
+    var sessionWrapper = new SessionWrapper(Context.Session);
     var viewBagWrapper = Model.ViewBagInfo;
     var indexViewModel = Model.IndexViewModel;
     var index = viewBagWrapper.Index;
     var property = viewBagWrapper.DisplayProperty;
-    var fieldOperations = Model.GetFieldOperations();
     var typeOperations = Model.GetTypeOperations(property);
+    var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
+    var propertyValue = default(string);
+    var propertyOperation = default(string);
 
+    filterValues?.TryGetValue(property.Name, out propertyValue);
+    filterValues?.TryGetValue($"{property.Name}.{StaticLiterals.TypeOperationPostfix}", out propertyOperation);
+
+    var listOperation = new List<SelectListItem>(typeOperations);
+
+    listOperation.ForEach(e => e.Selected = propertyOperation != null && e.Value == propertyOperation);
     <div class="form-group row">
-@*        
-        <div class="col-sm-2">
+        @*
+            <div class="col-sm-2">
             @if (index > 0)
             {
-                @Html.DropDownList(Model.GetFieldOperationName(property), fieldOperations, null, new { @class = "form-control" })
+            @Html.DropDownList(Model.GetFieldOperationName(property), fieldOperations, null, new { @class = "form-control" })
             }
-        </div>
-*@
+            </div>
+        *@
         <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(property))</label>
         <div class="col-sm-2">
-            @Html.DropDownList(Model.GetTypeOperationName(property), typeOperations, null, new { @class = "form-control" })
+            @Html.DropDownList(Model.GetTypeOperationName(property), listOperation, null, new { @class = "form-control" })
         </div>
         <div class="col-sm-8">
             @if (property.PropertyType.IsEnum)
@@ -30,11 +40,13 @@
 
                 list.Add(new SelectListItem { Text = string.Empty, Value = string.Empty });
                 list.AddRange(Html.GetEnumSelectList(property.PropertyType));
+                list.ForEach(e => e.Selected = propertyValue != null && e.Value == propertyValue);
+
                 @Html.DropDownList(Model.GetName(property), list, null, new { @class = "form-control" })
             }
             else
             {
-                <input type="text" class="form-control" id="@Model.GetId(property)" name="@Model.GetName(property)" />
+                <input type="text" class="form-control" id="@Model.GetId(property)" name="@Model.GetName(property)" , value="@propertyValue" />
             }
         </div>
     </div>

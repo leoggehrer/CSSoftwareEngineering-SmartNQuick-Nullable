@@ -107,21 +107,21 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             operations.Add(new SelectListItem { Value = string.Empty, Text = string.Empty });
             if (property.PropertyType == typeof(string))
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = "equals" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNotEquals, Text = "not equals" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationContains, Text = "contains" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationStartsWith, Text = "begins with" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEndsWith, Text = "ends with" });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = StaticLiterals.OperationEquals });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNotEquals, Text = StaticLiterals.OperationNotEquals });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationContains, Text = StaticLiterals.OperationContains });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationStartsWith, Text = StaticLiterals.OperationStartsWith });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEndsWith, Text = StaticLiterals.OperationEndsWith });
             }
             else if (property.PropertyType == typeof(int))
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumEquals, Text = "equals" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsGreater, Text = "is greater" });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsLess, Text = "is less" });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumEquals, Text = StaticLiterals.OperationNumEquals });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsGreater, Text = StaticLiterals.OperationNumIsGreater });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsLess, Text = StaticLiterals.OperationNumIsLess });
             }
             else
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = "equals" });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = StaticLiterals.OperationEquals });
             }
             return new SelectList(operations, "Value", "Text");
         }

@@ -42,15 +42,15 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             }
             else if (operation.Equals(StaticLiterals.OperationContains))
             {
-                result = $"{name}.Contains(\"{value}\")";
+                result = $"{name} != null && {name}.ToLower().Contains(\"{value?.ToLower()}\")";
             }
             else if (operation.Equals(StaticLiterals.OperationStartsWith))
             {
-                result = $"{name}.StartsWith(\"{value}\")";
+                result = $"{name} != null && {name}.ToLower().StartsWith(\"{value.ToLower()}\")";
             }
             else if (operation.Equals(StaticLiterals.OperationEndsWith))
             {
-                result = $"{name}.EndsWith(\"{value}\")";
+                result = $"{name} != null && {name}.ToLower().EndsWith(\"{value.ToLower()}\")";
             }
             else if (operation.Equals(StaticLiterals.OperationNumEquals))
             {
