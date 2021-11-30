@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
+using SmartNQuick.AspMvc.Models.Modules.View;
+using SmartNQuick.AspMvc.Modules.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +103,15 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void BeforeGetModel(ref TModel model, ref bool handled);
         partial void AfterGetModel(TModel model);
 
+        protected virtual FilterValues CreateFilterValues(IFormCollection formCollection)
+        {
+            var models = Array.Empty<IdentityModel>();
+            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+            var indexViewModel = viewBagWrapper.CreateIndexViewModel(models, typeof(TModel));
+            var filterModel = new FilterModel(SessionWrapper, viewBagWrapper, indexViewModel);
+            
+            return filterModel.GetFilterValues(formCollection);
+        }
         protected virtual void SetSessionPageData(ref int pageCount, ref int pageIndex, ref int pageSize)
         {
             pageCount = pageCount < 0 ? 0 : pageCount;
@@ -110,6 +121,49 @@ namespace SmartNQuick.AspMvc.Controllers
             SessionWrapper.SetPageCount(ControllerName, pageCount);
             SessionWrapper.SetPageIndex(ControllerName, pageIndex);
             SessionWrapper.SetPageSize(ControllerName, pageSize);
+        }
+        protected virtual void SetSessionFilterValues(FilterValues filterValues)
+        {
+            SessionWrapper.SetFilterValues(ControllerName, filterValues);
+
+            var fv = SessionWrapper.GetFilterValues(ControllerName);
+        }
+
+        [HttpPost]
+        [ActionName("Filter")]
+        public virtual async Task<IActionResult> FilterAsync(IFormCollection formCollection)
+        {
+            var handled = false;
+            var models = default(IEnumerable<TModel>);
+
+            BeforeIndex(ref models, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    using var ctrl = CreateController();
+                    var filterValues = CreateFilterValues(formCollection);
+                    var predicate = filterValues.CreatePredicate();
+                    var pageCount = await ctrl.CountByAsync(predicate).ConfigureAwait(false);
+                    var pageIndex = 0;
+                    var pageSize = SessionWrapper.GetPageSize(ControllerName);
+
+                    SetSessionFilterValues(filterValues);
+                    SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
+
+                    var entities = await ctrl.QueryPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+                    models = entities.Select(e => ToModel(e));
+                    models = BeforeView(models, ActionMode.Index);
+                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterIndex(models);
+            return ReturnIndexView(models);
         }
 
         [HttpGet]

@@ -1,9 +1,11 @@
 //@BaseCode
 //MdStart
 
+using SmartNQuick.AspMvc.Models.Modules.View;
+
 namespace SmartNQuick.AspMvc.Modules.Session
 {
-    internal partial interface ISessionWrapper
+    public partial interface ISessionWrapper
     {
         #region General
         bool HasValue(string key);
@@ -32,12 +34,16 @@ namespace SmartNQuick.AspMvc.Modules.Session
         string Error { get; set; }
         #endregion Properties
 
-        #region Page properties
+        #region Filter properties
         void SetSearchFilter(string controllerName, string value);
         string GetSearchFilter(string controllerName);
         void SetFilterPredicate(string controllerName, string value);
         string GetFilterPredicate(string controllerName);
+        void SetFilterValues(string controllerName, FilterValues filterValues);
+        FilterValues GetFilterValues(string controllerName);
+        #endregion Filter properties
 
+        #region Page properties
         void SetPageCount(string controllerName, int value);
         int GetPageCount(string controllerName);
 

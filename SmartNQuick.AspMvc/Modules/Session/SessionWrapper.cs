@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using SmartNQuick.AspMvc.Extensions;
 using System.Linq;
+using SmartNQuick.AspMvc.Models.Modules.View;
 
 namespace SmartNQuick.AspMvc.Modules.Session
 {
@@ -103,7 +104,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         }
         #endregion Properties
 
-        #region Page-Properties
+        #region Filter values
         public void SetSearchFilter(string controllerName, string value)
         {
             SetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}", value);
@@ -120,7 +121,17 @@ namespace SmartNQuick.AspMvc.Modules.Session
         {
             return GetStringValue($"{StaticLiterals.FilterPredicateKeyPrefix}{controllerName}");
         }
+        public void SetFilterValues(string controllerName, FilterValues filterValues)
+        {
+            Session.Set<FilterValues>($"{StaticLiterals.FilterValuesKey}{controllerName}", filterValues);
+        }
+        public FilterValues GetFilterValues(string controllerName)
+        {
+            return Session.Get<FilterValues>($"{StaticLiterals.FilterValuesKey}{controllerName}");
+        }
+        #endregion Filter values
 
+        #region Page-Properties
         public void SetPageCount(string controllerName, int value)
         {
             SetIntValue($"{StaticLiterals.PageCountKeyPrefix}{controllerName}", value);

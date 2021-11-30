@@ -17,19 +17,24 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
-        public ModelType ModelType
+        public Type ViewType
+        {
+            get => ViewBag.ViewType as Type;
+            set => ViewBag.ViewType = value;
+        }
+        public ModelCategory ModelCategory
         {
             get
             {
-                var result = ModelType.Single;
+                var result = ModelCategory.Single;
 
-                if (ViewBag.ModelType != null)
+                if (ViewBag.ModelCategory != null)
                 {
-                    result = ViewBag.ModelType;
+                    result = ViewBag.ModelCategory;
                 }
                 return result;
             }
-            set => ViewBag.ModelType = value;
+            set => ViewBag.ModelCategory = value;
         }
         public EditMode EditMode
         {
@@ -75,11 +80,6 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get => ViewBag.Action as string;
             set => ViewBag.Action = value;
-        }
-        public Type ViewType
-        {
-            get => ViewBag.ViewType as Type;
-            set => ViewBag.ViewType = value;
         }
         public string ItemPrefix
         {

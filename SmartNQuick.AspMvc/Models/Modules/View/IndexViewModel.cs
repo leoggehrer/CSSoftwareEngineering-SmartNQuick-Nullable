@@ -12,10 +12,14 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
     public partial class IndexViewModel : ViewModel
     {
         private Type modelType = null;
-        public IEnumerable<IdentityModel> Models { get; init; }
         public override Type ModelType => modelType ??= Models.Any() ? Models.First().GetType() 
                                                                      : Models.GetType().GetGenericArguments().FirstOrDefault(e => e.IsClass || e.IsInterface);
+        public IEnumerable<IdentityModel> Models { get; init; }
 
+        public IndexViewModel(ViewBagWrapper viewBagWrapper, Type elementType)
+            : this(viewBagWrapper, Array.Empty<IdentityModel>(), elementType)
+        {
+        }
         public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models)
             : base(viewBagWrapper)
         {
@@ -23,6 +27,10 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             Constructing();
             Models = models;
+            if (models.Any())
+            {
+                modelType = models.First().GetType();
+            }
             Constructed();
         }
         public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models, Type elementType)

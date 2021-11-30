@@ -78,27 +78,22 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             foreach (var item in type.GetAllInterfacePropertyInfos())
             {
-                var property = default(PropertyInfo);
+                var typeProperty = default(PropertyInfo);
                 var mapName = ViewBagWrapper.GetMapping(item.Name);
 
-                if (mapName.Equals(item.Name) == false)
+                typeProperty = typeProperties.FirstOrDefault(p => p.Name.Equals(mapName, StringComparison.OrdinalIgnoreCase));
+                if (typeProperty != null)
                 {
-                    property = typeProperties.FirstOrDefault(p => p.Name.Equals(mapName, StringComparison.OrdinalIgnoreCase));
-                    if (property != null)
-                    {
-                        ViewBagWrapper.AddMappingProperty(mapName, item);
-                    }
+                    ViewBagWrapper.AddMappingProperty(mapName, typeProperty);
                 }
 
-                property ??= item;
-
-                if (property.CanRead && AllDisplayNames.Any(e => e.Equals(property.Name)))
+                if (item.CanRead && AllDisplayNames.Any(e => e.Equals(item.Name)))
                 {
-                    result.Add(property);
+                    result.Add(item);
                 }
-                else if (property.CanRead && AllDisplayNames.Any() == false && AllIgnoreNames.Any(e => e.Equals(item.Name)) == false)
+                else if (item.CanRead && AllDisplayNames.Any() == false && AllIgnoreNames.Any(e => e.Equals(item.Name)) == false)
                 {
-                    result.Add(property);
+                    result.Add(item);
                 }
             }
             return result;

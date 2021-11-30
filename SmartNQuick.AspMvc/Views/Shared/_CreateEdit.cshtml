@@ -25,7 +25,7 @@
         var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
         var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
 
-        viewBagWrapper.ModelType = ModelType.OneToAnother;
+        viewBagWrapper.ModelCategory = ModelCategory.OneToAnother;
         viewBagWrapper.ItemPrefix = "OneModel";
         oneModel.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", oneModel)
@@ -43,7 +43,7 @@
         var manyModels = manyProperty?.GetValue(Model) as IdentityModel;
         var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
 
-        viewBagWrapper.ModelType = ModelType.MasterDetail;
+        viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
         viewBagWrapper.ItemPrefix = "OneModel";
         oneModel.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", oneModel)
@@ -58,7 +58,7 @@
         var anotherProperty = Model.GetType().GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
 
-        viewBagWrapper.ModelType = ModelType.Composite;
+        viewBagWrapper.ModelCategory = ModelCategory.Composite;
         if (connectorModel != null)
         {
             viewBagWrapper.ItemPrefix = "ConnectorModel";
@@ -84,7 +84,7 @@
     }
     else
     {
-        viewBagWrapper.ModelType = ModelType.Single;
+        viewBagWrapper.ModelCategory = ModelCategory.Single;
         Model.ViewBagInfo = viewBagWrapper;
         @await Html.PartialAsync("_EditModel", Model)
         <hr />

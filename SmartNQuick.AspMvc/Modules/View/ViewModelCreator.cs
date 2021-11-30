@@ -8,6 +8,22 @@ namespace SmartNQuick.AspMvc.Modules.View
 {
     public partial class ViewModelCreator
     {
+        public virtual IndexViewModel CreateIndexViewModel(string viewTypeName, Type elementType, ViewBagWrapper viewBagWrapper)
+        {
+            var handled = false;
+            IndexViewModel result = null;
+
+            BeforeCreateIndexViewModel(viewTypeName, elementType, viewBagWrapper, ref result, ref handled);
+            if (handled == false)
+            {
+                result = new IndexViewModel(viewBagWrapper, elementType);
+            }
+            AfterCreateIndexViewModel(viewTypeName, elementType, viewBagWrapper, result);
+            return result;
+        }
+        partial void BeforeCreateIndexViewModel(string viewTypeName, Type elementType, ViewBagWrapper viewBagWrapper, ref IndexViewModel result, ref bool handled);
+        partial void AfterCreateIndexViewModel(string viewTypeName, Type elementType, ViewBagWrapper viewBagWrapper, IndexViewModel result);
+
         public virtual IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, ViewBagWrapper viewBagWrapper)
         {
             var handled = false;

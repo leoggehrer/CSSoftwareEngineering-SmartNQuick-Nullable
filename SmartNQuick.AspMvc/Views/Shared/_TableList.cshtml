@@ -25,12 +25,12 @@
         {
             indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
         }
-        viewBagWrapper.ModelType = ModelType.MasterDetail;
+        viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
         viewBagWrapper.CommandMode |= SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.CreateDetail;
     }
     else
     {
-        viewBagWrapper.ModelType = ModelType.Single;
+        viewBagWrapper.ModelCategory = ModelCategory.Single;
         indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
     }
 
