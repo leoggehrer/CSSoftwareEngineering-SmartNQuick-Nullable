@@ -79,6 +79,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
+            ViewBag.ModelType = typeof(TModel);
             ViewBag.ViewModelCreator = new ViewModelCreator();
 
             base.OnActionExecuted(context);
@@ -112,7 +113,7 @@ namespace SmartNQuick.AspMvc.Controllers
             
             return filterModel.GetFilterValues(formCollection);
         }
-        protected virtual void SetSessionPageData(ref int pageCount, ref int pageIndex, ref int pageSize)
+        protected virtual void SetSessionPageData(int pageCount, int pageIndex, int pageSize)
         {
             pageCount = pageCount < 0 ? 0 : pageCount;
             pageSize = pageSize < 1 ? 1 : pageSize;
@@ -129,23 +130,25 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize)
         {
             var result = default(IEnumerable<TContract>);
+            var pageCount = 0;
             var filterValue = SessionWrapper.GetFilterValues(ControllerName);
             var predicate = filterValue?.CreatePredicate();
 
+            SetSessionPageData(pageCount, pageIndex, pageSize);
             if (predicate.HasContent())
             {
                 using var ctrl = CreateController();
-                var pageCount = await ctrl.CountByAsync(predicate).ConfigureAwait(false);
+                pageCount = await ctrl.CountByAsync(predicate).ConfigureAwait(false);
 
-                SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
+                SetSessionPageData(pageCount, pageIndex, pageSize);
                 result = await ctrl.QueryPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
             }
             else
             {
                 using var ctrl = CreateController();
-                var pageCount = await ctrl.CountAsync().ConfigureAwait(false);
+                pageCount = await ctrl.CountAsync().ConfigureAwait(false);
 
-                SetSessionPageData(ref pageCount, ref pageIndex, ref pageSize);
+                SetSessionPageData(pageCount, pageIndex, pageSize);
                 result = await ctrl.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
             }
             return result;

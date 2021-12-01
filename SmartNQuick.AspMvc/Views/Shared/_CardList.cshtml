@@ -26,13 +26,17 @@
         {
             indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
         }
+        else
+        {
+            indexViewModel = viewBagWrapper.CreateIndexViewModel(new IdentityModel[] { mds.ElementAt(0).Master }, viewBagWrapper.ModelType);
+        }
         viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
         viewBagWrapper.CommandMode |= SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.CreateDetail;
     }
     else
     {
         viewBagWrapper.ModelCategory = ModelCategory.Single;
-        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
+        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model, viewBagWrapper.ModelType);
     }
 
     if (indexViewModel != null)

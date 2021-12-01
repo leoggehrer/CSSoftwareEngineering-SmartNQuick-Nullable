@@ -1,11 +1,12 @@
 @*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models
     @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+    @model IEnumerable<IdentityModel>
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -13,7 +14,7 @@
     viewBagWrapper.Translate = Translator.TranslateIt;
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model != null ? Model.GetType() : null;
+    viewBagWrapper.ViewType = Model != null ? Model.GetType() : typeof(IEnumerable<IdentityModel>);
 
     ViewData["Title"] = viewBagWrapper.Title;
     <div class="row">
@@ -33,6 +34,7 @@
         <div class="alert alert-danger" role="alert">
             @ErrorHandler.GetLastViewErrorAndClear()
         </div>
+        @await Html.PartialAsync("_PagerControl", Array.Empty<IdentityModel>())
     }
     else
     {

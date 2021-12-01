@@ -22,10 +22,14 @@
         {
             indexViewModel = viewBagWrapper.CreateIndexViewModel(new IdentityModel[] { mds.ElementAt(0).Master });
         }
+        else
+        {
+            indexViewModel = viewBagWrapper.CreateIndexViewModel(new IdentityModel[] { mds.ElementAt(0).Master }, viewBagWrapper.ModelType);
+        }
     }
     else
     {
-        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
+        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model, viewBagWrapper.ModelType);
     }
 
     if (indexViewModel != null)
