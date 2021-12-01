@@ -12,6 +12,7 @@ namespace SmartNQuick.AspMvc
         public static string SearchFilterKeyPrefix => "SFILK";
         public static string FilterPredicateKeyPrefix => "FPREDK";
 
+        public static string FilterModelKey => "FMK";
         public static string FilterValuesKey => "FVK";
         public static string PageSizesKeyPrefix => "PSIZSK";
         public static string PageCountKeyPrefix => "PCNTK";

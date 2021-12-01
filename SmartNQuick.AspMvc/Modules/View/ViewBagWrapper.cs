@@ -1,10 +1,13 @@
 ﻿//@BaseCode
 //MdStart
 
+using CommonBase.Extensions;
+using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Models.Modules.View;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Modules.View
@@ -225,43 +228,21 @@ namespace SmartNQuick.AspMvc.Modules.View
         }
         public Func<string, string> TranslateFor => text => Translate($"{Controller}.{text}");
 
-        public IndexViewModel CreateIndexViewModel(IEnumerable<Models.IdentityModel> models)
+        public IndexViewModel CreateIndexViewModel(IEnumerable<IdentityModel> models)
         {
-            return CreateIndexViewModel(ViewTypeName, models);
-        }
-        public IndexViewModel CreateIndexViewModel(IEnumerable<Models.IdentityModel> models, Type elementType)
-        {
-            return CreateIndexViewModel(ViewTypeName, models, elementType);
-        }
-        public IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewTypeName, models, this) 
-                                            : new ViewModelCreator().CreateIndexViewModel(viewTypeName, models, this);
-        }
-        public IndexViewModel CreateIndexViewModel(string viewTypeName, IEnumerable<Models.IdentityModel> models, Type elementType)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(viewTypeName, models, elementType, this)
-                                            : new ViewModelCreator().CreateIndexViewModel(viewTypeName, models, elementType, this);
+            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(this, models)
+                                            : new ViewModelCreator().CreateIndexViewModel(this, models);
         }
 
-        public EditViewModel CreateEditViewModel(Models.IdentityModel model)
+        public DisplayViewModel CreateDisplayViewModel(IdentityModel model)
         {
-            return CreateEditViewModel(ViewTypeName, model);
+            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(this, model)
+                                            : new ViewModelCreator().CreateDisplayViewModel(this, model);
         }
-        public EditViewModel CreateEditViewModel(string viewTypeName, Models.IdentityModel model)
+        public EditViewModel CreateEditViewModel(IdentityModel model)
         {
-            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(viewTypeName, model, this)
-                                            : new ViewModelCreator().CreateEditViewModel(viewTypeName, model, this);
-        }
-
-        public DisplayViewModel CreateDisplayViewModel(Models.IdentityModel model)
-        {
-            return CreateDisplayViewModel(ViewTypeName, model);
-        }
-        public DisplayViewModel CreateDisplayViewModel(string viewTypeName, Models.IdentityModel model)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(viewTypeName, model, this)
-                                            : new ViewModelCreator().CreateDisplayViewModel(viewTypeName, model, this);
+            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(this, model)
+                                            : new ViewModelCreator().CreateEditViewModel(this, model);
         }
     }
 }

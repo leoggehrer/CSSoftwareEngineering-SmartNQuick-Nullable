@@ -41,6 +41,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         }
 
         public abstract Type ModelType { get; }
+        public abstract Type ViewType { get; }
         protected ViewModel(ViewBagWrapper viewBagWrapper)
         {
             viewBagWrapper.CheckArgument(nameof(viewBagWrapper));

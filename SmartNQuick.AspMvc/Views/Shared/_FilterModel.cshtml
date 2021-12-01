@@ -1,12 +1,16 @@
 ﻿@*@BaseCode*@
 @{
+    @using System.Reflection
     @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
 
     var index = 0;
+    var sessionWrapper = Model.Session;
     var viewBagWrapper = Model.ViewBagInfo;
     var indexViewModel = Model.IndexViewModel;
+    var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
+    var properties = indexViewModel.GetDisplayProperties();
 
-    @foreach (var property in indexViewModel.GetDisplayProperties())
+    @foreach (var property in properties)
     {
         if (property.CanRead)
         {

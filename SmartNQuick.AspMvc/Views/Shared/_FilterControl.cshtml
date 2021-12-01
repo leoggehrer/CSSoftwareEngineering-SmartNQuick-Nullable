@@ -14,28 +14,12 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var indexViewModel = default(IndexViewModel);
-
-    if (Model is IEnumerable<IMasterDetails> mds)
-    {
-        if (mds.Any())
-        {
-            indexViewModel = viewBagWrapper.CreateIndexViewModel(new IdentityModel[] { mds.ElementAt(0).Master });
-        }
-        else
-        {
-            indexViewModel = viewBagWrapper.CreateIndexViewModel(new IdentityModel[] { mds.ElementAt(0).Master }, viewBagWrapper.ModelType);
-        }
-    }
-    else
-    {
-        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model, viewBagWrapper.ModelType);
-    }
+    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
 
     if (indexViewModel != null)
     {
         var filterModel = new FilterModel(sessionWrapper, viewBagWrapper, indexViewModel);
-
+        
         <form asp-action="Filter" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @await Html.PartialAsync("_FilterModel", filterModel)

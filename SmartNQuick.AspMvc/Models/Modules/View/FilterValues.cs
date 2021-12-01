@@ -1,12 +1,11 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public class FilterValues : Dictionary<string, string>
+    public class FilterValues : Dictionary<string, FilterItem>
     {
         public string CreatePredicate()
         {
@@ -16,13 +15,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             {
                 if (item.Key.EndsWith($"{StaticLiterals.TypeOperationPostfix}") == false)
                 {
-                    if (TryGetValue($"{item.Key}.{StaticLiterals.TypeOperationPostfix}", out string op))
+                    if (TryGetValue($"{item.Key}", out FilterItem filterItem))
                     {
                         if (result.Length > 0)
                         {
                             result.Append(" AND ");
                         }
-                        result.Append(CreatePredicate(item.Key, op, item.Value));
+                        result.Append(CreatePredicate(filterItem.Name, filterItem.Operation, filterItem.Value));
                     }
                 }
             }
@@ -33,6 +32,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             var result = default(string);
 
             if (operation.Equals(StaticLiterals.OperationEquals))
+
             {
                 result = $"{name} == \"{value}\"";
             }

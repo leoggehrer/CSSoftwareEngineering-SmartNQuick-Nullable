@@ -12,6 +12,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
     {
         public IdentityModel Model { get; init; }
         public override Type ModelType => Model.GetType();
+        public override Type ViewType => Model.GetType();
 
         public EditViewModel(ViewBagWrapper viewBagWrapper, IdentityModel model)
             : base(viewBagWrapper)
@@ -27,11 +28,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
         {
-            return GetHiddenProperties(ModelType);
+            return GetHiddenProperties(ViewType);
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
-            return GetDisplayProperties(ModelType);
+            return GetDisplayProperties(ViewType);
         }
         public virtual object GetValue(PropertyInfo propertyInfo)
         {

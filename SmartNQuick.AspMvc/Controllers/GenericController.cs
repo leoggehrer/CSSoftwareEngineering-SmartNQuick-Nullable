@@ -17,7 +17,7 @@ namespace SmartNQuick.AspMvc.Controllers
 {
     public abstract partial class GenericController<TContract, TModel> : MvcController
         where TContract : Contracts.IIdentifiable, Contracts.ICopyable<TContract>
-        where TModel : TContract, new()
+        where TModel : IdentityModel, TContract, new()
     {
         static GenericController()
         {
@@ -104,14 +104,13 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void BeforeGetModel(ref TModel model, ref bool handled);
         partial void AfterGetModel(TModel model);
 
-        protected virtual FilterValues CreateFilterValues(IFormCollection formCollection)
+        protected virtual FilterModel CreateFilterModel()
         {
-            var models = Array.Empty<IdentityModel>();
+            var models = new TModel[] { new TModel() };
             var viewBagWrapper = new ViewBagWrapper(ViewBag);
-            var indexViewModel = viewBagWrapper.CreateIndexViewModel(models, typeof(TModel));
-            var filterModel = new FilterModel(SessionWrapper, viewBagWrapper, indexViewModel);
-            
-            return filterModel.GetFilterValues(formCollection);
+            var indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
+
+            return new FilterModel(SessionWrapper, viewBagWrapper, indexViewModel);
         }
         protected virtual void SetSessionPageData(int pageCount, int pageIndex, int pageSize)
         {
@@ -166,8 +165,9 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    var filterValues = CreateFilterValues(formCollection);
                     var pageIndex = 0;
+                    var filterModel = CreateFilterModel();
+                    var filterValues = filterModel.GetFilterValues(formCollection);
                     var pageSize = SessionWrapper.GetPageSize(ControllerName);
 
                     SetSessionFilterValues(filterValues);
@@ -591,7 +591,7 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneProperty = model.GetType().GetProperty("OneModel");
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
-                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as IdentityModel;
+                        var manyModel = createManyMethod?.Invoke(model, Array.Empty<object>()) as IdentityModel;
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
@@ -633,7 +633,7 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneProperty = model.GetType().GetProperty("OneModel");
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
-                        var manyModel = createManyMethod?.Invoke(model, new object[] { }) as IdentityModel;
+                        var manyModel = createManyMethod?.Invoke(model, Array.Empty<object>()) as IdentityModel;
                         var addManyMethod = model.GetType().GetMethod("AddManyItem");
 
                         masterDetailModel.Master = oneModel;

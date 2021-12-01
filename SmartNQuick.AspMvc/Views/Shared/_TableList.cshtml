@@ -2,7 +2,6 @@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.Common;
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
@@ -15,24 +14,7 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var indexViewModel = default(IndexViewModel);
-
-    if (Model is IEnumerable<IMasterDetails> mds)
-    {
-        var models = mds.Select(m => m.Master);
-
-        if (models.Any())
-        {
-            indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
-        }
-        viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
-        viewBagWrapper.CommandMode |= SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.CreateDetail;
-    }
-    else
-    {
-        viewBagWrapper.ModelCategory = ModelCategory.Single;
-        indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
-    }
+    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
 
     if (indexViewModel != null)
     {
@@ -49,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var model in indexViewModel.Models)
+                @foreach (var model in indexViewModel.ViewModels)
                 {
                     model.ViewBagInfo = viewBagWrapper;
                     <tr>

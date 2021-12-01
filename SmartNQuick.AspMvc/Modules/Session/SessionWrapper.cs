@@ -104,7 +104,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         }
         #endregion Properties
 
-        #region Filter values
+        #region Filter
         public void SetSearchFilter(string controllerName, string value)
         {
             SetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}", value);
@@ -121,6 +121,14 @@ namespace SmartNQuick.AspMvc.Modules.Session
         {
             return GetStringValue($"{StaticLiterals.FilterPredicateKeyPrefix}{controllerName}");
         }
+        public void SetFilterModel(string controllerName, FilterModel filterModel)
+        {
+            Session.Set<FilterModel>($"{StaticLiterals.FilterModelKey}{controllerName}", filterModel);
+        }
+        public FilterModel GetFilterModel(string controllerName)
+        {
+            return Session.Get<FilterModel>($"{StaticLiterals.FilterModelKey}{controllerName}");
+        }
         public void SetFilterValues(string controllerName, FilterValues filterValues)
         {
             Session.Set<FilterValues>($"{StaticLiterals.FilterValuesKey}{controllerName}", filterValues);
@@ -129,7 +137,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         {
             return Session.Get<FilterValues>($"{StaticLiterals.FilterValuesKey}{controllerName}");
         }
-        #endregion Filter values
+        #endregion Filter
 
         #region Page-Properties
         public void SetPageCount(string controllerName, int value)
@@ -147,9 +155,7 @@ namespace SmartNQuick.AspMvc.Modules.Session
         }
         public int[] GetPageSizes(string controllerName)
         {
-            var result = GetValue($"{StaticLiterals.PageSizesKeyPrefix}{controllerName}") as int[];
-
-            return result == null ? StaticLiterals.DefaultPageSizes : result;
+            return GetValue($"{StaticLiterals.PageSizesKeyPrefix}{controllerName}") is not int[] result ? StaticLiterals.DefaultPageSizes : result;
         }
 
         public void SetPageSize(string controllerName, int value)

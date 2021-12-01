@@ -86,11 +86,12 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
         public SelectList GetFieldOperations()
         {
-            var operations = new List<SelectListItem>();
-
-            operations.Add(new SelectListItem { Selected = true, Value = string.Empty, Text = string.Empty });
-            operations.Add(new SelectListItem { Selected = true, Value = "and", Text = "And" });
-            operations.Add(new SelectListItem { Selected = true, Value = "or", Text = "Or" });
+            var operations = new List<SelectListItem>
+            {
+                new SelectListItem { Selected = true, Value = string.Empty, Text = string.Empty },
+                new SelectListItem { Selected = true, Value = "and", Text = "And" },
+                new SelectListItem { Selected = true, Value = "or", Text = "Or" }
+            };
             return new SelectList(operations, "Value", "Text");
         }
         public SelectList GetTypeOperations(PropertyInfo propertyInfo)
@@ -125,27 +126,32 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             }
             return new SelectList(operations, "Value", "Text");
         }
-
         public FilterValues GetFilterValues(IFormCollection formCollection)
         {
             formCollection.CheckArgument(nameof(formCollection));
 
             var result = new FilterValues();
 
-            foreach (var item in IndexViewModel.GetDisplayProperties())
+            foreach (var property in IndexViewModel.GetDisplayProperties())
             {
-                var operationName = GetTypeOperationName(item);
+                var operationName = GetTypeOperationName(property);
                 var operationValue = formCollection[operationName];
 
                 if (operationValue.Count > 0 && string.IsNullOrEmpty(operationValue[0]) == false)
                 {
-                    var operandName = GetName(item);
+                    var operandName = GetName(property);
                     var operandValue = formCollection[operandName];
 
                     if (operandValue.Count > 0 && string.IsNullOrEmpty(operandValue[0]) == false)
                     {
-                        result[item.Name] = operandValue[0];
-                        result[$"{item.Name}.{StaticLiterals.TypeOperationPostfix}"] = operationValue;
+                        var filterItem = new FilterItem()
+                        {
+                            Name = property.Name,
+                            Operation = operationValue,
+                            Value = operandValue,
+                        };
+                        result[property.Name] = filterItem;
+//                        result[$"{property.Name}.{StaticLiterals.TypeOperationPostfix}"] = operationValue;
                     }
                 }
             }

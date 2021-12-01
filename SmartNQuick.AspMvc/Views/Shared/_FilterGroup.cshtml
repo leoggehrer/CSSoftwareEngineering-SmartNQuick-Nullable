@@ -13,9 +13,15 @@
     var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
     var propertyValue = default(string);
     var propertyOperation = default(string);
+    var filterItem = default(FilterItem);
 
-    filterValues?.TryGetValue(property.Name, out propertyValue);
-    filterValues?.TryGetValue($"{property.Name}.{StaticLiterals.TypeOperationPostfix}", out propertyOperation);
+    if (filterValues != null && filterValues.TryGetValue(property.Name, out filterItem))
+    {
+        propertyValue = filterItem.Value;
+        propertyOperation = filterItem.Operation;
+    }
+    //filterValues?.TryGetValue(property.Name, out propertyValue);
+    //filterValues?.TryGetValue($"{property.Name}.{StaticLiterals.TypeOperationPostfix}", out propertyOperation);
 
     var listOperation = new List<SelectListItem>(typeOperations);
 
