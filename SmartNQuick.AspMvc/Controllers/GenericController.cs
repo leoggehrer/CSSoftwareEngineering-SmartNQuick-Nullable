@@ -79,7 +79,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            ViewBag.ViewModelCreator = new Modules.View.ViewModelCreator();
+            ViewBag.ViewModelCreator = new ViewModelCreator();
 
             base.OnActionExecuted(context);
         }

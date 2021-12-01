@@ -46,9 +46,12 @@
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter and page index">
-                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
-                    <i class="fa fa-filter">@filterText</i>
-                </button>
+                @if (viewBagWrapper.HasFilter)
+                {
+                    <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+                        <i class="fa fa-filter">@filterText</i>
+                    </button>
+                }
                 <div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
                         @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
@@ -166,7 +169,7 @@
             </div>
         </nav>
     }
-    else if (pageCount == 0)
+    else if (pageCount == 0 && viewBagWrapper.HasFilter && string.IsNullOrEmpty(filterText) == false)
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter">
@@ -182,7 +185,7 @@
             </div>
         </nav>
     }
-    else
+    else if (viewBagWrapper.HasFilter)
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter">

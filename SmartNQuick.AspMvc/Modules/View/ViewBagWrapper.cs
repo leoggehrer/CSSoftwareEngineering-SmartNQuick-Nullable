@@ -22,6 +22,16 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.ViewType as Type;
             set => ViewBag.ViewType = value;
         }
+        public bool HasPager
+        {
+            get => ViewBag.HasPager != null ? (bool)ViewBag.HasPager : true;
+            set => ViewBag.HasPager = value;
+        }
+        public bool HasFilter
+        {
+            get => ViewBag.HasFilter != null ? (bool)ViewBag.HasFilter : true;
+            set => ViewBag.HasFilter = value;
+        }
         public ModelCategory ModelCategory
         {
             get
