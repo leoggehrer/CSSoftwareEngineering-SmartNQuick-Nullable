@@ -33,7 +33,7 @@
                         }
                     </li>
                 </ul>
-                @*#if ACCOUNT_ON*@
+@*#if ACCOUNT_ON*@
                 @{
                     @if (sessionInfo.LoginSession != null && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
                     {
@@ -46,15 +46,13 @@
                         @await Html.PartialAsync("_CardBody", model)
                     }
                 }
-                @*#endif*@
+@*#endif*@
 
-                @*#if ACCOUNT_OFF*@
-                @*
+@*#if ACCOUNT_OFF*@@*
                     @{
                     @await Html.PartialAsync("_CardBody", Model)
                     }
-                *@
-                @*#endif*@
+*@@*#endif*@
             </div>
         }
     }

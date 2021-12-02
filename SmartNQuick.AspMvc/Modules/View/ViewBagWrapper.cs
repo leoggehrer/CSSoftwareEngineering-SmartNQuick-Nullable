@@ -1,6 +1,8 @@
 ﻿//@BaseCode
 //MdStart
 
+using CommonBase.Extensions;
+using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using System;
 using System.Collections.Generic;
@@ -16,16 +18,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
-        public Type ViewType
-        {
-            get => ViewBag.ViewType as Type;
-            set => ViewBag.ViewType = value;
-        }
-        public Type ModelType
-        {
-            get => ViewBag.ModelType as Type;
-            set => ViewBag.ModelType = value;
-        }
         public bool HasPager
         {
             get => ViewBag.HasPager != null ? (bool)ViewBag.HasPager : true;
@@ -100,7 +92,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.ItemPrefix as string;
             set => ViewBag.ItemPrefix = value;
         }
-        public string ViewTypeName => ViewType?.FullName;
         public int Index
         {
             get => ViewBag.Index != null ? (int)ViewBag.Index : 0;
@@ -217,6 +208,24 @@ namespace SmartNQuick.AspMvc.Modules.View
             set => ViewBag.Translate = value;
         }
         public Func<string, string> TranslateFor => text => Translate($"{Controller}.{text}");
+
+        public static Type GetDisplayType(Type modelType)
+        {
+            modelType.CheckArgument(nameof(modelType));
+
+            var result = modelType;
+
+            if (modelType.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+            {
+                var genericTypes = modelType.BaseType.GetGenericArguments();
+
+                if (genericTypes.Length > 1)
+                {
+                    result = genericTypes[1];
+                }
+            }
+            return result;
+        }
     }
 }
 //MdEnd

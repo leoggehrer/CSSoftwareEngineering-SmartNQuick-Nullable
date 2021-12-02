@@ -7,86 +7,85 @@
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model EditViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = Model?.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model?.GetType();
-
-    @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+    @if (Model.DisplayType.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
     {
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-        var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-        var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, oneModel);
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
+        var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagWrapper.ModelCategory = ModelCategory.OneToAnother;
-        viewBagWrapper.ItemPrefix = "OneModel";
-        oneModel.ViewBagInfo = viewBagWrapper;
-        @await Html.PartialAsync("_EditModel", oneModel)
-
-        viewBagWrapper.ItemPrefix = "AnotherModel";
-        anotherModel.ViewBagInfo = viewBagWrapper;
-        @await Html.PartialAsync("_EditModel", anotherModel)
-        <hr />
-    }
-    else if (Model.GetType().IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
-    {
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var manyProperty = Model.GetType().GetProperty("ManyModels");
-        var manyModels = manyProperty?.GetValue(Model) as IdentityModel;
-        var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, oneModel);
-
-        viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
-        viewBagWrapper.ItemPrefix = "OneModel";
-        oneModel.ViewBagInfo = viewBagWrapper;
-        @await Html.PartialAsync("_EditModel", oneModel)
-        <hr />
-    }
-    else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
-    {
-        var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
-        var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-        var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-
-        viewBagWrapper.ModelCategory = ModelCategory.Composite;
-        if (connectorModel != null)
-        {
-            viewBagWrapper.ItemPrefix = "ConnectorModel";
-            <h2>@viewBagWrapper.TranslateFor("ConnectorModel")</h2>
-            connectorModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_EditModel", connectorModel)
-        }
+        viewBagInfo.ModelCategory = ModelCategory.OneToAnother;
         if (oneModel != null)
         {
-            viewBagWrapper.ItemPrefix = "OneModel";
-            oneModel.ViewBagInfo = viewBagWrapper;
-            <h2>@viewBagWrapper.TranslateFor("OneModel")</h2>
+            viewBagInfo.ItemPrefix = "OneModel";
+            oneModel.ViewBagInfo = viewBagInfo;
             @await Html.PartialAsync("_EditModel", oneModel)
         }
         if (anotherModel != null)
         {
-            viewBagWrapper.ItemPrefix = "AnotherModel";
-            anotherModel.ViewBagInfo = viewBagWrapper;
-            <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
+            viewBagInfo.ItemPrefix = "AnotherModel";
+            anotherModel.ViewBagInfo = viewBagInfo;
+            @await Html.PartialAsync("_EditModel", anotherModel)
+        }
+        <hr />
+    }
+    else if (Model.DisplayType.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+    {
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var manyProperty = Model.DisplayType.GetProperty("ManyModels");
+        var manyModels = manyProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+
+        viewBagInfo.ModelCategory = ModelCategory.MasterDetail;
+        viewBagInfo.ParentModel = oneModel;
+        viewBagInfo.ItemPrefix = "OneModel";
+        oneModel.ViewBagInfo = viewBagInfo;
+        @await Html.PartialAsync("_EditModel", oneModel)
+        <hr />
+    }
+    else if (Model.DisplayType.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+    {
+        var connectorProperty = Model.DisplayType.GetProperty("ConnectorModel");
+        var connectorModel = connectorProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
+        var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+
+        viewBagInfo.ModelCategory = ModelCategory.Composite;
+        if (connectorModel != null)
+        {
+            viewBagInfo.ItemPrefix = "ConnectorModel";
+            <h2>@viewBagInfo.TranslateFor("ConnectorModel")</h2>
+            connectorModel.ViewBagInfo = viewBagInfo;
+            @await Html.PartialAsync("_EditModel", connectorModel)
+        }
+        if (oneModel != null)
+        {
+            viewBagInfo.ItemPrefix = "OneModel";
+            oneModel.ViewBagInfo = viewBagInfo;
+            <h2>@viewBagInfo.TranslateFor("OneModel")</h2>
+            @await Html.PartialAsync("_EditModel", oneModel)
+        }
+        if (anotherModel != null)
+        {
+            viewBagInfo.ItemPrefix = "AnotherModel";
+            anotherModel.ViewBagInfo = viewBagInfo;
+            <h2>@viewBagInfo.TranslateFor("AnotherModel")</h2>
             @await Html.PartialAsync("_EditModel", anotherModel)
         }
         <hr />
     }
     else
     {
-        viewBagWrapper.ModelCategory = ModelCategory.Single;
-        Model.ViewBagInfo = viewBagWrapper;
-        @await Html.PartialAsync("_EditModel", Model)
+        viewBagInfo.ModelCategory = ModelCategory.Single;
+        Model.DisplayModel.ViewBagInfo = viewBagInfo;
+        @await Html.PartialAsync("_EditModel", Model.DisplayModel)
         <hr />
     }
 }

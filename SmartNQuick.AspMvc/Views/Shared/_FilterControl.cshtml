@@ -1,27 +1,18 @@
 @*@BaseCode*@
 @{
-    @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
     @model IndexViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
-
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-
-    if (Model != null)
-    {
-        var filterModel = new FilterModel(sessionWrapper, viewBagWrapper, Model);
+    var viewBagInfo = Model?.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
+    var filterModel = new FilterModel(sessionInfo, Model);
         
-        <form asp-action="Filter" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @await Html.PartialAsync("_FilterModel", filterModel)
-            @await Html.PartialAsync("_Submit", new SubmitCmd() { SubmitText = viewBagWrapper.TranslateFor("Apply") })
-        </form>
-    }
+    <form asp-action="Filter" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @await Html.PartialAsync("_FilterModel", filterModel)
+        @await Html.PartialAsync("_Submit", new SubmitCmd() { SubmitText = viewBagInfo.TranslateFor("Apply") })
+    </form>
 }

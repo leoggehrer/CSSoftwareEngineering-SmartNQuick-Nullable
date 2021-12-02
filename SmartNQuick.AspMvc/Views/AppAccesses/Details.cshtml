@@ -8,28 +8,27 @@
     @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = new ViewBagWrapper(ViewBag);
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model?.GetType();
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    Model.ViewBagInfo = viewBagWrapper;
-    Model.OneModel.ViewBagInfo = viewBagWrapper;
-    ViewData["Title"] = viewBagWrapper.Title;
+    Model.ViewBagInfo = viewBagInfo;
+    Model.OneModel.ViewBagInfo = viewBagInfo;
+    ViewData["Title"] = viewBagInfo.Title;
     <h1>@ViewData["Title"]</h1>
 
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@viewBagWrapper.Title</h4>
+            <h4>@viewBagInfo.Title</h4>
         </div>
         <div class="p-sm-2">
-            <a asp-action="Index" class="btn btn-outline-dark" style="min-width: 8em;">@viewBagWrapper.TranslateFor("Back to List")</a>
+            <a asp-action="Index" class="btn btn-outline-dark" style="min-width: 8em;">@viewBagInfo.TranslateFor("Back to List")</a>
         </div>
         <div class="p-sm-2">
-            @Html.ActionLink(viewBagWrapper.TranslateFor("Edit"), "Edit", new { id = Model.Id }, new { @class = "btn btn-secondary", style = "min-width: 8em;" })
+            @Html.ActionLink(viewBagInfo.TranslateFor("Edit"), "Edit", new { id = Model.Id }, new { @class = "btn btn-secondary", style = "min-width: 8em;" })
         </div>
     </div>
     <hr />

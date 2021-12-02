@@ -1,11 +1,11 @@
 ﻿@*@BaseCode*@
 @{
-@using SmartNQuick.AspMvc.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @using SmartNQuick.AspMvc.Modules.View
+    @model SmartNQuick.AspMvc.Models.ModelObject
 
     var index = 0;
-    var viewBagWrapper = Model.ViewBagInfo;
-    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagWrapper, Model);
+    var viewBagInfo = Model.ViewBagInfo;
+    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, Model);
 
     @foreach (var property in displayViewModel.GetHiddenProperties())
     {

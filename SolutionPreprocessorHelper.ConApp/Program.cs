@@ -152,7 +152,15 @@ namespace SolutionPreprocessorHelper.ConApp
                     var startIndex = 0;
                     var hasChanged = false;
                     var result = string.Empty;
-                    var text = File.ReadAllText(file, Encoding.Default);
+                    var text = File.ReadAllLines(file, Encoding.Default)
+                                   .Select(l =>
+                                   {
+                                       if (l.Contains($"@*#if {directive}*@") || l.Contains("@*#endif*@"))
+                                       {
+                                           l = l.Trim();
+                                       }
+                                       return l;
+                                   }).ToText();
 
                     foreach (var tag in text.GetAllTags($"@*#if {directive}*@", "@*#endif*@"))
                     {
@@ -167,9 +175,9 @@ namespace SolutionPreprocessorHelper.ConApp
                             else
                             {
                                 hasChanged = true;
-                                result += Environment.NewLine + "@*";
+                                result += /*Environment.NewLine + */"@*";
                                 result += tag.InnerText;
-                                result += "*@" + Environment.NewLine;
+                                result += "*@";// + Environment.NewLine;
                             }
                             result += tag.EndTag;
                             startIndex += tag.EndTagIndex + tag.EndTag.Length;

@@ -7,103 +7,98 @@
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
     @using SmartNQuick.AspMvc.Models.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model DisplayViewModel
 
-    var viewBagWrapper = Model.ViewBagInfo;
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = Model.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model?.GetType();
-
-    @if (Model.GetType().IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+    @if (Model.DisplayType.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
     {
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-        var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
+        var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagWrapper.ModelCategory = ModelCategory.OneToAnother;
+        viewBagInfo.ModelCategory = ModelCategory.OneToAnother;
         if (oneModel != null)
         {
-            oneModel.ViewBagInfo = viewBagWrapper;
+            oneModel.ViewBagInfo = viewBagInfo;
             @await Html.PartialAsync("_DisplayModel", oneModel)
         }
         if (anotherModel != null)
         {
-            anotherModel.ViewBagInfo = viewBagWrapper;
+            anotherModel.ViewBagInfo = viewBagInfo;
             @await Html.PartialAsync("_DisplayModel", anotherModel)
         }
     }
-    else if (Model.GetType().IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+    else if (Model.DisplayType.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
     {
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var manyProperty = Model.GetType().GetProperty("ManyModels");
-        var manyModels = manyProperty?.GetValue(Model);
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var manyProperty = Model.DisplayType.GetProperty("ManyModels");
+        var manyModels = manyProperty?.GetValue(Model.DisplayModel);
 
-        viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
-        viewBagWrapper.ParentModel = oneModel;
-        if (oneModel != null)
+        viewBagInfo.ModelCategory = ModelCategory.MasterDetail;
+        viewBagInfo.ParentModel = oneModel;
+        oneModel.ViewBagInfo = viewBagInfo;
+        @await Html.PartialAsync("_DisplayModel", oneModel)
+        <hr />
+
+        @if (viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false && (viewBagInfo.CommandMode & CommandMode.Edit) > 0)
         {
-            oneModel.ViewBagInfo = viewBagWrapper;
-            @await Html.PartialAsync("_DisplayModel", oneModel)
-
-            @if (viewBagWrapper.Action.Equals(ActionMode.Delete.ToString()) == false && (viewBagWrapper.CommandMode & CommandMode.Edit) > 0)
-            {
-                <div class="row">
-                    <div class="col-md-12 d-flex">
-                        <div class="ml-auto">
-                            <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-dark" title="@viewBagWrapper.TranslateFor("Create new detail...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                        </div>
+            <div class="row" style="margin-bottom: 1em;">
+                <div class="col-md-12 d-flex">
+                    <div class="ml-auto">
+                        <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-dark" title="@viewBagInfo.TranslateFor("Create new detail...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
                     </div>
                 </div>
-            }
+            </div>
         }
 
         if (manyModels is IEnumerable<IdentityModel> details && details.Any())
         {
-            <hr />
-            viewBagWrapper.HiddenNames.Add($"{oneModel.GetType().Name}Id");
-            viewBagWrapper.IgnoreNames.Add($"{oneModel.GetType().Name}Id");
+            var modelType = details.First().GetType();
+            var displayType = ViewBagWrapper.GetDisplayType(modelType);
+            var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagInfo, details, modelType, displayType);
 
-            @await Html.PartialAsync("_CardList", manyModels)
+            viewBagInfo.HiddenNames.Add($"{oneModel.GetType().Name}Id");
+            viewBagInfo.IgnoreNames.Add($"{oneModel.GetType().Name}Id");
+            @await Html.PartialAsync("_CardList", indexViewModel)
         }
     }
-    else if (Model.GetType().IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+    else if (Model.DisplayType.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
     {
-        var connectorProperty = Model.GetType().GetProperty("ConnectorModel");
-        var connectorModel = connectorProperty?.GetValue(Model) as IdentityModel;
-        var oneProperty = Model.GetType().GetProperty("OneModel");
-        var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
-        var anotherProperty = Model.GetType().GetProperty("AnotherModel");
-        var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
+        var connectorProperty = Model.DisplayType.GetProperty("ConnectorModel");
+        var connectorModel = connectorProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var oneProperty = Model.DisplayType.GetProperty("OneModel");
+        var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
+        var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
+        var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagWrapper.ModelCategory = ModelCategory.Composite;
+        viewBagInfo.ModelCategory = ModelCategory.Composite;
         if (connectorModel != null)
         {
-            connectorModel.ViewBagInfo = viewBagWrapper;
+            connectorModel.ViewBagInfo = viewBagInfo;
             @await Html.PartialAsync("_DisplayModel", connectorModel)
         }
         if (oneModel != null)
         {
-            oneModel.ViewBagInfo = viewBagWrapper;
-            <h2>@viewBagWrapper.TranslateFor("OneModel")</h2>
+            oneModel.ViewBagInfo = viewBagInfo;
+            <h2>@viewBagInfo.TranslateFor("OneModel")</h2>
             @await Html.PartialAsync("_DisplayModel", oneModel)
         }
         if (anotherModel != null)
         {
-            anotherModel.ViewBagInfo = viewBagWrapper;
-            <h2>@viewBagWrapper.TranslateFor("AnotherModel")</h2>
+            anotherModel.ViewBagInfo = viewBagInfo;
+            <h2>@viewBagInfo.TranslateFor("AnotherModel")</h2>
             @await Html.PartialAsync("_DisplayModel", anotherModel)
         }
     }
     else
     {
-        viewBagWrapper.ModelCategory = ModelCategory.Single;
-        Model.ViewBagInfo = viewBagWrapper;
-        @await Html.PartialAsync("_DisplayModel", Model)
+        viewBagInfo.ModelCategory = ModelCategory.Single;
+        Model.DisplayModel.ViewBagInfo = viewBagInfo;
+        @await Html.PartialAsync("_DisplayModel", Model.DisplayModel)
         <hr />
     }
 }

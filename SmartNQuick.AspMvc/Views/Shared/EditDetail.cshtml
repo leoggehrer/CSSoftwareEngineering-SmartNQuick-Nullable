@@ -7,25 +7,23 @@
     @using SmartNQuick.AspMvc.Models.Modules.View
     @model SmartNQuick.AspMvc.Models.MasterDetailModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = new ViewBagWrapper(ViewBag);
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model?.GetType();
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    Model.Master.ViewBagInfo = viewBagWrapper;
-    Model.Detail.ViewBagInfo = viewBagWrapper;
-    viewBagWrapper.HiddenNames.Add($"{Model.Master.GetType().Name}Id");
-    viewBagWrapper.IgnoreNames.Add($"{Model.Master.GetType().Name}Id");
+    Model.Master.ViewBagInfo = viewBagInfo;
+    Model.Detail.ViewBagInfo = viewBagInfo;
+    viewBagInfo.HiddenNames.Add($"{Model.Master.GetType().Name}Id");
+    viewBagInfo.IgnoreNames.Add($"{Model.Master.GetType().Name}Id");
 
-    ViewData["Title"] = viewBagWrapper.Title;
+    ViewData["Title"] = viewBagInfo.Title;
     <h2>@ViewData["Title"]</h2>
-
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@viewBagWrapper.TranslateFor(viewBagWrapper.Action)</h4>
+            <h4>@viewBagInfo.TranslateFor(viewBagInfo.Action)</h4>
         </div>
     </div>
     <hr />
@@ -40,15 +38,15 @@
     @await Html.PartialAsync("_DisplayModel", Model.Master)
     <hr />
 
-    viewBagWrapper.ItemPrefix = nameof(Model.Detail);
-    <form asp-action="@viewBagWrapper.Action" method="post">
+    viewBagInfo.ItemPrefix = nameof(Model.Detail);
+    <form asp-action="@viewBagInfo.Action" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_EditModel", Model.Detail)
         <hr />
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() 
         { 
-            SubmitText = viewBagWrapper.TranslateFor("Save"), 
-            BackText = viewBagWrapper.TranslateFor("Back to List"),
+            SubmitText = viewBagInfo.TranslateFor("Save"), 
+            BackText = viewBagInfo.TranslateFor("Back to List"),
             BackAction = "Details",
             BackRouteValues = new { id = Model.Master.Id }
         })

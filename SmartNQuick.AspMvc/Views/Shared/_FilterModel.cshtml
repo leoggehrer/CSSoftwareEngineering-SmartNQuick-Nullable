@@ -1,10 +1,11 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using System.Reflection
-    @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
+    @model FilterModel
 
     var index = 0;
-    var sessionWrapper = Model.Session;
+    var sessionWrapper = Model.SessionInfo;
     var viewBagWrapper = Model.ViewBagInfo;
     var indexViewModel = Model.IndexViewModel;
     var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);

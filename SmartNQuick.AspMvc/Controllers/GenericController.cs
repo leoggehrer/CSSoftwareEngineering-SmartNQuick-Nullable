@@ -63,6 +63,20 @@ namespace SmartNQuick.AspMvc.Controllers
         protected bool FromEditToIndex { get; set; } = true;
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            ViewBag.ModelType = typeof(TModel);
+
+            base.OnActionExecuted(context);
+        }
+
+        #region Before view
+        protected virtual TModel BeforeView(TModel model, ActionMode action) => model;
+        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action) => models;
+        protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action) => Task.FromResult(model);
+        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action) => Task.FromResult(models);
+        #endregion Before view
+
         protected virtual TModel ToModel(TContract entity)
         {
             entity.CheckArgument(nameof(entity));
@@ -72,18 +86,6 @@ namespace SmartNQuick.AspMvc.Controllers
             result.CopyProperties(entity);
             return result;
         }
-        protected virtual TModel BeforeView(TModel model, ActionMode action) => model;
-        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action) => models;
-        protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action) => Task.FromResult(model);
-        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action) => Task.FromResult(models);
-
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            ViewBag.ModelType = typeof(TModel);
-
-            base.OnActionExecuted(context);
-        }
-
         protected virtual async Task<TModel> GetModelAsync(int id)
         {
             var handled = false;
@@ -106,12 +108,35 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual FilterModel CreateFilterModel()
         {
             var models = new TModel[] { new TModel() };
-            var modelType = typeof(TModel);
-            var viewBagWrapper = new ViewBagWrapper(ViewBag);
-            var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagWrapper, models, modelType, modelType);
+            var indexViewModel = CreateIndexViewModel(models);
 
-            return new FilterModel(SessionWrapper, viewBagWrapper, indexViewModel);
+            return new FilterModel(SessionWrapper, indexViewModel);
         }
+        protected virtual IndexViewModel CreateIndexViewModel(IEnumerable<TModel> models)
+        {
+            var modelType = typeof(TModel);
+            var displayType = ViewBagWrapper.GetDisplayType(modelType);
+            var viewBageInfo = new ViewBagWrapper(ViewBag);
+
+            return ViewModelCreator.CreateIndexViewModel(viewBageInfo, models, modelType, displayType);
+        }
+        protected virtual EditViewModel CreateEditViewModel(TModel model)
+        {
+            var modelType = typeof(TModel);
+            var displayType = modelType;
+            var viewBagInfo = new ViewBagWrapper(ViewBag);
+
+            return ViewModelCreator.CreateEditViewModel(viewBagInfo, model, modelType, displayType);
+        }
+        protected virtual DisplayViewModel CreateDisplayViewModel(TModel model)
+        {
+            var modelType = typeof(TModel);
+            var displayType = modelType;
+            var viewBagInfo = new ViewBagWrapper(ViewBag);
+
+            return ViewModelCreator.CreateDisplayViewModel(viewBagInfo, model, modelType, displayType);
+        }
+
         protected virtual void SetSessionPageData(int pageCount, int pageIndex, int pageSize)
         {
             pageCount = pageCount < 0 ? 0 : pageCount;
@@ -218,14 +243,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeIndex(ref IEnumerable<TModel> models, ref bool handled);
         partial void AfterIndex(IEnumerable<TModel> models);
-        protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models)
-        {
-            var modelType = typeof(TModel);
-            var viewBagWrapper = new ViewBagWrapper(ViewBag);
-            var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagWrapper, models, modelType, modelType);
-
-            return View("Index", indexViewModel);
-        }
+        protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models) => View("Index", CreateIndexViewModel(models));
 
         [HttpGet]
         [ActionName("IndexByPageIndex")]
@@ -317,7 +335,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeCreate(ref TModel model, ref bool handled);
         partial void AfterCreate(TModel model);
-        protected virtual IActionResult ReturnCreateView(TModel model) => View("Create", model);
+        protected virtual IActionResult ReturnCreateView(TModel model) => View("Create", CreateEditViewModel(model));
 
         protected virtual async Task<TModel> CreateModelAsync()
         {
@@ -371,7 +389,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeInsertModel(TModel model, ref bool handled);
         partial void AfterInsertModel(TModel model);
-        protected virtual IActionResult ReturnAfterCreate(bool hasError, TModel model) => hasError ? View("Create", model) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
+        protected virtual IActionResult ReturnAfterCreate(bool hasError, TModel model) => hasError ? View("Create", CreateEditViewModel(model)) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
 
         [HttpGet]
         [ActionName("Edit")]
@@ -403,7 +421,10 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeEdit(ref TModel model, ref bool handled);
         partial void AfterEdit(TModel model);
-        protected virtual IActionResult ReturnEditView(TModel model) => View("Edit", model);
+        protected virtual IActionResult ReturnEditView(TModel model)
+        {
+            return View("Edit", CreateEditViewModel(model));
+        }
 
         protected virtual async Task<TModel> EditModelAsync(int id)
         {
@@ -472,7 +493,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeUpdateModel(TModel model, ref bool handled);
         partial void AfterUpdateModel(TModel model);
-        protected virtual IActionResult ReturnAfterEdit(bool hasError, TModel model) => hasError ? View("Edit", model) : FromEditToIndex ? RedirectToAction("Index") : RedirectToAction("Edit", new { model.Id });
+        protected virtual IActionResult ReturnAfterEdit(bool hasError, TModel model) => hasError ? View("Edit", CreateEditViewModel(model)) : FromEditToIndex ? RedirectToAction("Index") : RedirectToAction("Edit", new { model.Id });
 
         [HttpGet]
         [ActionName("Delete")]
@@ -507,7 +528,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeDelete(ref TModel model, ref bool handled);
         partial void AfterDelete(TModel model);
-        protected virtual IActionResult ReturnDeleteView(TModel model) => View("Delete", model);
+        protected virtual IActionResult ReturnDeleteView(TModel model) => View("Delete", CreateDisplayViewModel(model));
 
         [ActionName("Delete")]
         public virtual async Task<IActionResult> DeleteAsync(int id)
@@ -542,7 +563,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeDeleteModel(int id, ref bool handled);
         partial void AfterDeleteModel(int id);
-        protected virtual IActionResult ReturnAfterDelete(bool hasError, TModel model) => hasError ? View("Delete", model) : RedirectToAction("Index");
+        protected virtual IActionResult ReturnAfterDelete(bool hasError, TModel model) => hasError ? View("Delete", CreateDisplayViewModel(model)) : RedirectToAction("Index");
 
         [HttpGet]
         [ActionName("Details")]
@@ -574,7 +595,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeDetails(ref TModel model, ref bool handled);
         partial void AfterDetails(TModel model);
-        protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", model);
+        protected virtual IActionResult ReturnDetailsView(TModel model) => View("Details", CreateDisplayViewModel(model));
 
         #region Detail actions
         [HttpGet]

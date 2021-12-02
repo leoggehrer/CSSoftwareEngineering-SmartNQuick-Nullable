@@ -2,28 +2,25 @@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Session
-    @model SmartNQuick.AspMvc.Models.Modules.View.FilterModel
+    @model FilterModel
 
-    var sessionWrapper = new SessionWrapper(Context.Session);
-    var viewBagWrapper = Model.ViewBagInfo;
+    var viewBagInfo = Model.ViewBagInfo;
+    var sessionInfo = Model.SessionInfo;
     var indexViewModel = Model.IndexViewModel;
-    var index = viewBagWrapper.Index;
-    var property = viewBagWrapper.DisplayProperty;
+    var index = viewBagInfo.Index;
+    var property = viewBagInfo.DisplayProperty;
     var typeOperations = Model.GetTypeOperations(property);
-    var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
+    var filterValues = sessionInfo.GetFilterValues(viewBagInfo.Controller);
     var propertyValue = default(string);
     var propertyOperation = default(string);
     var filterItem = default(FilterItem);
+    var listOperation = new List<SelectListItem>(typeOperations);
 
     if (filterValues != null && filterValues.TryGetValue(property.Name, out filterItem))
     {
         propertyValue = filterItem.Value;
         propertyOperation = filterItem.Operation;
     }
-    //filterValues?.TryGetValue(property.Name, out propertyValue);
-    //filterValues?.TryGetValue($"{property.Name}.{StaticLiterals.TypeOperationPostfix}", out propertyOperation);
-
-    var listOperation = new List<SelectListItem>(typeOperations);
 
     listOperation.ForEach(e => e.Selected = propertyOperation != null && e.Value == propertyOperation);
     <div class="form-group row">
@@ -35,7 +32,7 @@
             }
             </div>
         *@
-        <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagWrapper.TranslateFor(indexViewModel.GetLabel(property))</label>
+        <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagInfo.TranslateFor(indexViewModel.GetLabel(property))</label>
         <div class="col-sm-2">
             @Html.DropDownList(Model.GetTypeOperationName(property), listOperation, null, new { @class = "form-control" })
         </div>
@@ -56,5 +53,5 @@
             }
         </div>
     </div>
-    viewBagWrapper.Handled = true;
+    viewBagInfo.Handled = true;
 }

@@ -12,18 +12,16 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public class FilterModel
     {
-        public ISessionWrapper Session { get; init; }
-        public ViewBagWrapper ViewBagInfo { get; init; }
+        public ISessionWrapper SessionInfo { get; init; }
+        public ViewBagWrapper ViewBagInfo => IndexViewModel.ViewBagInfo;
         public IndexViewModel IndexViewModel { get; init; }
 
-        public FilterModel(ISessionWrapper session, ViewBagWrapper viewBagInfo, IndexViewModel indexViewModel)
+        public FilterModel(ISessionWrapper sessionInfo, IndexViewModel indexViewModel)
         {
-            session.CheckArgument(nameof(session));
-            viewBagInfo.CheckArgument(nameof(viewBagInfo));
+            sessionInfo.CheckArgument(nameof(sessionInfo));
             indexViewModel.CheckArgument(nameof(indexViewModel));
 
-            Session = session;
-            ViewBagInfo = viewBagInfo;
+            SessionInfo = sessionInfo;
             IndexViewModel = indexViewModel;
         }
 
@@ -151,7 +149,6 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
                             Value = operandValue,
                         };
                         result[property.Name] = filterItem;
-//                        result[$"{property.Name}.{StaticLiterals.TypeOperationPostfix}"] = operationValue;
                     }
                 }
             }

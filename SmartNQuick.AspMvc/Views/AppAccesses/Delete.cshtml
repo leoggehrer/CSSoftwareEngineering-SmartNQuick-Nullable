@@ -9,22 +9,21 @@
     @using SmartNQuick.AspMvc.Models.Modules.View
     @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = new ViewBagWrapper(ViewBag);
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model?.GetType();
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    Model.ViewBagInfo = viewBagWrapper;
-    Model.OneModel.ViewBagInfo = viewBagWrapper;
-    ViewData["Title"] = viewBagWrapper.Title;
+    Model.ViewBagInfo = viewBagInfo;
+    Model.OneModel.ViewBagInfo = viewBagInfo;
+    ViewData["Title"] = viewBagInfo.Title;
     <h1>@ViewData["Title"]</h1>
 
     <div class="d-flex bg-transparent">
         <div class="p-sm-2 mr-auto">
-            <h4>@viewBagWrapper.TranslateFor("Edit")</h4>
+            <h4>@viewBagInfo.TranslateFor("Edit")</h4>
         </div>
     </div>
     <hr />
@@ -38,24 +37,24 @@
     else
     {
         <div class="alert alert-danger" role="alert">
-            @viewBagWrapper.TranslateFor("Should the entry be deleted?")
+            @viewBagInfo.TranslateFor("Should the entry be deleted?")
         </div>
     }
 
-    <form asp-action="@viewBagWrapper.Action" method="post">
+    <form asp-action="@viewBagInfo.Action" method="post">
         <div style="margin-top: 1em;">
             @await Html.PartialAsync("_DisplayModel", Model.OneModel)
         </div>
 
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagWrapper.TranslateFor("Delete"), BackText = viewBagWrapper.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
+        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagInfo.TranslateFor("Delete"), BackText = viewBagInfo.TranslateFor("Back to List"), SubmitCss = "btn btn-danger", FromSubmitToBack = true })
     </form>
 
     <div style="margin-top: 1em;">
         <h4>Rolen</h4>
         @foreach (var item in Model.ManyModels)
         {
-            item.ViewBagInfo = viewBagWrapper;
-            viewBagWrapper.DisplayNames.Add("Designation");
+            item.ViewBagInfo = viewBagInfo;
+            viewBagInfo.DisplayNames.Add("Designation");
 
             @await Html.PartialAsync("_DisplayModel", item)
         }

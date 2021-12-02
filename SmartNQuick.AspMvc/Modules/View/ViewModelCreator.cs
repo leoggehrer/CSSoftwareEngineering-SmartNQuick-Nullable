@@ -25,7 +25,7 @@ namespace SmartNQuick.AspMvc.Modules.View
         static partial void BeforeCreateIndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<Models.IdentityModel> models, Type modelType, Type displayType, ref IndexViewModel result, ref bool handled);
         static partial void AfterCreateIndexViewModel(IndexViewModel result);
 
-        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model)
+        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model)
         {
             viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
             model.CheckArgument(nameof(model));
@@ -34,7 +34,7 @@ namespace SmartNQuick.AspMvc.Modules.View
 
             return CreateDisplayViewModel(viewBagWrapper, model, modelType, modelType); 
         }
-        public static DisplayViewModel CreateDisplayViewModel( ViewBagWrapper viewBagWrapper, Models.IdentityModel model, Type modelType, Type displayType)
+        public static DisplayViewModel CreateDisplayViewModel( ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType)
         {
             var handled = false;
             DisplayViewModel result = null;
@@ -47,7 +47,7 @@ namespace SmartNQuick.AspMvc.Modules.View
             AfterCreateDisplayViewModel(result);
             return result;
         }
-        static partial void BeforeCreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model, Type modelType, Type displayType, ref DisplayViewModel result, ref bool handled);
+        static partial void BeforeCreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType, ref DisplayViewModel result, ref bool handled);
         static partial void AfterCreateDisplayViewModel(DisplayViewModel result);
 
         public static EditViewModel CreateEditViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model)

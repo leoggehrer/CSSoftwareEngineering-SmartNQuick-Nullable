@@ -11,6 +11,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
     public partial class DisplayViewModel : ViewModel
     {
         public ModelObject Model { get; init; }
+        public ModelObject DisplayModel => Model;
 
         public DisplayViewModel(ViewBagWrapper viewBagWrapper, ModelObject model, Type modelType, Type displayType)
             : base(viewBagWrapper, modelType, displayType)
