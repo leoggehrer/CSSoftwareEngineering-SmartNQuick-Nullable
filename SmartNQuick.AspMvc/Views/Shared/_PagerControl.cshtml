@@ -6,24 +6,19 @@
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+    @model IndexViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
-
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-
+    var viewBagInfo = Model?.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
     var pageIndexAction = "IndexByPageIndex";
     var pageSizeAction = "IndexByPageSize";
-    var pageCount = sessionWrapper.GetPageCount(viewBagWrapper.Controller);
-    var pageIndex = sessionWrapper.GetPageIndex(viewBagWrapper.Controller);
-    var pageSize = sessionWrapper.GetPageSize(viewBagWrapper.Controller);
+    var pageCount = sessionInfo.GetPageCount(viewBagInfo.Controller);
+    var pageIndex = sessionInfo.GetPageIndex(viewBagInfo.Controller);
+    var pageSize = sessionInfo.GetPageSize(viewBagInfo.Controller);
     var prvCss = pageIndex == 0 ? "page-item disabled" : "page-item";
     var nxtCss = (pageIndex + 1) * pageSize >= pageCount ? "page-item disabled" : "page-item";
     var maxPageIndex = pageCount / pageSize;
-    var filterValues = sessionWrapper.GetFilterValues(viewBagWrapper.Controller);
+    var filterValues = sessionInfo.GetFilterValues(viewBagInfo.Controller);
     var filterText = filterValues?.Count > 0 ? "*" : string.Empty;
 
     if (pageCount % pageSize == 0)
@@ -46,21 +41,21 @@
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter and page index">
-                @if (viewBagWrapper.HasFilter)
+                @if (viewBagInfo.HasFilter)
                 {
                     <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
                         <i class="fa fa-filter">@filterText</i>
                     </button>
                 }
                 <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageIndex")">
+                    <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageIndex")">
                         @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
                         <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
                         @for (int index = 0; index <= maxPageIndex; index++)
                         {
-                            string action = Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(index));
+                            string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(index));
 
                             if (index == pageIndex)
                             {
@@ -79,7 +74,7 @@
                 <li class="@prvCss">
                     @if (pageIndex > 0)
                     {
-                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(pageIndex - 1))" aria-label="Previous">
+                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex - 1))" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     }
@@ -107,7 +102,7 @@
                             for (int idx = startIdx; idx < pageUpperIdx && (idx * pageSize) < pageCount; idx++)
                             {
                                 string text = $"{MinItemIndex(idx)}..{MaxItemIndex(idx)}";
-                                string action = Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(idx));
+                                string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(idx));
 
                                 if (idx == pageIndex)
                                 {
@@ -127,7 +122,7 @@
                 <li class="@nxtCss">
                     @if (pageIndex < maxPageIndex)
                     {
-                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagWrapper.Controller, CreateIndexParameters(pageIndex + 1))" aria-label="Next">
+                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex + 1))" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     }
@@ -140,14 +135,14 @@
 
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagWrapper.Translate("PageSize")">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageSize")">
                         @pageSize
                         <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownPageSize">
-                        @foreach (int size in sessionWrapper.GetPageSizes(viewBagWrapper.Controller))
+                        @foreach (int size in sessionInfo.GetPageSizes(viewBagInfo.Controller))
                         {
-                            string action = Url.Action(pageSizeAction, viewBagWrapper.Controller, new { pageSize = size });
+                            string action = Url.Action(pageSizeAction, viewBagInfo.Controller, new { pageSize = size });
 
                             if (size == pageSize)
                             {
@@ -169,7 +164,7 @@
             </div>
         </nav>
     }
-    else if (pageCount == 0 && viewBagWrapper.HasFilter && string.IsNullOrEmpty(filterText) == false)
+    else if (pageCount == 0 && viewBagInfo.HasFilter && string.IsNullOrEmpty(filterText) == false)
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter">
@@ -185,7 +180,7 @@
             </div>
         </nav>
     }
-    else if (viewBagWrapper.HasFilter)
+    else if (viewBagInfo.HasFilter)
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter">

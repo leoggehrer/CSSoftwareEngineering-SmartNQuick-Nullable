@@ -11,7 +11,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public abstract partial class ViewModel
     {
-        public ViewBagWrapper ViewBagWrapper { get; init; }
+        public ViewBagWrapper ViewBagInfo { get; init; }
         public List<string> HiddenNames { get; } = new List<string>()
         {
             nameof(IdentityModel.Id),
@@ -19,7 +19,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         };
         public IEnumerable<string> AllHiddenNames
         {
-            get { return HiddenNames.Union(ViewBagWrapper.HiddenNames).Distinct(); }
+            get { return HiddenNames.Union(ViewBagInfo.HiddenNames).Distinct(); }
         }
         public List<string> IgnoreNames { get; } = new List<string>()
         {
@@ -30,24 +30,29 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         };
         public IEnumerable<string> AllIgnoreNames
         {
-            get { return IgnoreNames.Union(ViewBagWrapper.IgnoreNames).Distinct(); }
+            get { return IgnoreNames.Union(ViewBagInfo.IgnoreNames).Distinct(); }
         }
         public List<string> DisplayNames { get; } = new List<string>()
         {
         };
         public IEnumerable<string> AllDisplayNames
         {
-            get { return DisplayNames.Union(ViewBagWrapper.DisplayNames).Distinct(); }
+            get { return DisplayNames.Union(ViewBagInfo.DisplayNames).Distinct(); }
         }
 
-        public abstract Type ModelType { get; }
-        public abstract Type ViewType { get; }
-        protected ViewModel(ViewBagWrapper viewBagWrapper)
+        public Type ModelType { get; }
+        public Type DisplayType { get; }
+
+        protected ViewModel(ViewBagWrapper viewBagWrapper, Type modelType, Type displayType)
         {
             viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
+            modelType.CheckArgument(nameof(modelType));
+            displayType.CheckArgument(nameof(displayType));
 
             Constructing();
-            ViewBagWrapper = viewBagWrapper;
+            ViewBagInfo = viewBagWrapper;
+            ModelType = modelType;
+            DisplayType = displayType;
             Constructed();
         }
         partial void Constructing();
@@ -65,7 +70,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             type.CheckArgument(nameof(type));
 
-            return AllHiddenNames.Select(n => ViewBagWrapper.GetMapping(n))
+            return AllHiddenNames.Select(n => ViewBagInfo.GetMapping(n))
                                  .Select(n => type.GetProperty(n))
                                  .Where(p => p != null && p.CanRead)
                                  .ToArray();
@@ -80,12 +85,12 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             foreach (var item in type.GetAllInterfacePropertyInfos())
             {
                 var typeProperty = default(PropertyInfo);
-                var mapName = ViewBagWrapper.GetMapping(item.Name);
+                var mapName = ViewBagInfo.GetMapping(item.Name);
 
                 typeProperty = typeProperties.FirstOrDefault(p => p.Name.Equals(mapName, StringComparison.OrdinalIgnoreCase));
                 if (typeProperty != null)
                 {
-                    ViewBagWrapper.AddMappingProperty(mapName, typeProperty);
+                    ViewBagInfo.AddMappingProperty(mapName, typeProperty);
                 }
 
                 if (item.CanRead && AllDisplayNames.Any(e => e.Equals(item.Name)))
@@ -104,7 +109,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            var itemPrefix = ViewBagWrapper.ItemPrefix;
+            var itemPrefix = ViewBagInfo.ItemPrefix;
 
             return string.IsNullOrEmpty(itemPrefix) ? propertyInfo.Name : $"{itemPrefix}_{propertyInfo.Name}";
         }
@@ -112,7 +117,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            var itemPrefix = ViewBagWrapper.ItemPrefix;
+            var itemPrefix = ViewBagInfo.ItemPrefix;
 
             return string.IsNullOrEmpty(itemPrefix) ? propertyInfo.Name : $"{itemPrefix}.{propertyInfo.Name}";
         }

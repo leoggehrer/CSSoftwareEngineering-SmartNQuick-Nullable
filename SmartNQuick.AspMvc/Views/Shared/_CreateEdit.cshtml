@@ -23,7 +23,7 @@
         var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
         var anotherProperty = Model.GetType().GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model) as IdentityModel;
-        var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
+        var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, oneModel);
 
         viewBagWrapper.ModelCategory = ModelCategory.OneToAnother;
         viewBagWrapper.ItemPrefix = "OneModel";
@@ -41,7 +41,7 @@
         var oneModel = oneProperty?.GetValue(Model) as IdentityModel;
         var manyProperty = Model.GetType().GetProperty("ManyModels");
         var manyModels = manyProperty?.GetValue(Model) as IdentityModel;
-        var editViewModel = viewBagWrapper.CreateEditViewModel(oneModel);
+        var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, oneModel);
 
         viewBagWrapper.ModelCategory = ModelCategory.MasterDetail;
         viewBagWrapper.ItemPrefix = "OneModel";

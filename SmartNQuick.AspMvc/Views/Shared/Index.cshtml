@@ -2,28 +2,33 @@
 @{
     @using SmartNQuick.AspMvc.Models
     @using SmartNQuick.AspMvc.Models.Modules.Common
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<IdentityModel>
+    @model IndexViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = Model?.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
-    viewBagWrapper.ViewType = Model != null ? Model.GetType() : typeof(IEnumerable<IdentityModel>);
+    if (viewBagInfo == null)
+    {
+        viewBagInfo = new ViewBagWrapper(ViewBag);
+    }
 
-    ViewData["Title"] = viewBagWrapper.Title;
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
+
+    ViewData["Title"] = viewBagInfo.Title;
     <div class="row">
         <div class="col-md-12 d-flex">
-            <h2 id="quote">@viewBagWrapper.Title</h2>
-            @if ((viewBagWrapper.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Create) > 0)
+            <h2 id="quote">@viewBagInfo.Title</h2>
+            @if ((viewBagInfo.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Create) > 0)
             {
                 <div class="ml-auto">
-                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-dark" title="@viewBagWrapper.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-dark" title="@viewBagInfo.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
                 </div>
             }
         </div>
@@ -34,7 +39,7 @@
         <div class="alert alert-danger" role="alert">
             @ErrorHandler.GetLastViewErrorAndClear()
         </div>
-        @await Html.PartialAsync("_PagerControl", Array.Empty<IdentityModel>())
+        @await Html.PartialAsync("_PagerControl", Model)
     }
     else
     {

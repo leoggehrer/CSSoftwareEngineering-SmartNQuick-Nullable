@@ -1,10 +1,11 @@
 ﻿@*@BaseCode*@
 @{
+@using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
     var viewBagWrapper = Model.ViewBagInfo;
     var property = viewBagWrapper.DisplayProperty;
-    var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
+    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, Model);
 
     <div class="row">
         <div class="col-md-6">

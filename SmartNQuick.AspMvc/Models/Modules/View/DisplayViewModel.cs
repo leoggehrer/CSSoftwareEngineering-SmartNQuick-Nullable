@@ -10,12 +10,10 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public partial class DisplayViewModel : ViewModel
     {
-        public object Model { get; init; }
-        public override Type ModelType => Model.GetType();
-        public override Type ViewType => Model.GetType();
+        public ModelObject Model { get; init; }
 
-        public DisplayViewModel(ViewBagWrapper viewBagWrapper, object model)
-            : base(viewBagWrapper)
+        public DisplayViewModel(ViewBagWrapper viewBagWrapper, ModelObject model, Type modelType, Type displayType)
+            : base(viewBagWrapper, modelType, displayType)
         {
             model.CheckArgument(nameof(model));
 
@@ -28,11 +26,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
         {
-            return GetHiddenProperties(ViewType);
+            return GetHiddenProperties(DisplayType);
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
-            return GetDisplayProperties(ViewType);
+            return GetDisplayProperties(DisplayType);
         }
         public virtual object GetValue(PropertyInfo propertyInfo)
         {

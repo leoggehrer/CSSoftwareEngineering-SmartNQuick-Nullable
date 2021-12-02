@@ -13,10 +13,10 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var displayViewModel = viewBagWrapper.CreateDisplayViewModel(Model);
 
-    if (displayViewModel != null)
+    if (Model != null)
     {
+        var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagWrapper, Model);
         Model.ViewBagInfo = viewBagWrapper;
         <div class="card" style="margin-bottom: 0.5em; background: gray;">
             <ul class="list-group list-group-flush">

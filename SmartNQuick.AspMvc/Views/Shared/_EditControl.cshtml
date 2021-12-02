@@ -1,12 +1,13 @@
 ﻿@*@BaseCode*@
 @{
     @using CommonBase.Extensions
+@using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
     var viewBagWrapper = Model.ViewBagInfo;
     var property = viewBagWrapper.DisplayProperty;
     var mappingProperty = default(System.Reflection.PropertyInfo);
-    var editViewModel = viewBagWrapper.CreateEditViewModel(Model);
+    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, Model);
 
     @if (property.CanRead && property.CanWrite)
     {

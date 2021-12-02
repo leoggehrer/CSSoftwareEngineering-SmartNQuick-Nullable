@@ -80,7 +80,6 @@ namespace SmartNQuick.AspMvc.Controllers
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             ViewBag.ModelType = typeof(TModel);
-            ViewBag.ViewModelCreator = new ViewModelCreator();
 
             base.OnActionExecuted(context);
         }
@@ -107,8 +106,9 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual FilterModel CreateFilterModel()
         {
             var models = new TModel[] { new TModel() };
+            var modelType = typeof(TModel);
             var viewBagWrapper = new ViewBagWrapper(ViewBag);
-            var indexViewModel = viewBagWrapper.CreateIndexViewModel(models);
+            var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagWrapper, models, modelType, modelType);
 
             return new FilterModel(SessionWrapper, viewBagWrapper, indexViewModel);
         }
@@ -218,7 +218,14 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         partial void BeforeIndex(ref IEnumerable<TModel> models, ref bool handled);
         partial void AfterIndex(IEnumerable<TModel> models);
-        protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models) => View("Index", models);
+        protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models)
+        {
+            var modelType = typeof(TModel);
+            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+            var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagWrapper, models, modelType, modelType);
+
+            return View("Index", indexViewModel);
+        }
 
         [HttpGet]
         [ActionName("IndexByPageIndex")]

@@ -5,7 +5,7 @@
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+    @model IndexViewModel
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -14,31 +14,29 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
-
-    if (indexViewModel != null)
+    if (Model != null)
     {
         <table class="table">
             <thead>
                 <tr>
-                    @foreach (var item in indexViewModel.GetDisplayProperties())
+                    @foreach (var item in Model.GetDisplayProperties())
                     {
                         <th>
-                            @viewBagWrapper.TranslateFor(indexViewModel.GetLabel(item))
+                            @viewBagWrapper.TranslateFor(Model.GetLabel(item))
                         </th>
                     }
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var model in indexViewModel.ViewModels)
+                @foreach (var model in Model.DisplayModels)
                 {
                     model.ViewBagInfo = viewBagWrapper;
                     <tr>
-                        @foreach (var displayItem in indexViewModel.GetDisplayProperties())
+                        @foreach (var displayItem in Model.GetDisplayProperties())
                         {
                             <td>
-                                @indexViewModel.GetDisplayValue(model, displayItem)
+                                @Model.GetDisplayValue(model, displayItem)
                             </td>
                         }
                         <td>

@@ -1,13 +1,9 @@
 ﻿//@BaseCode
 //MdStart
 
-using CommonBase.Extensions;
-using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
-using SmartNQuick.AspMvc.Models.Modules.View;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Modules.View
@@ -105,12 +101,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             set => ViewBag.ItemPrefix = value;
         }
         public string ViewTypeName => ViewType?.FullName;
-        public ViewModelCreator ViewModelCreator
-        {
-            get => ViewBag.ViewModelCreator as ViewModelCreator;
-            set => ViewBag.ViewModelCreator = value;
-        }
-
         public int Index
         {
             get => ViewBag.Index != null ? (int)ViewBag.Index : 0;
@@ -227,23 +217,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             set => ViewBag.Translate = value;
         }
         public Func<string, string> TranslateFor => text => Translate($"{Controller}.{text}");
-
-        public IndexViewModel CreateIndexViewModel(IEnumerable<IdentityModel> models)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateIndexViewModel(this, models)
-                                            : new ViewModelCreator().CreateIndexViewModel(this, models);
-        }
-
-        public DisplayViewModel CreateDisplayViewModel(IdentityModel model)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateDisplayViewModel(this, model)
-                                            : new ViewModelCreator().CreateDisplayViewModel(this, model);
-        }
-        public EditViewModel CreateEditViewModel(IdentityModel model)
-        {
-            return ViewModelCreator != null ? ViewModelCreator.CreateEditViewModel(this, model)
-                                            : new ViewModelCreator().CreateEditViewModel(this, model);
-        }
     }
 }
 //MdEnd

@@ -5,7 +5,7 @@
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<SmartNQuick.AspMvc.Models.IdentityModel>
+    @model IndexViewModel
 
     var viewBagWrapper = new ViewBagWrapper(ViewBag);
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -14,11 +14,9 @@
     viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    var indexViewModel = viewBagWrapper.CreateIndexViewModel(Model);
-
-    if (indexViewModel != null)
+    if (Model != null)
     {
-        var filterModel = new FilterModel(sessionWrapper, viewBagWrapper, indexViewModel);
+        var filterModel = new FilterModel(sessionWrapper, viewBagWrapper, Model);
         
         <form asp-action="Filter" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

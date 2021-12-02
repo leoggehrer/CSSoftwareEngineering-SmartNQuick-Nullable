@@ -11,42 +11,30 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public partial class IndexViewModel : ViewModel
     {
-        private Type modelType = null;
-        private Type viewType = null;
-        private IEnumerable<IdentityModel> viewModels = null;
+        private IEnumerable<IdentityModel> displayModels = null;
 
-        public override Type ModelType => modelType ??= Models.Any() ? Models.First().GetType() : typeof(IdentityModel);
         public IEnumerable<IdentityModel> Models { get; init; }
-        public override Type ViewType => viewType ??= ViewModels.Any() ? ViewModels.First().GetType() : typeof(IdentityModel);
-        public IEnumerable<IdentityModel> ViewModels 
+        public IEnumerable<IdentityModel> DisplayModels
         {
             get
             {
-                if (viewModels == null)
+                if (displayModels == null)
                 {
                     if (Models is IEnumerable<IMasterDetails> mds)
                     {
-                        viewModels = mds.Select(m => m.Master);
+                        displayModels = mds.Select(m => m.Master);
                     }
                     else
                     {
-                        viewModels = Models;
-                    }
-                    if (viewModels.Any())
-                    {
-                        viewType = viewModels.First()?.GetType();
-                    }
-                    else
-                    {
-                        viewType = typeof(IdentityModel);
+                        displayModels = Models;
                     }
                 }
-                return viewModels;
+                return displayModels;
             }
         }
 
-        public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models)
-            : base(viewBagWrapper)
+        public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models, Type modelType, Type displayType)
+            : base(viewBagWrapper, modelType, displayType)
         {
             models.CheckArgument(nameof(models));
 
@@ -60,13 +48,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         private IEnumerable<PropertyInfo> displayProperties = null;
         public virtual IEnumerable<PropertyInfo> GetHiddenProperties()
         {
-            return GetHiddenProperties(ViewType);
+            return GetHiddenProperties(DisplayType);
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
             if (displayProperties == null)
             {
-                displayProperties = GetDisplayProperties(ViewType);
+                displayProperties = GetDisplayProperties(DisplayType);
             }
             return displayProperties;
         }
