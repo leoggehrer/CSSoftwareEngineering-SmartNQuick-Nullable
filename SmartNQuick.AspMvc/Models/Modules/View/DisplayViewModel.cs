@@ -37,13 +37,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            return propertyInfo.GetValue(Model);
+            return propertyInfo.GetValue(DisplayModel);
         }
         public virtual string GetDisplayValue(PropertyInfo propertyInfo)
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            var value = propertyInfo.GetValue(Model);
+            var value = propertyInfo.GetValue(DisplayModel);
 
             return value != null ? value.ToString() : string.Empty;
         }

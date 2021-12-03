@@ -1,0 +1,29 @@
+@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Modules.Common
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model DisplayViewModel
+
+    if (Model != null)
+    {
+        var viewBagInfo = Model?.ViewBagInfo;
+
+        Model.DisplayModel.ViewBagInfo = viewBagInfo;
+        <li class="list-group-item">
+            @foreach (var property in Model.GetDisplayProperties())
+            {
+                viewBagInfo.Index = index++;
+                viewBagInfo.Handled = false;
+                viewBagInfo.DisplayProperty = property;
+
+                @await Html.PartialAsync("_CardItem", Model.DisplayModel)
+                @if (model.ViewBagInfo.Handled == false)
+                {
+                    <strong>@viewBagInfo.TranslateFor(Model.GetLabel(property))</strong>
+
+                    <p>@Model.GetDisplayValue(Model.DisplayModel, property)</p>
+                }
+            }
+        </li>
+    }
+}
