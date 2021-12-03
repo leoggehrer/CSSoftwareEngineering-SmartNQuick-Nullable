@@ -7,12 +7,12 @@
     @using SmartNQuick.AspMvc.Modules.View
     @model IndexViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = new ViewBagWrapper(ViewBag);
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
     if (Model != null)
     {
@@ -22,7 +22,7 @@
                     @foreach (var item in Model.GetDisplayProperties())
                     {
                         <th>
-                            @viewBagWrapper.TranslateFor(Model.GetLabel(item))
+                            @viewBagInfo.TranslateFor(Model.GetLabel(item))
                         </th>
                     }
                     <th></th>
@@ -31,7 +31,7 @@
             <tbody>
                 @foreach (var model in Model.DisplayModels)
                 {
-                    model.ViewBagInfo = viewBagWrapper;
+                    model.ViewBagInfo = viewBagInfo;
                     <tr>
                         @foreach (var displayItem in Model.GetDisplayProperties())
                         {

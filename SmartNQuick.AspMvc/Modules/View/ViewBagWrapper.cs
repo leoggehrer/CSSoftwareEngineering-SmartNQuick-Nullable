@@ -60,7 +60,7 @@ namespace SmartNQuick.AspMvc.Modules.View
         {
             get
             {
-                var result = CommandMode.Create | CommandMode.Edit | CommandMode.Delete | CommandMode.Details | CommandMode.CreateDetail | CommandMode.EditDetail | CommandMode.DeleteDetail;
+                var result = CommandMode.All;
 
                 if (ViewBag.CommandMode != null)
                 {

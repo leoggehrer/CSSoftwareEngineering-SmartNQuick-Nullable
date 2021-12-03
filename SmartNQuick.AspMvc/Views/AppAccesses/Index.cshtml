@@ -2,95 +2,57 @@
 @*#if ACCOUNT_ON*@
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
-    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model IEnumerable<SmartNQuick.AspMvc.Models.Business.Account.AppAccess>
+    @model IndexViewModel
 
-    var viewBagWrapper = new ViewBagWrapper(ViewBag);
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var viewBagInfo = Model?.ViewBagInfo;
+    var sessionInfo = new SessionWrapper(Context.Session);
 
-    viewBagWrapper.Translate = Translator.TranslateIt;
-    viewBagWrapper.Controller = ViewContext.RouteData.Values["controller"].ToString();
-    viewBagWrapper.Action = ViewContext.RouteData.Values["action"].ToString();
+    if (viewBagInfo == null)
+    {
+        viewBagInfo = new ViewBagWrapper(ViewBag);
+    }
 
-    ViewData["Title"] = viewBagWrapper.Title;
-    <h1>@viewBagWrapper.Title</h1>
+    viewBagInfo.Translate = Translator.TranslateIt;
+    viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
+    viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    @if (sessionWrapper.IsAuthenticated && sessionWrapper.HasRole("SysAdmin", "AppAdmin"))
+    ViewData["Title"] = viewBagInfo.Title;
+    <h1>@viewBagInfo.Title</h1>
+
+    @if (sessionInfo.IsAuthenticated && sessionInfo.HasRole("SysAdmin", "AppAdmin"))
     {
         <div class="d-flex bg-transparent">
             <div class="mr-auto p-sm-2">
-                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Create New")</a>
+                <a asp-action="Create" class="btn btn-outline-secondary">@viewBagInfo.TranslateFor("Create new...")</a>
             </div>
             <div class="p-sm-2">
-                <a asp-action="Export" class="btn btn-outline-secondary">@viewBagWrapper.TranslateFor("Export")</a>
+                <a asp-action="Export" class="btn btn-outline-secondary">@viewBagInfo.TranslateFor("Export")</a>
             </div>
             <div class="p-sm-2">
-                <a asp-action="Import" class="btn btn-outline-primary">@viewBagWrapper.TranslateFor("Import")</a>
+                <a asp-action="Import" class="btn btn-outline-primary">@viewBagInfo.TranslateFor("Import")</a>
             </div>
         </div>
     }
-    <p></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.Name))
-                </th>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.Email))
-                </th>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.EnableJwtAuth))
-                </th>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.ManyItems))
-                </th>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.AccessFailedCount))
-                </th>
-                <th>
-                    @viewBagWrapper.TranslateFor(Html.DisplayNameFor(model => model.OneItem.State))
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                item.ViewBagInfo = viewBagWrapper;
+    @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ErrorHandler.GetLastViewErrorAndClear()
+        </div>
+        @await Html.PartialAsync("_PagerControl", Model)
+    }
+    else
+    {
+        viewBagInfo.IgnoreNames.Add("Guid");
+        viewBagInfo.IgnoreNames.Add("Name");
+        viewBagInfo.IgnoreNames.Add("Password");
 
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OneItem.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OneItem.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OneItem.EnableJwtAuth)
-                    </td>
-                    <td>
-                        <ul>
-                            @foreach (var role in item.ManyItems)
-                            {
-                                <li>@role.Designation</li>
-                            }
-                        </ul>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OneItem.AccessFailedCount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OneItem.State)
-                    </td>
-                    <td>
-                        @await Html.PartialAsync("_CommandControl", item)
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        @await Html.PartialAsync("_PagerControl", Model)
+        @await Html.PartialAsync("_CardList", Model)
+    }
 }
 @*#endif*@

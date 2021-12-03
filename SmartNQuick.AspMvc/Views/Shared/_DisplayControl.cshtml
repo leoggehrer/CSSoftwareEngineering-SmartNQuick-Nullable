@@ -3,10 +3,10 @@
     @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
-    var viewBagWrapper = Model.ViewBagInfo;
-    var property = viewBagWrapper.DisplayProperty;
-    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagWrapper, Model);
+    var viewBagInfo = Model.ViewBagInfo;
+    var property = viewBagInfo.DisplayProperty;
+    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, Model);
 
     @displayViewModel.GetDisplayValue(property)
-    viewBagWrapper.Handled = true;
+    viewBagInfo.Handled = true;
 }

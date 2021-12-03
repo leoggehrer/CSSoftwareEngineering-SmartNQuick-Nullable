@@ -17,24 +17,24 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
     {
         protected override Model BeforeView(Model model, ActionMode action)
         {
-            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+            var viewBagInfo = new ViewBagWrapper(ViewBag);
 
             if (action == ActionMode.Create)
             {
-                viewBagWrapper.AddIgnoreHidden(nameof(Model.OneModel.Guid));
+                viewBagInfo.AddIgnoreHidden(nameof(Model.OneModel.Guid));
             }
-            viewBagWrapper.AddIgnoreHidden(nameof(Model.AnotherModel.IdentityId));
+            viewBagInfo.AddIgnoreHidden(nameof(Model.AnotherModel.IdentityId));
             return base.BeforeView(model, action);
         }
         protected override IEnumerable<Model> BeforeView(IEnumerable<Model> models, ActionMode action)
         {
-            var viewBagWrapper = new ViewBagWrapper(ViewBag);
+            var viewBagInfo = new ViewBagWrapper(ViewBag);
 
             if (action == ActionMode.Create)
             {
-                viewBagWrapper.AddIgnoreHidden(nameof(Model.OneModel.Guid));
+                viewBagInfo.AddIgnoreHidden(nameof(Model.OneModel.Guid));
             }
-            viewBagWrapper.HiddenNames.Add(nameof(Model.AnotherModel.IdentityId));
+            viewBagInfo.HiddenNames.Add(nameof(Model.AnotherModel.IdentityId));
             return base.BeforeView(models, action);
         }
 

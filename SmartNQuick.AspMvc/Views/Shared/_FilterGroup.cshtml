@@ -24,14 +24,6 @@
 
     listOperation.ForEach(e => e.Selected = propertyOperation != null && e.Value == propertyOperation);
     <div class="form-group row">
-        @*
-            <div class="col-sm-2">
-            @if (index > 0)
-            {
-            @Html.DropDownList(Model.GetFieldOperationName(property), fieldOperations, null, new { @class = "form-control" })
-            }
-            </div>
-        *@
         <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagInfo.TranslateFor(indexViewModel.GetLabel(property))</label>
         <div class="col-sm-2">
             @Html.DropDownList(Model.GetTypeOperationName(property), listOperation, null, new { @class = "form-control" })

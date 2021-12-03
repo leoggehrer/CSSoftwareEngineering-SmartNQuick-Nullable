@@ -35,7 +35,9 @@
                 </ul>
 @*#if ACCOUNT_ON*@
                 @{
-                    @if (sessionInfo.LoginSession != null && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
+                    @if (sessionInfo.LoginSession != null
+                         && viewBagInfo.CommandMode != CommandMode.None
+                         && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
                     {
                         <div class="card-body">
                             @await Html.PartialAsync("_CommandControl", model)
@@ -49,9 +51,9 @@
 @*#endif*@
 
 @*#if ACCOUNT_OFF*@@*
-                    @{
+                @{
                     @await Html.PartialAsync("_CardBody", Model)
-                    }
+                }
 *@@*#endif*@
             </div>
         }

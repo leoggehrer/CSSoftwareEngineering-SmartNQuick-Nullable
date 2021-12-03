@@ -179,7 +179,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
 
         [HttpPost]
-        [ActionName("Filter")]
+        [ActionName(nameof(ActionMode.Filter))]
         public virtual async Task<IActionResult> FilterAsync(IFormCollection formCollection)
         {
             var handled = false;
@@ -213,7 +213,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
 
         [HttpGet]
-        [ActionName("Index")]
+        [ActionName(nameof(ActionMode.Index))]
         public virtual async Task<IActionResult> IndexAsync()
         {
             var handled = false;
@@ -246,7 +246,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnIndexView(IEnumerable<TModel> models) => View("Index", CreateIndexViewModel(models));
 
         [HttpGet]
-        [ActionName("IndexByPageIndex")]
+        [ActionName(nameof(ActionMode.IndexByPageIndex))]
         public virtual async Task<IActionResult> IndexByPageIndexAsync(int pageIndex, int pageSize)
         {
             var handled = false;
@@ -275,7 +275,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterIndexByPageIndex(IEnumerable<TModel> models);
 
         [HttpGet]
-        [ActionName("IndexByPageSize")]
+        [ActionName(nameof(ActionMode.IndexByPageSize))]
         public virtual async Task<IActionResult> IndexByPageSizeAsync(int pageSize)
         {
             var handled = false;
@@ -306,7 +306,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterIndexByPageSize(IEnumerable<TModel> models);
 
         [HttpGet]
-        [ActionName("Create")]
+        [ActionName(nameof(ActionMode.Create))]
         public virtual async Task<IActionResult> CreateAsync()
         {
             var handled = false;
@@ -358,7 +358,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
 
         [HttpPost]
-        [ActionName("Create")]
+        [ActionName(nameof(ActionMode.Create))]
         public virtual async Task<IActionResult> InsertAsync(TModel model)
         {
             var handled = false;
@@ -392,7 +392,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnAfterCreate(bool hasError, TModel model) => hasError ? View("Create", CreateEditViewModel(model)) : FromCreateToEdit ? RedirectToAction("Edit", new { model.Id }) : RedirectToAction("Index");
 
         [HttpGet]
-        [ActionName("Edit")]
+        [ActionName(nameof(ActionMode.Edit))]
         public virtual async Task<IActionResult> EditAsync(int id)
         {
             var handled = false;
@@ -446,7 +446,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterEditModel(TModel model);
 
         [HttpPost]
-        [ActionName("Edit")]
+        [ActionName(nameof(ActionMode.Edit))]
         public virtual async Task<IActionResult> Update(TModel model)
         {
             var handled = false;
@@ -496,7 +496,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnAfterEdit(bool hasError, TModel model) => hasError ? View("Edit", CreateEditViewModel(model)) : FromEditToIndex ? RedirectToAction("Index") : RedirectToAction("Edit", new { model.Id });
 
         [HttpGet]
-        [ActionName("Delete")]
+        [ActionName(nameof(ActionMode.Delete))]
         public virtual async Task<IActionResult> ViewDeleteAsync(int id)
         {
             var handled = false;
@@ -530,7 +530,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterDelete(TModel model);
         protected virtual IActionResult ReturnDeleteView(TModel model) => View("Delete", CreateDisplayViewModel(model));
 
-        [ActionName("Delete")]
+        [ActionName(nameof(ActionMode.Delete))]
         public virtual async Task<IActionResult> DeleteAsync(int id)
         {
             var handled = false;
@@ -566,7 +566,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnAfterDelete(bool hasError, TModel model) => hasError ? View("Delete", CreateDisplayViewModel(model)) : RedirectToAction("Index");
 
         [HttpGet]
-        [ActionName("Details")]
+        [ActionName(nameof(ActionMode.Details))]
         public virtual async Task<IActionResult> DetailsAsync(int id)
         {
             var handled = false;
@@ -599,7 +599,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
         #region Detail actions
         [HttpGet]
-        [ActionName("CreateDetail")]
+        [ActionName(nameof(ActionMode.CreateDetail))]
         public virtual async Task<IActionResult> CreateDetailAsync(int id)
         {
             var handled = false;
@@ -643,7 +643,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnCreateDetailView(MasterDetailModel model) => View("CreateDetail", model);
 
         [HttpPost]
-        [ActionName("CreateDetail")]
+        [ActionName(nameof(ActionMode.CreateDetail))]
         public virtual async Task<IActionResult> AddDetailAsync(int id, IFormCollection formCollection)
         {
             var handled = false;
@@ -693,7 +693,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterAddDetail(TModel model);
 
         [HttpGet]
-        [ActionName("EditDetail")]
+        [ActionName(nameof(ActionMode.EditDetail))]
         public virtual async Task<IActionResult> EditDetailAsync(int id, int detailId)
         {
             var handled = false;
@@ -727,8 +727,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterEditDetail(model);
             if (HasError == false)
             {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.EditDetail);
+                model = await BeforeViewAsync(model, ActionMode.EditDetail).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnEditDetailView(masterDetailModel);
         }
@@ -737,7 +737,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnEditDetailView(MasterDetailModel model) => View("EditDetail", model);
 
         [HttpPost]
-        [ActionName("EditDetail")]
+        [ActionName(nameof(ActionMode.EditDetail))]
         public virtual async Task<IActionResult> EditDetailAsync(int id, IFormCollection formCollection)
         {
             var handled = false;
@@ -780,8 +780,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterUpdateDetail(model);
             if (HasError == false)
             {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.EditDetail);
+                model = await BeforeViewAsync(model, ActionMode.EditDetail).ConfigureAwait(false);
             }
             return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }
@@ -789,7 +789,7 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void AfterUpdateDetail(TModel model);
 
         [HttpGet]
-        [ActionName("DeleteDetail")]
+        [ActionName(nameof(ActionMode.DeleteDetail))]
         public virtual async Task<IActionResult> ViewDeleteDetailAsync(int id, int detailId)
         {
             var handled = false;
@@ -823,8 +823,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterViewDeleteDetail(model);
             if (HasError == false)
             {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.DeleteDetail);
+                model = await BeforeViewAsync(model, ActionMode.DeleteDetail).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnDeleteDetailView(masterDetailModel);
         }
@@ -833,7 +833,7 @@ namespace SmartNQuick.AspMvc.Controllers
         protected virtual IActionResult ReturnDeleteDetailView(MasterDetailModel model) => View("DeleteDetail", model);
 
         [HttpPost]
-        [ActionName("DeleteDetail")]
+        [ActionName(nameof(ActionMode.DeleteDetail))]
         public virtual async Task<IActionResult> DeleteDetailAsync(int id, IFormCollection formCollection)
         {
             var handled = false;
@@ -878,8 +878,8 @@ namespace SmartNQuick.AspMvc.Controllers
             AfterDeleteDetail(model);
             if (HasError == false)
             {
-                model = BeforeView(model, ActionMode.CreateDetail);
-                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                model = BeforeView(model, ActionMode.DeleteDetail);
+                model = await BeforeViewAsync(model, ActionMode.DeleteDetail).ConfigureAwait(false);
             }
             return HasError ? ReturnDeleteDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }

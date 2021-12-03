@@ -2,21 +2,29 @@
 @*#if ACCOUNT_ON*@
 @{
     @using Microsoft.AspNetCore.Mvc.Rendering
-    @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Models.Business.Account
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
+    @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.View
-    @model SmartNQuick.AspMvc.Models.Business.Account.AppAccess
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model DisplayViewModel
 
-    var viewBagInfo = new ViewBagWrapper(ViewBag);
+    var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
+    var appAccessModel = Model.DisplayModel as AppAccess;
 
+    if (viewBagInfo == null)
+    {
+        viewBagInfo = new ViewBagWrapper(ViewBag);
+    }
     viewBagInfo.Translate = Translator.TranslateIt;
     viewBagInfo.Controller = ViewContext.RouteData.Values["controller"].ToString();
     viewBagInfo.Action = ViewContext.RouteData.Values["action"].ToString();
 
-    Model.ViewBagInfo = viewBagInfo;
-    Model.OneModel.ViewBagInfo = viewBagInfo;
+    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, appAccessModel.OneModel);
+    var indexViewModel = ViewModelCreator.CreateIndexViewModel(viewBagInfo, appAccessModel.ManyModels, appAccessModel.DetailType, appAccessModel.DetailType);
+
     ViewData["Title"] = viewBagInfo.Title;
     <h1>@ViewData["Title"]</h1>
 
@@ -28,7 +36,7 @@
             <a asp-action="Index" class="btn btn-outline-dark" style="min-width: 8em;">@viewBagInfo.TranslateFor("Back to List")</a>
         </div>
         <div class="p-sm-2">
-            @Html.ActionLink(viewBagInfo.TranslateFor("Edit"), "Edit", new { id = Model.Id }, new { @class = "btn btn-secondary", style = "min-width: 8em;" })
+            @Html.ActionLink(viewBagInfo.TranslateFor("Edit"), "Edit", new { id = appAccessModel.OneModel.Id }, new { @class = "btn btn-secondary", style = "min-width: 8em;" })
         </div>
     </div>
     <hr />
@@ -41,12 +49,12 @@
     }
 
     <div style="margin-top: 1em;">
-        @await Html.PartialAsync("_DisplayModel", Model.OneItem)
+        @await Html.PartialAsync("_Display", displayViewModel)
     </div>
 
     <div style="margin-top: 1em;">
         <h4>Rolen</h4>
-        @await Html.PartialAsync("_CardList", Model.ManyItems)
+        @await Html.PartialAsync("_CardList", indexViewModel)
     </div>
 }
 @*#endif*@

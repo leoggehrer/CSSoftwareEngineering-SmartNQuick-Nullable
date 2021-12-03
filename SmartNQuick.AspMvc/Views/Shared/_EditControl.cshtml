@@ -1,17 +1,17 @@
 ﻿@*@BaseCode*@
 @{
     @using CommonBase.Extensions
-@using SmartNQuick.AspMvc.Modules.View
+    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.IdentityModel
 
-    var viewBagWrapper = Model.ViewBagInfo;
-    var property = viewBagWrapper.DisplayProperty;
+    var viewBagInfo = Model.ViewBagInfo;
+    var property = viewBagInfo.DisplayProperty;
     var mappingProperty = default(System.Reflection.PropertyInfo);
-    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagWrapper, Model);
+    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagInfo, Model);
 
     @if (property.CanRead && property.CanWrite)
     {
-        @if (property.PropertyType == typeof(SelectList) && viewBagWrapper.GetMappingProperty(property.Name, out mappingProperty))
+        @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
         {
             @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
@@ -27,7 +27,7 @@
     }
     else if (property.CanRead)
     {
-        @if (property.PropertyType == typeof(SelectList) && viewBagWrapper.GetMappingProperty(property.Name, out mappingProperty))
+        @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
         {
             @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
@@ -38,5 +38,5 @@
             </div>
         }
     }
-    viewBagWrapper.Handled = true;
+    viewBagInfo.Handled = true;
 }
