@@ -224,6 +224,15 @@ namespace SmartNQuick.AspMvc.Modules.View
                     result = genericTypes[1];
                 }
             }
+            else if (modelType.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+            {
+                var genericTypes = modelType.BaseType.GetGenericArguments();
+
+                if (genericTypes.Length > 1)
+                {
+                    result = genericTypes[1];
+                }
+            }
             return result;
         }
     }

@@ -84,13 +84,11 @@
         if (oneModel != null)
         {
             oneModel.ViewBagInfo = viewBagInfo;
-            <h2>@viewBagInfo.TranslateFor("OneModel")</h2>
             @await Html.PartialAsync("_DisplayModel", oneModel)
         }
         if (anotherModel != null)
         {
             anotherModel.ViewBagInfo = viewBagInfo;
-            <h2>@viewBagInfo.TranslateFor("AnotherModel")</h2>
             @await Html.PartialAsync("_DisplayModel", anotherModel)
         }
     }

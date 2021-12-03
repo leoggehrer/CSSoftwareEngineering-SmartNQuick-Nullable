@@ -20,8 +20,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         internal static string OneToAnotherModel => nameof(OneToAnotherModel);
         internal static string OneToManyModel => nameof(OneToManyModel);
         internal static string ShadowModel => nameof(ShadowModel);
-
-
         #endregion Models
 
         protected ModelGenerator(SolutionProperties solutionProperties)
@@ -88,7 +86,14 @@ namespace CSharpCodeGenerator.Logic.Generation
                     {
                         var (one, _) = ContractHelper.GetOneToManyTypes(type);
 
-                        result.Add(CreateDelegateProperties(type, one, StaticLiterals.OneModelName, UnitType, Common.ItemType.BusinessModel));
+                        result.Add(CreateDelegateProperties(type, one, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
+                    }
+                    else if (ContractHelper.HasOneToAnother(type))
+                    {
+                        var (one, another) = ContractHelper.GetOneToAnotherTypes(type);
+
+                        result.Add(CreateDelegateProperties(type, one, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
+                        result.Add(CreateDelegateProperties(type, another, StaticLiterals.AnotherItemName, UnitType, Common.ItemType.BusinessModel));
                     }
                     result.Add(CreateBusinessModel(type, UnitType));
                 }
@@ -324,7 +329,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
-                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, "OneDeligate", StaticLiterals.CSharpFileExtension),
+                SubFilePath = CreateSubFilePathFromInterface(type, ModelsFolder, delegateObjectName, StaticLiterals.CSharpFileExtension),
             };
             CreateModelAttributes(type, result.Source);
             result.Add($"public partial class {modelName}");

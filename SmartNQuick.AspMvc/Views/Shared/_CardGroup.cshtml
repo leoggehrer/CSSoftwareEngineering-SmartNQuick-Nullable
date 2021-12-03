@@ -6,7 +6,8 @@
 
     if (Model != null)
     {
-        var viewBagInfo = Model?.ViewBagInfo;
+        var index = 0;
+        var viewBagInfo = Model.ViewBagInfo;
 
         Model.DisplayModel.ViewBagInfo = viewBagInfo;
         <li class="list-group-item">
@@ -17,11 +18,11 @@
                 viewBagInfo.DisplayProperty = property;
 
                 @await Html.PartialAsync("_CardItem", Model.DisplayModel)
-                @if (model.ViewBagInfo.Handled == false)
+                @if (viewBagInfo.Handled == false)
                 {
                     <strong>@viewBagInfo.TranslateFor(Model.GetLabel(property))</strong>
 
-                    <p>@Model.GetDisplayValue(Model.DisplayModel, property)</p>
+                    <p>@Model.GetDisplayValue(property)</p>
                 }
             }
         </li>

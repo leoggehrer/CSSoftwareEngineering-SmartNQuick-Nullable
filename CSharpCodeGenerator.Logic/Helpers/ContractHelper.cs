@@ -354,6 +354,13 @@ namespace CSharpCodeGenerator.Logic.Helpers
             return type.GetInterfaces().FirstOrDefault(e => e.IsGenericType
                                                          && e.Name.Equals(StaticLiterals.IOneToManyName)) != null;
         }
+        public static bool HasOneToAnother(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.GetInterfaces().FirstOrDefault(e => e.IsGenericType
+                                                         && e.Name.Equals(StaticLiterals.IOneToAnotherName)) != null;
+        }
         public static (Type one, Type many) GetOneToManyTypes(Type type)
         {
             type.CheckArgument(nameof(type));
@@ -362,6 +369,15 @@ namespace CSharpCodeGenerator.Logic.Helpers
                                 .FirstOrDefault(e => e.IsGenericType
                                                   && e.Name.Equals(StaticLiterals.IOneToManyName));
             return (oneToMany?.GetGenericArguments()[0], oneToMany?.GetGenericArguments()[1]);
+        }
+        public static (Type one, Type many) GetOneToAnotherTypes(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var oneToAnother = type.GetInterfaces()
+                                .FirstOrDefault(e => e.IsGenericType
+                                                  && e.Name.Equals(StaticLiterals.IOneToAnotherName));
+            return (oneToAnother?.GetGenericArguments()[0], oneToAnother?.GetGenericArguments()[1]);
         }
         public static bool HasPersistenceBaseInterface(Type type)
         {

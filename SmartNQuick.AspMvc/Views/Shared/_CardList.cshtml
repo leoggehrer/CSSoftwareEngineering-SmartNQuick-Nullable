@@ -3,9 +3,9 @@
     @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.Session
+    @using SmartNQuick.AspMvc.Modules.View
     @model IndexViewModel
 
-    var index = 0;
     var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
 
@@ -13,47 +13,41 @@
     {
         @foreach (var model in Model.DisplayModels)
         {
-            index = 0;
             model.ViewBagInfo = viewBagInfo;
             <div class="card" style="margin-bottom: 0.5em;">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        @foreach (var item in Model.GetDisplayProperties())
-                        {
-                            model.ViewBagInfo.Index = index++;
-                            model.ViewBagInfo.Handled = false;
-                            model.ViewBagInfo.DisplayProperty = item;
-                            @await Html.PartialAsync("_CardItem", model)
-                            @if (model.ViewBagInfo.Handled == false)
-                            {
-                                <strong>@viewBagInfo.TranslateFor(Model.GetLabel(item))</strong>
-
-                                <p>@Model.GetDisplayValue(model, item)</p>
-                            }
-                        }
-                    </li>
-                </ul>
-@*#if ACCOUNT_ON*@
-                @{
-                    @if (sessionInfo.LoginSession != null
-                         && viewBagInfo.CommandMode != CommandMode.None
-                         && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
+                    @if (model is IFirstToSecond fTs)
                     {
-                        <div class="card-body">
-                            @await Html.PartialAsync("_CommandControl", model)
-                        </div>
+                        viewBagInfo.IgnoreNames.Add($"{fTs.FirstModel.GetType().Name}Id");
+                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.FirstModel))
+                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.SecondModel))
                     }
                     else
                     {
-                        @await Html.PartialAsync("_CardBody", model)
+                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, model))
                     }
-                }
+                </ul>
+@*#if ACCOUNT_ON*@
+@{
+    @if (sessionInfo.LoginSession != null
+    && viewBagInfo.CommandMode != CommandMode.None
+    && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
+    {
+        <div class="card-body">
+            @await Html.PartialAsync("_CommandControl", model)
+        </div>
+    }
+    else
+    {
+        @await Html.PartialAsync("_CardBody", model)
+    }
+}
 @*#endif*@
 
 @*#if ACCOUNT_OFF*@@*
-                @{
-                    @await Html.PartialAsync("_CardBody", Model)
-                }
+    @{
+    @await Html.PartialAsync("_CardBody", Model)
+    }
 *@@*#endif*@
             </div>
         }

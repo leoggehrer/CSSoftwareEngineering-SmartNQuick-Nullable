@@ -23,7 +23,7 @@
     ViewData["Title"] = viewBagInfo.Title;
     <div class="row">
         <div class="col-md-12 d-flex">
-            <h2 id="quote">@viewBagInfo.Title</h2>
+            <h2>@viewBagInfo.Title</h2>
             @if ((viewBagInfo.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Create) > 0)
             {
                 <div class="ml-auto">

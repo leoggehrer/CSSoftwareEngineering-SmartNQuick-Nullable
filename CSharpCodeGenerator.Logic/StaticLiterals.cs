@@ -61,6 +61,7 @@ namespace CSharpCodeGenerator.Logic
         public static string OneItemName => "OneItem";
         public static string OneModelName => "OneModel";
         public static string AnotherItemName => "AnotherItem";
+        public static string AnotherModelName => "AnotherModel";
         public static string FirstItemName => "FirstItem";
         public static string SecondItemName => "SecondItem";
         public static string ManyItemName => "ManyItem";

@@ -2,7 +2,7 @@
 //MdStart
 namespace SmartNQuick.AspMvc.Models
 {
-    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel
+    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, IFirstToSecond
         where TOne : Contracts.IIdentifiable
         where TAnother : Contracts.IIdentifiable
         where TOneModel : IdentityModel, Contracts.ICopyable<TOne>, TOne, new()
@@ -32,6 +32,9 @@ namespace SmartNQuick.AspMvc.Models
                     ve.RowVersion = value;
             }
         }
+
+        public IdentityModel FirstModel => OneModel;
+        public IdentityModel SecondModel => AnotherModel;
     }
 }
 //MdEnd
