@@ -45,8 +45,16 @@
 @*#endif*@
 
 @*#if ACCOUNT_OFF*@@*
-    @{
-    @await Html.PartialAsync("_CardBody", Model)
+    @if (viewBagInfo.CommandMode != CommandMode.None
+         && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
+    {
+        <div class="card-body">
+            @await Html.PartialAsync("_CommandControl", model)
+        </div>
+    }
+    else
+    {
+        @await Html.PartialAsync("_CardBody", model)
     }
 *@@*#endif*@
             </div>

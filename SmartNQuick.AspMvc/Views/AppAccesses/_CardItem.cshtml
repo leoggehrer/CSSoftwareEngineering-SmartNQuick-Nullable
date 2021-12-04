@@ -1,0 +1,16 @@
+@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Persistence.Account
+    @using SmartNQuick.AspMvc.Modules.View
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    if (Model is Role role)
+    {
+        var viewBagInfo = Model.ViewBagInfo;
+        var property = viewBagInfo.DisplayProperty;
+        var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, Model);
+
+        viewBagInfo.Handled = true;
+        <p><span style="color: blue;">@($"{viewBagInfo.TranslateFor("Has access to")}: ")</span><strong>@($"{displayViewModel.GetDisplayValue(property)}")</strong></p>
+    }
+}

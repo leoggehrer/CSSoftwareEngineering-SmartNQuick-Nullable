@@ -3,7 +3,6 @@
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Models.Modules.View;
@@ -63,18 +62,15 @@ namespace SmartNQuick.AspMvc.Controllers
         protected bool FromEditToIndex { get; set; } = true;
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            ViewBag.ModelType = typeof(TModel);
-
-            base.OnActionExecuted(context);
-        }
-
         #region Before view
         protected virtual TModel BeforeView(TModel model, ActionMode action) => model;
         protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action) => models;
+
         protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action) => Task.FromResult(model);
         protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action) => Task.FromResult(models);
+
+        protected virtual MasterDetailModel BeforeViewMasterDetail(MasterDetailModel model, ActionMode action) => model;
+        protected virtual Task<MasterDetailModel> BeforeViewMasterDetailAsync(MasterDetailModel model, ActionMode action) => Task.FromResult(model);
         #endregion Before view
 
         protected virtual TModel ToModel(TContract entity)
@@ -636,6 +632,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 model = BeforeView(model, ActionMode.CreateDetail);
                 model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.CreateDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.CreateDetail).ConfigureAwait (false);
             }
             return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(masterDetailModel);
         }
@@ -667,7 +665,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
-                        SetModelValues(masterDetailModel.Detail, nameof(Models.MasterDetailModel.Detail), formCollection);
+                        SetModelValues(masterDetailModel.Detail, nameof(MasterDetailModel.Detail), formCollection);
                         addManyMethod?.Invoke(model, new object[] { masterDetailModel.Detail });
 
                         using var ctrl = CreateController();
@@ -683,10 +681,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterAddDetail(model);
-            if (HasError == false)
+            if (HasError)
             {
                 model = BeforeView(model, ActionMode.CreateDetail);
                 model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.CreateDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.CreateDetail).ConfigureAwait(false);
             }
             return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }
@@ -730,6 +730,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 model = BeforeView(model, ActionMode.EditDetail);
                 model = await BeforeViewAsync(model, ActionMode.EditDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.EditDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.EditDetail).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnEditDetailView(masterDetailModel);
         }
@@ -779,10 +781,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterUpdateDetail(model);
-            if (HasError == false)
+            if (HasError)
             {
                 model = BeforeView(model, ActionMode.EditDetail);
                 model = await BeforeViewAsync(model, ActionMode.EditDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.EditDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.EditDetail).ConfigureAwait(false);
             }
             return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }
@@ -826,6 +830,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 model = BeforeView(model, ActionMode.DeleteDetail);
                 model = await BeforeViewAsync(model, ActionMode.DeleteDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.DeleteDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.DeleteDetail).ConfigureAwait(false);
             }
             return HasError ? RedirectToAction("Index") : ReturnDeleteDetailView(masterDetailModel);
         }
@@ -877,10 +883,12 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
             AfterDeleteDetail(model);
-            if (HasError == false)
+            if (HasError)
             {
                 model = BeforeView(model, ActionMode.DeleteDetail);
                 model = await BeforeViewAsync(model, ActionMode.DeleteDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.DeleteDetail);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.DeleteDetail).ConfigureAwait(false);
             }
             return HasError ? ReturnDeleteDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }

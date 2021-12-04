@@ -44,12 +44,12 @@
         @await Html.PartialAsync("_DisplayModel", oneModel)
         <hr />
 
-        @if (viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false && (viewBagInfo.CommandMode & CommandMode.Edit) > 0)
+        @if (viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false && (viewBagInfo.CommandMode & CommandMode.CreateDetail) > 0)
         {
             <div class="row" style="margin-bottom: 1em;">
                 <div class="col-md-12 d-flex">
                     <div class="ml-auto">
-                        <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-dark" title="@viewBagInfo.TranslateFor("Create new detail...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        <a asp-action="@nameof(CommandMode.CreateDetail)" asp-route-id="@oneModel.Id" class="btn btn-outline-primary" title="@viewBagInfo.TranslateFor("Create new detail...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>

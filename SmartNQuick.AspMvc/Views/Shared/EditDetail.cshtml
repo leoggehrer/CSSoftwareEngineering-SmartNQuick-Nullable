@@ -46,7 +46,7 @@
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() 
         { 
             SubmitText = viewBagInfo.TranslateFor("Save"), 
-            BackText = viewBagInfo.TranslateFor("Back to List"),
+            BackText = viewBagInfo.TranslateFor("Back to Details"),
             BackAction = "Details",
             BackRouteValues = new { id = Model.Master.Id }
         })

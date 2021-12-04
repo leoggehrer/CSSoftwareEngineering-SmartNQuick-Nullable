@@ -1,0 +1,31 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Persistence.Account
+    @using SmartNQuick.AspMvc.Modules.View
+    @model SmartNQuick.AspMvc.Models.IdentityModel
+
+    @if (Model is Role role)
+    {
+        var viewBagInfo = Model.ViewBagInfo;
+        var property = viewBagInfo.DisplayProperty;
+
+        if (property.Name.Equals(nameof(Role.Designation)))
+        {
+            var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagInfo, Model);
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-check" style="margin-bottom: 0.5em;">
+                        <label class="form-label" for="@property.Name" style="color: blue;">@viewBagInfo.TranslateFor("Grant access to:")</label>
+                        @Html.DropDownList(editViewModel.GetName(property), new SelectList(role.AssignedRoles, "Designation", "Designation"), null, new { @class = "form-control", style = "min-width: 400px; border-color: blue; font-weight: bold;" })
+                    </div>
+                </div>
+            </div>
+        }
+        viewBagInfo.Handled = true;
+    }
+    else
+    {
+        @await Html.PartialAsync("../Shared/_EditGroup", Model)
+    }
+}
