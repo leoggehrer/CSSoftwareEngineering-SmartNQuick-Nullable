@@ -22,7 +22,17 @@
                 {
                     <strong>@viewBagInfo.TranslateFor(Model.GetLabel(property))</strong>
 
-                    <p>@Model.GetDisplayValue(property)</p>
+                    @if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+                    {
+                        var value = Model.GetValue(property);
+                        var boolVal = value != null ? Convert.ToBoolean(value) : false;
+
+                        <p>@Html.CheckBox(Model.GetName(property), boolVal, new { disabled="disabled" })</p>
+                    }
+                    else
+                    {
+                        <p>@Model.GetDisplayValue(property)</p>
+                    }
                 }
             }
         </li>

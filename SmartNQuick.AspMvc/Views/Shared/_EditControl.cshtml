@@ -15,6 +15,13 @@
         {
             @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
+        else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+        {
+            var value = editViewModel.GetValue(property);
+            var boolVal = value != null ? Convert.ToBoolean(value) : false;
+
+            @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input" })
+        }
         else if (property.PropertyType.IsEnum)
         {
             @Html.DropDownList(editViewModel.GetName(property), Html.GetEnumSelectList(property.PropertyType), editViewModel.GetDisplayValue(property), new { @class = "form-control" })
@@ -30,6 +37,13 @@
         @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
         {
             @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
+        }
+        else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+        {
+            var value = editViewModel.GetValue(property);
+            var boolVal = value != null ? Convert.ToBoolean(value) : false;
+
+            @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled" })
         }
         else
         {

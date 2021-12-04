@@ -9,10 +9,20 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label" for="@property.Name">@viewBagInfo.TranslateFor(editViewModel.GetLabel(property))</label>
-                @await Html.PartialAsync("_EditControl", Model)
-            </div>
+            @if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+            {
+                <div class="form-check" style="margin-bottom: 0.5em;">
+                    @await Html.PartialAsync("_EditControl", Model)
+                    <label class="form-check-label" for="@property.Name">@viewBagInfo.TranslateFor(editViewModel.GetLabel(property))</label>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label" for="@property.Name">@viewBagInfo.TranslateFor(editViewModel.GetLabel(property))</label>
+                    @await Html.PartialAsync("_EditControl", Model)
+                </div>
+            }
         </div>
     </div>
     viewBagInfo.Handled = true;

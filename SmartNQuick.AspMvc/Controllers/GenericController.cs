@@ -117,8 +117,9 @@ namespace SmartNQuick.AspMvc.Controllers
             var modelType = typeof(TModel);
             var displayType = ViewBagWrapper.GetDisplayType(modelType);
             var viewBageInfo = new ViewBagWrapper(ViewBag);
+            var viewModels = models ?? Array.Empty<TModel>();
 
-            return ViewModelCreator.CreateIndexViewModel(viewBageInfo, models, modelType, displayType);
+            return ViewModelCreator.CreateIndexViewModel(viewBageInfo, viewModels, modelType, displayType);
         }
         protected virtual EditViewModel CreateEditViewModel(TModel model)
         {
