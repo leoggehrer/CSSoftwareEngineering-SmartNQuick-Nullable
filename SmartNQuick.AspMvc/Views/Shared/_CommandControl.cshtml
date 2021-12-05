@@ -9,19 +9,25 @@
     {
         @if ((Model.CommandMode & CommandMode.Edit) > 0)
         {
-            var action = Url.Action(nameof(CommandMode.Edit), viewBagInfo.Controller, new { @id = Model.Id });
+            var action = Url.Action(nameof(ActionMode.Edit), viewBagInfo.Controller, new { @id = Model.Id });
 
             <a type="button" href="@action" class="btn btn-outline-primary" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("Edit")"><i class="fa fa-edit" aria-hidden="true"></i></a>
         }
         @if ((Model.CommandMode & CommandMode.Details) > 0)
         {
-            var action = Url.Action(nameof(CommandMode.Details), viewBagInfo.Controller, new { @id = Model.Id });
+            var action = Url.Action(nameof(ActionMode.Details), viewBagInfo.Controller, new { @id = Model.Id });
 
             <a type="button" href="@action" class="btn btn-outline-dark" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
         }
+        @if ((Model.CommandMode & CommandMode.Create) > 0)
+        {
+            var action = Url.Action(nameof(ActionMode.CreateById), viewBagInfo.Controller, new { @id = Model.Id });
+
+            <a type="button" href="@action" class="btn btn-outline-info" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("Create")"><i class="fa fa-copy" aria-hidden="true"></i></a>
+        }
         @if ((Model.CommandMode & CommandMode.Delete) > 0)
         {
-            var action = Url.Action(nameof(CommandMode.Delete), viewBagInfo.Controller, new { @id = Model.Id });
+            var action = Url.Action(nameof(ActionMode.Delete), viewBagInfo.Controller, new { @id = Model.Id });
 
             <a type="button" href="@action" class="btn btn-outline-danger" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("Delete")"><i class="fa fa-trash" aria-hidden="true"></i></a>
         }
@@ -32,7 +38,7 @@
 
         @if (master != null && (master.CommandMode & CommandMode.EditDetail) > 0)
         {
-            var action = Url.Action(nameof(CommandMode.EditDetail), viewBagInfo.Controller, new { @id = master.Id, @detailId = Model.Id });
+            var action = Url.Action(nameof(ActionMode.EditDetail), viewBagInfo.Controller, new { @id = master.Id, @detailId = Model.Id });
 
             <a type="button" href="@action" class="btn btn-outline-primary" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("EditDetail")"><i class="fa fa-edit" aria-hidden="true"></i></a>
         }
@@ -44,7 +50,7 @@
         }
         @if (master != null && (master.CommandMode & CommandMode.DeleteDetail) > 0)
         {
-            var action = Url.Action(nameof(CommandMode.DeleteDetail), viewBagInfo.Controller, new { @id = master.Id, @detailId = Model.Id });
+            var action = Url.Action(nameof(ActionMode.DeleteDetail), viewBagInfo.Controller, new { @id = master.Id, @detailId = Model.Id });
 
             <a type="button" href="@action" class="btn btn-outline-danger" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("DeleteDetail")"><i class="fa fa-trash" aria-hidden="true"></i></a>
         }

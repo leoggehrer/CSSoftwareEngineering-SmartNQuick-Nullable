@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -34,7 +35,7 @@
         </div>
     }
 
-    <form asp-action="@viewBagInfo.Action" method="post">
+    <form asp-action="@nameof(ActionMode.Create)" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_CreateEdit", Model)
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagInfo.TranslateFor("Save"), BackText = viewBagInfo.TranslateFor("Back to List") })

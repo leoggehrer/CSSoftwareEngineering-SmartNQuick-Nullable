@@ -330,6 +330,35 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             return HasError ? RedirectToAction("Index") : ReturnCreateView(model);
         }
+        [HttpGet]
+        [ActionName(nameof(ActionMode.CreateById))]
+        public virtual async Task<IActionResult> CreateAsync(int id)
+        {
+            var handled = false;
+            var model = default(TModel);
+
+            BeforeCreate(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await EditModelAsync(id).ConfigureAwait(false);
+                    model.Id = 0;
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterCreate(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.Create);
+                model = await BeforeViewAsync(model, ActionMode.Create).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnCreateView(model);
+        }
         partial void BeforeCreate(ref TModel model, ref bool handled);
         partial void AfterCreate(TModel model);
         protected virtual IActionResult ReturnCreateView(TModel model) => View("Create", CreateEditViewModel(model));
@@ -400,8 +429,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    model = await EditModelAsync(id).ConfigureAwait(false);
                     LastViewError = string.Empty;
+                    model = await EditModelAsync(id).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

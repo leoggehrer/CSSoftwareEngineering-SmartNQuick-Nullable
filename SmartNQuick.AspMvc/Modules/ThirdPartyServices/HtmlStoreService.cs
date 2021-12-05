@@ -61,7 +61,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
             if (htmlStoreServer.HasContent())
             {
                 var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IHtmlElement>(htmlStoreServer);
-                var predicate = $"{nameof(StaticPage.AppName)} == \"{appName}\" AND {nameof(StaticPage.Key)} == \"{key}\" AND {nameof(StaticPage.State)} == \"{State.Active}\"";
+                var predicate = $"{nameof(HtmlElement.AppName)} == \"{appName}\" AND {nameof(HtmlElement.Key)} == \"{key}\" AND {nameof(HtmlElement.State)} == \"{State.Active}\"";
 
                 try
                 {
@@ -96,7 +96,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
             if (htmlStoreServer.HasContent())
             {
                 var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IHtmlAttribute>(htmlStoreServer);
-                var predicate = $"{nameof(StaticPage.AppName)} == \"{appName}\" AND {nameof(StaticPage.Key)} == \"{key}\" AND {nameof(StaticPage.State)} == \"{State.Active}\"";
+                var predicate = $"{nameof(HtmlAttribute.AppName)} == \"{appName}\" AND {nameof(HtmlAttribute.Key)} == \"{key}\" AND {nameof(HtmlAttribute.State)} == \"{State.Active}\"";
 
                 try
                 {

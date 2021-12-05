@@ -7,7 +7,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
         None = 0,
 
         Create = 1,
-        Edit = 2 * Create,
+        CreateById = 2 * Create,
+        Edit = 2 * CreateById,
         Delete = 2 * Edit,
 
         CreateDetail = 2 * Delete,

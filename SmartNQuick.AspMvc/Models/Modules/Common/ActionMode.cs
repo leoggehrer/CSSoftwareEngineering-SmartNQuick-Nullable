@@ -10,7 +10,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
         IndexByPageSize = 2 * IndexByPageIndex,
 
         Create = 2 * IndexByPageSize,
-        Edit = 2 * Create,
+        CreateById = 2 * Create,
+        Edit = 2 * CreateById,
         Delete = 2 * Edit,
 
         CreateDetail = 2 * Delete,
