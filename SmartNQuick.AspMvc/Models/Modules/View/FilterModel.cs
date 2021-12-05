@@ -96,6 +96,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
+            var translate = ViewBagInfo.Translate;
             var operations = new List<SelectListItem>();
 
             if (ViewBagInfo.GetMappingProperty(propertyInfo.Name, out var property) == false)
@@ -106,21 +107,21 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             operations.Add(new SelectListItem { Value = string.Empty, Text = string.Empty });
             if (property.PropertyType == typeof(string))
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = StaticLiterals.OperationEquals });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNotEquals, Text = StaticLiterals.OperationNotEquals });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationContains, Text = StaticLiterals.OperationContains });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationStartsWith, Text = StaticLiterals.OperationStartsWith });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEndsWith, Text = StaticLiterals.OperationEndsWith });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = translate(StaticLiterals.OperationEquals) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNotEquals, Text = translate(StaticLiterals.OperationNotEquals) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationContains, Text = translate(StaticLiterals.OperationContains) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationStartsWith, Text = translate(StaticLiterals.OperationStartsWith) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEndsWith, Text = translate(StaticLiterals.OperationEndsWith) });
             }
             else if (property.PropertyType == typeof(int))
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumEquals, Text = StaticLiterals.OperationNumEquals });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsGreater, Text = StaticLiterals.OperationNumIsGreater });
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsLess, Text = StaticLiterals.OperationNumIsLess });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumEquals, Text = translate(StaticLiterals.OperationNumEquals) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsGreater, Text = translate(StaticLiterals.OperationNumIsGreater) });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsLess, Text = translate(StaticLiterals.OperationNumIsLess) });
             }
             else
             {
-                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = StaticLiterals.OperationEquals });
+                operations.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = translate(StaticLiterals.OperationEquals) });
             }
             return new SelectList(operations, "Value", "Text");
         }
@@ -146,7 +147,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
                         {
                             Name = property.Name,
                             Operation = operationValue,
-                            Value = operandValue,
+                            Value = operandValue[0],
                         };
                         result[property.Name] = filterItem;
                     }

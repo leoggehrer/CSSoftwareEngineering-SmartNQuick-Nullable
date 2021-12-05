@@ -28,7 +28,7 @@
             @if ((viewBagInfo.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Create) > 0)
             {
                 <div class="ml-auto">
-                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-dark" title="@viewBagInfo.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-primary" title="@viewBagInfo.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
                 </div>
             }
         </div>

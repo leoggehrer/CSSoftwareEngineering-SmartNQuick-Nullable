@@ -39,6 +39,12 @@
 
                 @Html.DropDownList(Model.GetName(property), list, null, new { @class = "form-control" })
             }
+            else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+            {
+                var boolVal = propertyValue != null ? Convert.ToBoolean(propertyValue) : false;
+
+                @Html.CheckBox(Model.GetName(property), boolVal, new { @class="form-check-input", style="margin: 0.7em;" })
+            }
             else
             {
                 <input type="text" class="form-control" id="@Model.GetId(property)" name="@Model.GetName(property)" , value="@propertyValue" />
