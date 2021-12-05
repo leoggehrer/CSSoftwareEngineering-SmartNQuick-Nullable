@@ -295,7 +295,7 @@ namespace CSharpCodeGenerator.Logic.Helpers
                 }
                 else if ((idx = pi.Name.IndexOf("Id_")) > -1)
                 {
-                    var masterName = pi.Name.Substring(0, idx);
+                    var masterName = pi.Name[..idx];
                     var masterReference = types.FirstOrDefault(e => new ContractHelper(e).EntityName.Equals(masterName));
 
                     if (masterReference != null)

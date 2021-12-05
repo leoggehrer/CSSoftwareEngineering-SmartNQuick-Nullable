@@ -1,7 +1,7 @@
 ﻿@*@BaseCode*@
 @{
     @using CommonBase.Extensions
-    @using SmartNQuick.AspMvc.Modules.StaticPage
+    @using SmartNQuick.AspMvc.Modules.ThirdPartyServices
     @using SmartNQuick.AspMvc.Modules.Language
 
     var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -10,7 +10,7 @@
     Func<string, string> translateFor = pn => translate($"{controller}.{pn}");
     var title = translateFor("Contact");
     var pageKey = $"{controller}.{action}";
-    var htmlItem = StaticPageService.GetPageContent(pageKey);
+    var htmlItem = HtmlStoreService.GetPageContent(pageKey);
 
     ViewData["Title"] = title;
 }
@@ -21,7 +21,7 @@
 }
 else
 {
-    var imgSrc = StaticPageService.GetPartialContent($"{pageKey}.img.src", "/img/kontakt.jpg");
+    var imgSrc = HtmlStoreService.GetHtmlAttribute($"{pageKey}.img.src", "/img/kontakt.jpg");
 
     <div class="card" style="margin-bottom: 1em; border: none;">
         @if (imgSrc.HasContent())

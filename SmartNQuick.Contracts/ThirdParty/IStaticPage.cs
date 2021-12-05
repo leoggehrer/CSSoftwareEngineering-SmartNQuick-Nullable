@@ -1,11 +1,10 @@
 ﻿//@BaseCode
 //MdStart
-
 using SmartNQuick.Contracts.Modules.Common;
 
 namespace SmartNQuick.Contracts.ThirdParty
 {
-    public partial interface IHtmlItem : IVersionable, ICopyable<IHtmlItem>
+    public partial interface IStaticPage : IVersionable, ICopyable<IStaticPage>
     {
         string AppName { get; set; }
         string Key { get; set; }

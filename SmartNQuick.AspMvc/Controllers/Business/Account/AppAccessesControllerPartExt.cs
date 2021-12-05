@@ -21,7 +21,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         {
             var viewBagInfo = new ViewBagWrapper(ViewBag);
 
-            viewBagInfo.CommandMode = viewBagInfo.CommandMode ^ CommandMode.EditDetail;
+            viewBagInfo.CommandMode ^= CommandMode.EditDetail;
             if (action == ActionMode.CreateDetail)
             {
                 roles = await LoadRolesAsync(model).ConfigureAwait(false);
@@ -32,7 +32,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
 
                 if (roles.All(r => r.Assigned))
                 {
-                    viewBagInfo.CommandMode = viewBagInfo.CommandMode ^ CommandMode.CreateDetail;
+                    viewBagInfo.CommandMode ^= CommandMode.CreateDetail;
                 }
                 viewBagInfo.IgnoreNames.Add(nameof(Role.Description));
             }

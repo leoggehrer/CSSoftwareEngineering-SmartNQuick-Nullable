@@ -2,8 +2,8 @@ namespace SmartNQuick.AspMvc.Controllers.Persistence.MusicStore
 {
     using SmartNQuick.Contracts.Client;
     using TContract = Contracts.ThirdParty.ITranslation;
-    using TModel = AspMvc.Models.ThirdParty.Translation;
-    public partial class TranslationsController : AspMvc.Controllers.GenericController<TContract, TModel>
+    using TModel = Models.ThirdParty.Translation;
+    public partial class TranslationsController : GenericController<TContract, TModel>
     {
         protected override IAdapterAccess<TContract> CreateController()
         {

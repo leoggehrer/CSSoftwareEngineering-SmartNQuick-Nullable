@@ -23,7 +23,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_CONNECTIONSTRING=Server=host.docker.internal,14330; Database=SmartNQuickDb; User Id=sa;Password=passme!1234
       - ASPNETCORE_TRANSLATIONSERVER=http://host.docker.internal:34785/api
-      - ASPNETCORE_STATICPAGESERVER=http://host.docker.internal:34820/api
+      - ASPNETCORE_HTMLSTORESERVER=http://host.docker.internal:34820/api
     ports:
       - "34800:80"
     volumes:
