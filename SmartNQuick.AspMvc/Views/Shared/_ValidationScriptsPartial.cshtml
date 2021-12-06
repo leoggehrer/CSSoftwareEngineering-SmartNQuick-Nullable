@@ -2,3 +2,26 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 *@
+<script type="text/javascript">
+    var checkLeav = true;
+
+    $('#form').submit(function() {
+        checkLeav = false;
+    });
+    $('#form').data('serialize',$('#form').serialize()); // On load save form current state
+
+    $(window).bind('beforeunload', function(e) {
+        if (checkLeav) {
+            var actualForm = $('#form').serialize();
+            var saveForm = $('#form').data('serialize');
+
+            if(actualForm != saveForm)
+                return true;
+            else
+                e = null; // i.e; if form state change show warning box, else don't show it.
+        }
+        else {
+            e = null;
+        }
+    });
+</script>

@@ -35,7 +35,7 @@
         </div>
     }
 
-    <form asp-action="@nameof(ActionMode.Create)" method="post">
+    <form id="form" asp-action="@nameof(ActionMode.Create)" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_CreateEdit", Model)
         @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagInfo.TranslateFor("Save"), BackText = viewBagInfo.TranslateFor("Back to List") })

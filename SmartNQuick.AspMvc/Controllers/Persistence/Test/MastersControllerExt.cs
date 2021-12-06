@@ -5,8 +5,8 @@ namespace SmartNQuick.AspMvc.Controllers.Persistence.Test
     {
         partial void Constructed()
         {
-            FromCreateToEdit = true;
-            FromEditToIndex = false;
+            //FromCreateToEdit = true;
+            //FromEditToIndex = false;
         }
     }
 }
