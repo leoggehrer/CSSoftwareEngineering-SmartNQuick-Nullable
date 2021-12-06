@@ -544,6 +544,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
             var modelType = $"AspMvc.{StaticLiterals.ModelsFolder}.{subNameSpace}.{entityName}";
             var controllerName = entityName.CreatePluralWord();
+            var className = $"{controllerName}Controller";
             var result = new Models.GeneratedItem(Common.UnitType.AspMvc, Common.ItemType.AspMvcController)
             {
                 FullName = CreateAspMvcControllerFullNameFromInterface(type),
@@ -557,9 +558,10 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add($"using TModel = {modelType};");
 
             CreateAspMvcControllerAttributes(type, result.Source);
-            result.Add($"{(isPublic ? "public " : string.Empty)}partial class {controllerName}Controller : AspMvc.Controllers.GenericController<TContract, TModel>");
+            result.Add($"{(isPublic ? "public " : string.Empty)}partial class {className} : AspMvc.Controllers.GenericController<TContract, TModel>");
             result.Add("{");
-
+            result.AddRange(CreatePartialStaticConstrutor(className));
+            result.AddRange(CreatePartialConstrutor("public", className));
             result.Add("}");
             result.EnvelopeWithANamespace(CreateAspMvcControllerNameSpace(type));
             result.FormatCSharpCode();

@@ -666,6 +666,49 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(masterDetailModel);
         }
+        [HttpGet]
+        [ActionName(nameof(ActionMode.CreateDetailById))]
+        public virtual async Task<IActionResult> CreateDetailAsync(int id, int detailId)
+        {
+            var handled = false;
+            var model = default(TModel);
+            var masterDetailModel = new MasterDetailModel();
+
+            BeforeCreateDetail(ref model, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    LastViewError = string.Empty;
+                    model = await GetModelAsync(id).ConfigureAwait(false);
+
+                    if (model != null)
+                    {
+                        var oneProperty = model.GetType().GetProperty("OneModel");
+                        var oneModel = oneProperty?.GetValue(model) as IdentityModel;
+                        var getManyMethod = model.GetType().GetMethod("GetManyModelById");
+                        var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
+
+                        masterDetailModel.Master = oneModel;
+                        masterDetailModel.Detail = manyModel;
+                        manyModel.Id = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterCreateDetail(model);
+            if (HasError == false)
+            {
+                model = BeforeView(model, ActionMode.CreateDetail);
+                model = await BeforeViewAsync(model, ActionMode.CreateDetail).ConfigureAwait(false);
+                masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.CreateDetailById);
+                masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.CreateDetailById).ConfigureAwait(false);
+            }
+            return HasError ? RedirectToAction("Index") : ReturnCreateDetailView(masterDetailModel);
+        }
         partial void BeforeCreateDetail(ref TModel model, ref bool handled);
         partial void AfterCreateDetail(TModel model);
         protected virtual IActionResult ReturnCreateDetailView(MasterDetailModel model) => View("CreateDetail", model);

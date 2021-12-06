@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -39,7 +40,7 @@
     <hr />
 
     viewBagInfo.ItemPrefix = nameof(Model.Detail);
-    <form asp-action="@viewBagInfo.Action" method="post">
+    <form asp-action="@nameof(ActionMode.EditDetail)" asp-route-id="@Model.Master.Id" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_EditModel", Model.Detail)
         <hr />

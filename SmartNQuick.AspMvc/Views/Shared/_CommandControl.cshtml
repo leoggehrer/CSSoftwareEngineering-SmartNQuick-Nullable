@@ -42,11 +42,11 @@
 
             <a type="button" href="@action" class="btn btn-outline-primary" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("EditDetail")"><i class="fa fa-edit" aria-hidden="true"></i></a>
         }
-        @if ((viewBagInfo.CommandMode & CommandMode.Details) > 0)
+        @if (master != null && (master.CommandMode & CommandMode.CreateDetail) > 0)
         {
-            //var action = Url.Action(nameof(CommandMode.De), viewBagWrapper.Controller, new { @id = master.Id, @detailId = Model.Id });
+            var action = Url.Action(nameof(ActionMode.CreateDetailById), viewBagInfo.Controller, new { @id = master.Id, @detailId = Model.Id });
 
-            //<a type="button" href="@($"/{viewBagWrapper.Controller}/{nameof(CommandMode.Details)}/{Model.Id}")" class="btn btn-outline-dark" style="margin: 0px 2px 2px 0px;" title="@viewBagWrapper.TranslateFor("Details")"><i class="fa fa-list" aria-hidden="true"></i></a>
+            <a type="button" href="@action" class="btn btn-outline-info" style="margin: 0px 2px 2px 0px;" title="@viewBagInfo.TranslateFor("Create")"><i class="fa fa-copy" aria-hidden="true"></i></a>
         }
         @if (master != null && (master.CommandMode & CommandMode.DeleteDetail) > 0)
         {

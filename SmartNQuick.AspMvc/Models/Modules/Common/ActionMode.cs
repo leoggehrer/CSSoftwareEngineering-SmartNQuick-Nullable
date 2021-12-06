@@ -15,7 +15,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
         Delete = 2 * Edit,
 
         CreateDetail = 2 * Delete,
-        EditDetail = 2 * CreateDetail,
+        CreateDetailById = 2 * CreateDetail,
+        EditDetail = 2 * CreateDetailById,
         DeleteDetail = 2 * EditDetail,
 
         Details = 2 * DeleteDetail,

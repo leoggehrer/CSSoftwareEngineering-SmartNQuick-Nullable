@@ -1,5 +1,6 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.Common
     @using SmartNQuick.AspMvc.Modules.Handler
     @using SmartNQuick.AspMvc.Modules.Language
     @using SmartNQuick.AspMvc.Modules.Session
@@ -32,7 +33,7 @@
     <hr />
 
     viewBagInfo.ItemPrefix = nameof(Model.Detail);
-    <form asp-action="@viewBagInfo.Action" method="post">
+    <form asp-action="@nameof(ActionMode.DeleteDetail)" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
