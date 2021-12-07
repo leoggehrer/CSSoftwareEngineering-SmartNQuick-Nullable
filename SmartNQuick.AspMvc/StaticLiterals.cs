@@ -12,14 +12,14 @@ namespace SmartNQuick.AspMvc
         public static string SearchFilterKeyPrefix => "SFILK";
         public static string FilterPredicateKeyPrefix => "FPREDK";
 
-        public static string FilterModelKey => "FMK";
-        public static string FilterValuesKey => "FVK";
         public static string PageSizesKeyPrefix => "PSIZSK";
         public static string PageCountKeyPrefix => "PCNTK";
         public static string PageIndexKeyPrefix => "PIDXK";
         public static string PageSizeKeyPrefix => "PSIZK";
 
         #region Filter
+        public static string FilterModelKey => "FMK";
+        public static string FilterValuesKey => "FVK";
         public static string TypeOperationPostfix => "TO";
         public static string FieldOperationPostfix => "FO";
         public static string OperationEquals => "Equals";
@@ -31,6 +31,14 @@ namespace SmartNQuick.AspMvc
         public static string OperationNumIsGreater => "IsGreater";
         public static string OperationNumIsLess => "IsLess";
         #endregion Filter
+
+        #region Sorter
+        public static string SorterModelKey => "SMK";
+        public static string SorterValuesKey => "SVK";
+        public static string SortOperationPostfix => "SO";
+        public static string SortAscending => "ASC";
+        public static string SortDescending => "DESC";
+        #endregion Sorter
     }
 }
 //MdEnd

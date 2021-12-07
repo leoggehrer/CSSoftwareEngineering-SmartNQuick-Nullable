@@ -28,6 +28,11 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.HasFilter != null ? (bool)ViewBag.HasFilter : true;
             set => ViewBag.HasFilter = value;
         }
+        public bool HasSorter
+        {
+            get => ViewBag.HasSorter != null ? (bool)ViewBag.HasSorter : true;
+            set => ViewBag.HasSorter = value;
+        }
         public ModelCategory ModelCategory
         {
             get

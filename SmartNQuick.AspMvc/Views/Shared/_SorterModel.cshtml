@@ -1,0 +1,25 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @using System.Reflection
+    @model SorterModel
+
+    var index = 0;
+    var viewBagInfo = Model.ViewBagInfo;
+    var sessionInfo = Model.SessionInfo;
+    var indexViewModel = Model.IndexViewModel;
+    var sorterValues = sessionInfo.GetSorterValues(viewBagInfo.Controller);
+    var properties = indexViewModel.GetDisplayProperties();
+
+    @foreach (var property in properties)
+    {
+        if (property.CanRead)
+        {
+            Model.ViewBagInfo.Index = index++;
+            Model.ViewBagInfo.Handled = false;
+            Model.ViewBagInfo.DisplayProperty = property;
+            @await Html.PartialAsync("_SorterGroup", Model)
+        }
+    }
+}
+

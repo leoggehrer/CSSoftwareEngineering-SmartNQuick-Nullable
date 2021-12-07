@@ -139,6 +139,17 @@ namespace SmartNQuick.AspMvc.Modules.Session
         }
         #endregion Filter
 
+        #region Sorter
+        public void SetSorterValues(string controllerName, SorterValues sorterValues)
+        {
+            Session.Set<SorterValues>($"{StaticLiterals.SorterValuesKey}{controllerName}", sorterValues);
+        }
+        public SorterValues GetSorterValues(string controllerName)
+        {
+            return Session.Get<SorterValues>($"{StaticLiterals.SorterValuesKey}{controllerName}");
+        }
+        #endregion Sorter
+
         #region Page-Properties
         public void SetPageCount(string controllerName, int value)
         {

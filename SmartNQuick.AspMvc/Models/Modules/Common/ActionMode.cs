@@ -4,9 +4,10 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
 {
     public enum ActionMode : int
     {
-        Index = 1,
-        Filter = 2 * Index,
-        IndexByPageIndex = 2 * Filter,
+        Filter = 1,
+        Sorter = 2 * Filter,
+        Index = 2 * Sorter,
+        IndexByPageIndex = 2 * Index,
         IndexByPageSize = 2 * IndexByPageIndex,
 
         Create = 2 * IndexByPageSize,

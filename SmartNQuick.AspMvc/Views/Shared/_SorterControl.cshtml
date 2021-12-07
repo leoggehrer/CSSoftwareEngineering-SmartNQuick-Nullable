@@ -7,11 +7,11 @@
 
     var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
-    var filterModel = new FilterModel(sessionInfo, Model);
+    var sorterModel = new SorterModel(sessionInfo, Model);
         
-    <form asp-action="Filter" method="post">
+    <form asp-action="Sorter" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @await Html.PartialAsync("_FilterModel", filterModel)
+        @await Html.PartialAsync("_SorterModel", sorterModel)
         @await Html.PartialAsync("_Submit", new SubmitCmd() { SubmitText = viewBagInfo.TranslateFor("Apply") })
     </form>
 }

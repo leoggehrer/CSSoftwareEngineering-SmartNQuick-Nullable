@@ -45,6 +45,11 @@ namespace SmartNQuick.AspMvc.Modules.Session
         FilterValues GetFilterValues(string controllerName);
         #endregion Filter properties
 
+        #region Sorter properties
+        void SetSorterValues(string controllerName, SorterValues sorterValues);
+        SorterValues GetSorterValues(string controllerName);
+        #endregion Sorter properties
+
         #region Page properties
         void SetPageCount(string controllerName, int value);
         int GetPageCount(string controllerName);

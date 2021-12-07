@@ -1,0 +1,32 @@
+﻿@*@BaseCode*@
+@{
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @using SmartNQuick.AspMvc.Modules.Session
+    @model SorterModel
+
+    var viewBagInfo = Model.ViewBagInfo;
+    var sessionInfo = Model.SessionInfo;
+    var indexViewModel = Model.IndexViewModel;
+    var index = viewBagInfo.Index;
+    var property = viewBagInfo.DisplayProperty;
+    var sortOperations = Model.GetSortOperations(property);
+    var sorterValues = sessionInfo.GetSorterValues(viewBagInfo.Controller);
+    var propertyValue = default(string);
+    var propertyOperation = default(string);
+    var sorterItem = default(SorterItem);
+    var listOperation = new List<SelectListItem>(sortOperations);
+
+    if (sorterValues != null && sorterValues.TryGetValue(property.Name, out sorterItem))
+    {
+        propertyOperation = sorterItem.Operation;
+    }
+
+    listOperation.ForEach(e => e.Selected = propertyOperation != null && e.Value == propertyOperation);
+    <div class="form-group row">
+        <label for="@property.Name" class="col-sm-2 col-form-label">@viewBagInfo.TranslateFor(indexViewModel.GetLabel(property))</label>
+        <div class="col-sm-2">
+            @Html.DropDownList(Model.GetSortOperationName(property), listOperation, null, new { @class = "form-control" })
+        </div>
+    </div>
+    viewBagInfo.Handled = true;
+}
