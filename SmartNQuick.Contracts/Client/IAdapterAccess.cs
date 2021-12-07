@@ -47,12 +47,26 @@ namespace SmartNQuick.Contracts.Client
         /// <returns>All interfaces of the entity collection.</returns>
         Task<IEnumerable<T>> GetAllAsync();
         /// <summary>
+        /// Returns all interfaces of the entities in the collection.
+        /// </summary>
+        /// <param name="orderBy">Sorts the elements of a sequence in order according to a key.</param>
+        /// <returns>All interfaces of the entity collection.</returns>
+        Task<IEnumerable<T>> GetAllAsync(string orderBy);
+        /// <summary>
         /// Gets a subset of items from the repository.
         /// </summary>
         /// <param name="pageIndex">0 based page index.</param>
         /// <param name="pageSize">The pagesize.</param>
         /// <returns>Subset in accordance with the parameters.</returns>
         Task<IEnumerable<T>> GetPageListAsync(int pageIndex, int pageSize);
+        /// <summary>
+        /// Gets a subset of items from the repository.
+        /// </summary>
+        /// <param name="orderBy">Sorts the elements of a sequence in order according to a key.</param>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns></returns>
+        Task<IEnumerable<T>> GetPageListAsync(string orderBy, int pageIndex, int pageSize);
 
         /// <summary>
         /// Filters a sequence of values based on a predicate.
@@ -64,10 +78,26 @@ namespace SmartNQuick.Contracts.Client
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="orderBy">Sorts the elements of a sequence in order according to a key.</param>
+        /// <returns>The filter result.</returns>
+        Task<IEnumerable<T>> QueryAllAsync(string predicate, string orderBy);
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="pageIndex">0 based page index.</param>
         /// <param name="pageSize">The pagesize.</param>
         /// <returns>The filter result.</returns>
         Task<IEnumerable<T>> QueryPageListAsync(string predicate, int pageIndex, int pageSize);
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="orderBy">Sorts the elements of a sequence in order according to a key.</param>
+        /// <param name="pageIndex">0 based page index.</param>
+        /// <param name="pageSize">The pagesize.</param>
+        /// <returns>The filter result.</returns>
+        Task<IEnumerable<T>> QueryPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize);
 
         /// <summary>
         /// Creates a new element of type T.

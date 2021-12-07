@@ -51,7 +51,8 @@ namespace SmartNQuick.WebApi.Controllers
 			return ctrl.MaxPageSize;
 		}
 
-		[HttpGet("/api/[controller]/Count")]
+        #region Get actions
+        [HttpGet("/api/[controller]/Count")]
 		public async Task<int> GetCountAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
@@ -82,6 +83,15 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return result.Select(e => ToModel(e));
 		}
+		[HttpGet("/api/[controller]/Sorted/{orderBy}")]
+		public async Task<IEnumerable<M>> GetAllAsync(string orderBy)
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.GetAllAsync(orderBy).ConfigureAwait(false);
+
+			return result.Select(e => ToModel(e));
+		}
+
 		[HttpGet("/api/[controller]/{index}/{size}")]
 		public async Task<IEnumerable<M>> GetPageListAsync(int index, int size)
 		{
@@ -90,15 +100,34 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return result.Select(e => ToModel(e));
 		}
+		[HttpGet("/api/[controller]/{index}/{size}/{orderBy}")]
+		public async Task<IEnumerable<M>> GetPageListAsync(int index, int size, string orderBy)
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.GetPageListAsync(orderBy, index, size).ConfigureAwait(false);
 
-		[HttpGet("/api/[controller]/Query/{predicate}")]
-		public async Task<IEnumerable<M>> QueryAllBy(string predicate)
+			return result.Select(e => ToModel(e));
+		}
+        #endregion Get actions
+
+        #region Query actions
+        [HttpGet("/api/[controller]/Query/{predicate}")]
+		public async Task<IEnumerable<M>> QueryAll(string predicate)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var result = await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
 
 			return result.Select(e => ToModel(e));
 		}
+		[HttpGet("/api/[controller]/Sorted/Query/{predicate}/{orderBy}")]
+		public async Task<IEnumerable<M>> QueryAll(string predicate, string orderBy)
+		{
+			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
+			var result = await ctrl.QueryAllAsync(predicate, orderBy).ConfigureAwait(false);
+
+			return result.Select(e => ToModel(e));
+		}
+
 		[HttpGet("/api/[controller]/{predicate}/{index}/{size}")]
 		public async Task<IEnumerable<M>> QueryPageListAsync(string predicate, int index, int size)
 		{
@@ -107,8 +136,9 @@ namespace SmartNQuick.WebApi.Controllers
 
 			return result.Select(e => ToModel(e));
 		}
+        #endregion Query actions
 
-		[HttpGet("/api/[controller]/Create")]
+        [HttpGet("/api/[controller]/Create")]
 		public async Task<M> CreateAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);

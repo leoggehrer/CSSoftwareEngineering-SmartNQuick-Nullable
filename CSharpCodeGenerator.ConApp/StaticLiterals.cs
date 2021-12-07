@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using System.Collections.Generic;
 using CommonStaticLiterals = CommonBase.StaticLiterals;
 
@@ -17,3 +18,4 @@ namespace CSharpCodeGenerator.ConApp
         public static string ContractsExtension => ".Contracts";
     }
 }
+//MdEnd

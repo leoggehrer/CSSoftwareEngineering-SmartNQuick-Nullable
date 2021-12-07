@@ -56,16 +56,30 @@ namespace SmartNQuick.Logic.Controllers.Business
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
+
         internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
+        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+
         internal override Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+        internal override Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
 
         internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
@@ -75,6 +89,10 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
 
         internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }

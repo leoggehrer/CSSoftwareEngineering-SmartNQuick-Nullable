@@ -59,18 +59,36 @@ namespace SmartNQuick.Adapters.Controller
         {
             return controller.GetAllAsync();
         }
+        public Task<IEnumerable<TContract>> GetAllAsync(string orderBy)
+        {
+            return controller.GetAllAsync(orderBy);
+        }
+
         public async Task<IEnumerable<TContract>> GetPageListAsync(int pageIndex, int pageSize)
         {
             return await controller.GetPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+        }
+        public async Task<IEnumerable<TContract>> GetPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            return await controller.GetPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
         }
 
         public Task<IEnumerable<TContract>> QueryAllAsync(string predicate)
         {
             return controller.QueryAllAsync(predicate);
         }
+        public Task<IEnumerable<TContract>> QueryAllAsync(string predicate, string orderBy)
+        {
+            return controller.QueryAllAsync(predicate, orderBy);
+        }
+
         public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             return (await controller.QueryPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false)).ToArray();
+        }
+        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            return (await controller.QueryPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false)).ToArray();
         }
 
         public Task<TContract> CreateAsync()

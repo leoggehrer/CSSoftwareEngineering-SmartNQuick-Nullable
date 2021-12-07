@@ -228,6 +228,11 @@ namespace CSharpCodeGenerator.Logic.Generation
                     {
                         innerResult.Add($".HasDefaultValueSql(\"{contractPropertyHelper.DefaultValueSql}\")");
                     }
+                    if (contractPropertyHelper.PropertyType == typeof(decimal))
+                    {
+                        innerResult.Add($".HasColumnType(\"decimal\").HasPrecision({contractPropertyHelper.Precision})");
+                    }
+
 
                     if (innerResult.Count > 0)
                     {

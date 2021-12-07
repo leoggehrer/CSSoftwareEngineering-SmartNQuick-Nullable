@@ -38,6 +38,10 @@ namespace SmartNQuick.Logic.DataContext
             where C : IIdentifiable
             where E : IdentityEntity, C;
 
+        Task<IEnumerable<E>> QueryAllAsync<C, E>(string predicate, string orderBy)
+            where C : IIdentifiable
+            where E : IdentityEntity, C;
+
         Task<E> InsertAsync<C, E>(E entity)
             where C : IIdentifiable
             where E : IdentityEntity, C;

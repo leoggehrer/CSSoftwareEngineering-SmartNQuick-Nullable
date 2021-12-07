@@ -46,6 +46,7 @@ namespace SmartNQuick.Adapters.Service
         {
             get;
         }
+        public string SortedExtUri => $"{ExtUri}/Sorted";
 
         public int MaxPageSize
         {
@@ -172,23 +173,52 @@ namespace SmartNQuick.Adapters.Service
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
-            //var result = new List<TContract>();
-            //var index = 0;
-            //var pageSize = MaxPageSize;
-            //int qryCount;
-            //do
-            //{
-            //    var qry = await GetPageListAsync(index++, pageSize).ConfigureAwait(false);
-
-            //    qryCount = qry.Count();
-            //    result.AddRange(qry);
-            //} while (qryCount > 0 && qryCount % pageSize == 0);
-            //return result;
         }
+        public async Task<IEnumerable<TContract>> GetAllAsync(string orderBy)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{SortedExtUri}/{orderBy}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
+
         public async Task<IEnumerable<TContract>> GetPageListAsync(int pageIndex, int pageSize)
         {
             using var client = GetClient(BaseUri);
             var response = await client.GetAsync($"{ExtUri}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
+        public async Task<IEnumerable<TContract>> GetPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{SortedExtUri}/{orderBy}/{pageIndex}/{pageSize}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -226,10 +256,51 @@ namespace SmartNQuick.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
+        public async Task<IEnumerable<TContract>> QueryAllAsync(string predicate, string orderBy)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{SortedExtUri}/Query/{predicate}/{orderBy}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
+
         public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             using var client = GetClient(BaseUri);
             var response = await client.GetAsync($"{ExtUri}/{predicate}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var contentData = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                return await JsonSerializer.DeserializeAsync<TModel[]>(contentData, DeserializerOptions).ConfigureAwait(false) as IEnumerable<TContract>;
+            }
+            else
+            {
+                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+
+                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
+                throw new AdapterException((int)response.StatusCode, errorMessage);
+            }
+        }
+        public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            using var client = GetClient(BaseUri);
+            var response = await client.GetAsync($"{SortedExtUri}/{predicate}/{orderBy}/{pageIndex}/{pageSize}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -266,6 +337,7 @@ namespace SmartNQuick.Adapters.Service
                 throw new AdapterException((int)response.StatusCode, errorMessage);
             }
         }
+
         public async Task<TContract> InsertAsync(TContract entity)
         {
             entity.CheckArgument(nameof(entity));

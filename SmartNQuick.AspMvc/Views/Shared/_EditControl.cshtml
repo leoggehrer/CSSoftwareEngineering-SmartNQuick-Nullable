@@ -24,9 +24,9 @@
         }
         else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
         {
-            var value = editViewModel.GetDisplayValue(property);
+            var displayVal = editViewModel.GetDisplayValue(property);
 
-            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@value" />
+            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@displayVal" />
         }
         else if (property.PropertyType.IsEnum)
         {
@@ -50,6 +50,12 @@
             var boolVal = value != null ? Convert.ToBoolean(value) : false;
 
             @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled" })
+        }
+        else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+        {
+            var displayVal = editViewModel.GetDisplayValue(property);
+
+            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@displayVal" readonly="readonly" />
         }
         else
         {

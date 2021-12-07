@@ -84,11 +84,21 @@ namespace SmartNQuick.Logic.DataContext
 		{
 			return await Set<C, E>().ToArrayAsync().ConfigureAwait(false);
 		}
+
 		public async Task<IEnumerable<E>> QueryAllAsync<C, E>(string predicate)
 			where C : IIdentifiable
 			where E : IdentityEntity, C
 		{
-			return await Set<C, E>().Where(predicate).ToArrayAsync();
+			return await Set<C, E>().Where(predicate)
+									.ToArrayAsync();
+		}
+		public async Task<IEnumerable<E>> QueryAllAsync<C, E>(string predicate, string orderBy)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return await Set<C, E>().OrderBy(orderBy)
+									.Where(predicate)
+									.ToArrayAsync();
 		}
 
 		public async Task<E> InsertAsync<C, E>(E entity)

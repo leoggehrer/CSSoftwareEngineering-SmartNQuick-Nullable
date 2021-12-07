@@ -8,8 +8,19 @@ using System.Reflection;
 
 namespace CommonBase.Extensions
 {
-    public static class EnumExtensions
+    public static partial class EnumExtensions
     {
+        public static T NextEnum<T>(this T source) where T : struct, Enum
+        {
+            if (typeof(T).IsEnum == false)
+                throw new ArgumentException(string.Format("Argument {0} is not an Enum", typeof(T).FullName));
+
+            var values = (T[])Enum.GetValues(source.GetType());
+            var idx = Array.IndexOf(values, source) + 1;
+
+            return (values.Length <= idx) ? values[0] : values[idx];
+        }
+
         /// <summary>
         /// Gets the string of an DescriptionAttribute of an Enum.
         /// </summary>
@@ -50,6 +61,28 @@ namespace CommonBase.Extensions
                     Enum.GetValues(type)
                         .OfType<Enum>()
                         .Select(e => new KeyValuePair<Enum, string>(e, e.Description()))
+                        .ToArray();
+        }
+
+        /// <summary>
+        /// Creates an List with all keys and values of a given Enum class
+        /// </summary>
+        /// <typeparam name="T">Must be derived from class Enum!</typeparam>
+        /// <returns>A list of KeyValuePair&lt;string, string&gt; with all available
+        /// names and values of the given Enum.</returns>
+        public static IList<KeyValuePair<string, string>> ToSelect<T>() where T : struct
+        {
+            var type = typeof(T);
+
+            if (type.IsEnum == false)
+            {
+                throw new ArgumentException("T must be an enum");
+            }
+
+            return (IList<KeyValuePair<string, string>>)
+                    Enum.GetValues(type)
+                        .OfType<Enum>()
+                        .Select(e => new KeyValuePair<string, string>(e.ToString(), e.Description()))
                         .ToArray();
         }
 

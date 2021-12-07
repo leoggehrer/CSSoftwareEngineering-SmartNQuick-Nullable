@@ -71,9 +71,30 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             } while (qryCount == MaxPageSize);
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        {
+            int idx = 0, qryCount;
+            var result = new List<E>();
+            do
+            {
+                var qry = await QueryableSet().OrderBy(orderBy)
+                                              .Skip(idx++ * MaxPageSize)
+                                              .Take(MaxPageSize)
+                                              .ToArrayAsync()
+                                              .ConfigureAwait(false);
+
+                qryCount = result.AddRangeAndCount(qry);
+            } while (qryCount == MaxPageSize);
+            return result;
+        }
+
         internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             return Context.QueryAllAsync<C, E>(predicate);
+        }
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        {
+            return Context.QueryAllAsync<C, E>(predicate, orderBy);
         }
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate)
         {
@@ -91,6 +112,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             } while (qryCount == MaxPageSize);
             return result;
         }
+
         internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
@@ -103,12 +125,39 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await QueryableSet().OrderBy(orderBy)
+                                             .Skip(pageIndex * pageSize)
+                                             .Take(pageSize)
+                                             .ToArrayAsync()
+                                             .ConfigureAwait(false);
+
+            return result;
+        }
+
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
 
             var result = await QueryableSet().Where(predicate)
+                                             .Skip(pageIndex * pageSize)
+                                             .Take(pageSize)
+                                             .ToArrayAsync()
+                                             .ConfigureAwait(false);
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await QueryableSet().Where(predicate)
+                                             .OrderBy(orderBy)
                                              .Skip(pageIndex * pageSize)
                                              .Take(pageSize)
                                              .ToArrayAsync()

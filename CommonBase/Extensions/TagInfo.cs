@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 
 namespace CommonBase.Extensions
 {
@@ -55,3 +56,4 @@ namespace CommonBase.Extensions
         }
     }
 }
+//MdEnd

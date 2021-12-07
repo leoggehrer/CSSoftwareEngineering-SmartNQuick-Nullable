@@ -1,5 +1,5 @@
 ﻿//@BaseCode
-
+//MdStart
 namespace CommonBase.Attributes
 {
 	public enum ContextType : byte
@@ -8,3 +8,4 @@ namespace CommonBase.Attributes
 		View = 2,
 	}
 }
+//MdEnd

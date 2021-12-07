@@ -1,4 +1,5 @@
 ﻿//@BaseCode
+//MdStart
 using System;
 using System.IO;
 using System.Linq;
@@ -81,3 +82,4 @@ namespace CSharpCodeGenerator.ConApp
         }
     }
 }
+//MdEnd

@@ -1,10 +1,11 @@
 ﻿//@BaseCode
+//MdStart
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace CommonBase.Extensions
 {
-	public partial class PropertyItem
+    public partial class PropertyItem
     {
         public PropertyItem(PropertyInfo propertyInfo)
         {
@@ -28,3 +29,4 @@ namespace CommonBase.Extensions
         public Dictionary<string, PropertyItem> PropertyItems { get; private set; }
     }
 }
+//MdEnd

@@ -135,6 +135,7 @@ namespace SmartNQuick.Logic.Controllers
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
         internal abstract Task<E> ExecuteGetEntityByIdAsync(int id);
+
         public virtual async Task<IEnumerable<C>> GetPageListAsync(int pageIndex, int pageSize)
         {
 #if ACCOUNT_ON
@@ -142,6 +143,14 @@ namespace SmartNQuick.Logic.Controllers
 #endif
 
             return await GetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+        }
+        public virtual async Task<IEnumerable<C>> GetPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
+#endif
+
+            return await GetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
         }
         internal virtual async Task<IEnumerable<E>> GetEntityPageListAsync(int pageIndex, int pageSize)
         {
@@ -153,7 +162,18 @@ namespace SmartNQuick.Logic.Controllers
             result = BeforeReturn(result);
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
+        internal virtual async Task<IEnumerable<E>> GetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            if (pageSize < 1 && pageSize > MaxPageSize)
+                throw new LogicException(ErrorType.InvalidPageSize);
+
+            var result = await ExecuteGetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
         internal abstract Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize);
+        internal abstract Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize);
 
         public virtual async Task<IEnumerable<C>> GetAllAsync()
         {
@@ -162,6 +182,13 @@ namespace SmartNQuick.Logic.Controllers
 #endif
             return await GetEntityAllAsync().ConfigureAwait(false);
         }
+        public virtual async Task<IEnumerable<C>> GetAllAsync(string orderBy)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.GetAll).ConfigureAwait(false);
+#endif
+            return await GetEntityAllAsync(orderBy).ConfigureAwait(false);
+        }
         internal virtual async Task<IEnumerable<E>> GetEntityAllAsync()
         {
             var result = await ExecuteGetEntityAllAsync().ConfigureAwait(false);
@@ -169,7 +196,15 @@ namespace SmartNQuick.Logic.Controllers
             result = BeforeReturn(result);
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
+        internal virtual async Task<IEnumerable<E>> GetEntityAllAsync(string orderBy)
+        {
+            var result = await ExecuteGetEntityAllAsync().ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
         internal abstract Task<IEnumerable<E>> ExecuteGetEntityAllAsync();
+        internal abstract Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy);
 
         public virtual async Task<IEnumerable<C>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
         {
@@ -178,6 +213,13 @@ namespace SmartNQuick.Logic.Controllers
 #endif
             return await QueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
         }
+        public virtual async Task<IEnumerable<C>> QueryPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryBy).ConfigureAwait(false);
+#endif
+            return await QueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
+        }
         internal virtual async Task<IEnumerable<E>> QueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             var result = await ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
@@ -185,7 +227,15 @@ namespace SmartNQuick.Logic.Controllers
             result = BeforeReturn(result);
             return await BeforeReturnAsync(result).ConfigureAwait(false);
         }
+        internal virtual async Task<IEnumerable<E>> QueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            var result = await ExecuteQueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
         internal abstract Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize);
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize);
 
         internal virtual async Task<IEnumerable<E>> QueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
         {
@@ -203,9 +253,23 @@ namespace SmartNQuick.Logic.Controllers
 #endif
             return await QueryEntityAllAsync(predicate).ConfigureAwait(false);
         }
+        public virtual async Task<IEnumerable<C>> QueryAllAsync(string predicate, string orderBy)
+        {
+#if ACCOUNT_ON
+            await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.QueryAll).ConfigureAwait(false);
+#endif
+            return await QueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
+        }
         internal virtual async Task<IEnumerable<E>> QueryEntityAllAsync(string predicate)
         {
             var result = await ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            result = BeforeReturn(result);
+            return await BeforeReturnAsync(result).ConfigureAwait(false);
+        }
+        internal virtual async Task<IEnumerable<E>> QueryEntityAllAsync(string predicate, string orderBy)
+        {
+            var result = await ExecuteQueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
 
             result = BeforeReturn(result);
             return await BeforeReturnAsync(result).ConfigureAwait(false);
@@ -219,6 +283,7 @@ namespace SmartNQuick.Logic.Controllers
         }
         internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate);
         internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate);
+        internal abstract Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy);
         #endregion Query
 
         #region Create
