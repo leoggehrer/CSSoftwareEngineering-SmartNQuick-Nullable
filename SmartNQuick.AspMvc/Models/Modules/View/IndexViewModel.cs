@@ -59,7 +59,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             return displayProperties;
         }
 
-        public virtual object GetValue(object model, PropertyInfo propertyInfo)
+        public override object GetValue(object model, PropertyInfo propertyInfo)
         {
             model.CheckArgument(nameof(model));
             propertyInfo.CheckArgument(nameof(propertyInfo));
@@ -70,14 +70,14 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             BeforeGetValue(model, propertyInfo, ref result, ref handled);
             if (handled == false)
             {
-                result = propertyInfo.GetValue(model);
+                result = base.GetValue(model, propertyInfo);
             }
             AfterGetValue(model, propertyInfo, result);
             return result;
         }
         partial void BeforeGetValue(object model, PropertyInfo propertyInfo, ref object result, ref bool handled);
         partial void AfterGetValue(object model, PropertyInfo propertyInfo, object result);
-        public virtual string GetDisplayValue(object model, PropertyInfo propertyInfo)
+        public override string GetDisplayValue(object model, PropertyInfo propertyInfo)
         {
             model.CheckArgument(nameof(model));
             propertyInfo.CheckArgument(nameof(propertyInfo));
@@ -88,7 +88,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             BeforeGetDisplayValue(model, propertyInfo, ref result, ref handled);
             if (handled == false)
             {
-                result = propertyInfo.GetValue(model);
+                result = base.GetDisplayValue(model, propertyInfo);
             }
             AfterGetDisplayValue(model, propertyInfo, result);
             return result != null ? result.ToString() : string.Empty;

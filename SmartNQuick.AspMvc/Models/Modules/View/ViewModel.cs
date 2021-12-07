@@ -128,6 +128,33 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             return propertyInfo.Name;
         }
+
+        public virtual object GetValue(Object model, PropertyInfo propertyInfo)
+        {
+            model.CheckArgument(nameof(model));
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            return propertyInfo.GetValue(model);
+        }
+        public virtual string GetDisplayValue(Object model, PropertyInfo propertyInfo)
+        {
+            model.CheckArgument(nameof(model));
+            propertyInfo.CheckArgument(nameof(propertyInfo));
+
+            var result = string.Empty;
+            var value = propertyInfo.GetValue(model);
+
+            if (value is DateTime dt)
+            {
+                result = dt.ToString("yyyy-MM-ddTHH:mm");
+            }
+            else if (value != null)
+            {
+                result = value.ToString();
+            }
+            return result;
+        }
+
     }
 }
 //MdEnd

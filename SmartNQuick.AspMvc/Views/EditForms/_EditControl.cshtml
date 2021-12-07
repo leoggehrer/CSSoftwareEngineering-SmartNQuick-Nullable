@@ -1,13 +1,14 @@
 ﻿@*@Ignore*@
 @{
-    @using SmartNQuick.AspMvc.Modules.View
     @model SmartNQuick.AspMvc.Models.Persistence.Test.EditForm
 
-    var viewBagInfo = new ViewBagWrapper(ViewBag);
-
-    if (viewBagInfo.DisplayProperty.Name.Equals("CheckBox"))
+    if (Model.ViewBagInfo.DisplayProperty.Name.Equals("CheckBox"))
     {
-        viewBagInfo.Handled = true;
+        Model.ViewBagInfo.Handled = true;
         <input type="checkbox" asp-for="CheckBox" />
+    }
+    else
+    {
+        @await Html.PartialAsync("../Shared/_EditControl", Model)
     }
 }

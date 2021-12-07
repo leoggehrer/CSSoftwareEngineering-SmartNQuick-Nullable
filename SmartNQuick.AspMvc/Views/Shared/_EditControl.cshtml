@@ -22,6 +22,12 @@
 
             @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input" })
         }
+        else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+        {
+            var value = editViewModel.GetDisplayValue(property);
+
+            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@value" />
+        }
         else if (property.PropertyType.IsEnum)
         {
             @Html.DropDownList(editViewModel.GetName(property), Html.GetEnumSelectList(property.PropertyType), editViewModel.GetDisplayValue(property), new { @class = "form-control" })
@@ -47,9 +53,7 @@
         }
         else
         {
-            <div class="form-group">
-                <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" readonly="readonly" />
-            </div>
+            <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" readonly="readonly" />
         }
     }
     viewBagInfo.Handled = true;

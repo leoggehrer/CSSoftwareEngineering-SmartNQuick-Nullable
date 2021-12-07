@@ -35,17 +35,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         }
         public virtual object GetValue(PropertyInfo propertyInfo)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
-
-            return propertyInfo.GetValue(DisplayModel);
+            return GetValue(Model, propertyInfo);
         }
         public virtual string GetDisplayValue(PropertyInfo propertyInfo)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
-
-            var value = propertyInfo.GetValue(DisplayModel);
-
-            return value != null ? value.ToString() : string.Empty;
+            return GetDisplayValue(Model, propertyInfo);
         }
     }
 }
