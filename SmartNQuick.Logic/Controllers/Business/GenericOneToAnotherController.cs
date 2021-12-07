@@ -125,6 +125,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+
         internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
             var result = new List<E>();
@@ -141,6 +142,23 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteGetEntityAllAsync(orderBy).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneItem.CopyProperties(item);
+                await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+
         internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             var result = new List<E>();
@@ -157,6 +175,23 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteGetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneItem.CopyProperties(item);
+                await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<E>();
@@ -173,10 +208,43 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneItem.CopyProperties(item);
+                await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             var result = new List<E>();
             var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new E();
+
+                entity.OneItem.CopyProperties(item);
+                await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            var result = new List<E>();
+            var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
