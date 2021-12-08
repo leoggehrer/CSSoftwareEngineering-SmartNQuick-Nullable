@@ -17,7 +17,7 @@
         Model.ViewBagInfo.Index = index++;
         Model.ViewBagInfo.Handled = false;
         Model.ViewBagInfo.DisplayProperty = item;
-        @await Html.PartialAsync("_EditGroup", Model)
+        @await Html.PartialAsync("_EditGroup", editViewModel)
     }
 }
 

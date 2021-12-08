@@ -1,11 +1,11 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model EditViewModel
 
     var viewBagInfo = Model.ViewBagInfo;
     var property = viewBagInfo.DisplayProperty;
-    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagInfo, Model);
 
     <div class="row">
         <div class="col-md-6">
@@ -13,13 +13,13 @@
             {
                 <div class="form-check" style="margin-bottom: 0.5em;">
                     @await Html.PartialAsync("_EditControl", Model)
-                    <label class="form-check-label" for="@property.Name">@viewBagInfo.TranslateFor(editViewModel.GetLabel(property))</label>
+                    <label class="form-check-label" for="@property.Name">@viewBagInfo.TranslateFor(Model.GetLabel(property))</label>
                 </div>
             }
             else
             {
                 <div class="form-group">
-                    <label class="control-label" for="@property.Name">@viewBagInfo.TranslateFor(editViewModel.GetLabel(property))</label>
+                    <label class="control-label" for="@property.Name">@viewBagInfo.TranslateFor(Model.GetLabel(property))</label>
                     @await Html.PartialAsync("_EditControl", Model)
                 </div>
             }

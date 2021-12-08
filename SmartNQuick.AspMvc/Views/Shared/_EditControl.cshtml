@@ -1,65 +1,65 @@
 ﻿@*@BaseCode*@
 @{
     @using CommonBase.Extensions
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model EditViewModel
 
     var viewBagInfo = Model.ViewBagInfo;
     var property = viewBagInfo.DisplayProperty;
     var mappingProperty = default(System.Reflection.PropertyInfo);
-    var editViewModel = ViewModelCreator.CreateEditViewModel(viewBagInfo, Model);
 
     @if (property.CanRead && property.CanWrite)
     {
         @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
         {
-            @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
+            @Html.DropDownList(Model.GetName(mappingProperty), Model.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
         else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
         {
-            var value = editViewModel.GetValue(property);
+            var value = Model.GetValue(property);
             var boolVal = value != null ? Convert.ToBoolean(value) : false;
 
-            @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input" })
+            @Html.CheckBox(Model.GetName(property), boolVal, new { @class="form-check-input" })
         }
         else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
         {
-            var displayVal = editViewModel.GetDisplayValue(property);
+            var displayVal = Model.GetDisplayValue(property);
 
-            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@displayVal" />
+            <input class="form-control" type="datetime-local" id="@Model.GetId(property)" name="@Model.GetName(property)" value="@displayVal" />
         }
         else if (property.PropertyType.IsEnum)
         {
-            @Html.DropDownList(editViewModel.GetName(property), Html.GetEnumSelectList(property.PropertyType), editViewModel.GetDisplayValue(property), new { @class = "form-control" })
+            @Html.DropDownList(Model.GetName(property), Html.GetEnumSelectList(property.PropertyType), Model.GetDisplayValue(property), new { @class = "form-control" })
         }
         else
         {
-            <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" />
-            <span class="text-danger field-validation-valid" data-valmsg-for="@editViewModel.GetName(property)" data-valmsg-replace="true"></span>
+            <input class="form-control" type="text" id="@Model.GetId(property)" name="@Model.GetName(property)" value="@Model.GetValue(property)" />
+            <span class="text-danger field-validation-valid" data-valmsg-for="@Model.GetName(property)" data-valmsg-replace="true"></span>
         }
     }
     else if (property.CanRead)
     {
         @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
         {
-            @Html.DropDownList(editViewModel.GetName(mappingProperty), editViewModel.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
+            @Html.DropDownList(Model.GetName(mappingProperty), Model.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
         else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
         {
-            var value = editViewModel.GetValue(property);
+            var value = Model.GetValue(property);
             var boolVal = value != null ? Convert.ToBoolean(value) : false;
 
-            @Html.CheckBox(editViewModel.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled" })
+            @Html.CheckBox(Model.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled" })
         }
         else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
         {
-            var displayVal = editViewModel.GetDisplayValue(property);
+            var displayVal = Model.GetDisplayValue(property);
 
-            <input class="form-control" type="datetime-local" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@displayVal" readonly="readonly" />
+            <input class="form-control" type="datetime-local" id="@Model.GetId(property)" name="@Model.GetName(property)" value="@displayVal" readonly="readonly" />
         }
         else
         {
-            <input class="form-control" type="text" id="@editViewModel.GetId(property)" name="@editViewModel.GetName(property)" value="@editViewModel.GetValue(property)" readonly="readonly" />
+            <input class="form-control" type="text" id="@Model.GetId(property)" name="@Model.GetName(property)" value="@Model.GetValue(property)" readonly="readonly" />
         }
     }
     viewBagInfo.Handled = true;

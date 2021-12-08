@@ -42,16 +42,16 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             Model = model;
             DisplayProperties = displayProperties;
         }
-        public IEnumerable<PropertyInfo> GetDisplayProperties()
+        public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
             return DisplayProperties;
         }
 
-        public object GetValue(PropertyInfo propertyInfo)
+        public virtual object GetValue(PropertyInfo propertyInfo)
         {
             return GetValue(DisplayModel, propertyInfo);
         }
-        public string GetDisplayValue(PropertyInfo propertyInfo)
+        public virtual string GetDisplayValue(PropertyInfo propertyInfo)
         {
             return GetDisplayValue(DisplayModel, propertyInfo);
         }
