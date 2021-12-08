@@ -134,8 +134,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             if (oneEntity != null)
             {
-                result = new E();
-                result.OneEntity = oneEntity;
+                result = new E
+                {
+                    OneEntity = oneEntity
+                };
                 await LoadDetailsAsync(result, oneEntity.Id).ConfigureAwait(false);
             }
             else
@@ -151,9 +153,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -167,9 +170,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -184,9 +188,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -200,9 +205,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -217,9 +223,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -233,9 +240,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -250,9 +258,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);
@@ -266,9 +275,10 @@ namespace SmartNQuick.Logic.Controllers.Business
 
             foreach (var item in query)
             {
-                var entity = new E();
-
-                entity.OneEntity = item;
+                var entity = new E
+                {
+                    OneEntity = item
+                };
                 await LoadDetailsAsync(entity, item.Id).ConfigureAwait(false);
 
                 result.Add(entity);

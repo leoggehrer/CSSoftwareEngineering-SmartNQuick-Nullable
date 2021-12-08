@@ -34,7 +34,7 @@ namespace SmartNQuick.AspMvc.Modules.View
 
             return CreateDisplayViewModel(viewBagWrapper, model, modelType, modelType); 
         }
-        public static DisplayViewModel CreateDisplayViewModel( ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType)
+        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType)
         {
             var handled = false;
             DisplayViewModel result = null;

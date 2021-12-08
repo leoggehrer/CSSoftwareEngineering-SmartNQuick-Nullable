@@ -8,10 +8,27 @@ using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public partial class DisplayViewModel : ViewModel
+    public partial class DisplayViewModel : ViewModel, IDisplayViewModel
     {
-        public ModelObject Model { get; init; }
-        public ModelObject DisplayModel => Model;
+        private ModelObject model;
+        private ModelObject displayModel;
+        private IEnumerable<PropertyInfo> displayProperties;
+
+        public ModelObject Model
+        {
+            get => model;
+            set => model = value ?? model;
+        }
+        public ModelObject DisplayModel
+        {
+            get => displayModel ?? model;
+            set => displayModel = value;
+        }
+        public IEnumerable<PropertyInfo> DisplayProperties
+        {
+            get => displayProperties;
+            set => displayProperties = value ?? displayProperties;
+        }
 
         public DisplayViewModel(ViewBagWrapper viewBagWrapper, ModelObject model, Type modelType, Type displayType)
             : base(viewBagWrapper, modelType, displayType)
@@ -31,7 +48,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         }
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
-            return GetDisplayProperties(DisplayType);
+            return displayProperties ??= GetDisplayProperties(DisplayType);
         }
         public virtual object GetValue(PropertyInfo propertyInfo)
         {

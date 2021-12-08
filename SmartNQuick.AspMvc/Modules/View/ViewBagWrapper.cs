@@ -129,6 +129,28 @@ namespace SmartNQuick.AspMvc.Modules.View
                 return result;
             }
         }
+        public List<string> IgnoreFilters
+        {
+            get
+            {
+                if (ViewBag.IgnoreFilters is not List<string> result)
+                {
+                    ViewBag.IgnoreFilters = result = new List<string>();
+                }
+                return result;
+            }
+        }
+        public List<string> IgnoreOrders
+        {
+            get
+            {
+                if (ViewBag.IgnoreOrders is not List<string> result)
+                {
+                    ViewBag.IgnoreOrders = result = new List<string>();
+                }
+                return result;
+            }
+        }
         public List<string> DisplayNames
         {
             get

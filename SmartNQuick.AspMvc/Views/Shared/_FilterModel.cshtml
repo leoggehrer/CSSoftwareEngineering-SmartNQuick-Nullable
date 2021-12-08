@@ -9,7 +9,7 @@
     var sessionInfo = Model.SessionInfo;
     var indexViewModel = Model.IndexViewModel;
     var filterValues = sessionInfo.GetFilterValues(viewBagInfo.Controller);
-    var properties = indexViewModel.GetDisplayProperties();
+    var properties = indexViewModel.GetFilterProperties();
 
     @foreach (var property in properties)
     {

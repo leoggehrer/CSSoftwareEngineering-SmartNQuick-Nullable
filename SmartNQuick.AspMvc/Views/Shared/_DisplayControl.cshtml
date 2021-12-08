@@ -1,12 +1,12 @@
 ﻿@*@BaseCode*@
 @{
+    @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.View
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @model DisplayViewModel
 
     var viewBagInfo = Model.ViewBagInfo;
     var property = viewBagInfo.DisplayProperty;
-    var displayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, Model);
 
-    @displayViewModel.GetDisplayValue(property)
+    @Model.GetDisplayValue(property)
     viewBagInfo.Handled = true;
 }

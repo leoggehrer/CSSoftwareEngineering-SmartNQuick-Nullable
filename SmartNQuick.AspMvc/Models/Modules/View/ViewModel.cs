@@ -10,9 +10,12 @@ using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public abstract partial class ViewModel
+    public abstract partial class ViewModel : IViewModel
     {
         public ViewBagWrapper ViewBagInfo { get; init; }
+        public Type ModelType { get; }
+        public Type DisplayType { get; }
+
         public List<string> HiddenNames { get; } = new List<string>()
         {
             nameof(IdentityModel.Id),
@@ -40,9 +43,6 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         {
             get { return DisplayNames.Union(ViewBagInfo.DisplayNames).Distinct(); }
         }
-
-        public Type ModelType { get; }
-        public Type DisplayType { get; }
 
         protected ViewModel(ViewBagWrapper viewBagWrapper, Type modelType, Type displayType)
         {

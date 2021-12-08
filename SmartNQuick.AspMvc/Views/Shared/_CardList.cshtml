@@ -11,6 +11,10 @@
 
     if (Model != null)
     {
+        IndexDisplayViewModel displayViewModel = null;
+        DisplayViewModel firstDisplayViewModel = null;
+        DisplayViewModel secondDisplayViewModel = null;
+
         @foreach (var model in Model.DisplayModels)
         {
             model.ViewBagInfo = viewBagInfo;
@@ -19,12 +23,38 @@
                     @if (model is IFirstToSecond fTs)
                     {
                         viewBagInfo.IgnoreNames.Add($"{fTs.FirstModel.GetType().Name}Id");
-                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.FirstModel))
-                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.SecondModel))
+
+                        if (firstDisplayViewModel == null)
+                        {
+                            firstDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.FirstModel);
+                        }
+                        else
+                        {
+                            firstDisplayViewModel.Model = fTs.FirstModel;
+                        }
+
+                        if (secondDisplayViewModel == null)
+                        {
+                            secondDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.SecondModel);
+                        }
+                        else
+                        {
+                            secondDisplayViewModel.Model = fTs.SecondModel;
+                        }
+                        @await Html.PartialAsync("_CardGroup", firstDisplayViewModel)
+                        @await Html.PartialAsync("_CardGroup", secondDisplayViewModel)
                     }
                     else
                     {
-                        @await Html.PartialAsync("_CardGroup", ViewModelCreator.CreateDisplayViewModel(viewBagInfo, model))
+                        if (displayViewModel == null)
+                        {
+                            displayViewModel = Model.CreateDisplayViewModel(model);
+                        }
+                        else
+                        {
+                            displayViewModel.Model = model;
+                        }
+                        @await Html.PartialAsync("_CardGroup", displayViewModel)
                     }
                 </ul>
 @*#if ACCOUNT_ON*@
