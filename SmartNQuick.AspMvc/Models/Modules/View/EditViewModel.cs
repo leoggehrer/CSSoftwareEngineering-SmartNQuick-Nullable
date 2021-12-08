@@ -13,8 +13,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         public IdentityModel Model { get; init; }
         public IdentityModel DisplayModel => Model;
 
-        public EditViewModel(ViewBagWrapper viewBagWrapper, IdentityModel model, Type modelType, Type displayType)
-            : base(viewBagWrapper, modelType, displayType)
+        public EditViewModel(ViewBagWrapper viewBagInfo, IdentityModel model, Type modelType, Type displayType)
+            : base(viewBagInfo, modelType, displayType)
         {
             model.CheckArgument(nameof(model));
 

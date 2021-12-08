@@ -56,8 +56,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             }
         }
 
-        public IndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<IdentityModel> models, Type modelType, Type displayType)
-            : base(viewBagWrapper, modelType, displayType)
+        public IndexViewModel(ViewBagWrapper viewBagInfo, IEnumerable<IdentityModel> models, Type modelType, Type displayType)
+            : base(viewBagInfo, modelType, displayType)
         {
             models.CheckArgument(nameof(models));
 

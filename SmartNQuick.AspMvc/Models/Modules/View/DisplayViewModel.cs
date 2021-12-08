@@ -30,8 +30,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             set => displayProperties = value ?? displayProperties;
         }
 
-        public DisplayViewModel(ViewBagWrapper viewBagWrapper, ModelObject model, Type modelType, Type displayType)
-            : base(viewBagWrapper, modelType, displayType)
+        public DisplayViewModel(ViewBagWrapper viewBagInfo, ModelObject model, Type modelType, Type displayType)
+            : base(viewBagInfo, modelType, displayType)
         {
             model.CheckArgument(nameof(model));
 

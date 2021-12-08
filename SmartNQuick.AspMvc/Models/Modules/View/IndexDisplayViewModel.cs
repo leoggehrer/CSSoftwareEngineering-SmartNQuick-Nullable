@@ -33,8 +33,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             set => displayProperties = value ?? displayProperties; 
         }
 
-        public IndexDisplayViewModel(ViewBagWrapper viewBagWrapper, Type modelType, Type displayType, ModelObject model, IEnumerable<PropertyInfo> displayProperties)
-            : base(viewBagWrapper, modelType, displayType)
+        public IndexDisplayViewModel(ViewBagWrapper viewBagInfo, Type modelType, Type displayType, ModelObject model, IEnumerable<PropertyInfo> displayProperties)
+            : base(viewBagInfo, modelType, displayType)
         {
             model.CheckArgument(nameof(model));
             displayProperties.CheckArgument(nameof(displayProperties));

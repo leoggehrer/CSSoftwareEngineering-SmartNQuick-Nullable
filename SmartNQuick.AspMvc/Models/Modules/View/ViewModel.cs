@@ -44,14 +44,14 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             get { return DisplayNames.Union(ViewBagInfo.DisplayNames).Distinct(); }
         }
 
-        protected ViewModel(ViewBagWrapper viewBagWrapper, Type modelType, Type displayType)
+        protected ViewModel(ViewBagWrapper viewBagInfo, Type modelType, Type displayType)
         {
-            viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
+            viewBagInfo.CheckArgument(nameof(viewBagInfo));
             modelType.CheckArgument(nameof(modelType));
             displayType.CheckArgument(nameof(displayType));
 
             Constructing();
-            ViewBagInfo = viewBagWrapper;
+            ViewBagInfo = viewBagInfo;
             ModelType = modelType;
             DisplayType = displayType;
             Constructed();

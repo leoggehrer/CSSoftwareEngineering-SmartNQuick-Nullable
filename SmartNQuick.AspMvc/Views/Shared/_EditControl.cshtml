@@ -11,9 +11,11 @@
 
     @if (property.CanRead && property.CanWrite)
     {
-        @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
+        viewBagInfo.GetMappingProperty(property.Name, out mappingProperty);
+
+        @if (mappingProperty?.PropertyType == typeof(SelectList))
         {
-            @Html.DropDownList(Model.GetName(mappingProperty), Model.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
+            @Html.DropDownList(Model.GetName(property), Model.GetValue(mappingProperty) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
         }
         else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
         {
@@ -40,9 +42,11 @@
     }
     else if (property.CanRead)
     {
-        @if (property.PropertyType == typeof(SelectList) && viewBagInfo.GetMappingProperty(property.Name, out mappingProperty))
+        viewBagInfo.GetMappingProperty(property.Name, out mappingProperty);
+
+        @if (mappingProperty?.PropertyType == typeof(SelectList))
         {
-            @Html.DropDownList(Model.GetName(mappingProperty), Model.GetValue(property) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;" })
+            @Html.DropDownList(Model.GetName(property), Model.GetValue(mappingProperty) as SelectList, null, new { @class = "form-control", style = "min-width: 400px;", disabled="disabled" })
         }
         else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
         {

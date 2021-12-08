@@ -9,70 +9,70 @@ namespace SmartNQuick.AspMvc.Modules.View
 {
     public static partial class ViewModelCreator
     {
-        public static IndexViewModel CreateIndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<Models.IdentityModel> models, Type modelType, Type displayType)
+        public static IndexViewModel CreateIndexViewModel(ViewBagWrapper vieBagInfo, IEnumerable<Models.IdentityModel> models, Type modelType, Type displayType)
         {
             var handled = false;
             IndexViewModel result = null;
 
-            BeforeCreateIndexViewModel(viewBagWrapper, models, modelType, displayType, ref result, ref handled);
+            BeforeCreateIndexViewModel(vieBagInfo, models, modelType, displayType, ref result, ref handled);
             if (handled == false)
             {
-                result = new IndexViewModel(viewBagWrapper, models, modelType, displayType);
+                result = new IndexViewModel(vieBagInfo, models, modelType, displayType);
             }
             AfterCreateIndexViewModel(result);
             return result;
         }
-        static partial void BeforeCreateIndexViewModel(ViewBagWrapper viewBagWrapper, IEnumerable<Models.IdentityModel> models, Type modelType, Type displayType, ref IndexViewModel result, ref bool handled);
+        static partial void BeforeCreateIndexViewModel(ViewBagWrapper viewBagInfo, IEnumerable<Models.IdentityModel> models, Type modelType, Type displayType, ref IndexViewModel result, ref bool handled);
         static partial void AfterCreateIndexViewModel(IndexViewModel result);
 
-        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model)
+        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagInfo, Models.ModelObject model)
         {
-            viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
+            viewBagInfo.CheckArgument(nameof(viewBagInfo));
             model.CheckArgument(nameof(model));
 
             var modelType = model.GetType();
 
-            return CreateDisplayViewModel(viewBagWrapper, model, modelType, modelType); 
+            return CreateDisplayViewModel(viewBagInfo, model, modelType, modelType); 
         }
-        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType)
+        public static DisplayViewModel CreateDisplayViewModel(ViewBagWrapper viewBagInfo, Models.ModelObject model, Type modelType, Type displayType)
         {
             var handled = false;
             DisplayViewModel result = null;
 
-            BeforeCreateDisplayViewModel(viewBagWrapper, model, modelType, displayType, ref result, ref handled);
+            BeforeCreateDisplayViewModel(viewBagInfo, model, modelType, displayType, ref result, ref handled);
             if (handled == false)
             {
-                result = new DisplayViewModel(viewBagWrapper, model, modelType, displayType);
+                result = new DisplayViewModel(viewBagInfo, model, modelType, displayType);
             }
             AfterCreateDisplayViewModel(result);
             return result;
         }
-        static partial void BeforeCreateDisplayViewModel(ViewBagWrapper viewBagWrapper, Models.ModelObject model, Type modelType, Type displayType, ref DisplayViewModel result, ref bool handled);
+        static partial void BeforeCreateDisplayViewModel(ViewBagWrapper viewBagInfo, Models.ModelObject model, Type modelType, Type displayType, ref DisplayViewModel result, ref bool handled);
         static partial void AfterCreateDisplayViewModel(DisplayViewModel result);
 
-        public static EditViewModel CreateEditViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model)
+        public static EditViewModel CreateEditViewModel(ViewBagWrapper viewBagInfo, Models.IdentityModel model)
         {
-            viewBagWrapper.CheckArgument(nameof(viewBagWrapper));
+            viewBagInfo.CheckArgument(nameof(viewBagInfo));
             model.CheckArgument(nameof(model));
 
             var modelType = model.GetType();
 
-            return CreateEditViewModel(viewBagWrapper, model, modelType, modelType);
+            return CreateEditViewModel(viewBagInfo, model, modelType, modelType);
         }
-        public static EditViewModel CreateEditViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model, Type modelType, Type displayType)
+        public static EditViewModel CreateEditViewModel(ViewBagWrapper viewBagInfo, Models.IdentityModel model, Type modelType, Type displayType)
         {
             var handled = false;
             EditViewModel result = null;
 
-            BeforeCreateEditViewModel(viewBagWrapper, model, modelType, displayType, ref result, ref handled);
+            BeforeCreateEditViewModel(viewBagInfo, model, modelType, displayType, ref result, ref handled);
             if (handled == false)
             {
-                result = new EditViewModel(viewBagWrapper, model, modelType, displayType);
+                result = new EditViewModel(viewBagInfo, model, modelType, displayType);
             }
             AfterCreateEditViewModel(result);
             return result;
         }
-        static partial void BeforeCreateEditViewModel(ViewBagWrapper viewBagWrapper, Models.IdentityModel model, Type modelType, Type displayType, ref EditViewModel result, ref bool handled);
+        static partial void BeforeCreateEditViewModel(ViewBagWrapper viewBagInfo, Models.IdentityModel model, Type modelType, Type displayType, ref EditViewModel result, ref bool handled);
         static partial void AfterCreateEditViewModel(EditViewModel result);
     }
 }
