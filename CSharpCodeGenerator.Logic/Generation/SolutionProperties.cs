@@ -9,8 +9,6 @@ namespace CSharpCodeGenerator.Logic.Generation
 {
     internal partial class SolutionProperties : Contracts.ISolutionProperties
     {
-        public static string GeneratedCodeFileName => "_GeneratedCode.cs";
-
         #region Project-postfixes
         public static string ContractsPostfix => ".Contracts";
         public static string LogicPostfix => ".Logic";
@@ -59,11 +57,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string EntitiesModulesSubPath => Path.Combine(LogicSubPath, EntitiesSubPath, StaticLiterals.ModulesFolder);
         public string EntitiesPersitenceSubPath => Path.Combine(LogicSubPath, EntitiesSubPath, StaticLiterals.PersistenceFolder);
         public string EntitiesShadowSubPath => Path.Combine(LogicSubPath, EntitiesSubPath, StaticLiterals.ShadowFolder);
-
-        public string EntitiesBusinessFileSubPath => Path.Combine(EntitiesBusinessSubPath, GeneratedCodeFileName);
-        public string EntitiesModulesFileSubPath => Path.Combine(EntitiesModulesSubPath, GeneratedCodeFileName);
-        public string EntitiesPersistenceFileSubPath => Path.Combine(EntitiesPersitenceSubPath, GeneratedCodeFileName);
-        public string EntitiesShadowFileSubPath => Path.Combine(EntitiesShadowSubPath, GeneratedCodeFileName);
         #endregion Entities
 
         #region DataContext
@@ -71,7 +64,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string DataContextSubPath => DataContextFolder;
         public string DataContextDbFolder => "Db";
         public string DataContextPersistenceSubPath => Path.Combine(LogicSubPath, DataContextSubPath);
-        public string DataContextPersistenceFileSubPath => Path.Combine(DataContextPersistenceSubPath, GeneratedCodeFileName);
         #endregion DataContext
 
         #region Controllers
@@ -79,15 +71,10 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string ControllersBusinessSubPath => Path.Combine(LogicSubPath, ControllersSubPath, StaticLiterals.BusinessFolder);
         public string ControllersPersistenceSubPath => Path.Combine(LogicSubPath, ControllersSubPath, StaticLiterals.PersistenceFolder);
         public string ControllersShadowSubPath => Path.Combine(LogicSubPath, ControllersSubPath, StaticLiterals.ShadowFolder);
-
-        public string ControllersBusinessFileSubPath => Path.Combine(ControllersBusinessSubPath, GeneratedCodeFileName);
-        public string ControllersPersistenceFileSubPath => Path.Combine(ControllersPersistenceSubPath, GeneratedCodeFileName);
-        public string ControllersShadowFileSubPath => Path.Combine(ControllersShadowSubPath, GeneratedCodeFileName);
         #endregion Controllers
 
         #region Logic-Factory
         public string LogicFactorySubPath => Path.Combine(LogicSubPath);
-        public string LogicFactoryFileSubPath => Path.Combine(LogicFactorySubPath, GeneratedCodeFileName);
         #endregion Logic-Factory
 
         #region Transfer
@@ -95,21 +82,14 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string TransferModulesSubPath => Path.Combine(TransferSubPath, StaticLiterals.ModulesFolder);
         public string TransferPersistenceSubPath => Path.Combine(TransferSubPath, StaticLiterals.PersistenceFolder);
         public string TransferShadowSubPath => Path.Combine(TransferSubPath, StaticLiterals.ShadowFolder);
-
-        public string TransferBusinessFileSubPath => Path.Combine(TransferBusinessSubPath, GeneratedCodeFileName);
-        public string TransferModulesFileSubPath => Path.Combine(TransferModulesSubPath, GeneratedCodeFileName);
-        public string TransferPersistenceFileSubPath => Path.Combine(TransferPersistenceSubPath, GeneratedCodeFileName);
-        public string TransferShadowFileSubPath => Path.Combine(TransferShadowSubPath, GeneratedCodeFileName);
         #endregion Transfer
 
         #region WebApi
         public string WebApiControllersSubPath => Path.Combine(WebApiSubPath, StaticLiterals.ControllersFolder);
-        public string WebApiControllersFileSubPath => Path.Combine(WebApiControllersSubPath, GeneratedCodeFileName);
         #endregion WebApi
 
         #region Adapters-Factory
         public string AdaptersFactorySubPath => Path.Combine(AdaptersSubPath);
-        public string AdaptersFactoryFileSubPath => Path.Combine(AdaptersFactorySubPath, GeneratedCodeFileName);
         #endregion Adapters-Factory
 
         #region AspMvc
@@ -117,11 +97,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string AspMvcModulesSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ModulesFolder);
         public string AspMvcPersistenceSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.PersistenceFolder);
         public string AspMvcShadowSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ShadowFolder);
-
-        public string AspMvcBusinessFileSubPath => Path.Combine(AspMvcBusinessSubPath, GeneratedCodeFileName);
-        public string AspMvcModulesFileSubPath => Path.Combine(AspMvcModulesSubPath, GeneratedCodeFileName);
-        public string AspMvcPersistenceFileSubPath => Path.Combine(AspMvcPersistenceSubPath, GeneratedCodeFileName);
-        public string AspMvcShadowFileSubPath => Path.Combine(AspMvcShadowSubPath, GeneratedCodeFileName);
         #endregion AspMvc
 
         protected SolutionProperties(string solutionPath)
@@ -156,7 +131,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             int endPos = AppContext.BaseDirectory.IndexOf($"{nameof(CSharpCodeGenerator)}", StringComparison.CurrentCultureIgnoreCase);
 
-            return AppContext.BaseDirectory.Substring(0, endPos);
+            return AppContext.BaseDirectory[..endPos];
         }
         private static string GetSolutionName(string solutionPath)
         {

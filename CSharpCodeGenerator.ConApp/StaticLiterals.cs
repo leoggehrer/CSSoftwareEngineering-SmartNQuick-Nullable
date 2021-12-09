@@ -7,6 +7,7 @@ namespace CSharpCodeGenerator.ConApp
 {
 	public static class StaticLiterals
 	{
+        public static string GeneratedCodeFileName => "_GeneratedCode.cs";
         public static string SolutionFileExtension => ".sln";
         public static string ProjectFileExtension => ".csproj";
         public static string SourceFileExtensions => CommonStaticLiterals.SourceFileExtensions;

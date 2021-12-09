@@ -11,8 +11,18 @@ using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.ConApp
 {
-    internal class Writer
+    internal partial class Writer
     {
+        #region Class-Constructors
+        static Writer()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+        #endregion Class-Constructors
+        public static bool WriteToSingleFile { get; set; } = true;
         public static void WriteAll(string solutionPath, ISolutionProperties solutionProperties, IEnumerable<IGeneratedItem> generatedItems)
         {
             solutionPath.CheckNotNullOrEmpty(nameof(solutionPath));
@@ -28,7 +38,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.BusinessEntity);
 
                 Console.WriteLine("Write Logic-Business-Entities...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -36,7 +53,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.ModuleEntity);
 
                 Console.WriteLine("Write Logic-Modules-Entities...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -44,7 +68,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.PersistenceEntity);
 
                 Console.WriteLine("Write Logic-Persistence-Entities...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -52,7 +83,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.ShadowEntity);
 
                 Console.WriteLine("Write Logic-Shadow-Entities...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -60,7 +98,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.DbContext);
 
                 Console.WriteLine("Write Logic-DataContext-DbContext...");
-                WriteCodeFiles(projectPath, new IGeneratedItem[] { writeItem });
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, new IGeneratedItem[] { writeItem });
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, new IGeneratedItem[] { writeItem });
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -68,7 +113,16 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.LogicController);
 
                 Console.WriteLine("Write Logic-Controllers...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Business")));
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Persistence")));
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Shadow")));
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -76,7 +130,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.Factory);
 
                 Console.WriteLine("Write Logic-Factory...");
-                WriteCodeFiles(projectPath, new IGeneratedItem[] { writeItem });
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, new IGeneratedItem[] { writeItem });
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, new IGeneratedItem[] { writeItem });
+                }
             }));
             #endregion WriteLogicCode
 
@@ -87,7 +148,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.BusinessModel);
 
                 Console.WriteLine("Write Transfer-Business-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -95,7 +163,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ModuleModel);
 
                 Console.WriteLine("Write Transfer-Modules-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -103,7 +178,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.PersistenceModel);
 
                 Console.WriteLine("Write Transfer-Persistence-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -111,7 +193,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write Transfer-Shadow-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -119,7 +208,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ThridPartyModel);
 
                 Console.WriteLine("Write Transfer-ThirdParty-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             #endregion WriteTansfer
 
@@ -130,7 +226,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Adapters && e.ItemType == ItemType.Factory);
 
                 Console.WriteLine("Write Adapters-Factory...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             #endregion WriteTransfer
 
@@ -141,7 +244,16 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiController);
 
                 Console.WriteLine("Write WebApi-Controllers...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Business")));
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Persistence")));
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Shadow")));
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             #endregion WriteWebApi
 
@@ -152,7 +264,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.BusinessModel);
 
                 Console.WriteLine("Write AspMvc-Business-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -160,7 +279,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ModuleModel);
 
                 Console.WriteLine("Write AspMvc-Modules-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -168,7 +294,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.PersistenceModel);
 
                 Console.WriteLine("Write AspMvc-Persistence-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -176,7 +309,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write AspMvc-Shadow-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -184,7 +324,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ThridPartyModel);
 
                 Console.WriteLine("Write AspMvc-ThridParty-Models...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
@@ -192,7 +339,14 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcController);
 
                 Console.WriteLine("Write AspMvc-Controllers...");
-                WriteCodeFiles(projectPath, writeItems);
+                if (WriteToSingleFile)
+                {
+                    WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
+                }
+                else
+                {
+                    WriteCodeFiles(projectPath, writeItems);
+                }
             }));
             #endregion AspMvc
 
@@ -308,14 +462,41 @@ namespace CSharpCodeGenerator.ConApp
                 WriteGeneratedItem(solutionPath, item);
             }
         }
-        public static void WriteGeneratedCodeFile(string solutionPath, string filePath, IGeneratedItem generatedItem)
+        public static void WriteGeneratedCodeFile(string projectPath, string fileName, IEnumerable<IGeneratedItem> generatedItems)
         {
-            WriteGeneratedCodeFile(solutionPath, filePath, new[] { generatedItem });
+            generatedItems.CheckArgument(nameof(generatedItems));
+
+            if (generatedItems.Any())
+            {
+                var idx = 0;
+                var count = generatedItems.Count();
+                var subPath = new StringBuilder();
+                var subPaths = generatedItems.Select(e => Path.GetDirectoryName(e.SubFilePath));
+                var minSubPath = subPaths.MinBy(e => e.Length);// generatedItems.MinBy(x => x.SubFilePath.Length)?.SubFilePath;
+
+                minSubPath ??= String.Empty;
+
+                while (idx < minSubPath.Length
+                       && count == generatedItems.Where(e => idx < e.SubFilePath.Length && e.SubFilePath[idx] == minSubPath[idx]).Count())
+                {
+                    subPath.Append(minSubPath[idx++]);
+                }
+
+                var fullFilePath = default(string);
+
+                if (subPath.Length == 0)
+                    fullFilePath = Path.Combine(projectPath, fileName);
+                else
+                    fullFilePath = Path.Combine(projectPath, subPath.ToString(), fileName);
+
+                WriteGeneratedCodeFile(fullFilePath, generatedItems);
+            }
         }
-        public static void WriteGeneratedCodeFile(string solutionPath, string filePath, IEnumerable<IGeneratedItem> generatedItems)
+        public static void WriteGeneratedCodeFile(string fullFilePath, IEnumerable<IGeneratedItem> generatedItems)
         {
+            generatedItems.CheckArgument(nameof(generatedItems));
+
             var lines = new List<string>();
-            var fullFilePath = Path.Combine(solutionPath, filePath);
             var directory = Path.GetDirectoryName(fullFilePath);
 
             foreach (var item in generatedItems)
@@ -323,21 +504,14 @@ namespace CSharpCodeGenerator.ConApp
                 lines.AddRange(item.SourceCode);
             }
 
-            if (lines.Any() == false)
-            {
-                if (File.Exists(fullFilePath))
-                {
-                    File.Delete(fullFilePath);
-                }
-            }
-            else if (Directory.Exists(directory) == false)
-            {
-                Directory.CreateDirectory(directory);
-            }
-
             if (lines.Any())
             {
                 var sourceLines = new List<string>(lines);
+
+                if (Directory.Exists(directory) == false)
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
                 sourceLines.Insert(0, $"//{StaticLiterals.GeneratedCodeLabel}");
                 File.WriteAllLines(fullFilePath, sourceLines);
