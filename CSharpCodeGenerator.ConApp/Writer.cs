@@ -22,7 +22,7 @@ namespace CSharpCodeGenerator.ConApp
         static partial void ClassConstructing();
         static partial void ClassConstructed();
         #endregion Class-Constructors
-        public static bool WriteToSingleFile { get; set; } = true;
+        public static bool WriteToGroupFile { get; set; } = true;
         public static void WriteAll(string solutionPath, ISolutionProperties solutionProperties, IEnumerable<IGeneratedItem> generatedItems)
         {
             solutionPath.CheckNotNullOrEmpty(nameof(solutionPath));
@@ -38,7 +38,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.BusinessEntity);
 
                 Console.WriteLine("Write Logic-Business-Entities...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -53,7 +53,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.ModuleEntity);
 
                 Console.WriteLine("Write Logic-Modules-Entities...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -68,7 +68,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.PersistenceEntity);
 
                 Console.WriteLine("Write Logic-Persistence-Entities...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -83,7 +83,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.ShadowEntity);
 
                 Console.WriteLine("Write Logic-Shadow-Entities...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -98,7 +98,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.DbContext);
 
                 Console.WriteLine("Write Logic-DataContext-DbContext...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, new IGeneratedItem[] { writeItem });
                 }
@@ -113,7 +113,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.LogicController);
 
                 Console.WriteLine("Write Logic-Controllers...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Business")));
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Persistence")));
@@ -130,7 +130,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItem = generatedItems.Single(e => e.UnitType == UnitType.Logic && e.ItemType == ItemType.Factory);
 
                 Console.WriteLine("Write Logic-Factory...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, new IGeneratedItem[] { writeItem });
                 }
@@ -148,7 +148,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.BusinessModel);
 
                 Console.WriteLine("Write Transfer-Business-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -163,7 +163,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ModuleModel);
 
                 Console.WriteLine("Write Transfer-Modules-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -178,7 +178,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.PersistenceModel);
 
                 Console.WriteLine("Write Transfer-Persistence-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -193,7 +193,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write Transfer-Shadow-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -208,7 +208,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Transfer && e.ItemType == ItemType.ThridPartyModel);
 
                 Console.WriteLine("Write Transfer-ThirdParty-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -226,7 +226,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.Adapters && e.ItemType == ItemType.Factory);
 
                 Console.WriteLine("Write Adapters-Factory...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -244,7 +244,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiController);
 
                 Console.WriteLine("Write WebApi-Controllers...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Business")));
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems.Where(e => e.SubFilePath.Contains("Persistence")));
@@ -264,7 +264,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.BusinessModel);
 
                 Console.WriteLine("Write AspMvc-Business-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -279,7 +279,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ModuleModel);
 
                 Console.WriteLine("Write AspMvc-Modules-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -294,7 +294,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.PersistenceModel);
 
                 Console.WriteLine("Write AspMvc-Persistence-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -309,7 +309,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ShadowModel);
 
                 Console.WriteLine("Write AspMvc-Shadow-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -324,7 +324,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ThridPartyModel);
 
                 Console.WriteLine("Write AspMvc-ThridParty-Models...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
@@ -339,7 +339,7 @@ namespace CSharpCodeGenerator.ConApp
                 var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcController);
 
                 Console.WriteLine("Write AspMvc-Controllers...");
-                if (WriteToSingleFile)
+                if (WriteToGroupFile)
                 {
                     WriteGeneratedCodeFile(projectPath, StaticLiterals.GeneratedCodeFileName, writeItems);
                 }
