@@ -14,8 +14,24 @@ using System.Text;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-    public class MvcController : Controller
+    public partial class MvcController : Controller
 	{
+        static MvcController()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
+        public MvcController()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         #region Error
         protected virtual string LastViewError
         {

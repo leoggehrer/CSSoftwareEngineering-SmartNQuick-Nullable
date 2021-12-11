@@ -4,14 +4,30 @@ using System.Diagnostics;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
 	{
+		static HomeController()
+		{
+			ClassConstructing();
+			ClassConstructed();
+		}
+		static partial void ClassConstructing();
+		static partial void ClassConstructed();
+
 		//private readonly ILogger<HomeController> _logger;
 
 		//public HomeController(ILogger<HomeController> logger)
 		//{
 		//	_logger = logger;
 		//}
+
+		public HomeController()
+		{
+			Constructing();
+			Constructed();
+		}
+		partial void Constructing();
+		partial void Constructed();
 
 		public IActionResult Index()
 		{

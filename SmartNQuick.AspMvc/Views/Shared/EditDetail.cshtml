@@ -40,7 +40,7 @@
     <hr />
 
     viewBagInfo.ItemPrefix = nameof(Model.Detail);
-    <form id="form" asp-action="@nameof(ActionMode.EditDetail)" asp-route-id="@Model.Master.Id" method="post">
+    <form id="form" asp-action="@nameof(ActionMode.UpdateDetail)" asp-route-id="@Model.Master.Id" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_EditModel", Model.Detail)
         <hr />

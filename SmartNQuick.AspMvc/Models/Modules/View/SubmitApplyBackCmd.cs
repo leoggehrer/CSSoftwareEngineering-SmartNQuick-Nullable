@@ -2,9 +2,9 @@
 //MdStart
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public partial class SubmitBackCmd : SubmitCmd
+    public partial class SubmitApplyBackCmd : SubmitApplyCmd
     {
-        public SubmitBackCmd()
+        public SubmitApplyBackCmd()
         {
             Constructing();
             Constructed();

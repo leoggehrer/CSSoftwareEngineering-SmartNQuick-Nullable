@@ -32,7 +32,9 @@
         }
         else if (property.PropertyType.IsEnum)
         {
-            @Html.DropDownList(Model.GetName(property), Html.GetEnumSelectList(property.PropertyType), Model.GetDisplayValue(property), new { @class = "form-control" })
+            var displayVal = Model.GetDisplayValue(property);
+
+            @Html.DropDownList(Model.GetName(property), Html.GetEnumSelectList(property.PropertyType).ForEach(e => e.Selected = e.Text == displayVal), null, new { @class = "form-control" })
         }
         else
         {

@@ -34,7 +34,6 @@
 
     viewBagInfo.ItemPrefix = nameof(Model.Detail);
     <form asp-action="@nameof(ActionMode.DeleteDetail)" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         @if (string.IsNullOrEmpty(ErrorHandler.LastViewError) == false)
         {
@@ -60,10 +59,4 @@
             BackRouteValues = new { id = Model.Master.Id }
         })
     </form>
-}
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

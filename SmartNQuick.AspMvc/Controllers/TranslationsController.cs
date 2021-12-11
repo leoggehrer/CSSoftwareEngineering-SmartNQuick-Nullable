@@ -7,8 +7,24 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
-    public class TranslationsController : MvcController
+    public partial class TranslationsController : MvcController
     {
+        static TranslationsController()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
+        internal TranslationsController()
+        {
+            Constructing();
+            Constructed();
+        }
+        partial void Constructing();
+        partial void Constructed();
+
         public IActionResult ReloadTranslations()
         {
             Translator.Instance.ReloadTranslations();

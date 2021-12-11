@@ -17,6 +17,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         public string SubmitText { get; set; } = "Save";
         public string SubmitCss { get; set; } = "btn btn-primary";
         public string SubmitStyle { get; set; } = "min-width: 8em;";
+        public string SubmitAction { get; set; } = string.Empty;
     }
 }
 //MdEnd

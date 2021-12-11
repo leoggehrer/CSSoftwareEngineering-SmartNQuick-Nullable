@@ -35,10 +35,17 @@
         </div>
     }
 
-    <form id="form" asp-action="@nameof(ActionMode.Create)" method="post">
+    <form id="form" action="" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_CreateEdit", Model)
-        @await Html.PartialAsync("_SubmitBack", new SubmitBackCmd() { SubmitText = viewBagInfo.TranslateFor("Save"), BackText = viewBagInfo.TranslateFor("Back to List") })
+        @await Html.PartialAsync("_SubmitApplyBack", new SubmitApplyBackCmd() 
+        {
+            SubmitText = viewBagInfo.TranslateFor("Save"),
+            SubmitAction = Url.Action(nameof(ActionMode.Insert), viewBagInfo.Controller),
+            BackText = viewBagInfo.TranslateFor("Back to List"),
+            ApplyText = viewBagInfo.TranslateFor("Apply"),
+            ApplyAction = Url.Action(nameof(ActionMode.Apply), viewBagInfo.Controller),
+        })
     </form>
 }
 

@@ -12,15 +12,21 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
 
         Create = 2 * IndexByPageSize,
         CreateById = 2 * Create,
-        Edit = 2 * CreateById,
-        Delete = 2 * Edit,
+        Insert = 2 * CreateById,
+        Edit = 2 * Insert,
+        Update = 2 * Edit,
+        Delete = 2 * Update,
+        Apply = 2 * Delete,
 
-        CreateDetail = 2 * Delete,
+        CreateDetail = 2 * Apply,
         CreateDetailById = 2 * CreateDetail,
-        EditDetail = 2 * CreateDetailById,
-        DeleteDetail = 2 * EditDetail,
+        InsertDetail = 2 * CreateDetailById,
+        EditDetail = 2 * InsertDetail,
+        UpdateDetail = 2 * EditDetail,
+        DeleteDetail = 2 * UpdateDetail,
+        ApplyDetail = 2 * DeleteDetail,
 
-        Details = 2 * DeleteDetail,
+        Details = 2 * ApplyDetail,
     }
 }
 //MdEnd

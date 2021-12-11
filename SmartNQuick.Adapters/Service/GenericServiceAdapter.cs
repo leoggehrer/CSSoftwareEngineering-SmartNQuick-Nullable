@@ -280,7 +280,7 @@ namespace SmartNQuick.Adapters.Service
         public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             using var client = GetClient(BaseUri);
-            var response = await client.GetAsync($"{ExtUri}/{predicate}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+            var response = await client.GetAsync($"{ExtUri}/Query/{predicate}/{pageIndex}/{pageSize}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
@@ -300,7 +300,7 @@ namespace SmartNQuick.Adapters.Service
         public async Task<IEnumerable<TContract>> QueryPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
         {
             using var client = GetClient(BaseUri);
-            var response = await client.GetAsync($"{SortedExtUri}/{predicate}/{orderBy}/{pageIndex}/{pageSize}").ConfigureAwait(false);
+            var response = await client.GetAsync($"{SortedExtUri}/Query/{predicate}/{orderBy}/{pageIndex}/{pageSize}").ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
