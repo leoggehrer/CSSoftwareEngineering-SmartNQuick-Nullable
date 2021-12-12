@@ -1,4 +1,5 @@
-﻿@*@BaseCode*@
+@*@BaseCode*@
+@*#if ACCOUNT_ON*@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Models.Persistence.Account
@@ -33,3 +34,4 @@
         @await Html.PartialAsync("../Shared/_EditGroup", Model)
     }
 }
+@*#endif*@
