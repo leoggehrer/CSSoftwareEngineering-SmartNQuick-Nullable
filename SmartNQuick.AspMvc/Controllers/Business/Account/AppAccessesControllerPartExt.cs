@@ -53,7 +53,7 @@ namespace SmartNQuick.AspMvc.Controllers.Business.Account
         {
             model.CheckArgument(nameof(model));
 
-            using var ctrlRole = Adapters.Factory.Create<Contracts.Persistence.Account.IRole>(SessionWrapper.SessionToken);
+            using var ctrlRole = Adapters.Factory.Create<Contracts.Persistence.Account.IRole>(SessionInfo.SessionToken);
             var roles = await ctrlRole.GetAllAsync().ConfigureAwait(false);
             var result = new List<Role>();
 

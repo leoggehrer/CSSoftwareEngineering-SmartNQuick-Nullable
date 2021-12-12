@@ -3,7 +3,9 @@
 using CommonBase.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using SmartNQuick.AspMvc.Models.Modules.Csv;
+using SmartNQuick.AspMvc.Modules.Language;
 using SmartNQuick.AspMvc.Modules.Session;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {
@@ -44,11 +47,32 @@ namespace SmartNQuick.AspMvc.Controllers
         protected bool HasError => string.IsNullOrEmpty(LastViewError) == false;
         #endregion Error
 
-        #region SessionWrapper
+        #region SessionInfo
         public bool IsSessionAvailable => HttpContext?.Session != null;
-        private ISessionWrapper sessionWrapper = null;
-        internal ISessionWrapper SessionWrapper => sessionWrapper ??= new SessionWrapper(HttpContext.Session);
-        #endregion
+        private ISessionWrapper sessionInfo = null;
+        internal ISessionWrapper SessionInfo => sessionInfo ??= new SessionWrapper(HttpContext.Session);
+        #endregion SessionInfo
+
+#if ACCOUNT_ON
+        protected virtual bool CheckSessionToken { get; set; } = true; 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (CheckSessionToken && context.Controller?.GetType().Name.Equals(nameof(AccountController)) == false)
+            {
+                if (SessionInfo.IsAuthenticated == false)
+                {
+                    LastViewError = Translator.TranslateIt("You are not yet registered. Please log in to the system.");
+                    context.Result = new RedirectToActionResult("Logon", "Account", null);
+                }
+                else if (SessionInfo.IsSessionAlive == false)
+                {
+                    LastViewError = Translator.TranslateIt("Your session has expired. Please sign in again.");
+                    context.Result = new RedirectToActionResult("Logon", "Account", null);
+                }
+            }
+            base.OnActionExecuting(context);
+        }
+#endif
 
         #region Export-Helpers
         protected virtual string Separator => ";";

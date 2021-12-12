@@ -49,7 +49,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 result = Adapters.Factory.Create<T>();
 #if ACCOUNT_ON
-                result.SessionToken = SessionWrapper?.SessionToken;
+                result.SessionToken = SessionInfo?.SessionToken;
 #endif
             }
             AfterCreateController(result);
@@ -106,14 +106,14 @@ namespace SmartNQuick.AspMvc.Controllers
             var models = new TModel[] { new TModel() };
             var indexViewModel = CreateIndexViewModel(models);
 
-            return new FilterModel(SessionWrapper, indexViewModel);
+            return new FilterModel(SessionInfo, indexViewModel);
         }
         protected virtual SorterModel CreateSorterModel()
         {
             var models = new TModel[] { new TModel() };
             var indexViewModel = CreateIndexViewModel(models);
 
-            return new SorterModel(SessionWrapper, indexViewModel);
+            return new SorterModel(SessionInfo, indexViewModel);
         }
 
         protected virtual IndexViewModel CreateIndexViewModel(IEnumerable<TModel> models)
@@ -148,25 +148,25 @@ namespace SmartNQuick.AspMvc.Controllers
             pageSize = pageSize < 1 ? 1 : pageSize;
             pageIndex = pageIndex < 0 || pageIndex * pageSize >= pageCount ? 0 : pageIndex;
 
-            SessionWrapper.SetPageCount(ControllerName, pageCount);
-            SessionWrapper.SetPageIndex(ControllerName, pageIndex);
-            SessionWrapper.SetPageSize(ControllerName, pageSize);
+            SessionInfo.SetPageCount(ControllerName, pageCount);
+            SessionInfo.SetPageIndex(ControllerName, pageIndex);
+            SessionInfo.SetPageSize(ControllerName, pageSize);
         }
         protected virtual void SetSessionFilterValues(FilterValues filterValues)
         {
-            SessionWrapper.SetFilterValues(ControllerName, filterValues);
+            SessionInfo.SetFilterValues(ControllerName, filterValues);
         }
         protected virtual void SetSessionSorterValues(SorterValues sorterValues)
         {
-            SessionWrapper.SetSorterValues(ControllerName, sorterValues);
+            SessionInfo.SetSorterValues(ControllerName, sorterValues);
         }
         protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize)
         {
             IEnumerable<TContract> result;
             var pageCount = 0;
-            var filterValues = SessionWrapper.GetFilterValues(ControllerName);
+            var filterValues = SessionInfo.GetFilterValues(ControllerName);
             var predicate = filterValues?.CreatePredicate();
-            var sorterValues = SessionWrapper.GetSorterValues(ControllerName);
+            var sorterValues = SessionInfo.GetSorterValues(ControllerName);
             var orderBy = sorterValues?.CreateOrderBy();
             using var ctrl = CreateController();
 
@@ -218,7 +218,7 @@ namespace SmartNQuick.AspMvc.Controllers
                     var pageIndex = 0;
                     var filterModel = CreateFilterModel();
                     var filterValues = filterModel.GetFilterValues(formCollection);
-                    var pageSize = SessionWrapper.GetPageSize(ControllerName);
+                    var pageSize = SessionInfo.GetPageSize(ControllerName);
 
                     SetSessionFilterValues(filterValues);
 
@@ -252,7 +252,7 @@ namespace SmartNQuick.AspMvc.Controllers
                     var pageIndex = 0;
                     var sorterModel = CreateSorterModel();
                     var sorterValues = sorterModel.GetSorterValues(formCollection);
-                    var pageSize = SessionWrapper.GetPageSize(ControllerName);
+                    var pageSize = SessionInfo.GetPageSize(ControllerName);
 
                     SetSessionSorterValues(sorterValues);
 
@@ -283,8 +283,8 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    var pageIndex = SessionWrapper.GetPageIndex(ControllerName);
-                    var pageSize = SessionWrapper.GetPageSize(ControllerName);
+                    var pageIndex = SessionInfo.GetPageIndex(ControllerName);
+                    var pageSize = SessionInfo.GetPageSize(ControllerName);
 
                     var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 

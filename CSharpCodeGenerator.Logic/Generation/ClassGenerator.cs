@@ -273,7 +273,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 : $"private {fieldType} {fieldName} = {defaultValue};");
 
             result.Add($"partial void On{propertyInfo.Name}Reading();");
-            result.Add($"partial void On{propertyInfo.Name}Changing(ref bool handled, ref {fieldType} {paramName});");
+            result.Add($"partial void On{propertyInfo.Name}Changing(ref bool handled, {fieldType} value, ref {fieldType} {paramName});");
             result.Add($"partial void On{propertyInfo.Name}Changed();");
             return result;
         }
@@ -316,7 +316,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("set");
             result.Add("{");
             result.Add("bool handled = false;");
-            result.Add($"On{propName}Changing(ref handled, ref {fieldName});");
+            result.Add($"On{propName}Changing(ref handled, value, ref {fieldName});");
             result.Add("if (handled == false)");
             result.Add("{");
             result.Add($"{fieldName} = value;");

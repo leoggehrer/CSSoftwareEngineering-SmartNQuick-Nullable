@@ -84,9 +84,14 @@ namespace SmartNQuick.Logic.Entities.Persistence.Account
                 _origin = nameof(SmartNQuick);
             }
         }
-        partial void OnLastAccessChanged()
+        partial void OnLastAccessChanging(ref bool handled, DateTime value, ref DateTime _lastAccess)
         {
-            HasChanged = true;
+            if (_lastAccess < value)
+            {
+                _lastAccess = value;
+                HasChanged = true;
+            }
+            handled = true;
         }
 
 #region Ignore properties
@@ -95,7 +100,7 @@ namespace SmartNQuick.Logic.Entities.Persistence.Account
         {
             get
             {
-                TimeSpan ts = DateTime.Now - LastAccess;
+                TimeSpan ts = DateTime.UtcNow - LastAccess;
 
                 return LogoutTime.HasValue || ts.TotalSeconds > TimeOutInMinutes * 60;
             }

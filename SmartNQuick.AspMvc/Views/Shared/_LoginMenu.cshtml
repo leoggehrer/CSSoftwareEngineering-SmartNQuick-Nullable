@@ -5,7 +5,7 @@
     @using SmartNQuick.AspMvc.Modules.Session
     @using SmartNQuick.AspMvc.Modules.Language
 
-    var sessionWrapper = new SessionWrapper(Context.Session);
+    var sessionInfo = new SessionWrapper(Context.Session);
     Func<string, string> translate = Translator.TranslateIt;
     Func<string, string> translateFor = pn => translate($"LoginMenu.{pn}");
     var mnoLogon = translateFor("Logon");
@@ -19,16 +19,16 @@
     var mnuExportNoTranslations = translateFor("Export no translations");
     var mnuUser = string.Empty;
 
-    if (sessionWrapper.LoginSession != null)
+    if (sessionInfo.IsAuthenticated)
     {
-        mnuUser = sessionWrapper.LoginSession.Name;
-        if (sessionWrapper.LoginSession.IsRemoteAuth)
+        mnuUser = sessionInfo.LoginSession.Name;
+        if (sessionInfo.LoginSession.IsRemoteAuth)
         {
             mnuUser = $"{mnuUser} [rm]";
         }
     }
 
-    @if (sessionWrapper.LoginSession != null && sessionWrapper.LoginSession.LogoutTime.HasValue == false)
+    @if (sessionInfo.IsAuthenticated && sessionInfo.IsSessionAlive)
     {
         using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
         {
@@ -38,7 +38,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">@mnuUser</a>
                     <ul class="dropdown-menu">
-                        @if (sessionWrapper.HasRole("SysAdmin") == true)
+                        @if (sessionInfo.HasRole("SysAdmin") == true)
                         {
                             <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccesses", routeValues: null, htmlAttributes: null)</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUsers", routeValues: null, htmlAttributes: null)</li>
@@ -46,7 +46,7 @@
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdChange, "ChangePassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuPwdReset, "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
                         }
-                        else if (sessionWrapper.HasRole("AppAdmin") == true)
+                        else if (sessionInfo.HasRole("AppAdmin") == true)
                         {
                             <li class="dropdown-item">@Html.ActionLink(mnuAccessAuth, "Index", "AppAccesses", routeValues: null, htmlAttributes: null)</li>
                             <li class="dropdown-item">@Html.ActionLink(mnuIdentityUser, "Index", "IdentityUsers", routeValues: null, htmlAttributes: null)</li>

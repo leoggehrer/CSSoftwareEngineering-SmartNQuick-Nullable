@@ -43,7 +43,7 @@ namespace SmartNQuick.AspMvc.Controllers
             BeforeLogon(viewModel, ref handled);
             if (handled == false)
             {
-                SessionWrapper.ReturnUrl = returnUrl;
+                SessionInfo.ReturnUrl = returnUrl;
                 if (error.HasContent())
                     LastViewError = error;
             }
@@ -70,8 +70,8 @@ namespace SmartNQuick.AspMvc.Controllers
                 return View(viewModel);
             }
             bool handled = false;
-            var action = "Index";
-            var controller = "Home";
+            var action = SessionInfo.ReturnAction ?? "Index";
+            var controller = SessionInfo.ReturnController ?? "Home";
 
             BeforeDoLogon(viewModel, ref handled);
             if (handled == false)
@@ -115,7 +115,7 @@ namespace SmartNQuick.AspMvc.Controllers
             BeforeLogonRemote(viewModel, ref handled);
             if (handled == false)
             {
-                SessionWrapper.ReturnUrl = returnUrl;
+                SessionInfo.ReturnUrl = returnUrl;
                 if (error.HasContent())
                     LastViewError = error;
             }
@@ -164,7 +164,7 @@ namespace SmartNQuick.AspMvc.Controllers
         [ActionName("Logout")]
         public async Task<IActionResult> LogoutAsync()
         {
-            if (SessionWrapper.LoginSession != null)
+            if (SessionInfo.LoginSession != null)
             {
                 bool handled = false;
 
@@ -173,8 +173,8 @@ namespace SmartNQuick.AspMvc.Controllers
                 {
                     var accMngr = new AccountManager();
 
-                    await accMngr.LogoutAsync(SessionWrapper.LoginSession.SessionToken).ConfigureAwait(false);
-                    SessionWrapper.LoginSession = null;
+                    await accMngr.LogoutAsync(SessionInfo.LoginSession.SessionToken).ConfigureAwait(false);
+                    SessionInfo.LoginSession = null;
                 }
                 AfterLogout();
             }
@@ -192,13 +192,13 @@ namespace SmartNQuick.AspMvc.Controllers
             BeforeChangePassword(viewModel, ref handled);
             if (handled == false)
             {
-                if (SessionWrapper.LoginSession == null
-                    || SessionWrapper.LoginSession.LogoutTime.HasValue)
+                if (SessionInfo.LoginSession == null
+                    || SessionInfo.LoginSession.LogoutTime.HasValue)
                 {
                     return RedirectToAction("Logon", new { returnUrl = "ChangePassword" });
                 }
-                viewModel.UserName = SessionWrapper.LoginSession.Name;
-                viewModel.Email = SessionWrapper.LoginSession.Email;
+                viewModel.UserName = SessionInfo.LoginSession.Name;
+                viewModel.Email = SessionInfo.LoginSession.Email;
             }
             AfterChangePassword(viewModel, ref viewName);
             return View(viewName, viewModel);
@@ -221,8 +221,8 @@ namespace SmartNQuick.AspMvc.Controllers
             BeforeDoChangePassword(viewModel, ref handled);
             if (handled == false)
             {
-                if (SessionWrapper.LoginSession == null
-                    || SessionWrapper.LoginSession.LogoutTime.HasValue)
+                if (SessionInfo.LoginSession == null
+                    || SessionInfo.LoginSession.LogoutTime.HasValue)
                 {
                     return RedirectToAction("Logon", new { returnUrl = "ChangePassword" });
                 }
@@ -231,7 +231,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 {
                     var accMngr = new AccountManager();
 
-                    await accMngr.ChangePasswordAsync(SessionWrapper.LoginSession.SessionToken, viewModel.OldPassword, viewModel.NewPassword).ConfigureAwait(false);
+                    await accMngr.ChangePasswordAsync(SessionInfo.LoginSession.SessionToken, viewModel.OldPassword, viewModel.NewPassword).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -254,8 +254,8 @@ namespace SmartNQuick.AspMvc.Controllers
             BeforeResetPassword(viewModel, ref handled);
             if (handled == false)
             {
-                if (SessionWrapper.LoginSession == null
-                    || SessionWrapper.LoginSession.LogoutTime.HasValue)
+                if (SessionInfo.LoginSession == null
+                    || SessionInfo.LoginSession.LogoutTime.HasValue)
                 {
                     return RedirectToAction("Logon", new { returnUrl = "ChangePassword" });
                 }
@@ -279,8 +279,8 @@ namespace SmartNQuick.AspMvc.Controllers
             var viewName = "ConfirmationResetPassword";
 
             BeforeDoResetPassword(viewModel, ref handled);
-            if (SessionWrapper.LoginSession == null
-                || SessionWrapper.LoginSession.LogoutTime.HasValue)
+            if (SessionInfo.LoginSession == null
+                || SessionInfo.LoginSession.LogoutTime.HasValue)
             {
                 return RedirectToAction("Logon", new { returnUrl = "ResetPassword" });
             }
@@ -289,7 +289,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 var accMngr = new AccountManager();
 
-                await accMngr.ChangePasswordForAsync(SessionWrapper.SessionToken, viewModel.Email, viewModel.ConfirmPassword).ConfigureAwait(false);
+                await accMngr.ChangePasswordForAsync(SessionInfo.SessionToken, viewModel.Email, viewModel.ConfirmPassword).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -311,7 +311,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 var loginSession = new LoginSession();
 
                 loginSession.CopyProperties(internLogin);
-                SessionWrapper.LoginSession = loginSession;
+                SessionInfo.LoginSession = loginSession;
             }
             catch (Exception ex)
             {
@@ -330,7 +330,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 var loginSession = new LoginSession();
 
                 loginSession.CopyProperties(internLogin);
-                SessionWrapper.LoginSession = loginSession;
+                SessionInfo.LoginSession = loginSession;
                 await extAccMngr.LogoutAsync(externLogin.SessionToken).ConfigureAwait(false);
             }
             catch (Exception ex)

@@ -13,9 +13,9 @@ namespace SmartNQuick.Logic.Controllers.Persistence.Account
 	{
 		protected override Task<LoginSession> BeforeInsertAsync(LoginSession entity)
 		{
-			entity.LoginTime = DateTime.Now;
-			entity.LastAccess = entity.LoginTime;
 			entity.SessionToken = Guid.NewGuid().ToString();
+			entity.LoginTime = entity.LastAccess = DateTime.UtcNow;
+
 			return base.BeforeInsertAsync(entity);
 		}
 

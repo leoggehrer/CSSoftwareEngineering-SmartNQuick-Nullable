@@ -19,7 +19,7 @@ namespace SmartNQuick.AspMvc.Controllers.Persistence.Account
             }
             else
             {
-                var redirectController = SessionWrapper.GetStringValue(StaticLiterals.RedirectControllerKey);
+                var redirectController = SessionInfo.GetStringValue(StaticLiterals.RedirectControllerKey);
 
                 if (string.IsNullOrEmpty(redirectController))
                 {
@@ -27,7 +27,7 @@ namespace SmartNQuick.AspMvc.Controllers.Persistence.Account
                 }
                 else
                 {
-                    SessionWrapper.SetStringValue(StaticLiterals.RedirectControllerKey, string.Empty);
+                    SessionInfo.SetStringValue(StaticLiterals.RedirectControllerKey, string.Empty);
                     result = RedirectToAction("Index", redirectController);
                 }
             }

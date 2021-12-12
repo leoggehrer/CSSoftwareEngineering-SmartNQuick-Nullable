@@ -80,6 +80,28 @@ namespace SmartNQuick.AspMvc.Modules.Session
                 SetStringValue(nameof(ReturnUrl), value);
             }
         }
+        public string ReturnController
+        {
+            get
+            {
+                return GetStringValue(nameof(ReturnController));
+            }
+            set
+            {
+                SetStringValue(nameof(ReturnController), value);
+            }
+        }
+        public string ReturnAction
+        {
+            get
+            {
+                return GetStringValue(nameof(ReturnAction));
+            }
+            set
+            {
+                SetStringValue(nameof(ReturnAction), value);
+            }
+        }
         public string Hint
         {
             get
@@ -212,6 +234,22 @@ namespace SmartNQuick.AspMvc.Modules.Session
                 return LoginSession != null;
             }
         }
+        public bool IsSessionAlive
+        {
+            get
+            {
+                var result = false;
+                var loginSession = LoginSession;
+
+                if (IsAuthenticated)
+                {
+                    var accMngr = new Adapters.Modules.Account.AccountManager();
+
+                    result = Task.Run(async () => await accMngr.IsSessionAliveAsync(SessionToken).ConfigureAwait(false)).Result;
+                }
+                return result;
+            }
+        }
         public bool HasRole(string role, params string[] further)
         {
             var result = false;
@@ -221,10 +259,10 @@ namespace SmartNQuick.AspMvc.Modules.Session
             {
                 var accMngr = new Adapters.Modules.Account.AccountManager();
 
-                Task.Run(async () => result = await accMngr.HasRoleAsync(loginSession.SessionToken, role).ConfigureAwait(false)).Wait();
+                result = Task.Run(async () => await accMngr.HasRoleAsync(loginSession.SessionToken, role).ConfigureAwait(false)).Result;
                 for (int i = 0; result == false && i < further.Length; i++)
                 {
-                    Task.Run(async () => result = await accMngr.HasRoleAsync(loginSession.SessionToken, further[i]).ConfigureAwait(false)).Wait();
+                    result = Task.Run(async () => await accMngr.HasRoleAsync(loginSession.SessionToken, further[i]).ConfigureAwait(false)).Result;
                 }
             }
             return result;

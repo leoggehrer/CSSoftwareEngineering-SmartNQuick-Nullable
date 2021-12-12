@@ -30,6 +30,8 @@ namespace SmartNQuick.AspMvc.Modules.Session
 
         #region Properties
         string ReturnUrl { get; set; }
+        string ReturnController { get; set; }
+        string ReturnAction { get; set; }
         string Hint { get; set; }
         string Error { get; set; }
         #endregion Properties
@@ -67,6 +69,8 @@ namespace SmartNQuick.AspMvc.Modules.Session
         #region Authentication
         Models.Persistence.Account.LoginSession LoginSession { get; set; }
         string SessionToken => LoginSession?.SessionToken;
+        bool IsAuthenticated { get; }
+        bool IsSessionAlive { get; }
         #endregion Authentication
 #endif
     }

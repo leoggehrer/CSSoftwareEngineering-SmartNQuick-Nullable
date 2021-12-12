@@ -156,10 +156,9 @@ namespace SmartNQuick.Logic.Modules.Account
                                                .FirstOrDefaultAsync(e => e.SessionToken.Equals(sessionToken))
                                                .ConfigureAwait(false);
 
-                if (session != null
-                    && session.IsActive)
+                if (session != null && session.IsActive)
                 {
-                    session.LogoutTime = DateTime.Now;
+                    session.LogoutTime = DateTime.UtcNow;
 
                     await sessionCtrl.UpdateAsync(session).ConfigureAwait(false);
                     await sessionCtrl.SaveChangesAsync().ConfigureAwait(false);
@@ -337,6 +336,52 @@ namespace SmartNQuick.Logic.Modules.Account
             }
             return result;
         }
+        internal static async Task<LoginSession> QueryAliveSessionAsync(string email, string password)
+        {
+            email.CheckArgument(nameof(email));
+            password.CheckArgument(nameof(password));
+
+            var result = LoginSessions.FirstOrDefault(e => e.IsActive
+                                                        && e.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
+
+            if (result == null)
+            {
+                using var identityCtrl = new Controllers.Persistence.Account.IdentityController(Factory.CreateContext())
+                {
+                    SessionToken = Authorization.SystemAuthorizationToken,
+                };
+                var identity = await identityCtrl.QueryableSet()
+                                                 .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
+                                                                        && e.AccessFailedCount < 4
+                                                                        && e.Email.ToLower() == email.ToLower())
+                                                 .ConfigureAwait(false);
+
+                if (identity != null && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
+                {
+                    using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
+                    var session = await sessionCtrl.QueryableSet()
+                                                   .FirstOrDefaultAsync(e => e.LogoutTime == null
+                                                                          && e.IdentityId == identity.Id)
+                                                   .ConfigureAwait(false);
+
+                    if (session != null && session.IsActive)
+                    {
+                        session.Identity = identity;
+                        session.Roles.AddRange(await QueryIdentityRolesAsync(sessionCtrl, identity.Id).ConfigureAwait(false));
+                        session.JsonWebToken = JsonWebToken.GenerateToken(new Claim[]
+                        {
+                            new Claim(ClaimTypes.Email, identity.Email),
+                            new Claim(ClaimTypes.System, nameof(SmartNQuick)),
+                        }.Union(session.Roles.Select(e => new Claim(ClaimTypes.Role, e.Designation))));
+
+                        result = new LoginSession();
+                        result.CopyProperties(session);
+                        LoginSessions.Add(session);
+                    }
+                }
+            }
+            return result;
+        }
         internal static async Task<LoginSession> QueryLoginByEmailAsync(string email, string password, string optionalInfo)
         {
             email.CheckArgument(nameof(email));
@@ -351,11 +396,9 @@ namespace SmartNQuick.Logic.Modules.Account
                 {
                     SessionToken = Authorization.SystemAuthorizationToken,
                 };
-                var identity = await identityCtrl.GetValidIdentityByEmail(email)
-                                                 .ConfigureAwait(false);
+                var identity = await identityCtrl.GetValidIdentityByEmail(email).ConfigureAwait(false);
 
-                if (identity != null
-                    && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
+                if (identity != null && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
                 {
                     using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
                     var session = new LoginSession
@@ -391,62 +434,13 @@ namespace SmartNQuick.Logic.Modules.Account
             }
             return result;
         }
-        internal static async Task<LoginSession> QueryAliveSessionAsync(string email, string password)
-        {
-            email.CheckArgument(nameof(email));
-            password.CheckArgument(nameof(password));
-
-            var result = LoginSessions.FirstOrDefault(e => e.IsActive
-                                                        && e.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
-
-            if (result == null)
-            {
-                using var identityCtrl = new Controllers.Persistence.Account.IdentityController(Factory.CreateContext())
-                {
-                    SessionToken = Authorization.SystemAuthorizationToken,
-                };
-                var identity = await identityCtrl.QueryableSet()
-                                                 .FirstOrDefaultAsync(e => e.State == Contracts.Modules.Common.State.Active
-                                                                        && e.AccessFailedCount < 4
-                                                                        && e.Email.ToLower() == email.ToLower())
-                                                 .ConfigureAwait(false);
-
-                if (identity != null
-                    && VerifyPasswordHash(password, identity.PasswordHash, identity.PasswordSalt))
-                {
-                    using var sessionCtrl = new Controllers.Persistence.Account.LoginSessionController(identityCtrl);
-                    var session = await sessionCtrl.QueryableSet()
-                                                   .FirstOrDefaultAsync(e => e.LogoutTime == null
-                                                                          && e.IdentityId == identity.Id)
-                                                   .ConfigureAwait(false);
-
-                    if (session != null
-                        && session.IsActive)
-                    {
-                        session.Identity = identity;
-                        session.Roles.AddRange(await QueryIdentityRolesAsync(sessionCtrl, identity.Id).ConfigureAwait(false));
-                        session.JsonWebToken = JsonWebToken.GenerateToken(new Claim[]
-                        {
-                        new Claim(ClaimTypes.Email, identity.Email),
-                        new Claim(ClaimTypes.System, nameof(SmartNQuick)),
-                        }.Union(session.Roles.Select(e => new Claim(ClaimTypes.Role, e.Designation))));
-
-                        result = new LoginSession();
-                        result.CopyProperties(session);
-                        LoginSessions.Add(session);
-                    }
-                }
-            }
-            return result;
-        }
         internal static async Task<IEnumerable<Role>> QueryIdentityRolesAsync(ControllerObject controllerObject, int identityId)
         {
             controllerObject.CheckArgument(nameof(controllerObject));
 
             var result = new List<Role>();
             using var identityXRoleCtrl = new Controllers.Persistence.Account.IdentityXRoleController(controllerObject);
-            var roles = await identityXRoleCtrl.QueryIdentityRolesAsync(identityId)
-                                               .ConfigureAwait(false);
+            var roles = await identityXRoleCtrl.QueryIdentityRolesAsync(identityId).ConfigureAwait(false);
 
             result.AddRange(roles);
             return result;
@@ -467,8 +461,7 @@ namespace SmartNQuick.Logic.Modules.Account
                             SessionToken = Authorization.SystemAuthorizationToken,
                         };
                         bool saveChanges = false;
-                        var dbSessions = await sessionCtrl.QueryOpenLoginSessionsAsync()
-                                                          .ConfigureAwait(false);
+                        var dbSessions = await sessionCtrl.QueryOpenLoginSessionsAsync().ConfigureAwait(false);
                         var uncheckSessions = LoginSessions.Where(i => dbSessions.Any() == false
                                                                     || dbSessions.Any(e => e.Id != i.Id));
 
@@ -493,7 +486,7 @@ namespace SmartNQuick.Logic.Modules.Account
                                 }
                                 if (dbItem.LogoutTime.HasValue == false)
                                 {
-                                    dbItem.LogoutTime = DateTime.Now;
+                                    dbItem.LogoutTime = DateTime.UtcNow;
                                 }
                             }
                             if (itemUpdate)

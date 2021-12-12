@@ -80,7 +80,7 @@ namespace SmartNQuick.Logic.Modules.Security
                     if (isAuthorized == false)
                         throw new AuthorizationException(ErrorType.NotAuthorized);
 
-                    curSession.LastAccess = DateTime.Now;
+                    curSession.LastAccess = DateTime.UtcNow;
                     Logging(curSession.IdentityId, originalMethodBase.DeclaringType, originalMethodBase, accessType, infoData);
                 }
             }
@@ -154,7 +154,7 @@ namespace SmartNQuick.Logic.Modules.Security
                     if (isAuthorized == false)
                         throw new AuthorizationException(ErrorType.NotAuthorized);
 
-                    curSession.LastAccess = DateTime.Now;
+                    curSession.LastAccess = DateTime.UtcNow;
                     Logging(curSession.IdentityId, subjectType, originalMethodBase, accessType, infoData);
                 }
             }
@@ -192,8 +192,10 @@ namespace SmartNQuick.Logic.Modules.Security
             });
 #endif
         }
+#if LOGGING_ON
         static partial void BeforeLogging(Type subjectType, MethodBase methodBase, AccessType accessType, ref bool handled);
         static partial void AfterLogging(Type subjectType, MethodBase methodBase, AccessType accessType);
+#endif
     }
 }
 #endif
