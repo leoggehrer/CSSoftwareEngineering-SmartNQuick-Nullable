@@ -6,7 +6,7 @@ using System;
 namespace CSharpCodeGenerator.Logic.Common
 {
     [Flags]
-    public enum ItemType : long
+    public enum ItemType : ulong
     {
         DbContext = 1,
         Factory = 2,
@@ -17,17 +17,17 @@ namespace CSharpCodeGenerator.Logic.Common
         ShadowEntity = 256,
         Entiy = BusinessEntity + ModuleEntity + PersistenceEntity + ShadowEntity,
 
-        BusinessModel = 1024,
-        ModuleModel = 2048,
-        PersistenceModel = 4096,
-        ShadowModel = 8192,
-        ThridPartyModel = (long)8192 * 2,
+        BusinessModel = 512,
+        ModuleModel = 1024,
+        PersistenceModel = 2048,
+        ShadowModel = 4096,
+        ThridPartyModel = (ulong)8192,
         Model = BusinessModel + ModuleModel + PersistenceModel + ShadowModel,
 
-        LogicController = (long)8192 * 4,
-        WebApiController = (long)8192 * 8,
-        AspMvcController = (long)8192 * 16,
-        Controller = LogicController  + WebApiController + AspMvcController,
+        LogicController = (ulong)8192 * 2,
+        WebApiController = (ulong)8192 * 4,
+        AspMvcController = (ulong)8192 * 8,
+        Controller = LogicController + WebApiController + AspMvcController,
     }
 }
 //MdEnd

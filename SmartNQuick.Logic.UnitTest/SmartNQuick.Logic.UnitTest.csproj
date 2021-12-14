@@ -24,8 +24,4 @@
 		<ProjectReference Include="..\SmartNQuick.Logic\SmartNQuick.Logic.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
-
 </Project>

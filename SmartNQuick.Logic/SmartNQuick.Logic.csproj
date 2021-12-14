@@ -21,8 +21,4 @@
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
-
 </Project>

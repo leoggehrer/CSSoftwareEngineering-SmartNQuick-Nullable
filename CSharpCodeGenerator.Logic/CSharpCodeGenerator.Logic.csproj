@@ -11,8 +11,4 @@
 	<ItemGroup>
 		<ProjectReference Include="..\CommonBase\CommonBase.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
 </Project>

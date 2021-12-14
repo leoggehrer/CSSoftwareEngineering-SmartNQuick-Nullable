@@ -183,9 +183,9 @@ namespace CSharpCodeGenerator.Logic.Generation
             var properties = contractHelper.GetAllProperties();
             var builder = $"{contractHelper.EntityFieldName}Builder";
 
-            foreach (var item in Helpers.ContractHelper.FilterPropertiesForGeneration(properties))
+            foreach (var item in Helpers.ContractHelper.FilterPropertiesForGeneration(type, properties))
             {
-                var contractPropertyHelper = new Helpers.ContractPropertyHelper(item);
+                var contractPropertyHelper = new Helpers.ContractPropertyHelper(type, item);
 
                 if (contractPropertyHelper.NotMapped)
                 {
@@ -243,7 +243,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 }
             }
             #region Create multicolumn index
-            var indexQueries = properties.Select(pi => new Helpers.ContractPropertyHelper(pi))
+            var indexQueries = properties.Select(pi => new Helpers.ContractPropertyHelper(type, pi))
                                          .Where(cph => cph.NotMapped == false
                                                     && string.IsNullOrEmpty(cph.IndexName) == false)
                                          .GroupBy(cph => cph.IndexName);

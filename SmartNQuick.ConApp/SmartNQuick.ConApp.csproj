@@ -47,8 +47,4 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
 </Project>

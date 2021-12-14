@@ -3,14 +3,16 @@
 using CommonBase.Attributes;
 using CSharpCodeGenerator.Logic.Generation;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace CSharpCodeGenerator.Logic.Helpers
 {
     internal partial class ContractPropertyHelper
     {
+        public Type Type { get; }
         public PropertyInfo Property { get; }
-        private ContractPropertyInfoAttribute AttributeInfo { get; }
+        private PropertyInfoAttribute AttributeInfo { get; }
 
         public string PropertyName => Property.Name;
         public string ColumnName => AttributeInfo?.ColumnName;
@@ -19,7 +21,10 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public Type PropertyType => Property.PropertyType;
         public string PropertyFieldType => GeneratorObject.GetPropertyType(Property);
         public string PropertyFieldName => $"_{char.ToLower(PropertyName[0])}{PropertyName[1..]}";
-        public ContentType ContentType => AttributeInfo != null ? AttributeInfo.ContentType : ContentType.Undefined; 
+        public Type DeclaringType => Property.DeclaringType;
+        public bool CanRead => Property.CanRead;
+        public bool CanWrite => Property.CanWrite;
+        public ContentType ContentType => AttributeInfo != null ? AttributeInfo.ContentType : ContentType.Undefined;
 
         public bool NotMapped => AttributeInfo != null && AttributeInfo.NotMapped;
         public bool HasImplementation => AttributeInfo != null && AttributeInfo.HasImplementation;
@@ -41,12 +46,16 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public string Description => AttributeInfo?.Description ?? string.Empty;
         public int Order => AttributeInfo != null ? AttributeInfo.Order : 10_000;
 
-        public ContractPropertyHelper(PropertyInfo propertyInfo)
+        public ContractPropertyHelper(Type type, PropertyInfo propertyInfo)
         {
+            type.CheckArgument(nameof(type));
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
+            Type = type;
             Property = propertyInfo;
-            AttributeInfo = Property.GetCustomAttribute<ContractPropertyInfoAttribute>();
+            AttributeInfo = Type.GetCustomAttributes<ContractMemberInfoAttribute>()
+                                .FirstOrDefault(cmi => cmi.PropertyName.Equals(propertyInfo.Name));
+            AttributeInfo ??= Property.GetCustomAttribute<ContractPropertyInfoAttribute>();
         }
     }
 }

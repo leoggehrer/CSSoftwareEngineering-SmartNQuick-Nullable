@@ -235,7 +235,7 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                             if (pi.Name.Equals($"{otherName}Id"))
                             {
-                                var propHelper = new ContractPropertyHelper(pi);
+                                var propHelper = new ContractPropertyHelper(item, pi);
                                 var otherFullName = GeneratorObject.CreateEntityFullNameFromInterface(other);
                                 var navigationName = propHelper.NavigationName.GetValueOrDefault(otherName);
 
@@ -248,8 +248,8 @@ namespace CSharpCodeGenerator.Logic.Generation
 
                                 if (data.Length == 2)
                                 {
-                                    var propHelper = new ContractPropertyHelper(pi);
-                                    var otherFullName = GeneratorObject.CreateEntityFullNameFromInterface(other);
+                                    var propHelper = new ContractPropertyHelper(item, pi);
+                                    var otherFullName = CreateEntityFullNameFromInterface(other);
                                     var navigationName = propHelper.NavigationName.GetValueOrDefault(data[1]);
 
                                     result.Add(($"[System.ComponentModel.DataAnnotations.Schema.ForeignKey(\"{pi.Name}\")]"));
@@ -318,9 +318,10 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialConstrutor("public", contractHelper.EntityName));
             foreach (var item in ContractHelper.GetEntityProperties(type).Where(p => CanCreateProperty(type, p.Name)))
             {
-                var codeLines = new List<string>(CreateProperty(item));
+                var propertyHelper = new ContractPropertyHelper(type, item);
+                var codeLines = new List<string>(CreateProperty(propertyHelper));
 
-                AfterCreateProperty(type, item, codeLines);
+                AfterCreateProperty(propertyHelper, codeLines);
                 result.AddRange(codeLines);
             }
             result.AddRange(CreateCopyProperties(type));
@@ -332,7 +333,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.FormatCSharpCode();
             return result;
         }
-        static partial void AfterCreateProperty(Type type, PropertyInfo propertyInfo, List<string> codeLines);
+        static partial void AfterCreateProperty(ContractPropertyHelper propertyHelper, List<string> codeLines);
 
         private static string GetBaseClassByContract(Type type)
         {

@@ -13,7 +13,4 @@
     <ProjectReference Include="..\CSharpCodeGenerator.Logic\CSharpCodeGenerator.Logic.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
 </Project>

@@ -243,13 +243,14 @@ namespace CSharpCodeGenerator.Logic.Helpers
             var typeProperties = GetAllProperties(type);
             var baseProperties = baseType != null ? GetAllProperties(baseType) : Array.Empty<PropertyInfo>();
 
-            return FilterPropertiesForGeneration(typeProperties.Except(baseProperties));
+            return FilterPropertiesForGeneration(type, typeProperties.Except(baseProperties));
         }
-        public static IEnumerable<PropertyInfo> FilterPropertiesForGeneration(IEnumerable<PropertyInfo> properties)
+        public static IEnumerable<PropertyInfo> FilterPropertiesForGeneration(Type type, IEnumerable<PropertyInfo> properties)
         {
+            type.CheckArgument(nameof(type));
             properties.CheckArgument(nameof(properties));
 
-            return properties.Select(e => new ContractPropertyHelper(e))
+            return properties.Select(e => new ContractPropertyHelper(type, e))
                              .Where(e => e.Property.DeclaringType.Name.Equals(StaticLiterals.IVersionableName) == false
                                       && e.Property.DeclaringType.Name.Equals(StaticLiterals.IIdentifiableName) == false
                                       && e.Property.DeclaringType.Name.Equals(StaticLiterals.ICompositeName) == false

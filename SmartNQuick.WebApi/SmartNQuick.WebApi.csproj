@@ -21,8 +21,4 @@
 		<ProjectReference Include="..\SmartNQuick.Transfer\SmartNQuick.Transfer.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Using Include="CommonBase.Extensions" />
-	</ItemGroup>
-
 </Project>

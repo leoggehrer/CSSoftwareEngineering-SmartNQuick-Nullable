@@ -127,7 +127,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         #region Create partial model
         public static IEnumerable<string> CreateModelFromInterface(Type type,
                                                            Action<Type, List<string>> createAttributes = null,
-                                                           Action<Type, PropertyInfo, List<string>> createPropertyAttributes = null)
+                                                           Action<ContractPropertyHelper, List<string>> createPropertyAttributes = null)
         {
             type.CheckArgument(nameof(type));
 
@@ -140,10 +140,12 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.AddRange(CreatePartialStaticConstrutor(entityName));
             result.AddRange(CreatePartialConstrutor("public", entityName));
-            foreach (var item in ContractHelper.FilterPropertiesForGeneration(properties))
+            foreach (var item in ContractHelper.FilterPropertiesForGeneration(type, properties))
             {
-                createPropertyAttributes?.Invoke(type, item, result);
-                result.AddRange(CreateProperty(item));
+                var propertyHelper = new ContractPropertyHelper(type, item);
+
+                createPropertyAttributes?.Invoke(propertyHelper, result);
+                result.AddRange(CreateProperty(propertyHelper));
             }
             result.AddRange(CreateCopyProperties(type));
             result.AddRange(CreateFactoryMethods(type, false));
@@ -190,31 +192,29 @@ namespace CSharpCodeGenerator.Logic.Generation
         #endregion Create partial model
 
         #region Create partial property
-        static partial void SetPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines);
-        static partial void SetPropertyGetAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines);
-        static partial void SetPropertySetAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines);
-        static partial void GetPropertyDefaultValue(Type type, PropertyInfo propertyInfo, ref string defaultValue);
+        static partial void CreatePropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines);
+        static partial void CreateGetPropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines);
+        static partial void CreateSetPropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines);
+        static partial void GetPropertyDefaultValue(ContractPropertyHelper propertyHelper, ref string defaultValue);
 
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft (Auto-Property oder Partial-Full-Property).
         /// </summary>
         /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreateProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreateProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             IEnumerable<string> result;
-            var contractPropertyHelper = new ContractPropertyHelper(propertyInfo);
 
-
-            if (contractPropertyHelper.IsAutoProperty)
+            if (propertyHelper.IsAutoProperty)
             {
-                result = CreateAutoProperty(propertyInfo);
+                result = CreateAutoProperty(propertyHelper);
             }
             else
             {
-                result = CreatePartialProperty(propertyInfo);
+                result = CreatePartialProperty(propertyHelper);
             }
             return result;
         }
@@ -224,23 +224,22 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// </summary>
         /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreateAutoProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreateAutoProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>();
-            var contractPropertyHelper = new ContractPropertyHelper(propertyInfo);
-            var defaultValue = contractPropertyHelper.DefaultValue;
-            var fieldType = contractPropertyHelper.PropertyFieldType;
+            var defaultValue = propertyHelper.DefaultValue;
+            var fieldType = propertyHelper.PropertyFieldType;
 
             result.Add(string.Empty);
-            SetPropertyAttributes(propertyInfo.DeclaringType, propertyInfo, result);
-            result.Add($"public {fieldType} {propertyInfo.Name}");
+            CreatePropertyAttributes(propertyHelper, result);
+            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
             result.Add(string.IsNullOrEmpty(defaultValue)
                 ? "{ get; set; }"
                 : "{ get; set; }" + $" = {defaultValue};");
 
-            GetPropertyDefaultValue(propertyInfo.DeclaringType, propertyInfo, ref defaultValue);
+            GetPropertyDefaultValue(propertyHelper, ref defaultValue);
             return result;
         }
         /// <summary>
@@ -248,33 +247,32 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// </summary>
         /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>();
-            var contractPropertyHelper = new ContractPropertyHelper(propertyInfo);
-            var defaultValue = contractPropertyHelper.DefaultValue;
-            var fieldType = contractPropertyHelper.PropertyFieldType;
-            var fieldName = contractPropertyHelper.PropertyFieldName;
-            var paramName = contractPropertyHelper.PropertyFieldName;
+            var defaultValue = propertyHelper.DefaultValue;
+            var fieldType = propertyHelper.PropertyFieldType;
+            var fieldName = propertyHelper.PropertyFieldName;
+            var paramName = propertyHelper.PropertyFieldName;
 
             result.Add(string.Empty);
-            SetPropertyAttributes(propertyInfo.DeclaringType, propertyInfo, result);
-            result.Add($"public {fieldType} {propertyInfo.Name}");
+            CreatePropertyAttributes(propertyHelper, result);
+            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
             result.Add("{");
-            result.AddRange(CreatePartialGetProperty(propertyInfo));
-            result.AddRange(CreatePartialSetProperty(propertyInfo));
+            result.AddRange(CreatePartialGetProperty(propertyHelper));
+            result.AddRange(CreatePartialSetProperty(propertyHelper));
             result.Add("}");
 
-            GetPropertyDefaultValue(propertyInfo.DeclaringType, propertyInfo, ref defaultValue);
+            GetPropertyDefaultValue(propertyHelper, ref defaultValue);
             result.Add(string.IsNullOrEmpty(defaultValue)
                 ? $"private {fieldType} {fieldName};"
                 : $"private {fieldType} {fieldName} = {defaultValue};");
 
-            result.Add($"partial void On{propertyInfo.Name}Reading();");
-            result.Add($"partial void On{propertyInfo.Name}Changing(ref bool handled, {fieldType} value, ref {fieldType} {paramName});");
-            result.Add($"partial void On{propertyInfo.Name}Changed();");
+            result.Add($"partial void On{propertyHelper.Property.Name}Reading();");
+            result.Add($"partial void On{propertyHelper.Property.Name}Changing(ref bool handled, {fieldType} value, ref {fieldType} {paramName});");
+            result.Add($"partial void On{propertyHelper.Property.Name}Changed();");
             return result;
         }
         /// <summary>
@@ -283,17 +281,17 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
         /// <param name="generationType">The type of the generation that should be performed</param>
         /// <returns>Die Getter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialGetProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialGetProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>();
-            var fieldName = CreateFieldName(propertyInfo, "_");
+            var fieldName = CreateFieldName(propertyHelper.Property, "_");
 
-            SetPropertyGetAttributes(propertyInfo.DeclaringType, propertyInfo, result);
+            CreateGetPropertyAttributes(propertyHelper, result);
             result.Add("get");
             result.Add("{");
-            result.Add($"On{propertyInfo.Name}Reading();");
+            result.Add($"On{propertyHelper.PropertyName}Reading();");
             result.Add($"return {fieldName};");
             result.Add("}");
             return result;
@@ -303,15 +301,15 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// </summary>
         /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Setter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialSetProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialSetProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>();
-            var propName = propertyInfo.Name;
-            var fieldName = CreateFieldName(propertyInfo, "_");
+            var propName = propertyHelper.PropertyName;
+            var fieldName = CreateFieldName(propertyHelper.Property, "_");
 
-            SetPropertySetAttributes(propertyInfo.DeclaringType, propertyInfo, result);
+            CreateSetPropertyAttributes(propertyHelper, result);
 
             result.Add("set");
             result.Add("{");
@@ -331,33 +329,33 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialDelegateProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialDelegateProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>();
-            var propName = propertyInfo.Name;
-            var fieldType = GeneratorObject.GetPropertyType(propertyInfo);
+            var propName = propertyHelper.PropertyName;
+            var fieldType = propertyHelper.PropertyFieldType;
 
             result.Add($"public {fieldType} {propName}");
             result.Add("{");
-            if (propertyInfo.CanRead)
+            if (propertyHelper.CanRead)
             {
-                result.AddRange(CreatePartialGetDelegateProperty(propertyInfo));
+                result.AddRange(CreatePartialGetDelegateProperty(propertyHelper));
             }
-            if (propertyInfo.CanWrite)
+            if (propertyHelper.CanWrite)
             {
-                result.AddRange(CreatePartialSetDelegateProperty(propertyInfo));
+                result.AddRange(CreatePartialSetDelegateProperty(propertyHelper));
             }
             result.Add("}");
 
-            if (propertyInfo.CanRead)
+            if (propertyHelper.CanRead)
             {
                 result.Add($"partial void On{propName}Reading();");
             }
-            if (propertyInfo.CanWrite)
+            if (propertyHelper.CanWrite)
             {
                 result.Add($"partial void On{propName}Changed();");
             }
@@ -366,18 +364,18 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Getter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Getter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialGetDelegateProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialGetDelegateProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>
             {
                 "get",
                 "{",
-                $"On{propertyInfo.Name}Reading();",
-                $"return {StaticLiterals.DelegatePropertyName} != null ? {StaticLiterals.DelegatePropertyName}.{propertyInfo.Name} : default({propertyInfo.PropertyType});",
+                $"On{propertyHelper.PropertyName}Reading();",
+                $"return {StaticLiterals.DelegatePropertyName} != null ? {StaticLiterals.DelegatePropertyName}.{propertyHelper.PropertyName} : default({propertyHelper.PropertyType});",
                 "}"
             };
             return result;
@@ -385,18 +383,18 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Setter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
         /// <returns>Die Setter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialSetDelegateProperty(PropertyInfo propertyInfo)
+        public static IEnumerable<string> CreatePartialSetDelegateProperty(ContractPropertyHelper propertyHelper)
         {
-            propertyInfo.CheckArgument(nameof(propertyInfo));
+            propertyHelper.CheckArgument(nameof(propertyHelper));
 
             var result = new List<string>
             {
                 "set",
                 "{",
-                $"{StaticLiterals.DelegatePropertyName}.{propertyInfo.Name} = value;",
-                $"On{propertyInfo.Name}Changed();",
+                $"{StaticLiterals.DelegatePropertyName}.{propertyHelper.PropertyName} = value;",
+                $"On{propertyHelper.PropertyName}Changed();",
                 "}"
             };
             return result;
@@ -432,7 +430,7 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             foreach (var item in ContractHelper.GetAllProperties(type))
             {
-                var contractPropertyHelper = new ContractPropertyHelper(item);
+                var contractPropertyHelper = new ContractPropertyHelper(type, item);
 
                 if (contractPropertyHelper.HasImplementation == false)
                 {
@@ -531,7 +529,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var result = new List<string>();
             var counter = 0;
             var properties = ContractHelper.GetAllProperties(type);
-            var filteredProperties = ContractHelper.FilterPropertiesForGeneration(properties);
+            var filteredProperties = ContractHelper.FilterPropertiesForGeneration(type, properties);
 
             if (filteredProperties.Any())
             {
@@ -596,7 +594,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var counter = 0;
             var codeLine = string.Empty;
             var properties = ContractHelper.GetAllProperties(type);
-            var filteredProperties = ContractHelper.FilterPropertiesForGeneration(properties);
+            var filteredProperties = ContractHelper.FilterPropertiesForGeneration(type, properties);
 
             if (filteredProperties.Any())
             {

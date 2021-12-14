@@ -1,9 +1,8 @@
 //@BaseCode
 //MdStart
 
-using System;
+using CSharpCodeGenerator.Logic.Helpers;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace CSharpCodeGenerator.Logic.Generation
 {
@@ -23,23 +22,23 @@ namespace CSharpCodeGenerator.Logic.Generation
         public override string AppModelsNameSpace => $"{SolutionProperties.TransferProjectName}.{StaticLiterals.ModelsFolder}";
         public override string ModelsFolder => StaticLiterals.ModelsFolder;
 
-        protected override void CreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines)
+        protected override void CreateModelPropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines)
         {
-            base.CreateModelPropertyAttributes(type, propertyInfo, codeLines);
+            base.CreateModelPropertyAttributes(propertyHelper, codeLines);
             var handled = false;
 
-            BeforeCreateModelPropertyAttributes(type, propertyInfo, codeLines, ref handled);
+            BeforeCreateModelPropertyAttributes(propertyHelper, codeLines, ref handled);
             if (handled == false)
             {
-                if (propertyInfo.PropertyType.IsInterface)
+                if (propertyHelper.PropertyType.IsInterface)
                 {
                     codeLines.Add("[System.Text.Json.Serialization.JsonIgnore]");
                 }
             }
-            AfterCreateModelPropertyAttributes(type, propertyInfo, codeLines);
+            AfterCreateModelPropertyAttributes(propertyHelper, codeLines);
         }
-        partial void BeforeCreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines, ref bool handled);
-        partial void AfterCreateModelPropertyAttributes(Type type, PropertyInfo propertyInfo, List<string> codeLines);
+        partial void BeforeCreateModelPropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines, ref bool handled);
+        partial void AfterCreateModelPropertyAttributes(ContractPropertyHelper propertyHelper, List<string> codeLines);
     }
 }
 //MdEnd
