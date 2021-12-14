@@ -1,7 +1,9 @@
 ﻿//@BaseCode
 //MdStart
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Shadow
@@ -80,35 +82,80 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         #region Count
         internal override Task<int> ExecuteCountAsync()
         {
-            return SourceEntityController.CountAsync();
+            return SourceEntityController.ExecuteCountAsync();
         }
         internal override Task<int> ExecuteCountByAsync(string predicate)
         {
-            return SourceEntityController.CountByAsync(predicate);
+            return SourceEntityController.ExecuteCountByAsync(predicate);
         }
         #endregion Count
 
         #region Query
         internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
         {
-            var entity = await SourceEntityController.GetByIdAsync(id).ConfigureAwait(false);
-            var result = ConvertTo(entity);
+            var entity = await SourceEntityController.ExecuteGetEntityByIdAsync(id).ConfigureAwait(false);
 
-            return result;
+            return ConvertTo(entity);
         }
+
         internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
         {
-            var entities = await SourceEntityController.GetAllAsync().ConfigureAwait(false);
-            var result = ConvertTo(entities);
+            var entities = await SourceEntityController.ExecuteGetEntityAllAsync().ConfigureAwait(false);
 
-            return result;
+            return ConvertTo(entities);
         }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        {
+            var entities = await SourceEntityController.ExecuteGetEntityAllAsync(orderBy).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            var entities = await SourceEntityController.ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            var entities = await SourceEntityController.ExecuteGetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+
         internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
         {
-            var entities = await SourceEntityController.QueryAllAsync(predicate).ConfigureAwait(false);
-            var result = ConvertTo(entities);
+            var entities = await SourceEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
 
-            return result;
+            return ConvertTo(entities);
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        {
+            var entities = await SourceEntityController.ExecuteQueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            var entities = await SourceEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            var entities = await SourceEntityController.ExecuteQueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            return ConvertTo(entities);
+        }
+        internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
+        {
+            throw new NotImplementedException();
         }
         #endregion Query
 
@@ -116,7 +163,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         internal override async Task<E> ExecuteCreateEntityAsync()
         {
             var entity = await SourceEntityController.CreateEntityAsync().ConfigureAwait(false);
-            
+
             return ConvertTo(entity);
         }
         #endregion Create
@@ -124,10 +171,10 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         #region Insert
         internal override async Task<E> ExecuteInsertEntityAsync(E entity)
         {
-            var sourceEntity = await SourceEntityController.CreateAsync().ConfigureAwait(false);
+            var sourceEntity = await SourceEntityController.CreateEntityAsync().ConfigureAwait(false);
 
             sourceEntity.CopyFrom(entity);
-            sourceEntity = await SourceEntityController.InsertAsync(sourceEntity).ConfigureAwait(false);
+            sourceEntity = await SourceEntityController.InsertEntityAsync(sourceEntity).ConfigureAwait(false);
 
             return ConvertTo(sourceEntity);
         }
@@ -140,7 +187,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
 
             var sourceEntity = new TSourceEntity();
             sourceEntity.CopyFrom(entity);
-            var result = await SourceEntityController.UpdateAsync(sourceEntity).ConfigureAwait(false);
+            var result = await SourceEntityController.UpdateEntityAsync(sourceEntity).ConfigureAwait(false);
 
             return ConvertTo(result);
         }
@@ -149,7 +196,12 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         #region Delete
         internal override async Task<E> ExecuteDeleteEntityAsync(E entity)
         {
-            await SourceEntityController.DeleteAsync(entity.Id).ConfigureAwait(false);
+            entity.CheckArgument(nameof(entity));
+
+            var sourceEntity = new TSourceEntity();
+            sourceEntity.CopyFrom(entity);
+
+            await SourceEntityController.DeleteEntityAsync(sourceEntity).ConfigureAwait(false);
 
             return entity;
         }
@@ -161,7 +213,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
 
             if (disposing)
             {
-                SourceEntityController.Dispose();
+                SourceEntityController?.Dispose();
 
                 SourceEntityController = null;
             }

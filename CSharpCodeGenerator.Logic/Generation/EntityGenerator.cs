@@ -303,8 +303,10 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             type.CheckArgument(nameof(type));
 
-            var baseItfc = GetPersistenceBaseContract(type);
             var contractHelper = new ContractHelper(type);
+            var baseInterfaces = GetPersistenceBaseContract(type);
+            var typeProperties = ContractHelper.GetAllProperties(type);
+            var generateProperties = default(IEnumerable<PropertyInfo>);
             var result = new Models.GeneratedItem(Common.UnitType.Logic, itemType)
             {
                 FullName = CreateEntityFullNameFromInterface(type),
@@ -316,7 +318,17 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.AddRange(CreatePartialStaticConstrutor(contractHelper.EntityName));
             result.AddRange(CreatePartialConstrutor("public", contractHelper.EntityName));
-            foreach (var item in ContractHelper.GetEntityProperties(type).Where(p => CanCreateProperty(type, p.Name)))
+
+            if (itemType == Common.ItemType.ShadowEntity)
+            {
+                generateProperties = typeProperties;
+            }
+            else
+            {
+                generateProperties = ContractHelper.GetEntityProperties(type).Where(p => CanCreateProperty(type, p.Name));
+            }
+
+            foreach (var item in generateProperties)
             {
                 var propertyHelper = new ContractPropertyHelper(type, item);
                 var codeLines = new List<string>(CreateProperty(propertyHelper));
@@ -327,7 +339,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreateCopyProperties(type));
             result.AddRange(CreateEquals(type));
             result.AddRange(CreateGetHashCode(type));
-            result.AddRange(CreateFactoryMethods(type, baseItfc != null));
+            result.AddRange(CreateFactoryMethods(type, baseInterfaces != null));
             result.Add("}");
             result.EnvelopeWithANamespace(CreateNameSpace(type), "using System;");
             result.FormatCSharpCode();

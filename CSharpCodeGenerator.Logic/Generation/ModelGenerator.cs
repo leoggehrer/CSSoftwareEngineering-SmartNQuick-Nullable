@@ -255,9 +255,10 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             type.CheckArgument(nameof(type));
 
+            var interfaces = GetInterfaces(type);
             var modelName = CreateModelNameFromInterface(type);
             var typeProperties = ContractHelper.GetAllProperties(type);
-            var interfaces = GetInterfaces(type);
+            var generateProperties = default(IEnumerable<PropertyInfo>);
             var result = new Models.GeneratedItem(unitType, itemType)
             {
                 FullName = CreateModelFullNameFromInterface(type),
@@ -269,7 +270,16 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.AddRange(CreatePartialStaticConstrutor(modelName));
             result.AddRange(CreatePartialConstrutor("public", modelName));
-            foreach (var item in ContractHelper.FilterPropertiesForGeneration(type, typeProperties))
+
+            if (itemType == Common.ItemType.ShadowModel)
+            {
+                generateProperties = typeProperties;
+            }
+            else
+            {
+                generateProperties = ContractHelper.FilterPropertiesForGeneration(type, typeProperties);
+            }
+            foreach (var item in generateProperties)
             {
                 var propertyHelper = new ContractPropertyHelper(type, item);
 

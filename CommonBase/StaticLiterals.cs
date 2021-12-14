@@ -17,6 +17,7 @@ namespace CommonBase
 			".WebApi",
 			".Adapters",
 			".AspMvc",
+			".Logic.UnitTest",
 			".ConApp"
 		};
 		public static string[] GeneratorProjects { get; } = new string[]
