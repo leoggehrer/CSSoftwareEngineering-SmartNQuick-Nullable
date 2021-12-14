@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using SmartNQuick.Logic.Controllers.Persistence.Account;
 using SmartNQuick.Logic.Entities.Business.Account;
 using SmartNQuick.Logic.Entities.Persistence.Account;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

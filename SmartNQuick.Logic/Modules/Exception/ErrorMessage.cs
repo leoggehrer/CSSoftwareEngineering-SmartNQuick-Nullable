@@ -1,12 +1,11 @@
 ﻿//@BaseCode
 //MdStart
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace SmartNQuick.Logic.Modules.Exception
 {
-	internal static partial class ErrorMessage
+    internal static partial class ErrorMessage
 	{
 		static ErrorMessage()
 		{

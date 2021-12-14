@@ -1,10 +1,7 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
-using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -12,6 +9,14 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public abstract partial class ViewModel : IViewModel
     {
+        static ViewModel()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
         public ViewBagWrapper ViewBagInfo { get; init; }
         public Type ModelType { get; }
         public Type DisplayType { get; }
@@ -134,26 +139,46 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             model.CheckArgument(nameof(model));
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            return propertyInfo.GetValue(model);
+            var handled = false;
+            var result = default(object);
+
+            BeforeGetValue(model, propertyInfo, ref result, ref handled);
+            if (handled == false)
+            {
+                result = propertyInfo.GetValue(model);
+            }
+            AfterGetValue(model, result);
+            return result;
         }
+        partial void BeforeGetValue(Object model, PropertyInfo propertyInfo, ref object value, ref bool handled);
+        partial void AfterGetValue(Object model, Object value);
         public virtual string GetDisplayValue(Object model, PropertyInfo propertyInfo)
         {
             model.CheckArgument(nameof(model));
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
+            var handled = false;
             var result = string.Empty;
-            var value = propertyInfo.GetValue(model);
 
-            if (value is DateTime dt)
+            BeforeGetDisplayValue(model, propertyInfo, ref result, ref handled);
+            if (handled == false)
             {
-                result = dt.ToString("yyyy-MM-ddTHH:mm");
+                var value = propertyInfo.GetValue(model);
+
+                if (value is DateTime dt)
+                {
+                    result = dt.ToString("yyyy-MM-ddTHH:mm");
+                }
+                else if (value != null)
+                {
+                    result = value.ToString();
+                }
             }
-            else if (value != null)
-            {
-                result = value.ToString();
-            }
+            AfterGetDisplayValue(model, result);
             return result;
         }
+        partial void BeforeGetDisplayValue(Object model, PropertyInfo propertyInfo, ref string value, ref bool handled);
+        partial void AfterGetDisplayValue(Object model, string value);
 
     }
 }

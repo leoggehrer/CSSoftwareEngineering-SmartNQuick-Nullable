@@ -10,7 +10,6 @@ using SmartNQuick.Logic.Entities.Persistence.Account;
 using SmartNQuick.Logic.Modules.Exception;
 using SmartNQuick.Logic.Modules.Security;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;

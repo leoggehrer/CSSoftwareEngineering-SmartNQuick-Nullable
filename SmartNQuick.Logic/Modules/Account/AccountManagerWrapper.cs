@@ -3,7 +3,6 @@
 #if ACCOUNT_ON
 using SmartNQuick.Contracts.Client;
 using SmartNQuick.Contracts.Persistence.Account;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Modules.Account

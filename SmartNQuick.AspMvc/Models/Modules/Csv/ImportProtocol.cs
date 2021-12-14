@@ -1,8 +1,6 @@
 //@BaseCode
 //MdStart
 
-using System.Collections.Generic;
-
 namespace SmartNQuick.AspMvc.Models.Modules.Csv
 {
     public class ImportProtocol : ModelObject

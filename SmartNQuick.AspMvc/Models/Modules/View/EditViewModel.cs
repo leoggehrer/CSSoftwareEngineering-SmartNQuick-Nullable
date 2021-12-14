@@ -1,15 +1,20 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
     public partial class EditViewModel : ViewModel
     {
+        static EditViewModel()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
         public IdentityModel Model { get; init; }
         public IdentityModel DisplayModel => Model;
 

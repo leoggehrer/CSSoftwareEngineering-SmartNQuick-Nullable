@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartNQuick.AspMvc.Models;
@@ -8,7 +7,6 @@ using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Models.Modules.View;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -742,9 +740,11 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
                         var manyModel = createManyMethod?.Invoke(model, Array.Empty<object>()) as IdentityModel;
+                        var addManyMethod = model.GetType().GetMethod("AddManyModel");
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
+                        addManyMethod?.Invoke(model, new object[] { masterDetailModel.Detail });
                     }
                 }
                 catch (Exception ex)
@@ -784,10 +784,12 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var getManyMethod = model.GetType().GetMethod("GetManyModelById");
                         var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
+                        var addManyMethod = model.GetType().GetMethod("AddManyModel");
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
                         manyModel.Id = 0;
+                        addManyMethod?.Invoke(model, new object[] { masterDetailModel.Detail });
                     }
                 }
                 catch (Exception ex)

@@ -2,7 +2,6 @@
 //MdStart
 #if ACCOUNT_ON
 
-using System.Collections.Generic;
 
 namespace SmartNQuick.AspMvc.Models.Persistence.Account
 {

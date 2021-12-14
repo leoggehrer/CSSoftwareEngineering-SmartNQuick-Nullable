@@ -1,15 +1,21 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
 {
-    public class IndexDisplayViewModel : ViewModel, IDisplayViewModel
+    public partial class IndexDisplayViewModel : ViewModel, IDisplayViewModel
     {
+        static IndexDisplayViewModel()
+        {
+            ClassConstructing();
+            ClassConstructed();
+        }
+        static partial void ClassConstructing();
+        static partial void ClassConstructed();
+
         private ModelObject model;
         private ModelObject displayModel;
         private IEnumerable<PropertyInfo> displayProperties;
@@ -36,12 +42,16 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         public IndexDisplayViewModel(ViewBagWrapper viewBagInfo, Type modelType, Type displayType, ModelObject model, IEnumerable<PropertyInfo> displayProperties)
             : base(viewBagInfo, modelType, displayType)
         {
+            Constructing();
             model.CheckArgument(nameof(model));
             displayProperties.CheckArgument(nameof(displayProperties));
 
             Model = model;
             DisplayProperties = displayProperties;
+            Constructed();
         }
+        partial void Constructing();
+        partial void Constructed();
         public virtual IEnumerable<PropertyInfo> GetDisplayProperties()
         {
             return DisplayProperties;
@@ -49,12 +59,34 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
         public virtual object GetValue(PropertyInfo propertyInfo)
         {
-            return GetValue(DisplayModel, propertyInfo);
+            var handled = false;
+            var result = default(object);
+
+            BeforeGetValue(propertyInfo, ref result, ref handled);
+            if (handled == false)
+            {
+                result = GetValue(DisplayModel, propertyInfo);
+            }
+            AfterGetValue(result);
+            return result;
         }
+        partial void BeforeGetValue(PropertyInfo propertyInfo, ref object value, ref bool handled);
+        partial void AfterGetValue(Object value);
         public virtual string GetDisplayValue(PropertyInfo propertyInfo)
         {
-            return GetDisplayValue(DisplayModel, propertyInfo);
+            var handled = false;
+            var result = string.Empty;
+
+            BeforeGetDisplayValue(propertyInfo, ref result, ref handled);
+            if (handled == false)
+            {
+                result = GetDisplayValue(DisplayModel, propertyInfo);
+            }
+            AfterGetDisplayValue(result);
+            return result;
         }
+        partial void BeforeGetDisplayValue(PropertyInfo propertyInfo, ref string value, ref bool handled);
+        partial void AfterGetDisplayValue(string value);
     }
 }
 //MdEnd

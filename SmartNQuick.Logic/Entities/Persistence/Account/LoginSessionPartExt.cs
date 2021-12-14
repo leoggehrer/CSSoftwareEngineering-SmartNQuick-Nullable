@@ -4,7 +4,6 @@
 using SmartNQuick.Contracts.Persistence.Account;
 using SmartNQuick.Logic.Modules.Security;
 using System;
-using System.Collections.Generic;
 
 namespace SmartNQuick.Logic.Entities.Persistence.Account
 {

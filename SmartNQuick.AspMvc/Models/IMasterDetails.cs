@@ -1,7 +1,6 @@
 ﻿//@BaseCode
 //MdStart
 using System;
-using System.Collections.Generic;
 
 namespace SmartNQuick.AspMvc.Models
 {

@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using System.Collections.Generic;
 using System.Text;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View

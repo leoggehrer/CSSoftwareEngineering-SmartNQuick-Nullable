@@ -1,11 +1,9 @@
 ﻿//@BaseCode
 //MdStart
 
-using CommonBase.Extensions;
 using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace SmartNQuick.AspMvc.Modules.View

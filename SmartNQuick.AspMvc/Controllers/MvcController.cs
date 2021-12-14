@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-using CommonBase.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,12 +7,10 @@ using SmartNQuick.AspMvc.Models.Modules.Csv;
 using SmartNQuick.AspMvc.Modules.Language;
 using SmartNQuick.AspMvc.Modules.Session;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
 {

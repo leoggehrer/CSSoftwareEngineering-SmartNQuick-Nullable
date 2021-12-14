@@ -1,14 +1,11 @@
 ﻿//@BaseCode
 //MdStart
 #if ACCOUNT_ON
-using CommonBase.Extensions;
-using Microsoft.AspNetCore.Mvc.Filters;
 using SmartNQuick.AspMvc.Models;
 using SmartNQuick.AspMvc.Models.Business.Account;
 using SmartNQuick.AspMvc.Models.Modules.Common;
 using SmartNQuick.AspMvc.Models.Persistence.Account;
 using SmartNQuick.AspMvc.Modules.View;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
