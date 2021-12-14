@@ -273,7 +273,7 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             if (itemType == Common.ItemType.ShadowModel)
             {
-                generateProperties = typeProperties;
+                generateProperties = ContractHelper.FilterShadowPropertiesForGeneration(type, typeProperties); 
             }
             else
             {

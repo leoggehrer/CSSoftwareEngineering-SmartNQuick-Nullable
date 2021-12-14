@@ -185,10 +185,14 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         {
             entity.CheckArgument(nameof(entity));
 
-            var sourceEntity = new TSourceEntity();
-            sourceEntity.CopyFrom(entity);
-            var result = await SourceEntityController.UpdateEntityAsync(sourceEntity).ConfigureAwait(false);
+            var result = new TSourceEntity();
+            var sourceEntity = await SourceEntityController.ExecuteGetEntityByIdAsync(entity.Id).ConfigureAwait(false);
 
+            if (sourceEntity != null)
+            {
+                sourceEntity.CopyFrom(entity);
+                result = await SourceEntityController.UpdateEntityAsync(sourceEntity).ConfigureAwait(false);
+            }
             return ConvertTo(result);
         }
         #endregion Update
