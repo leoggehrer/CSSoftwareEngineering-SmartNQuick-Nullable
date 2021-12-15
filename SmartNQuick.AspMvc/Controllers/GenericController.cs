@@ -61,14 +61,42 @@ namespace SmartNQuick.AspMvc.Controllers
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 
         #region Before view
-        protected virtual TModel BeforeView(TModel model, ActionMode action) => model;
-        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action) => models;
+        protected virtual void BeforeView()
+        {
+        }
+        protected virtual Task BeforeViewAsync() => Task.FromResult(0);
+        protected virtual TModel BeforeView(TModel model, ActionMode action)
+        {
+            BeforeView();
+            return model;
+        }
+        protected virtual IEnumerable<TModel> BeforeView(IEnumerable<TModel> models, ActionMode action)
+        {
+            BeforeView();
+            return models;
+        }
 
-        protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action) => Task.FromResult(model);
-        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action) => Task.FromResult(models);
+        protected virtual Task<TModel> BeforeViewAsync(TModel model, ActionMode action)
+        {
+            BeforeViewAsync();
+            return Task.FromResult(model);
+        }
+        protected virtual Task<IEnumerable<TModel>> BeforeViewAsync(IEnumerable<TModel> models, ActionMode action)
+        {
+            BeforeViewAsync();
+            return Task.FromResult(models);
+        }
 
-        protected virtual MasterDetailModel BeforeViewMasterDetail(MasterDetailModel model, ActionMode action) => model;
-        protected virtual Task<MasterDetailModel> BeforeViewMasterDetailAsync(MasterDetailModel model, ActionMode action) => Task.FromResult(model);
+        protected virtual MasterDetailModel BeforeViewMasterDetail(MasterDetailModel model, ActionMode action)
+        {
+            BeforeView();
+            return model;
+        }
+        protected virtual Task<MasterDetailModel> BeforeViewMasterDetailAsync(MasterDetailModel model, ActionMode action)
+        {
+            BeforeView();
+            return Task.FromResult(model);
+        }
         #endregion Before view
 
         protected virtual TModel ToModel(TContract entity)
