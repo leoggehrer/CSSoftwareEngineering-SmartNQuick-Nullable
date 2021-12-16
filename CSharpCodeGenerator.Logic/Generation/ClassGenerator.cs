@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CSharpCodeGenerator.Logic.Generation
 {
-    partial class ClassGenerator : GeneratorObject
+    internal partial class ClassGenerator : GeneratorObject
     {
         protected ClassGenerator(SolutionProperties solutionProperties)
             : base(solutionProperties)

@@ -5,7 +5,7 @@ using CommonStaticLiterals = CommonBase.StaticLiterals;
 
 namespace CSharpCodeGenerator.ConApp
 {
-	public static class StaticLiterals
+	public static partial class StaticLiterals
 	{
         public static string GeneratedCodeFileName => "_GeneratedCode.cs";
         public static string SolutionFileExtension => ".sln";

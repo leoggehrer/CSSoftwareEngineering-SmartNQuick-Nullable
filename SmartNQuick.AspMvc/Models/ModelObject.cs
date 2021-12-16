@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SmartNQuick.AspMvc.Models
 {
-    public class ModelObject
+    public partial class ModelObject
     {
         private CommandMode commandMode = CommandMode.All;
 

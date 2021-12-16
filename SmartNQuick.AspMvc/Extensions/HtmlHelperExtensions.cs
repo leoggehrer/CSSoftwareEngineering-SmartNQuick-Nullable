@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SmartNQuick.AspMvc.Extensions
 {
-    public static class HtmlHelperExtensions
+    public static partial class HtmlHelperExtensions
     {
         public static HtmlString ToSelect(this IHtmlHelper htmlHelper, string css, string id, string name, IEnumerable<KeyValuePair<Enum, string>> options, Enum selVal)
         {

@@ -9,7 +9,7 @@ namespace CommonBase.Attributes
     /// this attribute is used to redefine inheritance properties.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = true)]
-    public class ContractMemberInfoAttribute : PropertyInfoAttribute
+    public partial class ContractMemberInfoAttribute : PropertyInfoAttribute
     {
         public string PropertyName { get; set; }
     }

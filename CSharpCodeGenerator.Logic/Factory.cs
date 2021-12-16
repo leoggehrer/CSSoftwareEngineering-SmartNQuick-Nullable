@@ -4,7 +4,7 @@ using CSharpCodeGenerator.Logic.Generation;
 
 namespace CSharpCodeGenerator.Logic
 {
-    public class Factory
+    public partial class Factory
     {
         public static Contracts.ISolutionProperties GetSolutionProperties(string solutionName, string contractsFilePath)
         {

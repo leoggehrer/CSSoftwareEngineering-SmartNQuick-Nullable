@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CommonBase.Extensions
 {
-    public static class ConcurrentBagExtensions
+    public static partial class ConcurrentBagExtensions
     {
         public static void AddSafe<T>(this ConcurrentBag<T> source, T otherElement)
         {

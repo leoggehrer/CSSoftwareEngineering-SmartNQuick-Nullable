@@ -4,7 +4,7 @@ using System;
 
 namespace CommonBase.Extensions
 {
-	public static class ExceptionExtensions
+	public static partial class ExceptionExtensions
 	{
         public static string GetError(this Exception source)
         {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CSharpCodeGenerator.Logic.Extensions
 {
-    internal static class TypeExtensions
+    internal static partial class TypeExtensions
     {
         private const char GenericSpecialChar = '`';
         private const string GenericSeparator = ", ";

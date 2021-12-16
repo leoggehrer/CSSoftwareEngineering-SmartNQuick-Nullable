@@ -3,7 +3,7 @@
 
 namespace SmartNQuick.AspMvc.Models
 {
-    public class MasterDetailModel : ModelObject
+    public partial class MasterDetailModel : ModelObject
 	{
         public IdentityModel Master { get; set; }
         public IdentityModel Detail { get; set; }

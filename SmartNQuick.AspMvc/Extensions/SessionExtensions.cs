@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace SmartNQuick.AspMvc.Extensions
 {
-    public static class SessionExtensions
+    public static partial class SessionExtensions
     {
         public static void Set<T>(this ISession session, string key, T value)
         {

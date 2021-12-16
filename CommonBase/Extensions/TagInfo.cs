@@ -3,7 +3,7 @@
 
 namespace CommonBase.Extensions
 {
-    public class TagInfo
+    public partial class TagInfo
     {
         internal class TagHeader
         {

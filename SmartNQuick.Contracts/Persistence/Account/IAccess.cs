@@ -5,7 +5,7 @@
 namespace SmartNQuick.Contracts.Persistence.Account
 {
     [ContractInfo]
-    public interface IAccess : IIdentifiable, ICopyable<IAccess>
+    public partial interface IAccess : IIdentifiable, ICopyable<IAccess>
     {
         int IdentityId { get; set; }
         [ContractPropertyInfo(Required = true, HasIndex = true, IsUnique = true, MaxLength = 512)]

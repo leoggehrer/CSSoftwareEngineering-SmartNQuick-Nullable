@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.Logic.Git
 {
-    public class GitIgnoreManager
+    public partial class GitIgnoreManager
     {
         private static string[] Paths { get; set; }
         private static string[] SearchPatterns => StaticLiterals.SourceFileExtensions.Split('|');

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CSharpCodeGenerator.Logic.Helpers
 {
-    public class RazorBuilder
+    public partial class RazorBuilder
     {
         private enum SourceType
         {

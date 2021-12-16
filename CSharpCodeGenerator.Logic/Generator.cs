@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CSharpCodeGenerator.Logic
 {
-    public static class Generator
+    public static partial class Generator
     {
         public static IEnumerable<IGeneratedItem> Generate(string solutionName, string contractsFilePath, Common.UnitType appUnitTypes)
         {

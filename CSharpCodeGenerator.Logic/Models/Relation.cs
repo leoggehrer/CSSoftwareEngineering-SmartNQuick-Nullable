@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace CSharpCodeGenerator.Logic.Models
 {
-    internal class Relation
+    internal partial class Relation
     {
         public string Name => Reference.Name;
         public Type From { get; private set; }

@@ -31,20 +31,6 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.HasSorter != null ? (bool)ViewBag.HasSorter : true;
             set => ViewBag.HasSorter = value;
         }
-        public ModelCategory ModelCategory
-        {
-            get
-            {
-                var result = ModelCategory.Single;
-
-                if (ViewBag.ModelCategory != null)
-                {
-                    result = ViewBag.ModelCategory;
-                }
-                return result;
-            }
-            set => ViewBag.ModelCategory = value;
-        }
         public EditMode EditMode
         {
             get
@@ -188,6 +174,23 @@ namespace SmartNQuick.AspMvc.Modules.View
             }
         }
 
+        public void AddIgnoreHidden(string name)
+        {
+            if (IgnoreNames.Contains(name) == false)
+                IgnoreNames.Add(name);
+
+            if (HiddenNames.Contains(name) == false)
+                HiddenNames.Add(name);
+        }
+        public void AddIgnoreFilterOrder(string name)
+        {
+            if (IgnoreFilters.Contains(name) == false)
+                IgnoreFilters.Add(name);
+
+            if (IgnoreOrders.Contains(name) == false)
+                IgnoreOrders.Add(name);
+        }
+
         public string GetMapping(string key)
         {
             if (MappingNames.TryGetValue(key, out var result) == false)
@@ -203,15 +206,6 @@ namespace SmartNQuick.AspMvc.Modules.View
                MappingNames.Add(key, value);
             }
         }
-        public void AddIgnoreHidden(string name)
-        {
-            if (IgnoreNames.Contains(name) == false)
-                IgnoreNames.Add(name);
-
-            if (HiddenNames.Contains(name) == false)
-                HiddenNames.Add(name);
-        }
-
         public bool GetMappingProperty(string key, out PropertyInfo propertyInfo)
         {
             return MappingProperties.TryGetValue(key, out propertyInfo);

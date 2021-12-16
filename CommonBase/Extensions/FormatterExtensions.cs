@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace CommonBase.Extensions
 {
-    public static class FormatterExtensions
+    public static partial class FormatterExtensions
     {
         public static IEnumerable<string> FormatCSharpCode(this IEnumerable<string> lines, bool removeBlockComments = true, bool removeLineComments = true)
         {

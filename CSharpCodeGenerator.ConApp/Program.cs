@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CSharpCodeGenerator.ConApp
 {
-    class Program
+    internal partial class Program
 	{
 		static void Main(string[] args)
 		{

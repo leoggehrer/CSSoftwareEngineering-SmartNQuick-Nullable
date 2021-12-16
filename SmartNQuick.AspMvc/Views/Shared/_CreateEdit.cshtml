@@ -19,7 +19,6 @@
         var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagInfo.ModelCategory = ModelCategory.OneToAnother;
         if (oneModel != null)
         {
             viewBagInfo.ItemPrefix = "OneModel";
@@ -41,7 +40,6 @@
         var manyProperty = Model.DisplayType.GetProperty("ManyModels");
         var manyModels = manyProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagInfo.ModelCategory = ModelCategory.MasterDetail;
         viewBagInfo.ParentModel = oneModel;
         viewBagInfo.ItemPrefix = "OneModel";
         oneModel.ViewBagInfo = viewBagInfo;
@@ -57,7 +55,6 @@
         var anotherProperty = Model.DisplayType.GetProperty("AnotherModel");
         var anotherModel = anotherProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagInfo.ModelCategory = ModelCategory.Composite;
         if (connectorModel != null)
         {
             viewBagInfo.ItemPrefix = "ConnectorModel";
@@ -83,7 +80,6 @@
     }
     else
     {
-        viewBagInfo.ModelCategory = ModelCategory.Single;
         Model.DisplayModel.ViewBagInfo = viewBagInfo;
         @await Html.PartialAsync("_EditModel", Model.DisplayModel)
         <hr />

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CSharpCodeGenerator.Logic.Models
 {
-    internal class GeneratedItem : Contracts.IGeneratedItem
+    internal partial class GeneratedItem : Contracts.IGeneratedItem
     {
         public GeneratedItem()
         {

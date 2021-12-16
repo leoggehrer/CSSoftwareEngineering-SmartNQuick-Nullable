@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CommonBase.ThreadSafe
 {
-    public class ThreadSafeList<T> : IList<T>
+    public partial class ThreadSafeList<T> : IList<T>
     {
         protected static object _lock = new object();
         protected List<T> internalList = new List<T>();
