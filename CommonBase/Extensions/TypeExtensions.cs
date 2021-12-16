@@ -126,6 +126,14 @@ namespace CommonBase.Extensions
             return result;
         }
 
+        public static PropertyInfo GetInterfaceProperty(this Type type, string name)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.GetAllInterfacePropertyInfos()
+                       .SingleOrDefault(p => p.Name.Equals(name));
+        }
+
         public static Dictionary<string, PropertyItem> GetAllTypeProperties(this Type typeObject)
         {
             typeObject.CheckArgument(nameof(typeObject));

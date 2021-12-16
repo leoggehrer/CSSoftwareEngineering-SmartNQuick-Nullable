@@ -76,7 +76,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         }
         protected virtual PropertyInfo GetForeignKeyToOne()
         {
-            return typeof(TMany).GetProperty($"{typeof(TOneEntity).Name}Id");
+            return typeof(TMany).GetInterfaceProperty($"{typeof(TOneEntity).Name}Id");
         }
         protected virtual async Task LoadDetailsAsync(E entity, int masterId)
         {
