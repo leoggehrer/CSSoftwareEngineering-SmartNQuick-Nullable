@@ -859,7 +859,7 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var createManyMethod = model.GetType().GetMethod("CreateManyModel");
                         var manyModel = createManyMethod?.Invoke(model, Array.Empty<object>()) as IdentityModel;
-                        var addManyMethod = model.GetType().GetMethod("AddManyItem");
+                        var addManyMethod = model.GetType().GetMethod("AddManyModel");
 
                         masterDetailModel.Master = oneModel;
                         masterDetailModel.Detail = manyModel;
@@ -957,13 +957,13 @@ namespace SmartNQuick.AspMvc.Controllers
                         var oneModel = oneProperty?.GetValue(model) as IdentityModel;
                         var getManyMethod = model.GetType().GetMethod("GetManyModelById");
 
-                        if (GetObjectId(nameof(Models.MasterDetailModel.Detail), formCollection, out int detailId))
+                        if (GetObjectId(nameof(MasterDetailModel.Detail), formCollection, out int detailId))
                         {
                             var manyModel = getManyMethod?.Invoke(model, new object[] { detailId }) as IdentityModel;
 
                             masterDetailModel.Master = oneModel;
                             masterDetailModel.Detail = manyModel;
-                            SetModelValues(masterDetailModel.Detail, nameof(Models.MasterDetailModel.Detail), formCollection);
+                            SetModelValues(masterDetailModel.Detail, nameof(MasterDetailModel.Detail), formCollection);
                         }
 
                         using var ctrl = CreateController();
@@ -986,7 +986,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 masterDetailModel = BeforeViewMasterDetail(masterDetailModel, ActionMode.EditDetail);
                 masterDetailModel = await BeforeViewMasterDetailAsync(masterDetailModel, ActionMode.EditDetail).ConfigureAwait(false);
             }
-            return HasError ? ReturnCreateDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
+            return HasError ? ReturnEditDetailView(masterDetailModel) : RedirectToAction("Details", new { id = model.Id });
         }
         partial void BeforeUpdateDetail(ref TModel model, ref bool handled);
         partial void AfterUpdateDetail(TModel model);
