@@ -17,7 +17,7 @@
                 viewBagInfo.Handled = false;
                 viewBagInfo.DisplayProperty = property;
 
-                @await Html.PartialAsync("_CardItem", Model.DisplayModel)
+                @await Html.PartialAsync("_CardItem", Model)
                 @if (viewBagInfo.Handled == false)
                 {
                     <strong>@viewBagInfo.TranslateFor(Model.GetLabel(property))</strong>

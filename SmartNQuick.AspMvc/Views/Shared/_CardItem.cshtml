@@ -1,5 +1,25 @@
 @*@BaseCode*@
 @{
-    @model SmartNQuick.AspMvc.Models.IdentityModel
+    @using SmartNQuick.AspMvc.Models.Modules.Common
+    @using SmartNQuick.AspMvc.Models.Modules.View
+    @model IDisplayViewModel
 
+    var viewBagInfo = Model.ViewBagInfo;
+    var property = viewBagInfo.DisplayProperty;
+
+    <strong>@viewBagInfo.TranslateFor(Model.GetLabel(property))</strong>
+
+    @if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
+    {
+        var value = Model.GetValue(property);
+        var boolVal = value != null ? Convert.ToBoolean(value) : false;
+
+        <p>@Html.CheckBox(Model.GetName(property), boolVal, new { disabled="disabled" })</p>
+    }
+    else
+    {
+        <p>@Model.GetDisplayValue(property)</p>
+    }
+
+    viewBagInfo.Handled = true;
 }

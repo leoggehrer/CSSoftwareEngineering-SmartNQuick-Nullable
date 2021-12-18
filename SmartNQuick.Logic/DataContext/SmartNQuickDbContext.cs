@@ -37,6 +37,8 @@ namespace SmartNQuick.Logic.DataContext
 
 		public static string ConnectionString { get; protected set; }
 
+		public EntityState GetEntityState<T>(T entity) => Entry(entity).State;
+
 		public DbSet<E> Set<C, E>()
 			where C : IIdentifiable
 			where E : IdentityEntity, C
