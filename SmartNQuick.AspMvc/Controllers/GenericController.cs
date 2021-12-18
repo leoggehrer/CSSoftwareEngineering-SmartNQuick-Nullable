@@ -1162,6 +1162,27 @@ namespace SmartNQuick.AspMvc.Controllers
                             pi.SetValue(model, guidVal);
                         }
                     }
+                    else if (pi.PropertyType == typeof(float) || pi.PropertyType == typeof(float?))
+                    {
+                        if (string.IsNullOrEmpty(formValue) == false && float.TryParse(formValue, out float parseVal))
+                        {
+                            pi.SetValue(model, parseVal);
+                        }
+                    }
+                    else if (pi.PropertyType == typeof(double) || pi.PropertyType == typeof(double?))
+                    {
+                        if (string.IsNullOrEmpty(formValue) == false && double.TryParse(formValue, out double parseVal))
+                        {
+                            pi.SetValue(model, parseVal);
+                        }
+                    }
+                    else if (pi.PropertyType == typeof(decimal) || pi.PropertyType == typeof(decimal?))
+                    {
+                        if (string.IsNullOrEmpty(formValue) == false && decimal.TryParse(formValue, out decimal parseVal))
+                        {
+                            pi.SetValue(model, parseVal);
+                        }
+                    }
                     else
                     {
                         object value = Convert.ChangeType(formValue, pi.PropertyType);
