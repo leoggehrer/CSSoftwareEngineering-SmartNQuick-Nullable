@@ -2,7 +2,7 @@
 @{
     @using SmartNQuick.AspMvc.Models.Modules.View
     @using SmartNQuick.AspMvc.Modules.View
-    @model DisplayViewModel
+    @model IDisplayViewModel
 
     var viewBagInfo = Model.ViewBagInfo;
     var property = viewBagInfo.DisplayProperty;
@@ -12,7 +12,7 @@
         var value = Model.GetValue(property);
         var boolVal = value != null ? Convert.ToBoolean(value) : false;
 
-        @Html.CheckBox(Model.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled" })
+        @Html.CheckBox(Model.GetName(property), boolVal, new { @class="form-check-input", disabled="disabled", style="margin-left: 0.3em;" })
     }
     else
     {

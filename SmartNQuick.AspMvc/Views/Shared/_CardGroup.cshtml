@@ -27,7 +27,7 @@
                         var value = Model.GetValue(property);
                         var boolVal = value != null ? Convert.ToBoolean(value) : false;
 
-                        <p>@Html.CheckBox(Model.GetName(property), boolVal, new { disabled="disabled" })</p>
+                        <p>@Html.CheckBox(Model.GetName(property), boolVal, new { disabled="disabled", style="margin-left: 0.3em;" })</p>
                     }
                     else
                     {
