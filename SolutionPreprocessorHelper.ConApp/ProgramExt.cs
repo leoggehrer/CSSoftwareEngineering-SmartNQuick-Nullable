@@ -6,7 +6,7 @@
         {
             Directives = new string[]
             {
-                "ACCOUNT_ON",
+                "ACCOUNT_OFF",
                 "LOGGING_OFF",
                 "REVISION_OFF"
             };

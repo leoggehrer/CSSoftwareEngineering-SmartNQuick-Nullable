@@ -1,5 +1,5 @@
 @*@BaseCode*@
-@*#if ACCOUNT_ON*@
+@*#if ACCOUNT_ON*@@*
 @{
     @using SmartNQuick.AspMvc.Models.Persistence.Account
     @using SmartNQuick.AspMvc.Modules.View
@@ -15,4 +15,4 @@
         <p><span style="color: blue;">@($"{viewBagInfo.TranslateFor("Has access to")}: ")</span><strong>@($"{displayViewModel.GetDisplayValue(property)}")</strong></p>
     }
 }
-@*#endif*@
+*@@*#endif*@

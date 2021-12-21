@@ -1,3 +1,5 @@
+//@Ignore
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartNQuick.Contracts.Persistence.UnitTest;
 using System;

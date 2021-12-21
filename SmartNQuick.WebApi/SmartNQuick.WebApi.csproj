@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>ACCOUNT_ON;LOGGING_OFF;REVISION_OFF</DefineConstants>
+		<DefineConstants>ACCOUNT_OFF;LOGGING_OFF;REVISION_OFF</DefineConstants>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 		<UserSecretsId>2b969d77-7695-4038-aa87-ada9ff58eaa1</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
