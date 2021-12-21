@@ -186,6 +186,34 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             SessionInfo.SetSorterValues(ControllerName, sorterValues);
         }
+
+        protected virtual async Task<IEnumerable<TContract>> QueryByFilterAndSortAsync()
+        {
+            IEnumerable<TContract> result;
+            var filterValues = SessionInfo.GetFilterValues(ControllerName);
+            var predicate = filterValues?.CreatePredicate();
+            var sorterValues = SessionInfo.GetSorterValues(ControllerName);
+            var orderBy = sorterValues?.CreateOrderBy();
+            using var ctrl = CreateController();
+
+            if (predicate.HasContent() && orderBy.HasContent())
+            {
+                result = await ctrl.QueryAllAsync(predicate, orderBy).ConfigureAwait(false);
+            }
+            else if (predicate.HasContent())
+            {
+                result = await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
+            }
+            else if (orderBy.HasContent())
+            {
+                result = await ctrl.GetAllAsync(orderBy).ConfigureAwait(false);
+            }
+            else
+            {
+                result = await ctrl.GetAllAsync().ConfigureAwait(false);
+            }
+            return result;
+        }
         protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize)
         {
             IEnumerable<TContract> result;

@@ -347,6 +347,7 @@ healthchecksdb
 /SmartNQuick.Transfer/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Modules/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Business/_GeneratedCode.cs
+/SmartNQuick.Logic/DataContext/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Shadow/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Modules/_GeneratedCode.cs
@@ -359,7 +360,6 @@ healthchecksdb
 /SmartNQuick.AspMvc/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Modules/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Business/_GeneratedCode.cs
-/SmartNQuick.Logic/DataContext/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Controllers/_GeneratedCode.cs
 /SmartNQuick.Logic/_GeneratedCode.cs
 /SmartNQuick.Adapters/_GeneratedCode.cs

@@ -39,7 +39,7 @@
     {
         return new { pageIndex, pageSize };
     }
-    @if (pageCount > pageSize)
+    @if (pageCount > 0)
     {
         <nav class="navbar">
             <div class="btn-group" role="group" aria-label="Button group filter and page index">
@@ -49,92 +49,97 @@
                         <i class="fa fa-filter">@filterText</i>
                     </button>
                 }
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageIndex")">
-                        @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
-                        <span class="caret"></span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
-                        @for (int index = 0; index <= maxPageIndex; index++)
-                        {
-                            string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(index));
-
-                            if (index == pageIndex)
+                @if (pageCount > pageSize)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageIndex")">
+                            @($"{MinItemIndex(pageIndex)}..{MaxItemIndex(pageIndex)} / {pageCount}")
+                            <span class="caret"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownPageIndex">
+                            @for (int index = 0; index <= maxPageIndex; index++)
                             {
-                                <a class="dropdown-item active" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
-                            }
-                            else
-                            {
-                                <a class="dropdown-item" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
+                                string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(index));
 
-            <ul class="pagination justify-content-center" style="margin-top: 15px">
-                <li class="@prvCss">
-                    @if (pageIndex > 0)
-                    {
-                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex - 1))" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="page-link">&laquo;</a>
-                    }
-                </li>
-                @{
-                    int deltaPage = 5;
-                    int pageLowerIdx = 0;
-                    int pageUpperIdx = deltaPage;
-                    int pageLowerRange = (pageLowerIdx * pageSize);
-
-                    while (pageLowerRange <= pageCount)
-                    {
-                        if (pageIndex >= pageLowerIdx && pageIndex < pageUpperIdx)
-                        {
-                            int startIdx = pageLowerIdx;
-
-                            while (startIdx > 0 && startIdx + deltaPage - 1 > maxPageIndex)
-                            {
-                                startIdx--;
-                            }
-                            for (int idx = startIdx; idx < pageUpperIdx && (idx * pageSize) < pageCount; idx++)
-                            {
-                                string text = $"{MinItemIndex(idx)}..{MaxItemIndex(idx)}";
-                                string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(idx));
-
-                                if (idx == pageIndex)
+                                if (index == pageIndex)
                                 {
-                                    <li class="page-item active" style="min-width: 40px;"><a class="page-link" data-toggle="tooltip" title="@text" href="@action">@(idx + 1)</a></li>
+                                    <a class="dropdown-item active" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
                                 }
                                 else
                                 {
-                                    <li class="page-item" style="min-width: 40px;"><a class="page-link" data-toggle="tooltip" title="@text" href="@action">@(idx + 1)</a></li>
+                                    <a class="dropdown-item" href="@action">@($"{MinItemIndex(index)}..{MaxItemIndex(index)}")</a>
                                 }
                             }
-                        }
-                        pageLowerIdx = pageUpperIdx;
-                        pageUpperIdx = pageUpperIdx + deltaPage;
-                        pageLowerRange = (pageLowerIdx * pageSize);
-                    }
+                        </div>
+                    </div>
                 }
-                <li class="@nxtCss">
-                    @if (pageIndex < maxPageIndex)
-                    {
-                        <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex + 1))" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="page-link" aria-hidden="true">&raquo;</a>
-                    }
-                </li>
-            </ul>
+            </div>
 
+            @if (pageCount > pageSize)
+            {
+                <ul class="pagination justify-content-center" style="margin-top: 15px">
+                    <li class="@prvCss">
+                        @if (pageIndex > 0)
+                        {
+                            <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex - 1))" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="page-link">&laquo;</a>
+                        }
+                    </li>
+                    @{
+                        int deltaPage = 5;
+                        int pageLowerIdx = 0;
+                        int pageUpperIdx = deltaPage;
+                        int pageLowerRange = (pageLowerIdx * pageSize);
+
+                        while (pageLowerRange <= pageCount)
+                        {
+                            if (pageIndex >= pageLowerIdx && pageIndex < pageUpperIdx)
+                            {
+                                int startIdx = pageLowerIdx;
+
+                                while (startIdx > 0 && startIdx + deltaPage - 1 > maxPageIndex)
+                                {
+                                    startIdx--;
+                                }
+                                for (int idx = startIdx; idx < pageUpperIdx && (idx * pageSize) < pageCount; idx++)
+                                {
+                                    string text = $"{MinItemIndex(idx)}..{MaxItemIndex(idx)}";
+                                    string action = Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(idx));
+
+                                    if (idx == pageIndex)
+                                    {
+                                        <li class="page-item active" style="min-width: 40px;"><a class="page-link" data-toggle="tooltip" title="@text" href="@action">@(idx + 1)</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item" style="min-width: 40px;"><a class="page-link" data-toggle="tooltip" title="@text" href="@action">@(idx + 1)</a></li>
+                                    }
+                                }
+                            }
+                            pageLowerIdx = pageUpperIdx;
+                            pageUpperIdx = pageUpperIdx + deltaPage;
+                            pageLowerRange = (pageLowerIdx * pageSize);
+                        }
+                    }
+                    <li class="@nxtCss">
+                        @if (pageIndex < maxPageIndex)
+                        {
+                            <a class="page-link" href="@Url.Action(pageIndexAction, viewBagInfo.Controller, CreateIndexParameters(pageIndex + 1))" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="page-link" aria-hidden="true">&raquo;</a>
+                        }
+                    </li>
+                </ul>
+            }
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 <div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageSize")">

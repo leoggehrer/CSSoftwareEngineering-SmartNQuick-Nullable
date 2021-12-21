@@ -100,7 +100,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
                     if (value != null)
                     {
-                        exportLine.Append(value.ToString());
+                        exportLine.Append(value.ToString().Remove("\r", string.Empty));
                     }
                     else
                     {
