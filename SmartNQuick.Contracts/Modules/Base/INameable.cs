@@ -1,6 +1,4 @@
-﻿//@Ignore
-
-namespace SmartNQuick.Contracts.Modules.Base
+﻿namespace SmartNQuick.Contracts.Modules.Base
 {
     public partial interface INameable
     {
