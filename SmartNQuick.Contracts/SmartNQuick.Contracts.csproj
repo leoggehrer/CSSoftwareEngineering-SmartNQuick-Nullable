@@ -12,7 +12,7 @@
 		<ProjectReference Include="..\CommonBase\CommonBase.csproj" />
 	</ItemGroup>
 
-	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="True">
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="False">
 		<Exec Command="ECHO ON&#xD;&#xA;cd ..&#xD;&#xA;cd SolutionPreprocessorHelper.ConApp&#xD;&#xA;REM dotnet run &quot;-path&quot; $(ProjectDir)$(OutDir)&#xD;&#xA;dotnet build SolutionPreprocessorHelper.ConApp.csproj&#xD;&#xA;cd $(OutDir)&#xD;&#xA;SolutionPreprocessorHelper.ConApp.exe" />
 	</Target>
 
