@@ -20,8 +20,6 @@
     var maxPageIndex = pageCount / pageSize;
     var filterValues = sessionInfo.GetFilterValues(viewBagInfo.Controller);
     var filterText = filterValues?.Count > 0 ? "*" : string.Empty;
-    var sorterValues = sessionInfo.GetSorterValues(viewBagInfo.Controller);
-    var sorterText = sorterValues?.Count > 0 ? "*" : string.Empty;
 
     if (pageCount % pageSize == 0)
     {
@@ -162,12 +160,6 @@
                         }
                     </div>
                 </div>
-                @if (viewBagInfo.HasSorter)
-                {
-                    <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseSorter" role="button" aria-expanded="false" aria-controls="collapseSorter">
-                        <i class="fa fa-sort">@sorterText</i>
-                    </button>
-                }
             </div>
 
             @if (viewBagInfo.HasFilter)
@@ -175,15 +167,6 @@
                 <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseFilter">
                     <div class="card card-body">
                         @await Html.PartialAsync("_FilterControl", Model)
-                    </div>
-                </div>
-            }
-
-            @if (viewBagInfo.HasSorter)
-            {
-                <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseSorter">
-                    <div class="card card-body">
-                        @await Html.PartialAsync("_SorterControl", Model)
                     </div>
                 </div>
             }
@@ -196,30 +179,14 @@
                 <i class="fa fa-filter">@filterText</i>
             </button>
 
-            @if (viewBagInfo.HasSorter)
-            {
-                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseSorter" role="button" aria-expanded="false" aria-controls="collapseSorter">
-                    <i class="fa fa-sort">@sorterText</i>
-                </button>
-            }
-
             <div class="collapse.show w-100" style="margin-top: 0.5em;" id="collapseFilter">
                 <div class="card card-body">
                     @await Html.PartialAsync("_FilterControl", Model)
                 </div>
             </div>
-
-            @if (viewBagInfo.HasSorter)
-            {
-                <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseSorter">
-                    <div class="card card-body">
-                        @await Html.PartialAsync("_SorterControl", Model)
-                    </div>
-                </div>
-            }
         </nav>
     }
-    else if (viewBagInfo.HasFilter || viewBagInfo.HasSorter)
+    else if (viewBagInfo.HasFilter)
     {
         <nav class="navbar">
             @if (viewBagInfo.HasFilter)
@@ -228,26 +195,12 @@
                     <i class="fa fa-filter">@filterText</i>
                 </button>
             }
-            @if (viewBagInfo.HasSorter)
-            {
-                <button class="btn btn-outline-primary" data-toggle="collapse" href="#collapseSorter" role="button" aria-expanded="false" aria-controls="collapseSorter">
-                    <i class="fa fa-sort">@sorterText</i>
-                </button>
-            }
 
             @if (viewBagInfo.HasFilter)
             {
                 <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseFilter">
                     <div class="card card-body">
                         @await Html.PartialAsync("_FilterControl", Model)
-                    </div>
-                </div>
-            }
-            @if (viewBagInfo.HasSorter)
-            {
-                <div class="collapse w-100" style="margin-top: 0.5em;" id="collapseSorter">
-                    <div class="card card-body">
-                        @await Html.PartialAsync("_SorterControl", Model)
                     </div>
                 </div>
             }

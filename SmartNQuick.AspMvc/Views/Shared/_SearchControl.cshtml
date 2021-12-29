@@ -7,24 +7,25 @@
 
     var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
-    var filterModel = new FilterModel(sessionInfo, Model);
+    var searchModel = new SearchModel(sessionInfo, Model);
+    var searchValue = sessionInfo.GetSearchValue(viewBagInfo.Controller);
 
     <form asp-action="Search" method="post">
         <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All</button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    <div role="separator" class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a>
-                </div>
-            </div>
-            <input type="text" class="form-control" aria-label="Searchbox">
+            @Html.DropDownList(searchModel.GetSearchItemsName(), searchModel.GetSearchItems(), null, new { disabled="disabled" })
+            <input type="text" id="@searchModel.GetSearchValueId()" name="@searchModel.GetSearchValueName()" value="@searchValue" class="form-control" aria-label="Searchbox">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i>
             </button>
+            @if (viewBagInfo.HasSorter)
+            {
+                var sorterValues = sessionInfo.GetSorterValues(viewBagInfo.Controller);
+                var sorterText = sorterValues?.Count > 0 ? "*" : string.Empty;
+
+                <button type="button" class="btn btn-outline-primary" data-toggle="collapse" href="#collapseSorter" aria-expanded="false" aria-controls="collapseSorter">
+                    <i class="fa fa-sort">@sorterText</i>
+                </button>
+            }
         </div>
     </form>
 }

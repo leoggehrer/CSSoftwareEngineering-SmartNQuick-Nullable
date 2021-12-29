@@ -60,6 +60,27 @@ namespace SmartNQuick.AspMvc.Controllers
         protected bool FromEditToIndex { get; set; } = true;
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 
+        protected static Type GetViewType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = type;
+
+            if (type.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[0];
+            }
+            else if (type.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[0];
+            }
+            else if (type.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[0];
+            }
+            return result;
+        }
+
         #region Before view
         protected virtual void BeforeView()
         {
@@ -127,6 +148,13 @@ namespace SmartNQuick.AspMvc.Controllers
         partial void BeforeGetModel(ref TModel model, ref bool handled);
         partial void AfterGetModel(TModel model);
 
+        protected virtual SearchModel CreateSearchModel()
+        {
+            var models = new TModel[] { new TModel() };
+            var indexViewModel = CreateIndexViewModel(models);
+
+            return new SearchModel(SessionInfo, indexViewModel);
+        }
         protected virtual FilterModel CreateFilterModel()
         {
             var models = new TModel[] { new TModel() };
@@ -178,6 +206,10 @@ namespace SmartNQuick.AspMvc.Controllers
             SessionInfo.SetPageIndex(ControllerName, pageIndex);
             SessionInfo.SetPageSize(ControllerName, pageSize);
         }
+        protected virtual void SetSessionSearchValue(string searchValue)
+        {
+            SessionInfo.SetSearchValue(ControllerName, searchValue);
+        }
         protected virtual void SetSessionFilterValues(FilterValues filterValues)
         {
             SessionInfo.SetFilterValues(ControllerName, filterValues);
@@ -218,12 +250,31 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             IEnumerable<TContract> result;
             var pageCount = 0;
+            var predicate = string.Empty;
+            var viewType = GetViewType(typeof(TModel));
+            var searchValue = SessionInfo.GetSearchValue(ControllerName);
+            var searchPredicate = SearchModel.CreatePredicate(viewType, searchValue);
             var filterValues = SessionInfo.GetFilterValues(ControllerName);
-            var predicate = filterValues?.CreatePredicate();
+            var filterPredicate = filterValues?.CreatePredicate();
             var sorterValues = SessionInfo.GetSorterValues(ControllerName);
             var orderBy = sorterValues?.CreateOrderBy();
             using var ctrl = CreateController();
 
+            if (string.IsNullOrEmpty(filterPredicate) == false)
+            {
+                predicate = filterPredicate;
+            }
+            if (string.IsNullOrEmpty(searchPredicate) == false)
+            {
+                if (string.IsNullOrEmpty(predicate) == false)
+                {
+                    predicate = $"({predicate}) && ({searchPredicate})";
+                }
+                else
+                {
+                    predicate = searchPredicate;
+                }
+            }
             SetSessionPageData(pageCount, pageIndex, pageSize);
             if (predicate.HasContent() && orderBy.HasContent())
             {
@@ -270,11 +321,11 @@ namespace SmartNQuick.AspMvc.Controllers
                 try
                 {
                     var pageIndex = 0;
-                    var filterModel = CreateFilterModel();
-                    var filterValues = filterModel.GetFilterValues(formCollection);
+                    var searchModel = CreateSearchModel();
                     var pageSize = SessionInfo.GetPageSize(ControllerName);
+                    GetObjectValue(searchModel.ViewBagInfo.ItemPrefix, searchModel.GetSearchValueName(), formCollection, out string searchValue);
 
-                    SetSessionFilterValues(filterValues);
+                    SetSessionSearchValue(searchValue);
 
                     var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
@@ -1162,7 +1213,12 @@ namespace SmartNQuick.AspMvc.Controllers
             formCollection.CheckArgument(nameof(formCollection));
 
             var result = false;
-            var formKey = $"{prefix}.Id";
+            var formKey = "Id";
+
+            if (string.IsNullOrEmpty(prefix) == false)
+            {
+                formKey = $"{prefix}.{formKey}";
+            }
 
             if (formCollection.Keys.Contains(formKey))
             {
@@ -1173,6 +1229,28 @@ namespace SmartNQuick.AspMvc.Controllers
             else
             {
                 id = 0;
+            }
+            return result;
+        }
+        public static bool GetObjectValue(string prefix, string name, IFormCollection formCollection, out string value)
+        {
+            formCollection.CheckArgument(nameof(formCollection));
+
+            var result = false;
+            var formKey = name;
+
+            if (string.IsNullOrEmpty(prefix) == false)
+            {
+                formKey = $"{prefix}.{formKey}";
+            }
+
+            if (formCollection.Keys.Contains(formKey))
+            {
+                value = formCollection[formKey].FirstOrDefault();
+            }
+            else
+            {
+                value = string.Empty;
             }
             return result;
         }

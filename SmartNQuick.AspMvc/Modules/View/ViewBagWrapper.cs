@@ -16,6 +16,16 @@ namespace SmartNQuick.AspMvc.Modules.View
             ViewBag = viewBag;
         }
 
+        public bool HasSearchBox
+        {
+            get => ViewBag.HasSearchBox != null ? (bool)ViewBag.HasSearchBox : true;
+            set => ViewBag.HasSearchBox = value;
+        }
+        public bool HasSorter
+        {
+            get => ViewBag.HasSorter != null ? (bool)ViewBag.HasSorter : true;
+            set => ViewBag.HasSorter = value;
+        }
         public bool HasPager
         {
             get => ViewBag.HasPager != null ? (bool)ViewBag.HasPager : true;
@@ -23,13 +33,8 @@ namespace SmartNQuick.AspMvc.Modules.View
         }
         public bool HasFilter
         {
-            get => ViewBag.HasFilter != null ? (bool)ViewBag.HasFilter : true;
+            get => ViewBag.HasFilter != null ? (bool)ViewBag.HasFilter : false;
             set => ViewBag.HasFilter = value;
-        }
-        public bool HasSorter
-        {
-            get => ViewBag.HasSorter != null ? (bool)ViewBag.HasSorter : true;
-            set => ViewBag.HasSorter = value;
         }
         public EditMode EditMode
         {
@@ -109,6 +114,17 @@ namespace SmartNQuick.AspMvc.Modules.View
                 if (ViewBag.IgnoreNames is not List<string> result)
                 {
                     ViewBag.IgnoreNames = result = new List<string>();
+                }
+                return result;
+            }
+        }
+        public List<string> IgnoreSearchItems
+        {
+            get
+            {
+                if (ViewBag.IgnoreSearchItems is not List<string> result)
+                {
+                    ViewBag.IgnoreSearchItems = result = new List<string>();
                 }
                 return result;
             }

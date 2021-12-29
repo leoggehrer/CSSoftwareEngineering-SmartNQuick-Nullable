@@ -8,7 +8,7 @@
     var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
     var sorterModel = new SorterModel(sessionInfo, Model);
-        
+
     <form asp-action="Sorter" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @await Html.PartialAsync("_SorterModel", sorterModel)

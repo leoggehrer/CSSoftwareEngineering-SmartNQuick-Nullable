@@ -37,8 +37,8 @@ namespace SmartNQuick.AspMvc.Modules.Session
         #endregion Properties
 
         #region Filter properties
-        void SetSearchFilter(string controllerName, string value);
-        string GetSearchFilter(string controllerName);
+        void SetSearchValue(string controllerName, string value);
+        string GetSearchValue(string controllerName);
         void SetFilterPredicate(string controllerName, string value);
         string GetFilterPredicate(string controllerName);
         void SetFilterModel(string controllerName, FilterModel filterModel);

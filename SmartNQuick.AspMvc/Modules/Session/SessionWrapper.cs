@@ -127,11 +127,11 @@ namespace SmartNQuick.AspMvc.Modules.Session
         #endregion Properties
 
         #region Filter
-        public void SetSearchFilter(string controllerName, string value)
+        public void SetSearchValue(string controllerName, string value)
         {
             SetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}", value);
         }
-        public string GetSearchFilter(string controllerName)
+        public string GetSearchValue(string controllerName)
         {
             return GetStringValue($"{StaticLiterals.SearchFilterKeyPrefix}{controllerName}");
         }
