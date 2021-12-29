@@ -4,7 +4,8 @@ namespace SmartNQuick.AspMvc.Models.Modules.Common
 {
     public enum ActionMode : int
     {
-        Filter = 1,
+        Search = 1,
+        Filter = 2 * Search,
         Sorter = 2 * Filter,
         Index = 2 * Sorter,
         IndexByPageIndex = 2 * Index,

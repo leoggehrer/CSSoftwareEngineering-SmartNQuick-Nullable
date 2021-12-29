@@ -42,7 +42,10 @@
     }
     else
     {
-        @await Html.PartialAsync("_PagerControl", Model)
+        @await Html.PartialAsync("_SearchControl", Model)
         @await Html.PartialAsync("_CardList", Model)
+        viewBagInfo.HasFilter = false;
+        viewBagInfo.HasSorter = false;
+        @await Html.PartialAsync("_PagerControl", Model)
     }
 }

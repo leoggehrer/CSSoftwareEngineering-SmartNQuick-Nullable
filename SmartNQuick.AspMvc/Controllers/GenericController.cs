@@ -258,6 +258,40 @@ namespace SmartNQuick.AspMvc.Controllers
 
         #region Index actions
         [HttpPost]
+        [ActionName(nameof(ActionMode.Search))]
+        public virtual async Task<IActionResult> SearchAsync(IFormCollection formCollection)
+        {
+            var handled = false;
+            var models = default(IEnumerable<TModel>);
+
+            BeforeIndex(ref models, ref handled);
+            if (handled == false)
+            {
+                try
+                {
+                    var pageIndex = 0;
+                    var filterModel = CreateFilterModel();
+                    var filterValues = filterModel.GetFilterValues(formCollection);
+                    var pageSize = SessionInfo.GetPageSize(ControllerName);
+
+                    SetSessionFilterValues(filterValues);
+
+                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+                    models = entities.Select(e => ToModel(e));
+                    models = BeforeView(models, ActionMode.Index);
+                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    LastViewError = ex.GetError();
+                }
+            }
+            AfterIndex(models);
+            return ReturnIndexView(models);
+        }
+
+        [HttpPost]
         [ActionName(nameof(ActionMode.Filter))]
         public virtual async Task<IActionResult> FilterAsync(IFormCollection formCollection)
         {
