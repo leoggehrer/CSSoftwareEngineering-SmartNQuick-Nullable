@@ -47,7 +47,7 @@
                         <i class="fa fa-filter">@filterText</i>
                     </button>
                 }
-                @if (pageCount > (pageSize * 5))
+                @if (pageCount > pageSize)
                 {
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle" style="min-width: 175px;" type="button" id="dropdownPageIndex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@viewBagInfo.Translate("PageIndex")">
