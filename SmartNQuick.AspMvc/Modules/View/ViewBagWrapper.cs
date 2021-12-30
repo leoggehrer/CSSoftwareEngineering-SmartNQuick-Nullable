@@ -26,10 +26,15 @@ namespace SmartNQuick.AspMvc.Modules.View
             get => ViewBag.HasSorter != null ? (bool)ViewBag.HasSorter : true;
             set => ViewBag.HasSorter = value;
         }
-        public bool HasPager
+        public bool HasPagerTop
         {
-            get => ViewBag.HasPager != null ? (bool)ViewBag.HasPager : true;
-            set => ViewBag.HasPager = value;
+            get => ViewBag.HasPagerTop != null ? (bool)ViewBag.HasPagerTop : true;
+            set => ViewBag.HasPagerTop = value;
+        }
+        public bool HasPagerBottom
+        {
+            get => ViewBag.HasPagerBottom != null ? (bool)ViewBag.HasPagerBottom : false;
+            set => ViewBag.HasPagerBottom = value;
         }
         public bool HasFilter
         {

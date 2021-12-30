@@ -8,6 +8,7 @@ using SmartNQuick.AspMvc.Models.Modules.View;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core.Parser;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.AspMvc.Controllers
@@ -60,7 +61,27 @@ namespace SmartNQuick.AspMvc.Controllers
         protected bool FromEditToIndex { get; set; } = true;
         protected string ControllerName => GetType().Name.Replace("Controller", string.Empty);
 
-        protected static Type GetViewType(Type type)
+        protected static Type GetViewModel(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = type;
+
+            if (type.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[1];
+            }
+            else if (type.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[1];
+            }
+            else if (type.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+            {
+                result = type.BaseType.GetGenericArguments()[1];
+            }
+            return result;
+        }
+        protected static Type GetViewInterface(Type type)
         {
             type.CheckArgument(nameof(type));
 
@@ -246,35 +267,40 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             return result;
         }
-        protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize)
+        protected virtual async Task<IEnumerable<TContract>> QueryPageListAsync(int pageIndex, int pageSize, bool applyFilter)
         {
             IEnumerable<TContract> result;
             var pageCount = 0;
             var predicate = string.Empty;
-            var viewType = GetViewType(typeof(TModel));
-            var searchValue = SessionInfo.GetSearchValue(ControllerName);
-            var searchPredicate = SearchModel.CreatePredicate(viewType, searchValue);
-            var filterValues = SessionInfo.GetFilterValues(ControllerName);
-            var filterPredicate = filterValues?.CreatePredicate();
             var sorterValues = SessionInfo.GetSorterValues(ControllerName);
             var orderBy = sorterValues?.CreateOrderBy();
             using var ctrl = CreateController();
 
-            if (string.IsNullOrEmpty(filterPredicate) == false)
+            if (applyFilter)
             {
-                predicate = filterPredicate;
-            }
-            if (string.IsNullOrEmpty(searchPredicate) == false)
-            {
-                if (string.IsNullOrEmpty(predicate) == false)
+                var viewType = GetViewInterface(typeof(TModel));
+                var searchValue = SessionInfo.GetSearchValue(ControllerName);
+                var searchInterfacePredicate = SearchModel.CreateInterfacePredicate(viewType, searchValue);
+                var filterValues = SessionInfo.GetFilterValues(ControllerName);
+                var filterPredicate = filterValues?.CreatePredicate();
+
+                if (string.IsNullOrEmpty(filterPredicate) == false)
                 {
-                    predicate = $"({predicate}) && ({searchPredicate})";
+                    predicate = filterPredicate;
                 }
-                else
+                if (string.IsNullOrEmpty(searchInterfacePredicate) == false)
                 {
-                    predicate = searchPredicate;
+                    if (string.IsNullOrEmpty(predicate) == false)
+                    {
+                        predicate = $"({predicate}) && ({searchInterfacePredicate})";
+                    }
+                    else
+                    {
+                        predicate = searchInterfacePredicate;
+                    }
                 }
             }
+
             SetSessionPageData(pageCount, pageIndex, pageSize);
             if (predicate.HasContent() && orderBy.HasContent())
             {
@@ -306,6 +332,17 @@ namespace SmartNQuick.AspMvc.Controllers
             }
             return result;
         }
+        protected virtual async Task<IEnumerable<TModel>> QueryModelPageListAsync(int pageIndex, int pageSize, bool applyFilter)
+        {
+            var result = new List<TModel>();
+            IEnumerable<TContract> query = await QueryPageListAsync(pageIndex, pageSize, applyFilter).ConfigureAwait(false);
+
+            result.AddRange(query.Select(e => ToModel(e)));
+            result.AddRange(BeforeView(result.Eject(), ActionMode.Index));
+            result.AddRange(await BeforeViewAsync(result.Eject(), ActionMode.Index).ConfigureAwait(false));
+
+            return result;
+        }
 
         #region Index actions
         [HttpPost]
@@ -327,11 +364,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
                     SetSessionSearchValue(searchValue);
 
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -361,11 +394,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
                     SetSessionFilterValues(filterValues);
 
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -395,11 +424,7 @@ namespace SmartNQuick.AspMvc.Controllers
 
                     SetSessionSorterValues(sorterValues);
 
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -425,11 +450,7 @@ namespace SmartNQuick.AspMvc.Controllers
                     var pageIndex = SessionInfo.GetPageIndex(ControllerName);
                     var pageSize = SessionInfo.GetPageSize(ControllerName);
 
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -455,11 +476,7 @@ namespace SmartNQuick.AspMvc.Controllers
             {
                 try
                 {
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -486,11 +503,7 @@ namespace SmartNQuick.AspMvc.Controllers
                 {
                     var pageIndex = 0;
 
-                    var entities = await QueryPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
-
-                    models = entities.Select(e => ToModel(e));
-                    models = BeforeView(models, ActionMode.Index);
-                    models = await BeforeViewAsync(models, ActionMode.Index).ConfigureAwait(false);
+                    models = await QueryModelPageListAsync(pageIndex, pageSize, true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

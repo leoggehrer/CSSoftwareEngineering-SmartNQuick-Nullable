@@ -27,7 +27,7 @@
             @if ((viewBagInfo.CommandMode & SmartNQuick.AspMvc.Models.Modules.Common.CommandMode.Create) > 0)
             {
                 <div class="ml-auto">
-                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-primary" title="@viewBagInfo.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                    <a asp-action="@nameof(CommandMode.Create)" class="btn btn-outline-secondary" title="@viewBagInfo.TranslateFor("Create new...")"><i class="fa fa-plus" aria-hidden="true"></i></a>
                 </div>
             }
         </div>
@@ -70,7 +70,14 @@
                 </div>
             </div>
         }
+        @if (viewBagInfo.HasPagerTop)
+        {
+            @await Html.PartialAsync("_PagerControl", Model)
+        }
         @await Html.PartialAsync("_CardList", Model)
-        @await Html.PartialAsync("_PagerControl", Model)
+        @if (viewBagInfo.HasPagerBottom)
+        {
+            @await Html.PartialAsync("_PagerControl", Model)
+        }
     }
 }

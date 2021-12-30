@@ -1,11 +1,9 @@
 ﻿//@BaseCode
 //MdStart
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartNQuick.AspMvc.Modules.Session;
 using SmartNQuick.AspMvc.Modules.View;
 using System;
-using System.Reflection;
 using System.Text;
 
 namespace SmartNQuick.AspMvc.Models.Modules.View
@@ -70,7 +68,31 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             return result;
         }
 
-        public static string CreatePredicate(Type type, string value)
+        public static string CreateTypePredicate(Type type, string value)
+        {
+            type.CheckArgument(nameof(type));
+
+            var result = new StringBuilder();
+
+            if (string.IsNullOrEmpty(value) == false)
+            {
+                foreach (var property in type.GetAllTypePropertyInfos())
+                {
+                    if (property.PropertyType == typeof(string))
+                    {
+                        var name = property.Name;
+
+                        if (result.Length > 0)
+                        {
+                            result.Append(" || ");
+                        }
+                        result.Append($"{name} != null && {name}.ToLower().Contains(\"{value?.ToLower()}\")");
+                    }
+                }
+            }
+            return result.ToString();
+        }
+        public static string CreateInterfacePredicate(Type type, string value)
         {
             type.CheckArgument(nameof(type));
 
