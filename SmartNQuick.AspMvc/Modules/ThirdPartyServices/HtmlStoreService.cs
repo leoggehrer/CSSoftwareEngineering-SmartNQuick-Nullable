@@ -13,6 +13,48 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
 {
     public partial class HtmlStoreService
     {
+        private static DateTime? lastErrorTime;
+        private static bool canServiceAcessed = true;
+
+        private static DateTime? LastErrorTime
+        {
+            get => lastErrorTime;
+            set
+            {
+                lastErrorTime = value;
+                canServiceAcessed = value == null;
+                ServiceIsAccessible();
+            }
+        }
+        private static bool CanServiceAcessed => canServiceAcessed;
+
+        private static bool ServiceIsAccessible()
+        {
+            var htmlStoreServer = AppSettings.Configuration[StaticLiterals.EnvironmentHtmlStoreServerKey];
+
+            if (htmlStoreServer.HasContent() && canServiceAcessed == false)
+            {
+                var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IStaticPage>(htmlStoreServer);
+
+                Task.Run(() =>
+                {
+                    while (canServiceAcessed == false)
+                    {
+                        try
+                        {
+                            var maxSize = ctrl.MaxPageSize;
+
+                            canServiceAcessed = true;
+                        }
+                        catch
+                        {
+                            Task.Delay(60_000).Wait();
+                        }
+                    }
+                });
+            }
+            return canServiceAcessed;
+        }
         public static StaticPage GetPageContent(string pageName)
         {
             return GetPageContent(nameof(SmartNQuick), pageName);
@@ -22,7 +64,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
             var result = default(StaticPage);
             var htmlStoreServer = AppSettings.Configuration[StaticLiterals.EnvironmentHtmlStoreServerKey];
 
-            if (htmlStoreServer.HasContent())
+            if (htmlStoreServer.HasContent() && CanServiceAcessed)
             {
                 var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IStaticPage>(htmlStoreServer);
                 var predicate = $"{nameof(StaticPage.AppName)} == \"{appName}\" AND {nameof(StaticPage.Key)} == \"{pageName}\" AND {nameof(StaticPage.State)} == \"{State.Active}\"";
@@ -41,6 +83,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 }
                 catch (Exception ex)
                 {
+                    LastErrorTime = DateTime.UtcNow;
                     ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }
@@ -57,7 +100,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
             var result = defaultContent;
             var htmlStoreServer = AppSettings.Configuration[StaticLiterals.EnvironmentHtmlStoreServerKey];
 
-            if (htmlStoreServer.HasContent())
+            if (htmlStoreServer.HasContent() && CanServiceAcessed)
             {
                 var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IHtmlElement>(htmlStoreServer);
                 var predicate = $"{nameof(HtmlElement.AppName)} == \"{appName}\" AND {nameof(HtmlElement.Key)} == \"{key}\" AND {nameof(HtmlElement.State)} == \"{State.Active}\"";
@@ -76,6 +119,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 }
                 catch (Exception ex)
                 {
+                    LastErrorTime = DateTime.UtcNow;
                     ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }
@@ -92,7 +136,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
             var result = defaultContent;
             var htmlStoreServer = AppSettings.Configuration[StaticLiterals.EnvironmentHtmlStoreServerKey];
 
-            if (htmlStoreServer.HasContent())
+            if (htmlStoreServer.HasContent() && CanServiceAcessed)
             {
                 var ctrl = Adapters.Factory.CreateThridParty<Contracts.ThirdParty.IHtmlAttribute>(htmlStoreServer);
                 var predicate = $"{nameof(HtmlAttribute.AppName)} == \"{appName}\" AND {nameof(HtmlAttribute.Key)} == \"{key}\" AND {nameof(HtmlAttribute.State)} == \"{State.Active}\"";
@@ -111,6 +155,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 }
                 catch (Exception ex)
                 {
+                    LastErrorTime = DateTime.UtcNow;
                     ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }

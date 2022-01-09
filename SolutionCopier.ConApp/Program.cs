@@ -19,7 +19,7 @@ namespace SolutionCopier.ConApp
 
 			UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 			SourcePath = GetCurrentSolutionPath();
-			TargetPath = Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\DemoBikeTogether");
+			TargetPath = Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQCityCongestionCharge");
 			ClassConstructed();
 		}
 		static partial void ClassConstructing();
