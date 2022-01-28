@@ -2,6 +2,8 @@
 //MdStart
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace CommonBase.Extensions
 {
@@ -16,6 +18,38 @@ namespace CommonBase.Extensions
         {
             if (source == null)
                 throw new ArgumentNullException(itemName);
+        }
+        public static bool AreEqualProperties(this object source, object other, params string[] ignore)
+        {
+            static bool IsSimpleType(PropertyInfo propertyInfo)
+            {
+                var result = false;
+                var underlingType = propertyInfo.GetUnderlyingType();
+
+                if (underlingType != null)
+                {
+                    result = underlingType.IsSimpleType();
+                }
+                return result;
+            }
+            var sourceType = source.GetType();
+            var otherType = other.GetType();
+            var result = sourceType == otherType && source == other;
+
+            if (sourceType == otherType)
+            {
+                var ignoreList = new List<string>(ignore);
+                var unequalProperties =
+                    from pi in sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    where pi != null && !ignoreList.Contains(pi.Name) && pi.GetIndexParameters().Length == 0 && IsSimpleType(pi)
+                    let sourceValue = sourceType.GetProperty(pi.Name)?.GetValue(source, null)
+                    let otherValue = otherType.GetProperty(pi.Name)?.GetValue(other, null)
+                    where sourceValue != otherValue && (sourceValue == null || !sourceValue.Equals(otherValue))
+                    select sourceValue;
+
+                result = unequalProperties.Any() == false;
+            }
+            return result;
         }
 
         public static bool TryParse(this object value, Type type, out object typeValue)
