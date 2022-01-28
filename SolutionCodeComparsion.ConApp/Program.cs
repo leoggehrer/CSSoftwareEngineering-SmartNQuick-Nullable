@@ -23,19 +23,12 @@ namespace SolutionCodeComparsion.ConApp
             SourcePath = GetCurrentSolutionPath();
 
             // Project: SmartNQuick-Projects
-            TargetPaths = new string[]
-            {
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTranslator"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQConfigurator"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQContact"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQTradingCompany"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMusicStore"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQHtmlStore"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQSongContest"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQMenu"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQBikeTogether"),
-                Path.Combine(UserPath, @"source\repos\HtlLeo\AustroSoftAG\SnQAustroSoftBaseData"),
-            };
+            var directoryInfo = new DirectoryInfo(SourcePath);
+            var parentDirectory = directoryInfo.Parent != null ? directoryInfo.Parent.FullName : SourcePath;
+            var qtDirectories = Directory.GetDirectories(parentDirectory, "SnQ*", SearchOption.AllDirectories)
+                                         .Where(d => d.Contains('.') == false)
+                                         .ToList();
+            TargetPaths = qtDirectories.ToArray();
             // End: SmartNQuick-Projects
             ClassConstructed();
         }
