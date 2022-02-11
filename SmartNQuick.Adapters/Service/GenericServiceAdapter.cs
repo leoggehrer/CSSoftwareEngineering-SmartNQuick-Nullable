@@ -392,7 +392,7 @@ namespace SmartNQuick.Adapters.Service
             using var client = GetClient(BaseUri);
             var jsonData = JsonSerializer.Serialize(ToModel(entity));
             var contentData = new StringContent(jsonData, Encoding.UTF8, MediaType);
-            HttpResponseMessage response = await client.PutAsync($"{ExtUri}", contentData).ConfigureAwait(false);
+            HttpResponseMessage response = await client.PutAsync($"{ExtUri}/{entity.Id}", contentData).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
