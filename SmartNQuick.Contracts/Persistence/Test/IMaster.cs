@@ -3,6 +3,7 @@ using SmartNQuick.Contracts.Modules.Common;
 
 namespace SmartNQuick.Contracts.Persistence.Test
 {
+    [ContractInfo]
     public partial interface IMaster : IVersionable, ICopyable<IMaster>
     {
         [ContractPropertyInfo(Required = true, MaxLength = 100, Description = "Textbox mit max. 100 Zeichen")]

@@ -151,43 +151,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("}");
             return result;
         }
-
-        //public static IEnumerable<string> CreateDelegateModelFromInterface(Type type, Action<Type, List<string>> createAttributes = null)
-        //{
-        //    type.CheckArgument(nameof(type));
-
-        //    var result = new List<string>();
-        //    var baseItfcs = ContractHelper.GetBaseInterfaces(type);
-        //    var properties = ContractHelper.GetAllProperties(type, baseItfcs.ToArray());
-        //    var entityName = CreateEntityNameFromInterface(type);
-
-        //    createAttributes?.Invoke(type, result);
-        //    result.Add($"partial class {entityName} : {type.FullName}");
-        //    result.Add("{");
-        //    result.AddRange(CreatePartialStaticConstrutor(entityName));
-        //    result.AddRange(CreatePartialConstrutor("public", entityName));
-        //    if (baseItfcs.Count() == 0)
-        //    {
-        //        //result.Add($"public virtual {type.FullName} {ClassGenerator.DelegatePropertyName} " + "{ get; set; }");
-        //    }
-        //    else
-        //    {
-        //        //result.Add($"public virtual {type.FullName} {ClassGenerator.DelegatePropertyName} " + "{ get; set; }");
-        //    }
-        //    result.Add($"public {type.FullName} {StaticLiterals.DelegatePropertyName} " + "{ get; set; }");
-        //    foreach (var item in properties.Where(p => p.DeclaringType.Name.Equals(StaticLiterals.IVersionableName) == false))
-        //    {
-        //        result.AddRange(CreatePartialDelegateProperty(item));
-        //    }
-        //    result.AddRange(CreateDelegateCopyProperties(type, type.FullName));
-
-        //    foreach (var item in type.GetMethods().Where(mi => mi.Name.Contains("_") == false))
-        //    {
-        //        //result.AddRange(CreateDelegateMethod(item));
-        //    }
-        //    result.Add("}");
-        //    return result;
-        //}
         #endregion Create partial model
 
         #region Create partial property
@@ -197,9 +160,35 @@ namespace CSharpCodeGenerator.Logic.Generation
         static partial void GetPropertyDefaultValue(ContractPropertyHelper propertyHelper, ref string defaultValue);
 
         /// <summary>
+        /// Diese Methode erzeugt eine Delegat-Eigenschaft.
+        /// </summary>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateSourceName">Name der Delegate-Eigenschaft</param>
+        /// <param name="delegateHelper">Eigenschafts-Helper-Objekt</param>
+        /// <returns>Die delegate Eigenschaft als Text.</returns>
+        public static IEnumerable<string> CreateDelegateProperty(ContractPropertyHelper propertyHelper, string delegateSourceName, ContractPropertyHelper delegateHelper)
+        {
+            propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateSourceName.CheckNotNullOrEmpty(nameof(delegateSourceName));
+            delegateHelper.CheckArgument(nameof(delegateHelper));
+
+            var result = new List<string>();
+            var fieldType = propertyHelper.PropertyFieldType;
+
+            result.Add(string.Empty);
+            CreatePropertyAttributes(propertyHelper, result);
+            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
+            result.Add("{");
+            result.Add($"get => {delegateSourceName}.{delegateHelper.Property.Name};");
+            result.Add($"set => {delegateSourceName}.{delegateHelper.Property.Name} = value;");
+            result.Add("}");
+            return result;
+        }
+
+        /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft (Auto-Property oder Partial-Full-Property).
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreateProperty(ContractPropertyHelper propertyHelper)
         {
@@ -221,7 +210,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft (Auto-Property).
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreateAutoProperty(ContractPropertyHelper propertyHelper)
         {
@@ -244,7 +233,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft (Partial-Full-Property).
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialProperty(ContractPropertyHelper propertyHelper)
         {
@@ -277,8 +266,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Getter-Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
-        /// <param name="generationType">The type of the generation that should be performed</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Getter-Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialGetProperty(ContractPropertyHelper propertyHelper)
         {
@@ -298,7 +286,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Setter-Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
-        /// <param name="propertyInfo">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Setter-Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialSetProperty(ContractPropertyHelper propertyHelper)
         {
@@ -328,7 +316,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
-        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialDelegateProperty(ContractPropertyHelper propertyHelper)
         {
@@ -363,7 +351,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Getter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
         /// </summary>
-        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Getter-Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialGetDelegateProperty(ContractPropertyHelper propertyHelper)
         {
@@ -382,7 +370,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         /// <summary>
         /// Diese Methode erstellt den Programmcode einer Setter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
         /// </summary>
-        /// <param name="propertyHelper">Das Eigenschaftsinfo-Objekt.</param>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Setter-Eigenschaft als Text.</returns>
         public static IEnumerable<string> CreatePartialSetDelegateProperty(ContractPropertyHelper propertyHelper)
         {

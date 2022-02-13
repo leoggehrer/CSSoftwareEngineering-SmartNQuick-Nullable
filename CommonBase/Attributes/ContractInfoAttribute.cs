@@ -16,6 +16,7 @@ namespace CommonBase.Attributes
         public string ContextName { get; init; }
         public string KeyName { get; init; }
         public string Description { get; init; }
+        public Type DelegateType { get; init; }
     }
 }
 //MdEnd

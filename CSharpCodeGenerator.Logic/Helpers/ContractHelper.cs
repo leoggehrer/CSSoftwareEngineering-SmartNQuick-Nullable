@@ -67,6 +67,7 @@ namespace CSharpCodeGenerator.Logic.Helpers
                 return result.GetValue("Id");
             }
         }
+        public Type DelegateType => Info?.DelegateType;
 
         public ContractHelper(Type type)
         {
