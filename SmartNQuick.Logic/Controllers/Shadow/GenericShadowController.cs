@@ -158,7 +158,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         #endregion Query
 
         #region Create
-        internal override async Task<E> ExecuteCreateEntityAsync()
+        internal override async Task<E> CreateEntityAsync()
         {
             var entity = await SourceEntityController.CreateEntityAsync().ConfigureAwait(false);
 

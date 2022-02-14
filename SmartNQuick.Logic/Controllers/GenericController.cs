@@ -297,13 +297,6 @@ namespace SmartNQuick.Logic.Controllers
             AfterCreate(entity);
             return await BeforeReturnAsync(entity).ConfigureAwait(false);
         }
-        internal virtual async Task<E> ExecuteCreateEntityAsync()
-        {
-            E entity = new();
-
-            AfterCreate(entity);
-            return await BeforeReturnAsync(entity).ConfigureAwait(false);
-        }
         protected virtual void AfterCreate(E entity)
         {
         }
@@ -325,7 +318,7 @@ namespace SmartNQuick.Logic.Controllers
 #if ACCOUNT_ON
             await CheckAuthorizationAsync(GetType(), MethodBase.GetCurrentMethod(), AccessType.Insert).ConfigureAwait(false);
 #endif
-            var innerEntity = new E();
+            var innerEntity = await CreateEntityAsync().ConfigureAwait(false);
 
             innerEntity.CopyProperties(entity);
 
