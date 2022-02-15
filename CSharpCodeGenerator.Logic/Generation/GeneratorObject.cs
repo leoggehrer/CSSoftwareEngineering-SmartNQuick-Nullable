@@ -241,7 +241,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             return $"Transfer.{StaticLiterals.ModelsFolder}.{CreateSubNamespaceFromType(type)}";
         }
 
-
         /// <summary>
         /// Diese Methode ermittelt den Entity Namen aus seinem Schnittstellen Typ.
         /// </summary>
@@ -275,6 +274,15 @@ namespace CSharpCodeGenerator.Logic.Generation
                 result = type.Name[1..];
             }
             return result;
+        }
+        /// <summary>
+        /// Diese Methode ermittelt den Edit-Model Namen aus seinem Schnittstellen Typ.
+        /// </summary>
+        /// <param name="type">Schnittstellen-Typ</param>
+        /// <returns>Name des Models.</returns>
+        public static string CreateEditModelNameFromInterface(Type type)
+        {
+            return $"Edit{CreateModelNameFromInterface(type)}";
         }
         /// <summary>
         /// Diese Methode ermittelt den Entity-Typ aus seiner Schnittstellen.

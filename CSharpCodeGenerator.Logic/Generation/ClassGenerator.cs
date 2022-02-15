@@ -395,7 +395,7 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             return CreateCopyProperties(type, type.FullName);
         }
-        public static IEnumerable<string> CreateCopyProperties(Type type, string copyType)
+        private static IEnumerable<string> CreateCopyProperties(Type type, string copyType)
         {
             type.CheckArgument(nameof(type));
             copyType.CheckArgument(nameof(copyType));

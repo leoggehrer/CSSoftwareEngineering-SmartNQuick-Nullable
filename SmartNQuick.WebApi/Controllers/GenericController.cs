@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SmartNQuick.WebApi.Controllers
 {
-    public abstract class GenericController<I, M> : ApiControllerBase, IDisposable
-        where I : Contracts.IIdentifiable
-        where M : Transfer.Models.IdentityModel, I, Contracts.ICopyable<I>, new()
+    public abstract class GenericController<TContract, TModel> : ApiControllerBase, IDisposable
+        where TContract : Contracts.IIdentifiable
+        where TModel : Transfer.Models.IdentityModel, TContract, Contracts.ICopyable<TContract>, new()
     {
 		private bool disposedValue;
 
@@ -31,14 +31,14 @@ namespace SmartNQuick.WebApi.Controllers
 			return result;
 		}
 #else
-		protected Task<Contracts.Client.IControllerAccess<I>> CreateControllerAsync()
+		protected Task<Contracts.Client.IControllerAccess<TContract>> CreateControllerAsync()
 		{
-			return Task.Run(() => Logic.Factory.Create<I>());
+			return Task.Run(() => Logic.Factory.Create<TContract>());
 		}
 #endif
-		protected M ToModel(I entity)
+		protected TModel ToModel(TContract entity)
 		{
-			var result = new M();
+			var result = new TModel();
 
 			result.CopyProperties(entity);
 			return result;
@@ -74,7 +74,7 @@ namespace SmartNQuick.WebApi.Controllers
 		[HttpGet("/api/[controller]/{id}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<ActionResult<M>> GetByIdAsync(int id)
+		public async Task<ActionResult<TModel>> GetByIdAsync(int id)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
@@ -87,7 +87,7 @@ namespace SmartNQuick.WebApi.Controllers
 		/// <returns>List of models</returns>
 		[HttpGet("/api/[controller]")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> GetAllAsync()
+		public async Task<ActionResult<IEnumerable<TModel>>> GetAllAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.GetAllAsync().ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace SmartNQuick.WebApi.Controllers
 		}
 		[HttpGet("/api/[controller]/Sorted/{orderBy}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> GetAllAsync(string orderBy)
+		public async Task<ActionResult<IEnumerable<TModel>>> GetAllAsync(string orderBy)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.GetAllAsync(orderBy).ConfigureAwait(false);
@@ -106,7 +106,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 		[HttpGet("/api/[controller]/{index}/{size}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> GetPageListAsync(int index, int size)
+		public async Task<ActionResult<IEnumerable<TModel>>> GetPageListAsync(int index, int size)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.GetPageListAsync(index, size).ConfigureAwait(false);
@@ -115,7 +115,7 @@ namespace SmartNQuick.WebApi.Controllers
 		}
 		[HttpGet("/api/[controller]/Sorted/{orderBy}/{index}/{size}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> GetPageListAsync(int index, int size, string orderBy)
+		public async Task<ActionResult<IEnumerable<TModel>>> GetPageListAsync(int index, int size, string orderBy)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.GetPageListAsync(orderBy, index, size).ConfigureAwait(false);
@@ -127,7 +127,7 @@ namespace SmartNQuick.WebApi.Controllers
         #region Query actions
         [HttpGet("/api/[controller]/Query/{predicate}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> QueryAllAsync(string predicate)
+		public async Task<ActionResult<IEnumerable<TModel>>> QueryAllAsync(string predicate)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.QueryAllAsync(predicate).ConfigureAwait(false);
@@ -136,7 +136,7 @@ namespace SmartNQuick.WebApi.Controllers
 		}
 		[HttpGet("/api/[controller]/Sorted/Query/{predicate}/{orderBy}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> QueryAllAync(string predicate, string orderBy)
+		public async Task<ActionResult<IEnumerable<TModel>>> QueryAllAync(string predicate, string orderBy)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.QueryAllAsync(predicate, orderBy).ConfigureAwait(false);
@@ -146,7 +146,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 		[HttpGet("/api/[controller]/Query/{predicate}/{index}/{size}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> QueryPageListAsync(string predicate, int index, int size)
+		public async Task<ActionResult<IEnumerable<TModel>>> QueryPageListAsync(string predicate, int index, int size)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.QueryPageListAsync(predicate, index, size).ConfigureAwait(false);
@@ -155,7 +155,7 @@ namespace SmartNQuick.WebApi.Controllers
 		}
 		[HttpGet("/api/[controller]/Sorted/Query/{predicate}/{orderBy}/{index}/{size}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<IEnumerable<M>>> QueryPageListAsync(string predicate, int index, int size, string orderBy)
+		public async Task<ActionResult<IEnumerable<TModel>>> QueryPageListAsync(string predicate, int index, int size, string orderBy)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.QueryPageListAsync(predicate, orderBy, index, size).ConfigureAwait(false);
@@ -166,7 +166,7 @@ namespace SmartNQuick.WebApi.Controllers
 
 		[HttpGet("/api/[controller]/Create")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<M>> CreateAsync()
+		public async Task<ActionResult<TModel>> CreateAsync()
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entity = await ctrl.CreateAsync().ConfigureAwait(false);
@@ -182,18 +182,18 @@ namespace SmartNQuick.WebApi.Controllers
 		/// <response code="201">Model created</response>
 		[HttpPost("/api/[controller]")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<M>> PostAsync([FromBody] M model)
+		public async Task<ActionResult<TModel>> PostAsync([FromBody] TModel model)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entity = await ctrl.InsertAsync(model).ConfigureAwait(false);
 
 			await ctrl.SaveChangesAsync().ConfigureAwait(false);
-			return CreatedAtRoute(new { id = entity.Id }, ToModel(entity));
+			return CreatedAtAction("GetById", new { id = entity.Id }, ToModel(entity));
 		}
 		[HttpPost("/api/[controller]/Array")]
-		public async Task<IQueryable<M>> PostArrayAsync(IEnumerable<M> models)
+		public async Task<IQueryable<TModel>> PostArrayAsync(IEnumerable<TModel> models)
 		{
-			var result = new List<M>();
+			var result = new List<TModel>();
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.InsertAsync(models).ConfigureAwait(false);
 
@@ -213,7 +213,7 @@ namespace SmartNQuick.WebApi.Controllers
 		[HttpPut("/api/[controller]/{id}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<ActionResult<M>> PutAsync(int id, [FromBody]M model)
+		public async Task<ActionResult<TModel>> PutAsync(int id, [FromBody]TModel model)
 		{
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entity = await ctrl.GetByIdAsync(id).ConfigureAwait(false);
@@ -227,9 +227,9 @@ namespace SmartNQuick.WebApi.Controllers
 			return entity == null ? NotFound() : Ok(ToModel(entity));
 		}
 		[HttpPut("/api/[controller]/Array")]
-		public async Task<IQueryable<M>> PutArrayAsync(IEnumerable<M> models)
+		public async Task<IQueryable<TModel>> PutArrayAsync(IEnumerable<TModel> models)
 		{
-			var result = new List<M>();
+			var result = new List<TModel>();
 			using var ctrl = await CreateControllerAsync().ConfigureAwait(false);
 			var entities = await ctrl.UpdateAsync(models).ConfigureAwait(false);
 
