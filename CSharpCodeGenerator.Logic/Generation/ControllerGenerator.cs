@@ -481,6 +481,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
             var modelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
+            var editModelType = $"{CreateTransferModelNameSpace(type)}.Edit{entityName}";
             var controllerName = entityName.CreatePluralWord();
             var result = new Models.GeneratedItem(Common.UnitType.WebApi, Common.ItemType.WebApiController)
             {
@@ -491,12 +492,13 @@ namespace CSharpCodeGenerator.Logic.Generation
             ConvertWebApiControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");
             result.Add($"using TContract = {contractType};");
+            result.Add($"using TEditModel = {editModelType};");
             result.Add($"using TModel = {modelType};");
 
             result.Add("[ApiController]");
             result.Add("[Route(\"Controller\")]");
             CreateWebApiControllerAttributes(type, result.Source);
-            result.Add($"public partial class {controllerName}Controller : WebApi.Controllers.GenericController<TContract, TModel>");
+            result.Add($"public partial class {controllerName}Controller : WebApi.Controllers.GenericController<TContract, TEditModel, TModel>");
             result.Add("{");
 
             result.Add("}");

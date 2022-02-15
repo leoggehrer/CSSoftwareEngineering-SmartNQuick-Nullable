@@ -198,6 +198,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 {
                     result.Add(CreateModelFromContract(type, UnitType, Common.ItemType.ShadowModel));
                     result.Add(CreateShadowModel(type, UnitType));
+                    result.Add(CreateEditModelFromContract(type, UnitType, Common.ItemType.ShadowModel));
                 }
             }
             return result;
@@ -307,13 +308,14 @@ namespace CSharpCodeGenerator.Logic.Generation
             //var interfaces = GetInterfaces(type);
             var modelName = CreateEditModelNameFromInterface(type);
             var typeProperties = ContractHelper.GetAllProperties(type);
-            var generateProperties = default(IEnumerable<PropertyInfo>);
             var result = new Models.GeneratedItem(unitType, itemType)
             {
                 FullName = CreateModelFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
                 SubFilePath = CreateSubFilePathFromInterface(type, "Models", "", StaticLiterals.CSharpFileExtension),
             };
+            IEnumerable<PropertyInfo> generateProperties;
+
             CreateModelAttributes(type, result.Source);
             result.Add($"public partial class {modelName}");
             result.Add("{");
