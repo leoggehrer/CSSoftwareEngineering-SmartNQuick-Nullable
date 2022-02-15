@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using CommonStaticLiterals = CommonBase.StaticLiterals;
 
@@ -20,7 +19,7 @@ namespace SolutionCopier.ConApp
 
             UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             SourcePath = GetCurrentSolutionPath();
-            TargetPath = Directory.GetParent(SourcePath).FullName;// Path.Combine(UserPath, @"source\repos\HtlLeo\CSSoftwareEngineering\SnQCityCongestionCharge");
+            TargetPath = Directory.GetParent(SourcePath).FullName;
             ClassConstructed();
         }
         static partial void ClassConstructing();

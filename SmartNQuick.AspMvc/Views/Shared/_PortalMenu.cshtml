@@ -11,11 +11,11 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@translateFor("Home")</a>
         </li>
-@*#if ACCOUNT_ON*@@*
+@*#if ACCOUNT_ON*@
         @if (sessionWrapper.LoginSession != null)
         {
         }
-*@@*#endif*@
+@*#endif*@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">@translateFor("Contact")</a>
         </li>

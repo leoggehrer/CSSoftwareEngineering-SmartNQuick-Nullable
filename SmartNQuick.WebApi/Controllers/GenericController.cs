@@ -19,9 +19,9 @@ namespace SmartNQuick.WebApi.Controllers
 		}
 
 #if ACCOUNT_ON
-		protected async Task<Contracts.Client.IControllerAccess<I>> CreateControllerAsync()
+		protected async Task<Contracts.Client.IControllerAccess<TContract>> CreateControllerAsync()
 		{
-			var result = Logic.Factory.Create<I>();
+			var result = Logic.Factory.Create<TContract>();
 			var sessionToken = await GetSessionTokenAsync();
 
 			if (sessionToken.HasContent())

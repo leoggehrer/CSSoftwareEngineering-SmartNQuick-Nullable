@@ -26,7 +26,7 @@ namespace SolutionCodeComparsion.ConApp
             var directoryInfo = new DirectoryInfo(SourcePath);
             var parentDirectory = directoryInfo.Parent != null ? directoryInfo.Parent.FullName : SourcePath;
             var qtDirectories = Directory.GetDirectories(parentDirectory, "SnQ*", SearchOption.AllDirectories)
-                                         .Where(d => d.Contains('.') == false)
+                                         .Where(d => d.Replace(UserPath, string.Empty).Contains('.') == false)
                                          .ToList();
             TargetPaths = qtDirectories.ToArray();
             // End: SmartNQuick-Projects

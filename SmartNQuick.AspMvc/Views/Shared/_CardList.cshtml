@@ -57,7 +57,7 @@
                         @await Html.PartialAsync("_CardGroup", displayViewModel)
                     }
                 </ul>
-@*#if ACCOUNT_ON*@@*
+@*#if ACCOUNT_ON*@
 @{
     @if (sessionInfo.LoginSession != null
     && viewBagInfo.CommandMode != CommandMode.None
@@ -72,9 +72,9 @@
         @await Html.PartialAsync("_CardBody", model)
     }
 }
-*@@*#endif*@
+@*#endif*@
 
-@*#if ACCOUNT_OFF*@
+@*#if ACCOUNT_OFF*@@*
     @if (viewBagInfo.CommandMode != CommandMode.None
          && viewBagInfo.Action.Equals(ActionMode.Delete.ToString()) == false)
     {
@@ -86,7 +86,7 @@
     {
         @await Html.PartialAsync("_CardBody", model)
     }
-@*#endif*@
+*@@*#endif*@
             </div>
         }
     }
