@@ -4,6 +4,7 @@ using CSharpCodeGenerator.Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace CSharpCodeGenerator.Logic.Generation
 {
@@ -389,13 +390,13 @@ namespace CSharpCodeGenerator.Logic.Generation
         #endregion Delegate property helpers
 
         #region CopyProperties
-        public static IEnumerable<string> CreateCopyProperties(Type type)
+        public static IEnumerable<string> CreateCopyProperties(Type type, Func<PropertyInfo, bool> filter = null)
         {
             type.CheckArgument(nameof(type));
 
-            return CreateCopyProperties(type, type.FullName);
+            return CreateCopyProperties(type, type.FullName, filter != null ? filter : pi => true);
         }
-        private static IEnumerable<string> CreateCopyProperties(Type type, string copyType)
+        private static IEnumerable<string> CreateCopyProperties(Type type, string copyType, Func<PropertyInfo, bool> filter)
         {
             type.CheckArgument(nameof(type));
             copyType.CheckArgument(nameof(copyType));
@@ -415,7 +416,7 @@ namespace CSharpCodeGenerator.Logic.Generation
                 "{"
             };
 
-            foreach (var item in ContractHelper.GetAllProperties(type))
+            foreach (var item in ContractHelper.GetAllProperties(type).Where(filter))
             {
                 var contractPropertyHelper = new ContractPropertyHelper(type, item);
 

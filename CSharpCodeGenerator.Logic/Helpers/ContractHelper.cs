@@ -94,8 +94,38 @@ namespace CSharpCodeGenerator.Logic.Helpers
         }
         public IEnumerable<PropertyInfo> GetAllProperties() => GetAllProperties(Type);
 
-        #region Helpers
         #region Interface/Contract Helpers
+        public static bool IsBusinessType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.FullName.Contains(StaticLiterals.BusinessSubName);
+        }
+        public static bool IsModulesType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.FullName.Contains(StaticLiterals.ModulesSubName);
+        }
+        public static bool IsPersistenceType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.FullName.Contains(StaticLiterals.PersistenceSubName);
+        }
+        public static bool IsShadowType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.FullName.Contains(StaticLiterals.ShadowSubName);
+        }
+        public static bool IsThirdPartyType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.FullName.Contains(StaticLiterals.ThirdPartySubName);
+        }
+
         public static IEnumerable<Type> GetBaseInterfaces(Type type)
         {
             type.CheckArgument(nameof(type));
@@ -246,6 +276,7 @@ namespace CSharpCodeGenerator.Logic.Helpers
 
             return FilterPropertiesForGeneration(type, typeProperties.Except(baseProperties));
         }
+        public static IEnumerable<string> VersionProperties => new[] { "Id", "RowVersion" };
         public static IEnumerable<PropertyInfo> FilterPropertiesForGeneration(Type type, IEnumerable<PropertyInfo> properties)
         {
             type.CheckArgument(nameof(type));
@@ -461,7 +492,6 @@ namespace CSharpCodeGenerator.Logic.Helpers
             }
             return result;
         }
-        #endregion Helpers
     }
 }
 //MdEnd

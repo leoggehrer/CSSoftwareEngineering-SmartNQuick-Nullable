@@ -1,5 +1,6 @@
 //@BaseCode
 //MdStart
+using CSharpCodeGenerator.Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -481,7 +482,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
             var modelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
-            var editModelType = $"{CreateTransferModelNameSpace(type)}.Edit{entityName}";
+            var editModelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
             var controllerName = entityName.CreatePluralWord();
             var result = new Models.GeneratedItem(Common.UnitType.WebApi, Common.ItemType.WebApiController)
             {
@@ -491,6 +492,11 @@ namespace CSharpCodeGenerator.Logic.Generation
             };
             ConvertWebApiControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");
+
+            if (ContractHelper.IsBusinessType(type) == false)
+            {
+                editModelType = $"{CreateTransferModelNameSpace(type)}.Edit{entityName}";
+            }
             result.Add($"using TContract = {contractType};");
             result.Add($"using TEditModel = {editModelType};");
             result.Add($"using TModel = {modelType};");

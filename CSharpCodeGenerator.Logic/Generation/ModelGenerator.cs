@@ -96,7 +96,6 @@ namespace CSharpCodeGenerator.Logic.Generation
                         result.Add(CreateDelegateProperties(type, another, StaticLiterals.AnotherItemName, UnitType, Common.ItemType.BusinessModel));
                     }
                     result.Add(CreateBusinessModel(type, UnitType));
-                    result.Add(CreateEditModelFromContract(type, UnitType, Common.ItemType.BusinessModel));
                 }
             }
             return result;
@@ -305,7 +304,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             type.CheckArgument(nameof(type));
 
-            //var interfaces = GetInterfaces(type);
+            var interfaces = GetInterfaces(type);
             var modelName = CreateEditModelNameFromInterface(type);
             var typeProperties = ContractHelper.GetAllProperties(type);
             var result = new Models.GeneratedItem(unitType, itemType)
@@ -337,12 +336,12 @@ namespace CSharpCodeGenerator.Logic.Generation
                 CreateModelPropertyAttributes(propertyHelper, result.Source);
                 result.AddRange(CreateProperty(propertyHelper));
             }
-            //result.AddRange(CreateCopyProperties(type));
-            //foreach (var item in interfaces.Where(e => ContractHelper.HasCopyable(e)))
-            //{
-            //    result.AddRange(CreateCopyProperties(item));
-            //}
-            //result.AddRange(CreateFactoryMethods(type, false));
+            result.AddRange(CreateCopyProperties(type, pi => ContractHelper.VersionProperties.Contains(pi.Name) == false));
+            foreach (var item in interfaces.Where(e => ContractHelper.HasCopyable(e)))
+            {
+                result.AddRange(CreateCopyProperties(item, pi => ContractHelper.VersionProperties.Contains(pi.Name) == false));
+            }
+            result.AddRange(CreateFactoryMethods(type, false));
             result.Add("}");
             result.EnvelopeWithANamespace(CreateModelsNamespace(type), "using System;");
             result.FormatCSharpCode();
