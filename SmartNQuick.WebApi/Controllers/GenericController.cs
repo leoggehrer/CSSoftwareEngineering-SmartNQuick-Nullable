@@ -239,8 +239,8 @@ namespace SmartNQuick.WebApi.Controllers
         /// <response code="200">Model updated</response>
         /// <response code="404">Model not found</response>
         [HttpPut("/api/[controller]/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TModel>> PutAsync(int id, [FromBody] TEditModel model)
         {
             using var ctrl = await CreateControllerAsync();
