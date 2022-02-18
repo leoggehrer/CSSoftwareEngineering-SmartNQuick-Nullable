@@ -161,32 +161,6 @@ namespace CSharpCodeGenerator.Logic.Generation
         static partial void GetPropertyDefaultValue(ContractPropertyHelper propertyHelper, ref string defaultValue);
 
         /// <summary>
-        /// Diese Methode erzeugt eine Delegat-Eigenschaft.
-        /// </summary>
-        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
-        /// <param name="delegateSourceName">Name der Delegate-Eigenschaft</param>
-        /// <param name="delegateHelper">Eigenschafts-Helper-Objekt</param>
-        /// <returns>Die delegate Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreateDelegateProperty(ContractPropertyHelper propertyHelper, string delegateSourceName, ContractPropertyHelper delegateHelper)
-        {
-            propertyHelper.CheckArgument(nameof(propertyHelper));
-            delegateSourceName.CheckNotNullOrEmpty(nameof(delegateSourceName));
-            delegateHelper.CheckArgument(nameof(delegateHelper));
-
-            var result = new List<string>();
-            var fieldType = propertyHelper.PropertyFieldType;
-
-            result.Add(string.Empty);
-            CreatePropertyAttributes(propertyHelper, result);
-            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
-            result.Add("{");
-            result.Add($"get => {delegateSourceName}.{delegateHelper.Property.Name};");
-            result.Add($"set => {delegateSourceName}.{delegateHelper.Property.Name} = value;");
-            result.Add("}");
-            return result;
-        }
-
-        /// <summary>
         /// Diese Methode erstellt den Programmcode einer Eigenschaft (Auto-Property oder Partial-Full-Property).
         /// </summary>
         /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
@@ -298,7 +272,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             var fieldName = CreateFieldName(propertyHelper.Property, "_");
 
             CreateSetPropertyAttributes(propertyHelper, result);
-
             result.Add("set");
             result.Add("{");
             result.Add("bool handled = false;");
@@ -315,77 +288,146 @@ namespace CSharpCodeGenerator.Logic.Generation
 
         #region Delegate property helpers
         /// <summary>
-        /// Diese Methode erstellt den Programmcode einer Eigenschaft aus dem Eigenschaftsinfo-Objekt.
+        /// Diese Methode erstellt den Programmcode einer Delegate-Eigenschaft (Auto-Property oder Partial-Full-Property).
         /// </summary>
         /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateObjectName">Variablenname vom Delegat-Objekt</param>
+        /// <param name="delegatePropertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialDelegateProperty(ContractPropertyHelper propertyHelper)
+        public static IEnumerable<string> CreateDelegateProperty(ContractPropertyHelper propertyHelper, string delegateObjectName, ContractPropertyHelper delegatePropertyHelper)
         {
             propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateObjectName.CheckNotNullOrEmpty(nameof(delegateObjectName));
+            delegatePropertyHelper.CheckArgument(nameof(delegatePropertyHelper));
+
+            IEnumerable<string> result;
+
+            if (propertyHelper.IsAutoProperty)
+            {
+                result = CreateDelegateAutoProperty(propertyHelper, delegateObjectName, delegatePropertyHelper);
+            }
+            else
+            {
+                result = CreateDelegatePartialProperty(propertyHelper, delegateObjectName, delegatePropertyHelper);
+            }
+            return result;
+        }
+        /// <summary>
+        /// Diese Methode erstellt den Programmcode einer Delegate-Eigenschaft (Auto-Property).
+        /// </summary>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateObjectName">Variablenname vom Delegat-Objekt</param>
+        /// <param name="delegatePropertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <returns>Die Eigenschaft als Text.</returns>
+        public static IEnumerable<string> CreateDelegateAutoProperty(ContractPropertyHelper propertyHelper, string delegateObjectName, ContractPropertyHelper delegatePropertyHelper)
+        {
+            propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateObjectName.CheckNotNullOrEmpty(nameof(delegateObjectName));
+            delegatePropertyHelper.CheckArgument(nameof(delegatePropertyHelper));
 
             var result = new List<string>();
-            var propName = propertyHelper.PropertyName;
             var fieldType = propertyHelper.PropertyFieldType;
 
-            result.Add($"public {fieldType} {propName}");
+            result.Add(string.Empty);
+            CreatePropertyAttributes(propertyHelper, result);
+            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
             result.Add("{");
-            if (propertyHelper.CanRead)
-            {
-                result.AddRange(CreatePartialGetDelegateProperty(propertyHelper));
-            }
-            if (propertyHelper.CanWrite)
-            {
-                result.AddRange(CreatePartialSetDelegateProperty(propertyHelper));
-            }
+            result.Add($"get => {delegateObjectName}.{delegatePropertyHelper.Property.Name};");
+            result.Add($"set => {delegateObjectName}.{delegatePropertyHelper.Property.Name} = value;");
+            result.Add("}");
+            return result;
+        }
+        /// <summary>
+        /// Diese Methode erstellt den Programmcode einer Delegate-Eigenschaft (Partial-Full-Property).
+        /// </summary>
+        /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateObjectName">Variablenname vom Delegat-Objekt</param>
+        /// <param name="delegatePropertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <returns>Die Eigenschaft als Text.</returns>
+        public static IEnumerable<string> CreateDelegatePartialProperty(ContractPropertyHelper propertyHelper, string delegateObjectName, ContractPropertyHelper delegatePropertyHelper)
+        {
+            propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateObjectName.CheckNotNullOrEmpty(nameof(delegateObjectName));
+            delegatePropertyHelper.CheckArgument(nameof(delegatePropertyHelper));
+
+            var result = new List<string>();
+            var fieldType = propertyHelper.PropertyFieldType;
+            var paramName = propertyHelper.PropertyFieldName;
+
+            result.Add(string.Empty);
+            CreatePropertyAttributes(propertyHelper, result);
+            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
+            result.Add("{");
+            result.AddRange(CreateDelegatePartialGetProperty(propertyHelper, delegateObjectName, delegatePropertyHelper));
+            result.AddRange(CreateDelegatePartialSetProperty(propertyHelper, delegateObjectName, delegatePropertyHelper));
             result.Add("}");
 
-            if (propertyHelper.CanRead)
-            {
-                result.Add($"partial void On{propName}Reading();");
-            }
-            if (propertyHelper.CanWrite)
-            {
-                result.Add($"partial void On{propName}Changed();");
-            }
+            result.Add($"partial void On{propertyHelper.Property.Name}Reading();");
+            result.Add($"partial void On{propertyHelper.Property.Name}Changing(ref bool handled, {fieldType} value, ref {fieldType} {paramName});");
+            result.Add($"partial void On{propertyHelper.Property.Name}Changed();");
             return result;
         }
         /// <summary>
-        /// Diese Methode erstellt den Programmcode einer Getter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
+        /// Diese Methode erstellt den Programmcode einer Getter-Delegate-Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
         /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateObjectName">Variablenname vom Delegat-Objekt</param>
+        /// <param name="delegatePropertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Getter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialGetDelegateProperty(ContractPropertyHelper propertyHelper)
+        public static IEnumerable<string> CreateDelegatePartialGetProperty(ContractPropertyHelper propertyHelper, string delegateObjectName, ContractPropertyHelper delegatePropertyHelper)
         {
             propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateObjectName.CheckNotNullOrEmpty(nameof(delegateObjectName));
+            delegatePropertyHelper.CheckArgument(nameof(delegatePropertyHelper));
 
-            var result = new List<string>
-            {
-                "get",
-                "{",
-                $"On{propertyHelper.PropertyName}Reading();",
-                $"return {StaticLiterals.DelegatePropertyName} != null ? {StaticLiterals.DelegatePropertyName}.{propertyHelper.PropertyName} : default({propertyHelper.PropertyType});",
-                "}"
-            };
+            var result = new List<string>();
+
+            CreateGetPropertyAttributes(propertyHelper, result);
+            result.Add("get");
+            result.Add("{");
+            result.Add($"On{propertyHelper.PropertyName}Reading();");
+            result.Add($"return {delegateObjectName}.{delegatePropertyHelper.PropertyName};");
+            result.Add("}");
             return result;
         }
         /// <summary>
-        /// Diese Methode erstellt den Programmcode einer Setter-Eigenschaft und leitet diese an das Delegate-Objekt weiter.
+        /// Diese Methode erstellt den Programmcode einer Setter-Delegate-Eigenschaft aus dem Eigenschaftsinfo-Objekt.
         /// </summary>
         /// <param name="propertyHelper">Eigenschafts-Helper-Objekt</param>
+        /// <param name="delegateObjectName">Variablenname vom Delegat-Objekt</param>
+        /// <param name="delegatePropertyHelper">Eigenschafts-Helper-Objekt</param>
         /// <returns>Die Setter-Eigenschaft als Text.</returns>
-        public static IEnumerable<string> CreatePartialSetDelegateProperty(ContractPropertyHelper propertyHelper)
+        public static IEnumerable<string> CreateDelegatePartialSetProperty(ContractPropertyHelper propertyHelper, string delegateObjectName, ContractPropertyHelper delegatePropertyHelper)
         {
             propertyHelper.CheckArgument(nameof(propertyHelper));
+            delegateObjectName.CheckNotNullOrEmpty(nameof(delegateObjectName));
+            delegatePropertyHelper.CheckArgument(nameof(delegatePropertyHelper));
 
-            var result = new List<string>
-            {
-                "set",
-                "{",
-                $"{StaticLiterals.DelegatePropertyName}.{propertyHelper.PropertyName} = value;",
-                $"On{propertyHelper.PropertyName}Changed();",
-                "}"
-            };
-            return result;
+            var result = new List<string>();
+            var defaultValue = propertyHelper.DefaultValue;
+            var propName = propertyHelper.PropertyName;
+            var fieldType = propertyHelper.PropertyFieldType;
+            var fieldName = CreateFieldName(propertyHelper.Property, "_");
+
+            CreateSetPropertyAttributes(propertyHelper, result);
+            result.Add("set");
+            result.Add("{");
+            result.Add("bool handled = false;");
+            result.Add(string.IsNullOrEmpty(defaultValue)
+                ? $"{fieldType} {fieldName} = default;"
+                : $"{fieldType} {fieldName} = {defaultValue};");
+            result.Add($"On{propName}Changing(ref handled, value, ref {fieldName});");
+            result.Add("if (handled == false)");
+            result.Add("{");
+            result.Add($"{delegateObjectName}.{delegatePropertyHelper.PropertyName} = value;");
+            result.Add("}");
+            result.Add("else");
+            result.Add("{");
+            result.Add($"{delegateObjectName}.{delegatePropertyHelper.PropertyName} = {fieldName};");
+            result.Add("}");
+            result.Add($"On{propName}Changed();");
+            result.Add("}");
+            return result.ToArray();
         }
         #endregion Delegate property helpers
 
