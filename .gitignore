@@ -339,6 +339,11 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 #QnSCodeIgnoreStart
+/SmartNQuick.WebApi/Controllers/Shadow/_GeneratedCode.cs
+/SmartNQuick.WebApi/Controllers/Persistence/_GeneratedCode.cs
+/SmartNQuick.WebApi/Controllers/Business/_GeneratedCode.cs
+/SmartNQuick.Transfer/Models/ThirdParty/_GeneratedCode.cs
+/SmartNQuick.AspMvc/Controllers/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Shadow/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Modules/_GeneratedCode.cs
@@ -346,12 +351,8 @@ healthchecksdb
 /SmartNQuick.Logic/Controllers/Shadow/_GeneratedCode.cs
 /SmartNQuick.Logic/Controllers/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Controllers/Business/_GeneratedCode.cs
-/SmartNQuick.AspMvc/Controllers/_GeneratedCode.cs
-/SmartNQuick.Adapters/_GeneratedCode.cs
-/SmartNQuick.WebApi/Controllers/Shadow/_GeneratedCode.cs
-/SmartNQuick.WebApi/Controllers/Persistence/_GeneratedCode.cs
-/SmartNQuick.WebApi/Controllers/Business/_GeneratedCode.cs
-/SmartNQuick.Transfer/Models/ThirdParty/_GeneratedCode.cs
+/SmartNQuick.AspMvc/Models/Business/_GeneratedCode.cs
+/SmartNQuick.Logic/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Shadow/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Modules/_GeneratedCode.cs
@@ -360,7 +361,6 @@ healthchecksdb
 /SmartNQuick.AspMvc/Models/Shadow/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.AspMvc/Models/Modules/_GeneratedCode.cs
-/SmartNQuick.AspMvc/Models/Business/_GeneratedCode.cs
 /SmartNQuick.Logic/DataContext/_GeneratedCode.cs
-/SmartNQuick.Logic/_GeneratedCode.cs
+/SmartNQuick.Adapters/_GeneratedCode.cs
 #QnSCodeIgnoreEnd

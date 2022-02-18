@@ -430,6 +430,15 @@ namespace CSharpCodeGenerator.Logic.Helpers
                                                   && e.Name.Equals(StaticLiterals.IOneToAnotherName));
             return (oneToAnother?.GetGenericArguments()[0], oneToAnother?.GetGenericArguments()[1]);
         }
+        public static Type GetShadowtype(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var shadowType = type.GetInterfaces()
+                                 .FirstOrDefault(e => e.IsGenericType
+                                                   && e.Name.Equals(StaticLiterals.IShadowName));
+            return shadowType?.GetGenericArguments()[0];
+        }
         public static bool HasPersistenceBaseInterface(Type type)
         {
             return GetPersistenceBaseInterface(type) != null;

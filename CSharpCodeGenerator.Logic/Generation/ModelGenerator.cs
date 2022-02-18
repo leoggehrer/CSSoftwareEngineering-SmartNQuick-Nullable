@@ -84,16 +84,16 @@ namespace CSharpCodeGenerator.Logic.Generation
                     result.Add(CreateModelFromContract(type, UnitType, Common.ItemType.BusinessModel));
                     if (ContractHelper.HasOneToMany(type))
                     {
-                        var (one, _) = ContractHelper.GetOneToManyTypes(type);
+                        var (oneType, _) = ContractHelper.GetOneToManyTypes(type);
 
-                        result.Add(CreateDelegateProperties(type, one, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
+                        result.Add(CreateDelegateProperties(type, oneType, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
                     }
                     else if (ContractHelper.HasOneToAnother(type))
                     {
-                        var (one, another) = ContractHelper.GetOneToAnotherTypes(type);
+                        var (oneType, anotherType) = ContractHelper.GetOneToAnotherTypes(type);
 
-                        result.Add(CreateDelegateProperties(type, one, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
-                        result.Add(CreateDelegateProperties(type, another, StaticLiterals.AnotherItemName, UnitType, Common.ItemType.BusinessModel));
+                        result.Add(CreateDelegateProperties(type, oneType, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
+                        result.Add(CreateDelegateProperties(type, anotherType, StaticLiterals.AnotherItemName, UnitType, Common.ItemType.BusinessModel));
                     }
                     result.Add(CreateBusinessModel(type, UnitType));
                 }
