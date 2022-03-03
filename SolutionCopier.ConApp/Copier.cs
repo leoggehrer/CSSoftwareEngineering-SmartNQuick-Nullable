@@ -439,7 +439,7 @@ namespace SolutionCopier.ConApp
             var targetSolutionFolder = new DirectoryInfo(targetSolutionDirectory).Name;
             var subSourceFilePath = sourceFilePath.Replace(sourceSolutionDirectory, string.Empty);
 
-            foreach (var item in subSourceFilePath.Split('\\'))
+            foreach (var item in subSourceFilePath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (string.IsNullOrEmpty(item) == false)
                 {

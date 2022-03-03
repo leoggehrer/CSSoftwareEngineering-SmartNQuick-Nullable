@@ -45,7 +45,7 @@ namespace CSharpCodeGenerator.ConApp
         }
         private static string GetSolutionNameByPath(string solutionPath)
         {
-            return solutionPath.Split(new char[] { '\\', '/' })
+            return solutionPath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries)
                                .Where(e => string.IsNullOrEmpty(e) == false)
                                .Last();
         }

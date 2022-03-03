@@ -268,7 +268,7 @@ namespace SolutionCodeComparsion.ConApp
         private static string GetSolutionNameFromPath(string path)
         {
             var result = string.Empty;
-            var data = path.Split("\\", StringSplitOptions.RemoveEmptyEntries);
+            var data = path.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
 
             if (data.Any())
             {
@@ -279,7 +279,7 @@ namespace SolutionCodeComparsion.ConApp
         private static string GetProjectNameFromFilePath(string filePath, string solutionName)
         {
             var result = string.Empty;
-            var data = filePath.Split("\\", StringSplitOptions.RemoveEmptyEntries);
+            var data = filePath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < data.Length && result == string.Empty; i++)
             {
