@@ -428,6 +428,21 @@ namespace CSharpCodeGenerator.Logic.Generation
                         result = $"{OneToManyEntity}<{genericArgs[0].FullName}, {firstEntity}, {genericArgs[1].FullName}, {secondEntity}>";
                     }
                 }
+                else
+                {
+                    if (typeHelper.IsVersionable)
+                    {
+                        result = VersionEntity;
+                    }
+                    else if (typeHelper.IsIdentifiable)
+                    {
+                        result = IdentityEntity;
+                    }
+                    else
+                    {
+                        result = EntityObject;
+                    }
+                }
             }
             else if (type.FullName.Contains(StaticLiterals.PersistenceSubName))
             {

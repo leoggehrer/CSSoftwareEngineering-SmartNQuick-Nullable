@@ -439,6 +439,21 @@ namespace CSharpCodeGenerator.Logic.Generation
                         result = $"{OneToManyModel}<{genericArgs[0].FullName}, {firstModel}, {genericArgs[1].FullName}, {secondModel}>";
                     }
                 }
+                else
+                {
+                    if (typeHelper.IsVersionable)
+                    {
+                        result = VersionModel;
+                    }
+                    else if (typeHelper.IsIdentifiable)
+                    {
+                        result = IdentityModel;
+                    }
+                    else
+                    {
+                        result = ModelObject;
+                    }
+                }
             }
             else if (type.FullName.Contains(StaticLiterals.PersistenceSubName))
             {
