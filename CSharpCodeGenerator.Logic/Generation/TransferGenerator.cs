@@ -30,7 +30,11 @@ namespace CSharpCodeGenerator.Logic.Generation
             BeforeCreateModelPropertyAttributes(propertyHelper, codeLines, ref handled);
             if (handled == false)
             {
-                if (propertyHelper.PropertyType.IsInterface)
+                if (propertyHelper.JsonIgnore)
+                {
+                    codeLines.Add("[System.Text.Json.Serialization.JsonIgnore]");
+                }
+                else if (propertyHelper.PropertyType.IsInterface)
                 {
                     codeLines.Add("[System.Text.Json.Serialization.JsonIgnore]");
                 }

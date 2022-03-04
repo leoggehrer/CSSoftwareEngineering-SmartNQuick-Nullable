@@ -11,6 +11,9 @@ namespace CommonBase.Attributes
     public abstract partial class PropertyInfoAttribute : Attribute
     {
         private bool notMapped;
+
+        public ContentType ContentType { get; init; } = ContentType.Undefined;
+
         public bool NotMapped
         {
             get => notMapped && HasImplementation == false;
@@ -18,6 +21,7 @@ namespace CommonBase.Attributes
         }
         public bool HasImplementation { get; init; }
         public bool IsAutoProperty { get; init; } = true;
+        public bool JsonIgnore { get; init; } = false;
 
         public int Order { get; init; } = 10_000;
         public string ColumnName { get; init; }
@@ -32,7 +36,6 @@ namespace CommonBase.Attributes
         public int MinLength { get; init; } = -1;
         public int MaxLength { get; init; } = -1;
         public string RegularExpression { get; init; }
-        public ContentType ContentType { get; init; } = ContentType.Undefined;
 
         public bool HasUniqueIndexWithName { get; init; }
         public string IndexName { get; init; } = string.Empty;
