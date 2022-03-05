@@ -12,13 +12,13 @@ namespace SmartNQuick.Logic.Controllers.Business
 
     [Authorize(AllowModify = true)]
 #endif
-    internal abstract partial class GenericOneToAnotherController<C, E, TOne, TOneEntity, TAnother, TAnotherEntity> : BusinessControllerAdapter<C, E>
-        where C : Contracts.IOneToAnother<TOne, TAnother>
-        where E : Entities.OneToAnotherEntity<TOne, TOneEntity, TAnother, TAnotherEntity>, C, Contracts.ICopyable<C>, new()
-        where TOne : Contracts.IIdentifiable, Contracts.ICopyable<TOne>
-        where TOneEntity : Entities.IdentityEntity, TOne, Contracts.ICopyable<TOne>, new()
-        where TAnother : Contracts.IIdentifiable, Contracts.ICopyable<TAnother>
-        where TAnotherEntity : Entities.IdentityEntity, TAnother, Contracts.ICopyable<TAnother>, new()
+    internal abstract partial class GenericOneToAnotherController<TContract, TEntity, TOneContract, TOneEntity, TAnotherContract, TAnotherEntity> : BusinessControllerAdapter<TContract, TEntity>
+        where TContract : Contracts.IOneToAnother<TOneContract, TAnotherContract>
+        where TEntity : Entities.OneToAnotherEntity<TOneContract, TOneEntity, TAnotherContract, TAnotherEntity>, TContract, Contracts.ICopyable<TContract>, new()
+        where TOneContract : Contracts.IIdentifiable, Contracts.ICopyable<TOneContract>
+        where TOneEntity : Entities.IdentityEntity, TOneContract, Contracts.ICopyable<TOneContract>, new()
+        where TAnotherContract : Contracts.IIdentifiable, Contracts.ICopyable<TAnotherContract>
+        where TAnotherEntity : Entities.IdentityEntity, TAnotherContract, Contracts.ICopyable<TAnotherContract>, new()
     {
         static GenericOneToAnotherController()
         {
@@ -28,8 +28,8 @@ namespace SmartNQuick.Logic.Controllers.Business
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        protected abstract GenericController<TOne, TOneEntity> OneEntityController { get; set; }
-        protected abstract GenericController<TAnother, TAnotherEntity> AnotherEntityController { get; set; }
+        protected abstract GenericController<TOneContract, TOneEntity> OneEntityController { get; set; }
+        protected abstract GenericController<TAnotherContract, TAnotherEntity> AnotherEntityController { get; set; }
 
         public override bool IsTransient => true;
 
@@ -48,13 +48,13 @@ namespace SmartNQuick.Logic.Controllers.Business
 
         protected virtual PropertyInfo GetNavigationToOne()
         {
-            return typeof(TAnother).GetInterfaceProperty(typeof(TOneEntity).Name);
+            return typeof(TAnotherContract).GetInterfaceProperty(typeof(TOneEntity).Name);
         }
         protected virtual PropertyInfo GetForeignKeyToOne()
         {
-            return typeof(TAnother).GetInterfaceProperty($"{typeof(TOneEntity).Name}Id");
+            return typeof(TAnotherContract).GetInterfaceProperty($"{typeof(TOneEntity).Name}Id");
         }
-        protected virtual async Task LoadAnotherAsync(E entity, int masterId)
+        protected virtual async Task LoadAnotherAsync(TEntity entity, int masterId)
         {
             var predicate = $"{typeof(TOneEntity).Name}Id == {masterId}";
             var qyr = await AnotherEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
@@ -105,14 +105,14 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
+        internal override async Task<TEntity> ExecuteGetEntityByIdAsync(int id)
         {
-            E result;
+            TEntity result;
             var oneEntity = await OneEntityController.GetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (oneEntity != null)
             {
-                result = new E
+                result = new TEntity
                 {
                     OneEntity = oneEntity
                 };
@@ -125,14 +125,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync()
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteGetEntityAllAsync().ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -141,14 +141,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync(string orderBy)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteGetEntityAllAsync(orderBy).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -158,14 +158,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -174,14 +174,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteGetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -191,14 +191,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -207,14 +207,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteQueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -224,14 +224,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -240,14 +240,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await OneEntityController.ExecuteQueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.OneItem.CopyProperties(item);
                 await LoadAnotherAsync(entity, item.Id).ConfigureAwait(false);
@@ -259,7 +259,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Query
 
         #region Insert
-        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteInsertEntityAsync(TEntity entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
@@ -279,7 +279,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Insert
 
         #region Update
-        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteUpdateEntityAsync(TEntity entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
@@ -306,7 +306,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Update
 
         #region Delete
-        internal override async Task<E> ExecuteDeleteEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteDeleteEntityAsync(TEntity entity)
         {
             if (entity.AnotherEntity.Id > 0)
             {

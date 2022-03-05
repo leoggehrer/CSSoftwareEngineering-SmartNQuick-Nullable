@@ -12,9 +12,9 @@ namespace SmartNQuick.Logic.Controllers.Business
 
     [Authorize(AllowModify = true)]
 #endif
-    internal abstract partial class BusinessControllerAdapter<C, E> : GenericController<C, E>
-        where C : Contracts.IIdentifiable
-        where E : Entities.IdentityEntity, C, Contracts.ICopyable<C>, new()
+    internal abstract partial class BusinessControllerAdapter<TContract, TEntity> : GenericController<TContract, TEntity>
+        where TContract : Contracts.IIdentifiable
+        where TEntity : Entities.IdentityEntity, TContract, Contracts.ICopyable<TContract>, new()
     {
         static BusinessControllerAdapter()
         {
@@ -51,72 +51,72 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        internal override Task<E> ExecuteGetEntityByIdAsync(int id)
+        internal override Task<TEntity> ExecuteGetEntityByIdAsync(int id)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
 
-        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
+        internal override Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync()
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
-
-        internal override Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
-        internal override Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        internal override Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync(string orderBy)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
 
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
+        internal override Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
-        {
-            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
-        }
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate)
+        internal override Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
 
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
+        }
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
         #endregion Query
 
         #region Insert
-        internal override Task<E> ExecuteInsertEntityAsync(E entity)
+        internal override Task<TEntity> ExecuteInsertEntityAsync(TEntity entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
         #endregion Insert
 
         #region Update
-        internal override Task<E> ExecuteUpdateEntityAsync(E entity)
+        internal override Task<TEntity> ExecuteUpdateEntityAsync(TEntity entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }
         #endregion Update
 
         #region Delete
-        internal override Task ExecuteDeleteEntityAsync(E entity)
+        internal override Task ExecuteDeleteEntityAsync(TEntity entity)
         {
             throw new NotSupportedException($"It is not supported: {MethodBase.GetCurrentMethod().GetAsyncOriginal()}!");
         }

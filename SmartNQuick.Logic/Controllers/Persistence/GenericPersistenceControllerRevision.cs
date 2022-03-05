@@ -3,14 +3,13 @@
 #if ACCOUNT_ON && REVISION_ON
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SmartNQuick.Logic.Controllers.Persistence
 {
-    internal partial class GenericPersistenceController<C, E>
+    internal partial class GenericPersistenceController<TContract, TEntity>
     {
         private enum ActionType
         {
@@ -21,7 +20,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         private record HistoryItem(int IdentityId, ActionType ActionType, DateTime ActionTime, Entities.IdentityEntity Entity, string JsonData);
         private readonly List<HistoryItem> historyItems = new();
 
-        protected override async Task<E> AfterInsertAsync(E entity)
+        protected override async Task<TEntity> AfterInsertAsync(TEntity entity)
         {
             if (entity.GetType() != typeof(Entities.Persistence.Revision.History))
             {
@@ -34,13 +33,13 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             }
             return await base.AfterInsertAsync(entity).ConfigureAwait(false);
         }
-        protected override async Task<E> BeforeUpdateAsync(E entity)
+        protected override async Task<TEntity> BeforeUpdateAsync(TEntity entity)
         {
             var historyItem = historyItems.FirstOrDefault(e => e.Entity.Id == entity.Id);
 
             if (historyItem == null)
             {
-                var oriEntity = Context.QueryableSet<C, E>().AsNoTracking().FirstOrDefault(e => e.Id == entity.Id);
+                var oriEntity = Context.QueryableSet<TContract, TEntity>().AsNoTracking().FirstOrDefault(e => e.Id == entity.Id);
 
                 if (oriEntity != null)
                 {
@@ -54,7 +53,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             }
             return await base.BeforeUpdateAsync(entity).ConfigureAwait(false);
         }
-        protected override async Task BeforeDeleteAsync(E entity)
+        protected override async Task BeforeDeleteAsync(TEntity entity)
         {
             var loginSession = await Modules.Account.AccountManager.QueryAliveSessionAsync(SessionToken).ConfigureAwait(false);
 

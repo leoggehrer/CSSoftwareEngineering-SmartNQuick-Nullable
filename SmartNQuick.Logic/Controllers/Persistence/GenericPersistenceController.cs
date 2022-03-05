@@ -15,9 +15,9 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
     [Authorize(AllowModify = true)]
 #endif
-    internal abstract partial class GenericPersistenceController<C, E> : GenericController<C, E>
-        where C : Contracts.IIdentifiable
-        where E : Entities.IdentityEntity, Contracts.ICopyable<C>, C, new()
+    internal abstract partial class GenericPersistenceController<TContract, TEntity> : GenericController<TContract, TEntity>
+        where TContract : Contracts.IIdentifiable
+        where TEntity : Entities.IdentityEntity, Contracts.ICopyable<TContract>, TContract, new()
     {
         static GenericPersistenceController()
         {
@@ -29,8 +29,8 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
         public override bool IsTransient => false;
 
-        public DbSet<E> Set() => Context.Set<C, E>();
-        internal IQueryable<E> QueryableSet() => Context.QueryableSet<C, E>();
+        public DbSet<TEntity> Set() => Context.Set<TContract, TEntity>();
+        internal IQueryable<TEntity> QueryableSet() => Context.QueryableSet<TContract, TEntity>();
 
         protected GenericPersistenceController(DataContext.IContext context) : base(context)
         {
@@ -42,23 +42,23 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         #region Count
         internal override Task<int> ExecuteCountAsync()
         {
-            return Context.CountAsync<C, E>();
+            return Context.CountAsync<TContract, TEntity>();
         }
         internal override Task<int> ExecuteCountByAsync(string predicate)
         {
-            return Context.CountByAsync<C, E>(predicate);
+            return Context.CountByAsync<TContract, TEntity>(predicate);
         }
         #endregion Count
 
         #region Query
-        internal override Task<E> ExecuteGetEntityByIdAsync(int id)
+        internal override Task<TEntity> ExecuteGetEntityByIdAsync(int id)
         {
-            return Context.GetByIdAsync<C, E>(id);
+            return Context.GetByIdAsync<TContract, TEntity>(id);
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync()
         {
             int idx = 0, qryCount;
-            var result = new List<E>();
+            var result = new List<TEntity>();
             do
             {
                 var qry = await QueryableSet().Skip(idx++ * MaxPageSize)
@@ -71,10 +71,10 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             } while (qryCount == MaxPageSize);
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync(string orderBy)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync(string orderBy)
         {
             int idx = 0, qryCount;
-            var result = new List<E>();
+            var result = new List<TEntity>();
             do
             {
                 var qry = await QueryableSet().OrderBy(orderBy)
@@ -89,18 +89,18 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             return result;
         }
 
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
         {
-            return Context.QueryAllAsync<C, E>(predicate);
+            return Context.QueryAllAsync<TContract, TEntity>(predicate);
         }
-        internal override Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        internal override Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
         {
-            return Context.QueryAllAsync<C, E>(predicate, orderBy);
+            return Context.QueryAllAsync<TContract, TEntity>(predicate, orderBy);
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(Expression<Func<E, bool>> predicate)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             int idx = 0, qryCount;
-            var result = new List<E>();
+            var result = new List<TEntity>();
             do
             {
                 var qry = await QueryableSet().Where(predicate)
@@ -115,7 +115,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
@@ -128,7 +128,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
 
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
@@ -143,7 +143,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
             return result;
         }
 
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
@@ -156,7 +156,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
                                              .ConfigureAwait(false);
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
@@ -170,7 +170,7 @@ namespace SmartNQuick.Logic.Controllers.Persistence
                                              .ConfigureAwait(false);
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityPageListAsync(Expression<Func<E, bool>> predicate, int pageIndex, int pageSize)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize)
         {
             if (pageSize < 1 && pageSize > MaxPageSize)
                 throw new LogicException(ErrorType.InvalidPageSize);
@@ -186,38 +186,38 @@ namespace SmartNQuick.Logic.Controllers.Persistence
         #endregion Query
 
         #region Insert
-        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteInsertEntityAsync(TEntity entity)
         {
             BeforeExecuteInsertEntity(entity);
-            var result = await Context.InsertAsync<C, E>(entity).ConfigureAwait(false);
+            var result = await Context.InsertAsync<TContract, TEntity>(entity).ConfigureAwait(false);
             AfterExecuteInsertEntity(entity);
             return result;
         }
-        partial void BeforeExecuteInsertEntity(E entity);
-        partial void AfterExecuteInsertEntity(E entity);
+        partial void BeforeExecuteInsertEntity(TEntity entity);
+        partial void AfterExecuteInsertEntity(TEntity entity);
         #endregion Insert
 
         #region Update
-        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteUpdateEntityAsync(TEntity entity)
         {
             BeforeExecuteUpdateEntity(entity);
-            var result = await Context.UpdateAsync<C, E>(entity).ConfigureAwait(false);
+            var result = await Context.UpdateAsync<TContract, TEntity>(entity).ConfigureAwait(false);
             AfterExecuteUpdateEntity(entity);
             return result;
         }
-        partial void BeforeExecuteUpdateEntity(E entity);
-        partial void AfterExecuteUpdateEntity(E entity);
+        partial void BeforeExecuteUpdateEntity(TEntity entity);
+        partial void AfterExecuteUpdateEntity(TEntity entity);
         #endregion Update
 
         #region Delete
-        internal override async Task ExecuteDeleteEntityAsync(E entity)
+        internal override async Task ExecuteDeleteEntityAsync(TEntity entity)
         {
             BeforeExecuteDeleteEntity(entity);
-            await Context.DeleteAsync<C, E>(entity.Id).ConfigureAwait(false);
+            await Context.DeleteAsync<TContract, TEntity>(entity.Id).ConfigureAwait(false);
             AfterExecuteDeleteEntity(entity);
         }
-        partial void BeforeExecuteDeleteEntity(E entity);
-        partial void AfterExecuteDeleteEntity(E entity);
+        partial void BeforeExecuteDeleteEntity(TEntity entity);
+        partial void AfterExecuteDeleteEntity(TEntity entity);
         #endregion Delete
     }
 }

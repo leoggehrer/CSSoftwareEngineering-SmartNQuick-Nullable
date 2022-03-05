@@ -4,20 +4,20 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SmartNQuick.Logic.Controllers.Shadow
+namespace SmartNQuick.Logic.Controllers.Business
 {
 #if ACCOUNT_ON
     using SmartNQuick.Logic.Modules.Security;
 
     [Authorize(AllowModify = true)]
 #endif
-    internal abstract partial class GenericShadowController<TContract, TEntity, TSourceContract, TSourceEntity> : GenericController<TContract, TEntity>
+    internal abstract partial class GenericDelegateController<TContract, TEntity, TSourceContract, TSourceEntity> : GenericController<TContract, TEntity>
         where TContract : Contracts.IIdentifiable
-        where TEntity : Entities.ShadowEntity, TContract, Contracts.ICopyable<TContract>, new()
+        where TEntity : Entities.IdentityEntity, TContract, Contracts.ICopyable<TContract>, new()
         where TSourceContract : Contracts.IIdentifiable, Contracts.ICopyable<TSourceContract>
         where TSourceEntity : Entities.IdentityEntity, TSourceContract, Contracts.ICopyable<TSourceContract>, new()
     {
-        static GenericShadowController()
+        static GenericDelegateController()
         {
             ClassConstructing();
             ClassConstructed();
@@ -29,7 +29,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
 
         public override bool IsTransient => false;
 
-        public GenericShadowController(DataContext.IContext context) : base(context)
+        public GenericDelegateController(DataContext.IContext context) : base(context)
         {
             Constructing();
 #if ACCOUNT_ON
@@ -39,7 +39,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         }
         partial void Constructing();
         partial void Constructed();
-        public GenericShadowController(ControllerObject controller) : base(controller)
+        public GenericDelegateController(ControllerObject controller) : base(controller)
         {
             Constructing();
 #if ACCOUNT_ON
@@ -55,15 +55,7 @@ namespace SmartNQuick.Logic.Controllers.Shadow
         }
 #endif
 
-        protected virtual TEntity ConvertTo(TSourceEntity entity)
-        {
-            entity.CheckArgument(nameof(entity));
-
-            var result = new TEntity();
-
-            result.SetSource(entity);
-            return result;
-        }
+        protected abstract TEntity ConvertTo(TSourceEntity entity);
         protected virtual IEnumerable<TEntity> ConvertTo(IEnumerable<TSourceEntity> entities)
         {
             entities.CheckArgument(nameof(entities));

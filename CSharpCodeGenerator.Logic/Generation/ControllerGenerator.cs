@@ -98,17 +98,22 @@ namespace CSharpCodeGenerator.Logic.Generation
             type.CheckArgument(nameof(type));
 
             Contracts.IGeneratedItem result;
-            var itfcs = type.GetInterfaces();
+            var contractHelper = new ContractHelper(type);
+            var interfaces = type.GetInterfaces();
 
-            if (itfcs.Length > 0 && itfcs[0].Name.Equals(StaticLiterals.ICompositeName) && itfcs[0].GetGenericArguments().Length == 3)
+            if (contractHelper.DelegateType != null)
+            {
+                result = CreateDelegateBusinessController(type); ;
+            }
+            else if (interfaces.Length > 0 && interfaces[0].Name.Equals(StaticLiterals.ICompositeName) && interfaces[0].GetGenericArguments().Length == 3)
             {
                 result = CreateCompositeBusinessController(type);
             }
-            else if (itfcs.Length > 0 && itfcs[0].Name.Equals(StaticLiterals.IOneToAnotherName) && itfcs[0].GetGenericArguments().Length == 2)
+            else if (interfaces.Length > 0 && interfaces[0].Name.Equals(StaticLiterals.IOneToAnotherName) && interfaces[0].GetGenericArguments().Length == 2)
             {
                 result = CreateOneToAnotherBusinessController(type);
             }
-            else if (itfcs.Length > 0 && itfcs[0].Name.Equals(StaticLiterals.IOneToManyName) && itfcs[0].GetGenericArguments().Length == 2)
+            else if (interfaces.Length > 0 && interfaces[0].Name.Equals(StaticLiterals.IOneToManyName) && interfaces[0].GetGenericArguments().Length == 2)
             {
                 result = CreateOneToManyBusinessController(type);
             }
@@ -142,6 +147,68 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialStaticConstrutor(controllerName));
             result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)"));
             result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", null, false));
+            result.Add("}");
+            result.EnvelopeWithANamespace(CreateLogicControllerNameSpace(type));
+            result.FormatCSharpCode();
+            return result;
+        }
+        private Contracts.IGeneratedItem CreateDelegateBusinessController(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            var contractHelper = new ContractHelper(type);
+            var entityName = CreateEntityNameFromInterface(type);
+            var subNameSpace = CreateSubNamespaceFromType(type);
+            var entityType = $"{StaticLiterals.EntitiesFolder}.{subNameSpace}.{entityName}";
+            var controllerName = $"{entityName}Controller";
+            var baseControllerName = "GenericDelegateController";
+            var delegateGenericType = contractHelper.DelegateType;
+            var delegateEntityType = $"{CreateEntityFullNameFromInterface(delegateGenericType)}";
+            var delegateCtrlType = $"{CreateLogicControllerFullNameFromInterface(delegateGenericType)}";
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            {
+                FullName = CreateLogicControllerFullNameFromInterface(type),
+                FileExtension = StaticLiterals.CSharpFileExtension,
+                SubFilePath = CreateSubFilePathFromInterface(type, "Controllers", "Controller", StaticLiterals.CSharpFileExtension),
+            };
+            ConvertGenericPersistenceControllerName(type, ref baseControllerName);
+            CreateLogicControllerAttributes(type, result.Source);
+            result.Add($"sealed partial class {controllerName} : {baseControllerName}<{type.FullName}, {entityType}, {delegateGenericType.FullName}, {delegateEntityType}>");
+            result.Add("{");
+
+            var initStatements = new List<string>()
+            {
+                $"sourceEntityController = new {delegateCtrlType}(this);",
+            };
+
+            result.AddRange(CreatePartialStaticConstrutor(controllerName));
+            result.AddRange(CreatePartialConstrutor("public", controllerName, $"{SolutionProperties.DataContextFolder}.IContext context", "base(context)", initStatements));
+            result.AddRange(CreatePartialConstrutor("public", controllerName, "ControllerObject controller", "base(controller)", initStatements, false));
+
+            result.Add("[Attributes.ControllerManagedField]");
+            result.Add($"private {delegateCtrlType} sourceEntityController = null;");
+            result.Add($"protected override GenericController<{delegateGenericType.FullName}, {delegateEntityType}> SourceEntityController");
+            result.Add("{");
+            result.Add($"get => sourceEntityController; // ?? (sourceEntityController =  new {delegateCtrlType}(this));");
+            result.Add($"set => sourceEntityController = value as {delegateCtrlType};");
+            result.Add("}");
+
+            result.Add($"protected override {entityType} ConvertTo({delegateEntityType} delegateEntity)");
+            result.Add("{");
+            result.Add("var handled = false;");
+            result.Add($"var result = new {entityType}();");
+
+            result.Add("BeforeConvertTo(delegateEntity, result, ref handled);");
+            result.Add("if (handled == false)");
+            result.Add("{");
+            result.Add("result.SetSource(delegateEntity);");
+            result.Add("}");
+            result.Add("AfterConvertTo(delegateEntity, result);");
+            result.Add("return result;");
+            result.Add("}");
+            result.Add($"partial void BeforeConvertTo({delegateEntityType} delegateEntity, {entityType} entity, ref bool handled);");
+            result.Add($"partial void AfterConvertTo({delegateEntityType} delegateEntity, {entityType} entity);");
+    
             result.Add("}");
             result.EnvelopeWithANamespace(CreateLogicControllerNameSpace(type));
             result.FormatCSharpCode();

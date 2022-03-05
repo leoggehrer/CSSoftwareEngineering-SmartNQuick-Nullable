@@ -13,15 +13,15 @@ namespace SmartNQuick.Logic.Controllers.Business
 
     [Authorize(AllowModify = true)]
 #endif
-    internal abstract partial class GenericCompositeController<C, E, TConnector, TConnectorEntity, TOne, TOneEntity, TAnother, TAnotherEntity> : BusinessControllerAdapter<C, E>
-        where C : Contracts.IComposite<TConnector, TOne, TAnother>
-        where E : Entities.CompositeEntity<TConnector, TConnectorEntity, TOne, TOneEntity, TAnother, TAnotherEntity>, C, Contracts.ICopyable<C>, new()
-        where TConnector : Contracts.IIdentifiable, Contracts.ICopyable<TConnector>
-        where TConnectorEntity : Entities.IdentityEntity, TConnector, Contracts.ICopyable<TConnector>, new()
-        where TOne : Contracts.IIdentifiable, Contracts.ICopyable<TOne>
-        where TOneEntity : Entities.IdentityEntity, TOne, Contracts.ICopyable<TOne>, new()
-        where TAnother : Contracts.IIdentifiable, Contracts.ICopyable<TAnother>
-        where TAnotherEntity : Entities.IdentityEntity, TAnother, Contracts.ICopyable<TAnother>, new()
+    internal abstract partial class GenericCompositeController<TContract, TEntity, TConnectorContract, TConnectorEntity, TOneContract, TOneEntity, TAnotherContract, TAnotherEntity> : BusinessControllerAdapter<TContract, TEntity>
+        where TContract : Contracts.IComposite<TConnectorContract, TOneContract, TAnotherContract>
+        where TEntity : Entities.CompositeEntity<TConnectorContract, TConnectorEntity, TOneContract, TOneEntity, TAnotherContract, TAnotherEntity>, TContract, Contracts.ICopyable<TContract>, new()
+        where TConnectorContract : Contracts.IIdentifiable, Contracts.ICopyable<TConnectorContract>
+        where TConnectorEntity : Entities.IdentityEntity, TConnectorContract, Contracts.ICopyable<TConnectorContract>, new()
+        where TOneContract : Contracts.IIdentifiable, Contracts.ICopyable<TOneContract>
+        where TOneEntity : Entities.IdentityEntity, TOneContract, Contracts.ICopyable<TOneContract>, new()
+        where TAnotherContract : Contracts.IIdentifiable, Contracts.ICopyable<TAnotherContract>
+        where TAnotherEntity : Entities.IdentityEntity, TAnotherContract, Contracts.ICopyable<TAnotherContract>, new()
     {
         static GenericCompositeController()
         {
@@ -31,9 +31,9 @@ namespace SmartNQuick.Logic.Controllers.Business
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        protected abstract GenericController<TConnector, TConnectorEntity> ConnectorEntityController { get; set; }
-        protected abstract GenericController<TOne, TOneEntity> OneEntityController { get; set; }
-        protected abstract GenericController<TAnother, TAnotherEntity> AnotherEntityController { get; set; }
+        protected abstract GenericController<TConnectorContract, TConnectorEntity> ConnectorEntityController { get; set; }
+        protected abstract GenericController<TOneContract, TOneEntity> OneEntityController { get; set; }
+        protected abstract GenericController<TAnotherContract, TAnotherEntity> AnotherEntityController { get; set; }
 
         public override bool IsTransient => true;
 
@@ -52,21 +52,21 @@ namespace SmartNQuick.Logic.Controllers.Business
 
         protected virtual PropertyInfo GetNavigationToOne()
         {
-            return typeof(TConnector).GetInterfaceProperty(typeof(TOneEntity).Name);
+            return typeof(TConnectorContract).GetInterfaceProperty(typeof(TOneEntity).Name);
         }
         protected virtual PropertyInfo GetNavigationToAnother()
         {
-            return typeof(TConnector).GetInterfaceProperty(typeof(TAnotherEntity).Name);
+            return typeof(TConnectorContract).GetInterfaceProperty(typeof(TAnotherEntity).Name);
         }
         protected virtual PropertyInfo GetForeignKeyToOne()
         {
-            return typeof(TConnector).GetInterfaceProperty($"{typeof(TOneEntity).Name}Id");
+            return typeof(TConnectorContract).GetInterfaceProperty($"{typeof(TOneEntity).Name}Id");
         }
         protected virtual PropertyInfo GetForeignKeyToAnother()
         {
-            return typeof(TConnector).GetInterfaceProperty($"{typeof(TAnotherEntity).Name}Id");
+            return typeof(TConnectorContract).GetInterfaceProperty($"{typeof(TAnotherEntity).Name}Id");
         }
-        protected virtual async Task LoadChildsAsync(E entity)
+        protected virtual async Task LoadChildsAsync(TEntity entity)
         {
             var piOneFK = GetForeignKeyToOne();
             var piAnotherFK = GetForeignKeyToAnother();
@@ -113,14 +113,14 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Count
 
         #region Query
-        internal override async Task<E> ExecuteGetEntityByIdAsync(int id)
+        internal override async Task<TEntity> ExecuteGetEntityByIdAsync(int id)
         {
-            E result;
+            TEntity result;
             var entity = await ConnectorEntityController.GetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (entity != null)
             {
-                result = new E();
+                result = new TEntity();
                 result.ConnectorEntity.CopyProperties(entity);
                 await LoadChildsAsync(result).ConfigureAwait(false);
             }
@@ -130,14 +130,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteGetEntityAllAsync()
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync()
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await ConnectorEntityController.GetEntityAllAsync().ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.ConnectorEntity.CopyProperties(item);
                 await LoadChildsAsync(entity).ConfigureAwait(false);
@@ -146,14 +146,14 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<E>> ExecuteQueryEntityAllAsync(string predicate)
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
         {
-            var result = new List<E>();
+            var result = new List<TEntity>();
             var query = await ConnectorEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
 
             foreach (var item in query)
             {
-                var entity = new E();
+                var entity = new TEntity();
 
                 entity.ConnectorEntity.CopyProperties(item);
                 await LoadChildsAsync(entity).ConfigureAwait(false);
@@ -165,7 +165,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Query
 
         #region Insert
-        internal override async Task<E> ExecuteInsertEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteInsertEntityAsync(TEntity entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.ConnectorEntity.CheckArgument(nameof(entity.ConnectorEntity));
@@ -215,7 +215,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Insert
 
         #region Update
-        internal override async Task<E> ExecuteUpdateEntityAsync(E entity)
+        internal override async Task<TEntity> ExecuteUpdateEntityAsync(TEntity entity)
         {
             entity.CheckArgument(nameof(entity));
             entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
@@ -264,7 +264,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         #endregion Update
 
         #region Delete
-        internal override async Task ExecuteDeleteEntityAsync(E entity)
+        internal override async Task ExecuteDeleteEntityAsync(TEntity entity)
         {
             await ConnectorEntityController.DeleteEntityAsync(entity.ConnectorEntity).ConfigureAwait(false);
         }
