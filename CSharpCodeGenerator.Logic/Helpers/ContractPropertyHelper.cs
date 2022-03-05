@@ -24,10 +24,10 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public bool CanWrite => Property.CanWrite;
         public ContentType ContentType => AttributeInfo != null ? AttributeInfo.ContentType : ContentType.Undefined;
 
-        public bool NotMapped => AttributeInfo != null ? AttributeInfo.NotMapped : false;
-        public bool HasImplementation => AttributeInfo != null ? AttributeInfo.HasImplementation : false;
-        public bool IsAutoProperty => AttributeInfo != null ? AttributeInfo.IsAutoProperty : true;
-        public bool JsonIgnore => AttributeInfo != null ? AttributeInfo.JsonIgnore : false;
+        public bool NotMapped => AttributeInfo != null && AttributeInfo.NotMapped;
+        public bool HasImplementation => AttributeInfo != null && AttributeInfo.HasImplementation;
+        public bool IsAutoProperty => AttributeInfo == null || AttributeInfo.IsAutoProperty;
+        public bool JsonIgnore => AttributeInfo != null && AttributeInfo.JsonIgnore;
 
         public int Order => AttributeInfo != null ? AttributeInfo.Order : 10_000;
         public string ColumnName => AttributeInfo?.ColumnName;

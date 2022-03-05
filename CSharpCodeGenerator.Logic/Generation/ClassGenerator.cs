@@ -440,7 +440,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             type.CheckArgument(nameof(type));
 
-            return CreateCopyProperties(type, type.FullName, filter != null ? filter : pi => true);
+            return CreateCopyProperties(type, type.FullName, filter ?? (pi => true));
         }
         private static IEnumerable<string> CreateCopyProperties(Type type, string copyType, Func<PropertyInfo, bool> filter)
         {

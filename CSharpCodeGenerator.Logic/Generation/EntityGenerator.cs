@@ -325,8 +325,8 @@ namespace CSharpCodeGenerator.Logic.Generation
                 delegateType = contractHelper.DelegateType;
                 delegateEntityType = $"{CreateEntityFullNameFromInterface(delegateType)}";
 
-                result.Add($"public {delegateEntityType} {delegateSourceName}" + " { get; set; }");
-                result.Add($"public virtual void SetSource(object source) => {delegateSourceName} = source as {delegateEntityType};");
+                result.Add($"public {delegateEntityType} {delegateSourceName}" + " { get; set; }" + $" = new {delegateEntityType}();");
+                result.Add($"public virtual void SetSource({delegateEntityType} source) => {delegateSourceName} = source;");
 
                 delegateProperties = ContractHelper.GetAllProperties(delegateType)
                                                    .Where(p => CanCreateProperty(delegateType, p.Name));
