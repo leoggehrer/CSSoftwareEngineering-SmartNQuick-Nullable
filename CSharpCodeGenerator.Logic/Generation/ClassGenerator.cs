@@ -327,10 +327,12 @@ namespace CSharpCodeGenerator.Logic.Generation
 
             var result = new List<string>();
             var fieldType = propertyHelper.PropertyFieldType;
+            var modifier = propertyHelper.PropertyName.Equals("Id")
+                           || propertyHelper.PropertyName.Equals("RowVersion") ? "override " : string.Empty;
 
             result.Add(string.Empty);
             CreatePropertyAttributes(propertyHelper, result);
-            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
+            result.Add($"public {modifier} {fieldType} {propertyHelper.Property.Name}");
             result.Add("{");
             result.Add($"get => {delegateObjectName}.{delegatePropertyHelper.Property.Name};");
             result.Add($"set => {delegateObjectName}.{delegatePropertyHelper.Property.Name} = value;");
@@ -353,10 +355,12 @@ namespace CSharpCodeGenerator.Logic.Generation
             var result = new List<string>();
             var fieldType = propertyHelper.PropertyFieldType;
             var paramName = propertyHelper.PropertyFieldName;
+            var modifier = propertyHelper.PropertyName.Equals("Id")
+                           || propertyHelper.PropertyName.Equals("RowVersion") ? "override " : string.Empty;
 
             result.Add(string.Empty);
             CreatePropertyAttributes(propertyHelper, result);
-            result.Add($"public {fieldType} {propertyHelper.Property.Name}");
+            result.Add($"public {modifier} {fieldType} {propertyHelper.Property.Name}");
             result.Add("{");
             result.AddRange(CreateDelegatePartialGetProperty(propertyHelper, delegateObjectName, delegatePropertyHelper));
             result.AddRange(CreateDelegatePartialSetProperty(propertyHelper, delegateObjectName, delegatePropertyHelper));

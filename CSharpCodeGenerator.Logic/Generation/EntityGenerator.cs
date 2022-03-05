@@ -296,7 +296,6 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.FormatCSharpCode();
             return result;
         }
-
         private Contracts.IGeneratedItem CreateEntityFromContract(Type type, Common.ItemType itemType)
         {
             type.CheckArgument(nameof(type));
@@ -321,7 +320,20 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.AddRange(CreatePartialStaticConstrutor(contractHelper.EntityName));
             result.AddRange(CreatePartialConstrutor("public", contractHelper.EntityName));
 
-            if (itemType == Common.ItemType.ShadowEntity)
+            if (itemType == Common.ItemType.BusinessEntity && contractHelper.DelegateType != null)
+            {
+                delegateType = contractHelper.DelegateType;
+                delegateEntityType = $"{CreateEntityFullNameFromInterface(delegateType)}";
+
+                result.Add($"public {delegateEntityType} {delegateSourceName}" + " { get; set; }");
+                result.Add($"public virtual void SetSource(object source) => {delegateSourceName} = source as {delegateEntityType};");
+
+                delegateProperties = ContractHelper.GetAllProperties(delegateType)
+                                                   .Where(p => CanCreateProperty(delegateType, p.Name));
+                generateProperties = ContractHelper.GetAllProperties(type)
+                                                   .Where(p => CanCreateProperty(type, p.Name));
+            }
+            else if (itemType == Common.ItemType.ShadowEntity)
             {
                 var interfaceTypes = type.GetInterfaces();
 
