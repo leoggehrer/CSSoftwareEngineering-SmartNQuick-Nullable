@@ -1,5 +1,6 @@
 //@BaseCode
 //MdStart
+using CSharpCodeGenerator.Logic.Helpers;
 using System;
 using System.Linq;
 
@@ -41,9 +42,10 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             var first = true;
             var contractsProject = ContractsProject.Create(SolutionProperties);
-            var types = contractsProject.PersistenceTypes
-                                        .Union(contractsProject.ShadowTypes)
-                                        .Union(contractsProject.BusinessTypes);
+            var contractHelpers = contractsProject.PersistenceTypes
+                                                  .Union(contractsProject.ShadowTypes)
+                                                  .Union(contractsProject.BusinessTypes)
+                                                  .Select(t => new ContractHelper(t));
             var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.Factory)
             {
                 FullName = $"{LogicNameSpace}.Factory",
@@ -54,7 +56,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
             result.Add("static partial void CreateController<C>(ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
             result.Add("{");
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess && CanCreateLogicAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var entityName = CreateEntityNameFromInterface(type);
                 var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
@@ -84,7 +86,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("static partial void CreateController<C>(object sharedController, ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
             result.Add("{");
             first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess && CanCreateLogicAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var entityName = CreateEntityNameFromInterface(type);
                 var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
@@ -115,7 +117,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("public static void CreateController<C>(string sessionToken, ref Contracts.Client.IControllerAccess<C> controller) where C : Contracts.IIdentifiable");
             result.Add("{");
             first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess && CanCreateLogicAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var entityName = CreateEntityNameFromInterface(type);
                 var controllerNameSpace = $"Controllers.{CreateSubNamespaceFromType(type)}";
@@ -159,9 +161,10 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             var first = true;
             var contractsProject = ContractsProject.Create(SolutionProperties);
-            var types = contractsProject.PersistenceTypes
-                                        .Union(contractsProject.ShadowTypes)
-                                        .Union(contractsProject.BusinessTypes);
+            var contractHelpers = contractsProject.PersistenceTypes
+                                                  .Union(contractsProject.ShadowTypes)
+                                                  .Union(contractsProject.BusinessTypes)
+                                                  .Select(t => new ContractHelper(t));
             var result = new Models.GeneratedItem(Common.UnitType.Adapters, Common.ItemType.Factory)
             {
                 FullName = $"{AdapterNameSpace}.Factory",
@@ -175,7 +178,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("Contracts.Client.IAdapterAccess<C> result = null;");
             result.Add("if (Adapter == AdapterType.Controller)");
             result.Add("{");
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasWebApiAccess && CanCreateLogicAccess(ch.Type) && CanCreateAdapterAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var entityName = CreateEntityNameFromInterface(type);
                 var controllerNameSpace = CreateControllerNameSpace(type);
@@ -198,7 +201,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
 
             first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasWebApiAccess && CanCreateLogicAccess(ch.Type) && CanCreateAdapterAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var modelName = CreateEntityNameFromInterface(type);
                 var modelNameSpace = CreateTransferModelNameSpace(type);
@@ -231,7 +234,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("{");
 
             first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasWebApiAccess && CanCreateLogicAccess(ch.Type) && CanCreateAdapterAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var entityName = CreateEntityNameFromInterface(type);
                 var controllerNameSpace = CreateControllerNameSpace(type);
@@ -253,7 +256,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             result.Add("else if (Adapter == AdapterType.Service)");
             result.Add("{");
             first = true;
-            foreach (var type in types.Where(t => CanCreateLogicAccess(t) && CanCreateAdapterAccess(t)))
+            foreach (var type in contractHelpers.Where(ch => ch.HasWebApiAccess && CanCreateLogicAccess(ch.Type) && CanCreateAdapterAccess(ch.Type)).Select(ch => ch.Type))
             {
                 var modelName = CreateEntityNameFromInterface(type);
                 var modelNameSpace = CreateTransferModelNameSpace(type);
@@ -362,7 +365,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         }
 
         static partial void ConvertExtUri(Type type, ref string extUri);
-        #endregion
+        #endregion Adapter
     }
 }
 //MdEnd

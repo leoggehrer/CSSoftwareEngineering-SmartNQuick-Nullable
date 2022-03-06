@@ -16,7 +16,7 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public static string PersistenceLabel => "Persistence";
         public static string ShadowLabel => "Shadow";
 
-        private Type Type { get; }
+        public Type Type { get; }
         private ContractInfoAttribute Info { get; }
 
         public bool IsVersionable { get; }
@@ -68,6 +68,8 @@ namespace CSharpCodeGenerator.Logic.Helpers
             }
         }
         public Type DelegateType => Info?.DelegateType;
+        public bool HasLogicAccess => Info == null || Info.HasLogicAccess;
+        public bool HasWebApiAccess => Info == null || Info.HasWebApiAccess;
 
         public ContractHelper(Type type)
         {

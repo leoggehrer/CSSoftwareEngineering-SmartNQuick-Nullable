@@ -529,11 +529,12 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             var result = new List<Contracts.IGeneratedItem>();
             var contractsProject = ContractsProject.Create(SolutionProperties);
-            var types = contractsProject.PersistenceTypes
-                                        .Union(contractsProject.ShadowTypes)
-                                        .Union(contractsProject.BusinessTypes);
+            var contractHelpers = contractsProject.PersistenceTypes
+                                                  .Union(contractsProject.ShadowTypes)
+                                                  .Union(contractsProject.BusinessTypes)
+                                                  .Select(t => new ContractHelper(t));
 
-            foreach (var type in types)
+            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess).Select(ch => ch.Type))
             {
                 if (CanCreate(nameof(CreateWebApiControllers), type))
                 {
@@ -597,15 +598,16 @@ namespace CSharpCodeGenerator.Logic.Generation
         {
             var result = new List<Contracts.IGeneratedItem>();
             var contractsProject = ContractsProject.Create(SolutionProperties);
-            var types = contractsProject.PersistenceTypes
-                                        .Union(contractsProject.ShadowTypes)
-                                        .Union(contractsProject.BusinessTypes);
+            var contractHelpers = contractsProject.PersistenceTypes
+                                                  .Union(contractsProject.ShadowTypes)
+                                                  .Union(contractsProject.BusinessTypes)
+                                                  .Select(t => new ContractHelper(t));
 
-            foreach (var type in types)
+            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess).Select(ch => ch.Type))
             {
                 if (CanCreate(nameof(CreateAspMvcControllers), type))
                 {
-                    var isPublic = true;// contractsProject.BusinessTypes.Any(t => t == type) == false;
+                    var isPublic = true;
 
                     result.Add(CreateAspMvcController(type, isPublic));
                 }
