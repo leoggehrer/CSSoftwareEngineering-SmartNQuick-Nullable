@@ -104,10 +104,10 @@ namespace SmartNQuick.ConApp
 #endif
             Task.Run(async () =>
             {
-                Console.Write("Start: Import csv:  ");
+                Console.Write("Start: Import:  ");
                 Console.WriteLine(DateTime.Now);
                 await ImportDataAsync();
-                Console.Write("Finish: Import csv: ");
+                Console.Write("Finish: Import: ");
                 Console.WriteLine(DateTime.Now);
             }).Wait();
         }

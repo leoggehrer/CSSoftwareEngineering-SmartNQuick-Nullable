@@ -38,7 +38,7 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public bool IsUnique => AttributeInfo != null && AttributeInfo.IsUnique;
 
         public bool IsFixedLength => AttributeInfo != null && AttributeInfo.IsFixedLength;
-        public int Precision => AttributeInfo != null ? AttributeInfo.Precision : 2;
+        public string Precision => AttributeInfo != null ? AttributeInfo.Precision : "18, 2";
         public int MinLength => AttributeInfo != null ? AttributeInfo.MinLength : -1;
         public int MaxLength => AttributeInfo != null ? AttributeInfo.MaxLength : -1;
         public string RegularExpression => AttributeInfo?.RegularExpression ?? string.Empty;

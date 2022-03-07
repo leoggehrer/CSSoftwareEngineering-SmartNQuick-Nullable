@@ -32,7 +32,7 @@ namespace CommonBase.Attributes
         public bool IsUnique { get; init; }
 
         public bool IsFixedLength { get; init; }
-        public int Precision { get; init; } = 2;
+        public string Precision { get; init; } = "18, 2";
         public int MinLength { get; init; } = -1;
         public int MaxLength { get; init; } = -1;
         public string RegularExpression { get; init; }
