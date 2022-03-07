@@ -546,6 +546,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         private Contracts.IGeneratedItem CreateWebApiController(Type type)
         {
             //var routeBase = $"/api/[controller]";
+            var contractHelper = new ContractHelper(type);
             var entityName = CreateEntityNameFromInterface(type);
             var subNameSpace = CreateSubNamespaceFromType(type);
             var contractType = $"Contracts.{subNameSpace}.{type.Name}";
@@ -561,7 +562,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             ConvertWebApiControllerName(type, ref controllerName);
             result.Add("using Microsoft.AspNetCore.Mvc;");
 
-            if (ContractHelper.IsBusinessType(type) == false)
+            if (ContractHelper.IsBusinessType(type) == false || (ContractHelper.IsBusinessType(type) && contractHelper.DelegateType != null))
             {
                 editModelType = $"{CreateTransferModelNameSpace(type)}.Edit{entityName}";
             }

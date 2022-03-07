@@ -103,6 +103,24 @@ namespace CSharpCodeGenerator.Logic.Helpers
 
             return type.IsInterface && type.FullName.Contains(StaticLiterals.BusinessSubName);
         }
+        public static bool IsOneToManyType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.GetInterfaces().Any(i => i.FullName.Contains(StaticLiterals.IOneToManyName));
+        }
+        public static bool IsOneToAnotherType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.GetInterfaces().Any(i => i.FullName.Contains(StaticLiterals.IOneToAnotherName));
+        }
+        public static bool IsCompositeType(Type type)
+        {
+            type.CheckArgument(nameof(type));
+
+            return type.IsInterface && type.GetInterfaces().Any(i => i.FullName.Contains(StaticLiterals.ICompositeName));
+        }
         public static bool IsModulesType(Type type)
         {
             type.CheckArgument(nameof(type));

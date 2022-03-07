@@ -95,6 +95,10 @@ namespace CSharpCodeGenerator.Logic.Generation
                         result.Add(CreateDelegateProperties(type, oneType, StaticLiterals.OneItemName, UnitType, Common.ItemType.BusinessModel));
                         result.Add(CreateDelegateProperties(type, anotherType, StaticLiterals.AnotherItemName, UnitType, Common.ItemType.BusinessModel));
                     }
+                    else
+                    {
+                        result.Add(CreateEditModelFromContract(type, UnitType, Common.ItemType.BusinessModel));
+                    }
                     result.Add(CreateBusinessModel(type, UnitType));
                 }
             }
@@ -163,7 +167,6 @@ namespace CSharpCodeGenerator.Logic.Generation
                     result.Add(CreateModelFromContract(type, UnitType, Common.ItemType.PersistenceModel));
                     result.Add(CreatePersistenceModel(type, UnitType));
                     result.Add(CreateEditModelFromContract(type, UnitType, Common.ItemType.PersistenceModel));
-                    //result.Add(CreateOverrideToString(type, UnitType));
                 }
             }
             return result;
