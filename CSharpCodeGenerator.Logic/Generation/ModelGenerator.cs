@@ -332,19 +332,13 @@ namespace CSharpCodeGenerator.Logic.Generation
             {
                 generateProperties = ContractHelper.FilterPropertiesForGeneration(type, typeProperties);
             }
-            foreach (var item in generateProperties)
+            foreach (var item in generateProperties.Where(pi => pi.CanWrite))
             {
                 var propertyHelper = new ContractPropertyHelper(type, item);
 
                 CreateModelPropertyAttributes(propertyHelper, result.Source);
                 result.AddRange(CreateProperty(propertyHelper));
             }
-            result.AddRange(CreateCopyProperties(type, pi => ContractHelper.VersionProperties.Contains(pi.Name) == false));
-            foreach (var item in interfaces.Where(e => ContractHelper.HasCopyable(e)))
-            {
-                result.AddRange(CreateCopyProperties(item, pi => ContractHelper.VersionProperties.Contains(pi.Name) == false));
-            }
-            result.AddRange(CreateFactoryMethods(type, false));
             result.Add("}");
             result.EnvelopeWithANamespace(CreateModelsNamespace(type), "using System;");
             result.FormatCSharpCode();
