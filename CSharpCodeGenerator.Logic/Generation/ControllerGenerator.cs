@@ -534,16 +534,27 @@ namespace CSharpCodeGenerator.Logic.Generation
                                                   .Union(contractsProject.BusinessTypes)
                                                   .Select(t => new ContractHelper(t));
 
-            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess).Select(ch => ch.Type))
+            foreach (var item in contractHelpers.Where(ch => ch.HasLogicAccess))
             {
-                if (CanCreate(nameof(CreateWebApiControllers), type))
+                if (CanCreate(nameof(CreateWebApiControllers), item.Type))
                 {
-                    result.Add(CreateWebApiController(type));
+                    if (ContractHelper.IsBusinessType(item.Type))
+                    {
+                        result.Add(CreateWebApiController(item.Type, Common.ItemType.WebApiBusinessController));
+                    }
+                    else if (ContractHelper.IsPersistenceType(item.Type))
+                    {
+                        result.Add(CreateWebApiController(item.Type, Common.ItemType.WebApiPersistenceController));
+                    }
+                    else if (ContractHelper.IsShadowType(item.Type))
+                    {
+                        result.Add(CreateWebApiController(item.Type, Common.ItemType.WebApiShadowController));
+                    }
                 }
             }
             return result;
         }
-        private Contracts.IGeneratedItem CreateWebApiController(Type type)
+        private Contracts.IGeneratedItem CreateWebApiController(Type type, Common.ItemType itemType)
         {
             //var routeBase = $"/api/[controller]";
             var contractHelper = new ContractHelper(type);
@@ -553,7 +564,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var modelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
             var editModelType = $"{CreateTransferModelNameSpace(type)}.{entityName}";
             var controllerName = entityName.CreatePluralWord();
-            var result = new Models.GeneratedItem(Common.UnitType.WebApi, Common.ItemType.WebApiController)
+            var result = new Models.GeneratedItem(Common.UnitType.WebApi, itemType)
             {
                 FullName = CreateWebApiControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -604,18 +615,29 @@ namespace CSharpCodeGenerator.Logic.Generation
                                                   .Union(contractsProject.BusinessTypes)
                                                   .Select(t => new ContractHelper(t));
 
-            foreach (var type in contractHelpers.Where(ch => ch.HasLogicAccess).Select(ch => ch.Type))
+            foreach (var item in contractHelpers.Where(ch => ch.HasLogicAccess))
             {
-                if (CanCreate(nameof(CreateAspMvcControllers), type))
+                if (CanCreate(nameof(CreateAspMvcControllers), item.Type))
                 {
                     var isPublic = true;
 
-                    result.Add(CreateAspMvcController(type, isPublic));
+                    if (ContractHelper.IsBusinessType(item.Type))
+                    {
+                        result.Add(CreateAspMvcController(item.Type, Common.ItemType.AspMvcBusinessController, isPublic));
+                    }
+                    else if (ContractHelper.IsPersistenceType(item.Type))
+                    {
+                        result.Add(CreateAspMvcController(item.Type, Common.ItemType.AspMvcPersistenceController, isPublic));
+                    }
+                    else if (ContractHelper.IsShadowType(item.Type))
+                    {
+                        result.Add(CreateAspMvcController(item.Type, Common.ItemType.AspMvcShadowController, isPublic));
+                    }
                 }
             }
             return result;
         }
-        private Contracts.IGeneratedItem CreateAspMvcController(Type type, bool isPublic)
+        private Contracts.IGeneratedItem CreateAspMvcController(Type type, Common.ItemType itemType, bool isPublic)
         {
             var entityName = CreateEntityNameFromInterface(type);
             var subNameSpace = CreateSubNamespaceFromType(type);
@@ -623,7 +645,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var modelType = $"AspMvc.{StaticLiterals.ModelsFolder}.{subNameSpace}.{entityName}";
             var controllerName = entityName.CreatePluralWord();
             var className = $"{controllerName}Controller";
-            var result = new Models.GeneratedItem(Common.UnitType.AspMvc, Common.ItemType.AspMvcController)
+            var result = new Models.GeneratedItem(Common.UnitType.AspMvc, itemType)
             {
                 FullName = CreateAspMvcControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,

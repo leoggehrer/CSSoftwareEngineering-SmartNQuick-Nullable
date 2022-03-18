@@ -164,12 +164,26 @@ namespace CSharpCodeGenerator.ConApp
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 var projectPath = Path.Combine(solutionPath, solutionProperties.WebApiProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiController);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiBusinessController);
 
-                Console.WriteLine("Write WebApi-Controllers...");
-                WriteItems(projectPath, writeItems.Where(e => e.SubFilePath.Contains("Business")));
-                WriteItems(projectPath, writeItems.Where(e => e.SubFilePath.Contains("Persistence")));
-                WriteItems(projectPath, writeItems.Where(e => e.SubFilePath.Contains("Shadow")));
+                Console.WriteLine("Write WebApi-Business-Controllers...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.WebApiProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiPersistenceController);
+
+                Console.WriteLine("Write WebApi-Persistence-Controllers...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.WebApiProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.WebApi && e.ItemType == ItemType.WebApiShadowController);
+
+                Console.WriteLine("Write WebApi-Shadow-Controllers...");
+                WriteItems(projectPath, writeItems);
             }));
             #endregion WriteWebApi
 
@@ -217,9 +231,25 @@ namespace CSharpCodeGenerator.ConApp
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcController);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcBusinessController);
 
-                Console.WriteLine("Write AspMvc-Controllers...");
+                Console.WriteLine("Write AspMvc-Business-Controllers...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcPersistenceController);
+
+                Console.WriteLine("Write AspMvc-Persistence-Controllers...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcShadowController);
+
+                Console.WriteLine("Write AspMvc-Shadow-Controllers...");
                 WriteItems(projectPath, writeItems);
             }));
             #endregion AspMvc

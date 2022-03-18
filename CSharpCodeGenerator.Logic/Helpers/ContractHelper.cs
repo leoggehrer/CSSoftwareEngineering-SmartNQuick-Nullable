@@ -23,7 +23,6 @@ namespace CSharpCodeGenerator.Logic.Helpers
         public bool IsIdentifiable { get; }
         public bool IsCopyable { get; }
         public bool IsOneToMany { get; }
-        public bool IsPersistenType { get; }
         public string EntityType { get; }
         public string EntityName { get; }
         public string EntityFieldName => $"{char.ToLower(EntityName[0])}{EntityName[1..]}";
@@ -88,8 +87,6 @@ namespace CSharpCodeGenerator.Logic.Helpers
                                                          && e.Name.Equals(StaticLiterals.ICopyableName)
                                                          && e.GetGenericArguments()[0].Name.Equals(type.Name)) != null;
             IsOneToMany = HasOneToMany(type);
-
-            IsPersistenType = type.FullName.Contains(StaticLiterals.PersistenceSubName);
 
             EntityName = GeneratorObject.CreateEntityNameFromInterface(Type);
             EntityType = $"{entityNameSpace}.{EntityName}";
