@@ -133,7 +133,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "BusinessControllerAdapter";
             var controllerAttributes = InitLogicControllerAttributes(type);
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicBusinessController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -165,7 +165,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var delegateGenericType = contractHelper.DelegateType;
             var delegateEntityType = $"{CreateEntityFullNameFromInterface(delegateGenericType)}";
             var delegateCtrlType = $"{CreateLogicControllerFullNameFromInterface(delegateGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicBusinessController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -234,7 +234,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var connectorCtrlType = $"{CreateLogicControllerFullNameFromInterface(connectorGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var anotherCtrlType = $"{CreateLogicControllerFullNameFromInterface(anotherGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicBusinessController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -303,7 +303,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var anotherEntityType = $"{CreateEntityFullNameFromInterface(anotherGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var anotherCtrlType = $"{CreateLogicControllerFullNameFromInterface(anotherGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicBusinessController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -363,7 +363,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var manyEntityType = $"{CreateEntityFullNameFromInterface(manyGenericType)}";
             var oneCtrlType = $"{CreateLogicControllerFullNameFromInterface(oneGenericType)}";
             var manyCtrlType = $"{CreateLogicControllerFullNameFromInterface(manyGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicBusinessController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -431,7 +431,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var controllerName = $"{entityName}Controller";
             var baseControllerName = "GenericPersistenceController";
             var controllerAttributes = InitLogicControllerAttributes(type);
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicPersistenceController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,
@@ -479,7 +479,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var sourceGenericType = interfaceTypes.Single(e => e.IsGenericType && e.Name.Equals(StaticLiterals.IShadowName)).GetGenericArguments()[0];
             var sourceEntityType = $"{CreateEntityFullNameFromInterface(sourceGenericType)}";
             var sourceCtrlType = $"{CreateLogicControllerFullNameFromInterface(sourceGenericType)}";
-            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicController)
+            var result = new Models.GeneratedItem(Common.UnitType.Logic, Common.ItemType.LogicShadowController)
             {
                 FullName = CreateLogicControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,

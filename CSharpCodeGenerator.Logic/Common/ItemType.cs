@@ -24,10 +24,14 @@ namespace CSharpCodeGenerator.Logic.Common
         ThridPartyModel = (ulong)8192,
         Model = BusinessModel + ModuleModel + PersistenceModel + ShadowModel,
 
-        LogicController = (ulong)8192 * 2,
-        WebApiController = (ulong)8192 * 4,
-        AspMvcController = (ulong)8192 * 8,
-        Controller = LogicController + WebApiController + AspMvcController,
+//        LogicController = (ulong)8192 * 2,
+        LogicBusinessController = (ulong)8192 * 2,
+        LogicShadowController = (ulong)8192 * 4,
+        LogicPersistenceController = (ulong)8192 * 8,
+
+        WebApiController = (ulong)8192 * 16,
+        AspMvcController = (ulong)8192 * 32,
+//        Controller = LogicController + WebApiController + AspMvcController,
     }
 }
 //MdEnd
