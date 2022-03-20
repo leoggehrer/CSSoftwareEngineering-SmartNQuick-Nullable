@@ -2,7 +2,7 @@
 //MdStart
 namespace SmartNQuick.AspMvc.Models
 {
-    public abstract partial class CompositeModel<TConnector, TConnectorModel, TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel
+    public abstract partial class CompositeModel<TConnector, TConnectorModel, TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, IThreePartView
         where TConnector : Contracts.IIdentifiable
         where TOne : Contracts.IIdentifiable
         where TAnother : Contracts.IIdentifiable
@@ -15,11 +15,11 @@ namespace SmartNQuick.AspMvc.Models
 
         public virtual TOneModel OneModel { get; } = new TOneModel();
         public virtual TOne OneItem => OneModel;
-        public bool OneItemIncludeSave { get; set; }
+        public bool OneItemIncludeSave { get; set; } = true;
 
         public virtual TAnotherModel AnotherModel { get; } = new TAnotherModel();
         public virtual TAnother AnotherItem => AnotherModel;
-        public bool AnotherItemIncludeSave { get; set; }
+        public bool AnotherItemIncludeSave { get; set; } = true;
 
         public override int Id { get => ConnectorModel.Id; set => ConnectorModel.Id = value; }
         public byte[] RowVersion
@@ -39,6 +39,10 @@ namespace SmartNQuick.AspMvc.Models
                     ve.RowVersion = value;
             }
         }
+
+        public IdentityModel FirstModel => ConnectorModel;
+        public IdentityModel SecondModel => OneModel;
+        public IdentityModel ThirdModel => AnotherModel;
     }
 }
 //MdEnd

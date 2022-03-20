@@ -16,6 +16,22 @@ namespace SmartNQuick.Logic.Migrations
                 name: "UnitTest");
 
             migrationBuilder.CreateTable(
+                name: "Another",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Detail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Another", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EditForm",
                 schema: "Test",
                 columns: table => new
@@ -83,6 +99,22 @@ namespace SmartNQuick.Logic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "One",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_One", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Detail",
                 schema: "Test",
                 columns: table => new
@@ -107,6 +139,37 @@ namespace SmartNQuick.Logic.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "OneXAnother",
+                schema: "Test",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OneId = table.Column<int>(type: "int", nullable: false),
+                    AnotherId = table.Column<int>(type: "int", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OneXAnother", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OneXAnother_Another_AnotherId",
+                        column: x => x.AnotherId,
+                        principalSchema: "Test",
+                        principalTable: "Another",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OneXAnother_One_OneId",
+                        column: x => x.OneId,
+                        principalSchema: "Test",
+                        principalTable: "One",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Detail_MasterId",
                 schema: "Test",
@@ -119,6 +182,18 @@ namespace SmartNQuick.Logic.Migrations
                 table: "Genre",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OneXAnother_AnotherId",
+                schema: "Test",
+                table: "OneXAnother",
+                column: "AnotherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OneXAnother_OneId",
+                schema: "Test",
+                table: "OneXAnother",
+                column: "OneId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -136,7 +211,19 @@ namespace SmartNQuick.Logic.Migrations
                 schema: "UnitTest");
 
             migrationBuilder.DropTable(
+                name: "OneXAnother",
+                schema: "Test");
+
+            migrationBuilder.DropTable(
                 name: "Master",
+                schema: "Test");
+
+            migrationBuilder.DropTable(
+                name: "Another",
+                schema: "Test");
+
+            migrationBuilder.DropTable(
+                name: "One",
                 schema: "Test");
         }
     }

@@ -52,11 +52,11 @@ namespace SmartNQuick.Logic.Controllers.Business
 
         protected virtual PropertyInfo GetNavigationToOne()
         {
-            return typeof(TConnectorContract).GetInterfaceProperty(typeof(TOneEntity).Name);
+            return typeof(TConnectorEntity).GetProperty(typeof(TOneEntity).Name);
         }
         protected virtual PropertyInfo GetNavigationToAnother()
         {
-            return typeof(TConnectorContract).GetInterfaceProperty(typeof(TAnotherEntity).Name);
+            return typeof(TConnectorEntity).GetProperty(typeof(TAnotherEntity).Name);
         }
         protected virtual PropertyInfo GetForeignKeyToOne()
         {
@@ -77,12 +77,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
                 if (value != null)
                 {
-                    var child = await OneEntityController.GetEntityByIdAsync((int)Convert.ChangeType(value, piOneFK.PropertyType)).ConfigureAwait(false);
-
-                    if (child != null)
-                    {
-                        entity.OneEntity.CopyProperties(child);
-                    }
+                    entity.OneEntity = await OneEntityController.GetEntityByIdAsync((int)Convert.ChangeType(value, piOneFK.PropertyType)).ConfigureAwait(false);
                 }
             }
             if (piAnotherFK != null)
@@ -91,12 +86,7 @@ namespace SmartNQuick.Logic.Controllers.Business
 
                 if (value != null)
                 {
-                    var child = await AnotherEntityController.GetEntityByIdAsync((int)Convert.ChangeType(value, piAnotherFK.PropertyType)).ConfigureAwait(false);
-
-                    if (child != null)
-                    {
-                        entity.AnotherEntity.CopyProperties(child);
-                    }
+                    entity.AnotherEntity = await AnotherEntityController.GetEntityByIdAsync((int)Convert.ChangeType(value, piAnotherFK.PropertyType)).ConfigureAwait(false);
                 }
             }
         }
@@ -104,11 +94,11 @@ namespace SmartNQuick.Logic.Controllers.Business
         #region Count
         internal override Task<int> ExecuteCountAsync()
         {
-            return OneEntityController.ExecuteCountAsync();
+            return ConnectorEntityController.ExecuteCountAsync();
         }
         internal override Task<int> ExecuteCountByAsync(string predicate)
         {
-            return OneEntityController.ExecuteCountByAsync(predicate);
+            return ConnectorEntityController.ExecuteCountByAsync(predicate);
         }
         #endregion Count
 
@@ -116,12 +106,12 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<TEntity> ExecuteGetEntityByIdAsync(int id)
         {
             TEntity result;
-            var entity = await ConnectorEntityController.GetEntityByIdAsync(id).ConfigureAwait(false);
+            var entity = await ConnectorEntityController.ExecuteGetEntityByIdAsync(id).ConfigureAwait(false);
 
             if (entity != null)
             {
                 result = new TEntity();
-                result.ConnectorEntity.CopyProperties(entity);
+                result.ConnectorEntity = entity;
                 await LoadChildsAsync(result).ConfigureAwait(false);
             }
             else
@@ -133,7 +123,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync()
         {
             var result = new List<TEntity>();
-            var query = await ConnectorEntityController.GetEntityAllAsync().ConfigureAwait(false);
+            var query = await ConnectorEntityController.ExecuteGetEntityAllAsync().ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -149,7 +139,39 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
         {
             var result = new List<TEntity>();
-            var query = await ConnectorEntityController.QueryEntityAllAsync(predicate).ConfigureAwait(false);
+            var query = await ConnectorEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteGetEntityPageListAsync(pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -218,6 +240,7 @@ namespace SmartNQuick.Logic.Controllers.Business
         internal override async Task<TEntity> ExecuteUpdateEntityAsync(TEntity entity)
         {
             entity.CheckArgument(nameof(entity));
+            entity.ConnectorEntity.CheckArgument(nameof(entity.ConnectorEntity));
             entity.OneEntity.CheckArgument(nameof(entity.OneEntity));
             entity.AnotherEntity.CheckArgument(nameof(entity.AnotherEntity));
 

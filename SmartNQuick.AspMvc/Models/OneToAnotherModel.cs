@@ -2,7 +2,7 @@
 //MdStart
 namespace SmartNQuick.AspMvc.Models
 {
-    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, IFirstToSecond
+    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, ITwoPartView
         where TOne : Contracts.IIdentifiable
         where TAnother : Contracts.IIdentifiable
         where TOneModel : IdentityModel, Contracts.ICopyable<TOne>, TOne, new()

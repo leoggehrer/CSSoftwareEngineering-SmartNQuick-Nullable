@@ -3,7 +3,7 @@
 
 namespace SmartNQuick.AspMvc.Models
 {
-    public interface IFirstToSecond
+    public interface ITwoPartView
     {
         IdentityModel FirstModel { get; }
         IdentityModel SecondModel { get; }

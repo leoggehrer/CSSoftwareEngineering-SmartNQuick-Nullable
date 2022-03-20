@@ -14,35 +14,70 @@
         IndexDisplayViewModel displayViewModel = null;
         DisplayViewModel firstDisplayViewModel = null;
         DisplayViewModel secondDisplayViewModel = null;
+        DisplayViewModel threeDisplayViewModel = null;
 
         @foreach (var model in Model.DisplayModels)
         {
             model.ViewBagInfo = viewBagInfo;
             <div class="card" style="margin-bottom: 0.5em;">
                 <ul class="list-group list-group-flush">
-                    @if (model is IFirstToSecond fTs)
+                    @if (model is ITwoPartView twoPview)
                     {
-                        viewBagInfo.IgnoreNames.Add($"{fTs.FirstModel.GetType().Name}Id");
+                        viewBagInfo.IgnoreNames.Add($"{twoPview.FirstModel.GetType().Name}Id");
 
                         if (firstDisplayViewModel == null)
                         {
-                            firstDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.FirstModel);
+                            firstDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, twoPview.FirstModel);
                         }
                         else
                         {
-                            firstDisplayViewModel.Model = fTs.FirstModel;
+                            firstDisplayViewModel.Model = twoPview.FirstModel;
                         }
 
                         if (secondDisplayViewModel == null)
                         {
-                            secondDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, fTs.SecondModel);
+                            secondDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, twoPview.SecondModel);
                         }
                         else
                         {
-                            secondDisplayViewModel.Model = fTs.SecondModel;
+                            secondDisplayViewModel.Model = twoPview.SecondModel;
                         }
                         @await Html.PartialAsync("_CardGroup", firstDisplayViewModel)
                         @await Html.PartialAsync("_CardGroup", secondDisplayViewModel)
+                    }
+                    else if (model is IThreePartView threePview)
+                    {
+                        viewBagInfo.IgnoreNames.Add($"{threePview.FirstModel.GetType().Name}Id");
+
+                        if (firstDisplayViewModel == null)
+                        {
+                            firstDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, threePview.FirstModel);
+                        }
+                        else
+                        {
+                            firstDisplayViewModel.Model = threePview.FirstModel;
+                        }
+
+                        if (secondDisplayViewModel == null)
+                        {
+                            secondDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, threePview.SecondModel);
+                        }
+                        else
+                        {
+                            secondDisplayViewModel.Model = threePview.SecondModel;
+                        }
+
+                        if (threeDisplayViewModel == null)
+                        {
+                            threeDisplayViewModel = ViewModelCreator.CreateDisplayViewModel(viewBagInfo, threePview.ThirdModel);
+                        }
+                        else
+                        {
+                            threeDisplayViewModel.Model = threePview.ThirdModel;
+                        }
+                        @await Html.PartialAsync("_CardGroup", firstDisplayViewModel)
+                        @await Html.PartialAsync("_CardGroup", secondDisplayViewModel)
+                        @await Html.PartialAsync("_CardGroup", threeDisplayViewModel)
                     }
                     else
                     {

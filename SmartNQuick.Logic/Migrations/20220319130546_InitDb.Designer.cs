@@ -12,17 +12,44 @@ using SmartNQuick.Logic.DataContext;
 namespace SmartNQuick.Logic.Migrations
 {
     [DbContext(typeof(SmartNQuickDbContext))]
-    [Migration("20220214073701_InitDb")]
+    [Migration("20220319130546_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Another", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Another", "Test");
+                });
 
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Detail", b =>
                 {
@@ -175,6 +202,65 @@ namespace SmartNQuick.Logic.Migrations
                     b.ToTable("Master", "Test");
                 });
 
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.One", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("One", "Test");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.OneXAnother", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AnotherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("OneId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnotherId");
+
+                    b.HasIndex("OneId");
+
+                    b.ToTable("OneXAnother", "Test");
+                });
+
             modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.UnitTest.Genre", b =>
                 {
                     b.Property<int>("Id")
@@ -210,6 +296,35 @@ namespace SmartNQuick.Logic.Migrations
                         .IsRequired();
 
                     b.Navigation("Master");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.OneXAnother", b =>
+                {
+                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.Test.Another", "Another")
+                        .WithMany("OneXAnothers")
+                        .HasForeignKey("AnotherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartNQuick.Logic.Entities.Persistence.Test.One", "One")
+                        .WithMany("OneXAnothers")
+                        .HasForeignKey("OneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Another");
+
+                    b.Navigation("One");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.Another", b =>
+                {
+                    b.Navigation("OneXAnothers");
+                });
+
+            modelBuilder.Entity("SmartNQuick.Logic.Entities.Persistence.Test.One", b =>
+                {
+                    b.Navigation("OneXAnothers");
                 });
 #pragma warning restore 612, 618
         }
