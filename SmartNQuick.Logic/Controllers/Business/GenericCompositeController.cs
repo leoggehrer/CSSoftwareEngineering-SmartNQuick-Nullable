@@ -136,10 +136,10 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
-        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityAllAsync(string orderBy)
         {
             var result = new List<TEntity>();
-            var query = await ConnectorEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+            var query = await ConnectorEntityController.ExecuteGetEntityAllAsync(orderBy).ConfigureAwait(false);
 
             foreach (var item in query)
             {
@@ -152,6 +152,7 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+
         internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(int pageIndex, int pageSize)
         {
             var result = new List<TEntity>();
@@ -168,10 +169,75 @@ namespace SmartNQuick.Logic.Controllers.Business
             }
             return result;
         }
+        internal override async Task<IEnumerable<TEntity>> ExecuteGetEntityPageListAsync(string orderBy, int pageIndex, int pageSize)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteGetEntityPageListAsync(orderBy, pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteQueryEntityAllAsync(predicate).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityAllAsync(string predicate, string orderBy)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteQueryEntityAllAsync(predicate, orderBy).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
         internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, int pageIndex, int pageSize)
         {
             var result = new List<TEntity>();
             var query = await ConnectorEntityController.ExecuteQueryEntityPageListAsync(predicate, pageIndex, pageSize).ConfigureAwait(false);
+
+            foreach (var item in query)
+            {
+                var entity = new TEntity();
+
+                entity.ConnectorEntity.CopyProperties(item);
+                await LoadChildsAsync(entity).ConfigureAwait(false);
+
+                result.Add(entity);
+            }
+            return result;
+        }
+        internal override async Task<IEnumerable<TEntity>> ExecuteQueryEntityPageListAsync(string predicate, string orderBy, int pageIndex, int pageSize)
+        {
+            var result = new List<TEntity>();
+            var query = await ConnectorEntityController.ExecuteQueryEntityPageListAsync(predicate, orderBy, pageIndex, pageSize).ConfigureAwait(false);
 
             foreach (var item in query)
             {
