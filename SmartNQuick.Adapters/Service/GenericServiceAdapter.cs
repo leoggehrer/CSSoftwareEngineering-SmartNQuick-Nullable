@@ -59,14 +59,14 @@ namespace SmartNQuick.Adapters.Service
 
                     if (response.IsSuccessStatusCode)
                     {
-                        string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                         return Convert.ToInt32(stringData);
                     }
                     else
                     {
-                        string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                        var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                         System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                         throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -100,14 +100,14 @@ namespace SmartNQuick.Adapters.Service
 
             if (response.IsSuccessStatusCode)
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 return Convert.ToInt32(stringData);
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -120,14 +120,14 @@ namespace SmartNQuick.Adapters.Service
 
             if (response.IsSuccessStatusCode)
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 return Convert.ToInt32(stringData);
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -147,8 +147,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -167,8 +167,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -187,8 +187,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -208,8 +208,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -228,8 +228,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -249,8 +249,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -269,8 +269,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -290,8 +290,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -310,8 +310,8 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                string errorMessage = $"{response.ReasonPhrase}: {stringData}";
+                var stringData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var errorMessage = $"{response.ReasonPhrase}: {stringData}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -331,7 +331,7 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
+                var errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -355,7 +355,7 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
+                var errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -379,7 +379,7 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
+                var errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -402,7 +402,7 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
+                var errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -426,7 +426,7 @@ namespace SmartNQuick.Adapters.Service
             }
             else
             {
-                string errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
+                var errorMessage = $"{response.ReasonPhrase}: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
@@ -440,7 +440,7 @@ namespace SmartNQuick.Adapters.Service
 
             if (response.IsSuccessStatusCode == false)
             {
-                string errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
+                var errorMessage = $"{response.ReasonPhrase}: { await response.Content.ReadAsStringAsync().ConfigureAwait(false) }";
 
                 System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, errorMessage);
                 throw new AdapterException((int)response.StatusCode, errorMessage);
