@@ -15,10 +15,9 @@ namespace CSharpCodeGenerator.Logic.Generation
         public static string TransferPostfix => ".Transfer";
         public static string WebApiPostfix => ".WebApi";
         public static string AdaptersPostfix => ".Adapters";
-        public static string AspMvcPostfix => ".AspMvc";
-        public static string BlazorAppPostfix => ".BlazorApp";
-        public static string TelerikServerBlazorAppPostfix => ".TelerikServerBlazorApp";
         public static string AngularAppPostfix => ".AngularApp";
+        public static string AspMvcPostfix => ".AspMvc";
+        public static string BlazorServerAppPostfix => ".BlazorServerApp";
         public static string ConnectorPostfix => ".Connector";
         #endregion Project-postfixes
 
@@ -29,10 +28,9 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string TransferProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{TransferPostfix}"));
         public string WebApiProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{WebApiPostfix}"));
         public string AdaptersProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{AdaptersPostfix}"));
-        public string AspMvcProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{AspMvcPostfix}"));
-        public string BlazorAppProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{BlazorAppPostfix}"));
-        public string TelerikServerBlazorAppProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{TelerikServerBlazorAppPostfix}"));
         public string AngularAppProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{AngularAppPostfix}"));
+        public string AspMvcAppProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{AspMvcPostfix}"));
+        public string BlazorServerAppProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{BlazorServerAppPostfix}"));
         public string ConnectorProjectName => ProjectNames.FirstOrDefault(e => e.EndsWith($"{ConnectorPostfix}"));
         #endregion ProjectNames
 
@@ -46,7 +44,8 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string TransferSubPath => TransferProjectName;
         public string WebApiSubPath => WebApiProjectName;
         public string AdaptersSubPath => AdaptersProjectName;
-        public string AspMvcSubPath => AspMvcProjectName;
+        public string AspMvcAppSubPath => AspMvcAppProjectName;
+        public string BlazorServerAppSubPath => BlazorServerAppProjectName;
         public string ConnectorSubPath => ConnectorProjectName;
         #endregion ProjectPaths
 
@@ -92,12 +91,19 @@ namespace CSharpCodeGenerator.Logic.Generation
         public string AdaptersFactorySubPath => Path.Combine(AdaptersSubPath);
         #endregion Adapters-Factory
 
-        #region AspMvc
-        public string AspMvcBusinessSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.BusinessFolder);
-        public string AspMvcModulesSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ModulesFolder);
-        public string AspMvcPersistenceSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.PersistenceFolder);
-        public string AspMvcShadowSubPath => Path.Combine(AspMvcSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ShadowFolder);
-        #endregion AspMvc
+        #region AspMvcApp
+        public string AspMvcAppBusinessSubPath => Path.Combine(AspMvcAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.BusinessFolder);
+        public string AspMvcAppModulesSubPath => Path.Combine(AspMvcAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ModulesFolder);
+        public string AspMvcAppPersistenceSubPath => Path.Combine(AspMvcAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.PersistenceFolder);
+        public string AspMvcAppShadowSubPath => Path.Combine(AspMvcAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ShadowFolder);
+        #endregion AspMvcApp
+
+        #region BlazorServerApp
+        public string BlazorServerAppBusinessSubPath => Path.Combine(BlazorServerAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.BusinessFolder);
+        public string BlazorServerAppModulesSubPath => Path.Combine(BlazorServerAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ModulesFolder);
+        public string BlazorServerAppPersistenceSubPath => Path.Combine(BlazorServerAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.PersistenceFolder);
+        public string BlazorServerAppShadowSubPath => Path.Combine(BlazorServerAppSubPath, StaticLiterals.ModelsFolder, StaticLiterals.ShadowFolder);
+        #endregion BlazorServerApp
 
         protected SolutionProperties(string solutionPath)
         {

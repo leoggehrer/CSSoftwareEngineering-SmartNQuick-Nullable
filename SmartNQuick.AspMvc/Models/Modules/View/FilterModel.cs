@@ -35,11 +35,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             if (result.HasContent())
             {
-                result = $"{result}_{property.DeclaringType.Name}_{property.Name}";
+                result = $"{result}_{property?.DeclaringType?.Name}_{property?.Name}";
             }
             else
             {
-                result = $"{property.DeclaringType.Name}_{property.Name}";
+                result = $"{property?.DeclaringType?.Name}_{property?.Name}";
             }
             return result;
         }
@@ -55,11 +55,11 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
 
             if (result.HasContent())
             {
-                result = $"{result}.{property.DeclaringType.Name}.{property.Name}";
+                result = $"{result}.{property?.DeclaringType?.Name}.{property?.Name}";
             }
             else
             {
-                result = $"{property.DeclaringType.Name}.{property.Name}";
+                result = $"{property?.DeclaringType?.Name}.{property?.Name}";
             }
             return result;
         }
@@ -103,7 +103,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             }
 
             operationItems.Add(new SelectListItem { Value = string.Empty, Text = string.Empty });
-            if (property.PropertyType == typeof(string))
+            if (property?.PropertyType == typeof(string))
             {
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationEquals, Text = translate(StaticLiterals.OperationEquals) });
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationNotEquals, Text = translate(StaticLiterals.OperationNotEquals) });
@@ -111,7 +111,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationStartsWith, Text = translate(StaticLiterals.OperationStartsWith) });
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationEndsWith, Text = translate(StaticLiterals.OperationEndsWith) });
             }
-            else if (property.PropertyType == typeof(int))
+            else if (property?.PropertyType == typeof(int))
             {
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationNumEquals, Text = translate(StaticLiterals.OperationNumEquals) });
                 operationItems.Add(new SelectListItem { Value = StaticLiterals.OperationNumIsGreater, Text = translate(StaticLiterals.OperationNumIsGreater) });

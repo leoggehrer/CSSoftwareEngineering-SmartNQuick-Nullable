@@ -16,18 +16,13 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         static partial void ClassConstructing();
         static partial void ClassConstructed();
 
-        private ModelObject model;
-        private ModelObject displayModel;
-        private IEnumerable<PropertyInfo> displayProperties;
+        private ModelObject? displayModel;
+        private IEnumerable<PropertyInfo> displayProperties = Array.Empty<PropertyInfo>();
 
-        public ModelObject Model
-        {
-            get => model;
-            set => model = value ?? model;
-        }
+        public ModelObject Model { get; set; }
         public ModelObject DisplayModel
         {
-            get => displayModel ?? model;
+            get => displayModel ?? Model;
             set => displayModel = value;
         }
         public IEnumerable<PropertyInfo> DisplayProperties

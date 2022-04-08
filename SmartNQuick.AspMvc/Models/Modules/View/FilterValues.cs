@@ -26,7 +26,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             }
             return result.ToString();
         }
-        public static string CreatePredicate(string name, string operation, string value)
+        public static string? CreatePredicate(string name, string operation, string value)
         {
             var result = default(string);
 

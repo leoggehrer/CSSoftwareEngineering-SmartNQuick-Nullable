@@ -11,14 +11,15 @@ namespace CommonBase
 
 		public static string[] ProjectExtensions { get; } = new string[]
 		{
-			".Contracts",
-			".Logic",
-			".Transfer",
-			".WebApi",
 			".Adapters",
 			".AspMvc",
+			".BlazorServerApp",
+			".ConApp",
+			".Contracts",
+			".Logic",
 			".Logic.UnitTest",
-			".ConApp"
+			".Transfer",
+			".WebApi",
 		};
 		public static string[] GeneratorProjects { get; } = new string[]
 		{

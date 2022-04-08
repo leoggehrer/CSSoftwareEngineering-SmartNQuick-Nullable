@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+#if ACCOUNT_ON
 using SmartNQuick.BlazorServerApp.Models.Modules.Account;
 using SmartNQuick.BlazorServerApp.Models.Modules.Session;
 
@@ -19,4 +20,5 @@ namespace SmartNQuick.BlazorServerApp.Services.Modules.Authentication
         Task LogoutAsync();
     }
 }
+#endif
 //MdEnd

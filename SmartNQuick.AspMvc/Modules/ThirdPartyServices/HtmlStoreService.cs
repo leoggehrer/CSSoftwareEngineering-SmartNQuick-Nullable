@@ -84,7 +84,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 catch (Exception ex)
                 {
                     LastErrorTime = DateTime.UtcNow;
-                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
+                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod()?.Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }
             }
@@ -120,7 +120,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 catch (Exception ex)
                 {
                     LastErrorTime = DateTime.UtcNow;
-                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
+                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod()?.Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }
             }
@@ -156,7 +156,7 @@ namespace SmartNQuick.AspMvc.Modules.ThirdPartyServices
                 catch (Exception ex)
                 {
                     LastErrorTime = DateTime.UtcNow;
-                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {ex.GetError()}";
+                    ErrorHandler.LastLogicError = $"{System.Reflection.MethodBase.GetCurrentMethod()?.Name}: {ex.GetError()}";
                     System.Diagnostics.Debug.WriteLine(ErrorHandler.LastLogicError);
                 }
             }

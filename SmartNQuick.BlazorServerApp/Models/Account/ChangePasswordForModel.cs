@@ -1,5 +1,6 @@
 ﻿//@BaseCode
 //MdStart
+#if ACCOUNT_ON
 using System.ComponentModel.DataAnnotations;
 
 namespace SmartNQuick.BlazorServerApp.Models.Modules.Account
@@ -24,4 +25,5 @@ namespace SmartNQuick.BlazorServerApp.Models.Modules.Account
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 }
+#endif
 //MdEnd

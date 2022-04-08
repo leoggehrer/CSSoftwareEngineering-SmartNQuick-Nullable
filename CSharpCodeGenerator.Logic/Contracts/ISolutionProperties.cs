@@ -13,12 +13,19 @@ namespace CSharpCodeGenerator.Logic.Contracts
         string AdaptersSubPath { get; }
         string AdaptersProjectName { get; }
 
-        string AspMvcBusinessSubPath { get; }
-        string AspMvcModulesSubPath { get; }
-        string AspMvcSubPath { get; }
-        string AspMvcPersistenceSubPath { get; }
-        string AspMvcProjectName { get; }
-        string AspMvcShadowSubPath { get; }
+        string AspMvcAppBusinessSubPath { get; }
+        string AspMvcAppModulesSubPath { get; }
+        string AspMvcAppSubPath { get; }
+        string AspMvcAppPersistenceSubPath { get; }
+        string AspMvcAppProjectName { get; }
+        string AspMvcAppShadowSubPath { get; }
+
+        string BlazorServerAppBusinessSubPath { get; }
+        string BlazorServerAppModulesSubPath { get; }
+        string BlazorServerAppSubPath { get; }
+        string BlazorServerAppPersistenceSubPath { get; }
+        string BlazorServerAppProjectName { get; }
+        string BlazorServerAppShadowSubPath { get; }
 
         string ConnectorSubPath { get; }
         string ConnectorProjectName { get; }

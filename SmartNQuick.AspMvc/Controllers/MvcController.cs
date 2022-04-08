@@ -222,23 +222,24 @@ namespace SmartNQuick.AspMvc.Controllers
                 }
             }
         }
-        protected virtual object GetFieldValue(object item, string propertyName)
+        protected virtual object? GetFieldValue(object obj, string propertyName)
         {
-            item.CheckArgument(nameof(item));
+            obj.CheckArgument(nameof(obj));
             propertyName.CheckArgument(nameof(propertyName));
 
             var result = default(object);
             var propertyElems = propertyName.Split(".");
-            var pi = item.GetType().GetProperty(propertyElems[0]);
+            var pi = obj.GetType().GetProperty(propertyElems[0]);
+            var value = default(object);
 
             for (int i = 1; pi != null && pi.CanRead && i < propertyElems.Length; i++)
             {
-                item = pi.GetValue(item);
-                pi = item?.GetType().GetProperty(propertyElems[i]);
+                value = pi.GetValue(obj);
+                pi = value?.GetType().GetProperty(propertyElems[i]);
             }
-            if (item != null && pi != null && pi.CanRead)
+            if (obj != null && pi != null && pi.CanRead)
             {
-                result = pi.GetValue(item);
+                result = pi.GetValue(obj);
             }
             return result;
         }
@@ -278,9 +279,9 @@ namespace SmartNQuick.AspMvc.Controllers
         {
             return Request.Form.Files.Count;
         }
-        protected IFormFile GetRequestFormFile(int index)
+        protected IFormFile? GetRequestFormFile(int index)
         {
-            IFormFile result = null;
+            IFormFile? result = null;
 
             if (Request.Form.Files.Count > index)
             {
@@ -300,7 +301,7 @@ namespace SmartNQuick.AspMvc.Controllers
         }
         protected byte[] GetRequestFileData(IFormFile formFile)
         {
-            byte[] result = null;
+            byte[] result = Array.Empty<byte>();
 
             if (formFile != null)
             {

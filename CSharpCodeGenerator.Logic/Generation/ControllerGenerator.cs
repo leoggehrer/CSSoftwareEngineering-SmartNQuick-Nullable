@@ -596,7 +596,7 @@ namespace CSharpCodeGenerator.Logic.Generation
         #endregion WebApiController
 
         #region AspMvc-Controller
-        public string AspMvcNameSpace => $"{SolutionProperties.AspMvcProjectName}.{StaticLiterals.ControllersFolder}";
+        public string AspMvcNameSpace => $"{SolutionProperties.AspMvcAppProjectName}.{StaticLiterals.ControllersFolder}";
         public string CreateAspMvcControllerNameSpace(Type type)
         {
             type.CheckArgument(nameof(type));
@@ -645,7 +645,7 @@ namespace CSharpCodeGenerator.Logic.Generation
             var modelType = $"AspMvc.{StaticLiterals.ModelsFolder}.{subNameSpace}.{entityName}";
             var controllerName = entityName.CreatePluralWord();
             var className = $"{controllerName}Controller";
-            var result = new Models.GeneratedItem(Common.UnitType.AspMvc, itemType)
+            var result = new Models.GeneratedItem(Common.UnitType.AspMvcApp, itemType)
             {
                 FullName = CreateAspMvcControllerFullNameFromInterface(type),
                 FileExtension = StaticLiterals.CSharpFileExtension,

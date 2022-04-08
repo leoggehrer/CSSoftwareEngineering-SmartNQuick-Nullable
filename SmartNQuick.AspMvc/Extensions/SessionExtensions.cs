@@ -14,7 +14,7 @@ namespace SmartNQuick.AspMvc.Extensions
             session.SetString(key, strValue);
         }
 
-        public static T Get<T>(this ISession session, string key)
+        public static T? Get<T>(this ISession session, string key)
         {
             var strValue = session.GetString(key);
 

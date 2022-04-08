@@ -1,8 +1,8 @@
 ﻿//@BaseCode
 //MdStart
-namespace SmartNQuick.AspMvc.Models
+namespace SmartNQuick.BlazorServerApp.Models
 {
-    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, ITwoPartView
+    public abstract partial class OneToAnotherModel<TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel
         where TOne : Contracts.IIdentifiable
         where TAnother : Contracts.IIdentifiable
         where TOneModel : IdentityModel, Contracts.ICopyable<TOne>, TOne, new()
@@ -11,20 +11,20 @@ namespace SmartNQuick.AspMvc.Models
         public virtual TOneModel OneModel { get; } = new TOneModel();
         public virtual TOne OneItem => OneModel;
 
-        public virtual TAnotherModel AnotherModel { get; } = new TAnotherModel();
-        public virtual TAnother AnotherItem => AnotherModel;
+        public virtual TAnotherModel AnotherEntity { get; } = new TAnotherModel();
+        public virtual TAnother AnotherItem => AnotherEntity;
 
         public override int Id { get => OneModel.Id; set => OneModel.Id = value; }
         public byte[] RowVersion
         {
             get
             {
-                var result = System.Array.Empty<byte>();
+                var result = default(byte[]);
 
                 if (OneModel is VersionModel ve)
                     result = ve.RowVersion;
 
-                return result;
+                return result ?? Array.Empty<byte>();
             }
             set
             {
@@ -32,9 +32,6 @@ namespace SmartNQuick.AspMvc.Models
                     ve.RowVersion = value;
             }
         }
-
-        public IdentityModel FirstModel => OneModel;
-        public IdentityModel SecondModel => AnotherModel;
     }
 }
 //MdEnd

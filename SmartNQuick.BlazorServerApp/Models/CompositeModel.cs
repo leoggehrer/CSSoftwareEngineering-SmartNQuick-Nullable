@@ -1,6 +1,6 @@
 ﻿//@BaseCode
 //MdStart
-namespace SmartNQuick.AspMvc.Models
+namespace SmartNQuick.BlazorServerApp.Models
 {
     public abstract partial class CompositeModel<TConnector, TConnectorModel, TOne, TOneModel, TAnother, TAnotherModel> : IdentityModel, IThreePartView
         where TConnector : Contracts.IIdentifiable
@@ -31,7 +31,7 @@ namespace SmartNQuick.AspMvc.Models
                 if (ConnectorModel is VersionModel ve)
                     result = ve.RowVersion;
 
-                return result ?? System.Array.Empty<byte>();
+                return result ?? Array.Empty<byte>();
             }
             set
             {

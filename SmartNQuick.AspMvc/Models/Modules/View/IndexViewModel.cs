@@ -210,19 +210,20 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             model.CheckArgument(nameof(model));
             propertyInfo.CheckArgument(nameof(propertyInfo));
 
-            bool handled = false;
-            object result = null;
+            var handled = false;
+            object? value = null;
 
-            BeforeGetDisplayValue(model, propertyInfo, ref result, ref handled);
+            BeforeGetDisplayValue(model, propertyInfo, ref value, ref handled);
             if (handled == false)
             {
-                result = base.GetDisplayValue(model, propertyInfo);
+                value = base.GetDisplayValue(model, propertyInfo);
             }
-            AfterGetDisplayValue(model, propertyInfo, result);
-            return result != null ? result.ToString() : string.Empty;
+            AfterGetDisplayValue(model, propertyInfo, value);
+
+            return value?.ToString() ?? string.Empty;
         }
-        partial void BeforeGetDisplayValue(object model, PropertyInfo propertyInfo, ref object result, ref bool handled);
-        partial void AfterGetDisplayValue(object model, PropertyInfo propertyInfo, object result);
+        partial void BeforeGetDisplayValue(object model, PropertyInfo propertyInfo, ref object? result, ref bool handled);
+        partial void AfterGetDisplayValue(object model, PropertyInfo propertyInfo, object? result);
 
         public virtual IndexDisplayViewModel CreateDisplayViewModel(ModelObject model)
         {

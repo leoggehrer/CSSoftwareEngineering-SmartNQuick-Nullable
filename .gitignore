@@ -347,6 +347,11 @@ healthchecksdb
 /SmartNQuick.Transfer/Models/Persistence/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Modules/_GeneratedCode.cs
 /SmartNQuick.Transfer/Models/Business/_GeneratedCode.cs
+/SmartNQuick.BlazorServerApp/Models/ThirdParty/_GeneratedCode.cs
+/SmartNQuick.BlazorServerApp/Models/Shadow/_GeneratedCode.cs
+/SmartNQuick.BlazorServerApp/Models/Persistence/_GeneratedCode.cs
+/SmartNQuick.BlazorServerApp/Models/Modules/_GeneratedCode.cs
+/SmartNQuick.BlazorServerApp/Models/Business/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Shadow/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Persistence/_GeneratedCode.cs
 /SmartNQuick.Logic/Entities/Modules/_GeneratedCode.cs

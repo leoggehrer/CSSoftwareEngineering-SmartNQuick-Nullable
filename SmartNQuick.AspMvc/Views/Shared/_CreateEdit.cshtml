@@ -12,7 +12,8 @@
     var viewBagInfo = Model?.ViewBagInfo;
     var sessionInfo = new SessionWrapper(Context.Session);
 
-    @if (Model.DisplayType.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
+    viewBagInfo ??= new ViewBagWrapper(ViewBag);
+    @if (Model != null && Model.DisplayType.IsGenericTypeOf(typeof(OneToAnotherModel<,,,>)))
     {
         var oneProperty = Model.DisplayType.GetProperty("OneModel");
         var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
@@ -33,20 +34,23 @@
         }
         <hr />
     }
-    else if (Model.DisplayType.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
+    else if (Model != null && Model.DisplayType.IsGenericTypeOf(typeof(OneToManyModel<,,,>)))
     {
         var oneProperty = Model.DisplayType.GetProperty("OneModel");
         var oneModel = oneProperty?.GetValue(Model.DisplayModel) as IdentityModel;
         var manyProperty = Model.DisplayType.GetProperty("ManyModels");
         var manyModels = manyProperty?.GetValue(Model.DisplayModel) as IdentityModel;
 
-        viewBagInfo.ParentModel = oneModel;
-        viewBagInfo.ItemPrefix = "OneModel";
-        oneModel.ViewBagInfo = viewBagInfo;
-        @await Html.PartialAsync("_EditModel", oneModel)
+        if (oneModel != null)
+        {
+            viewBagInfo.ParentModel = oneModel;
+            viewBagInfo.ItemPrefix = "OneModel";
+            oneModel.ViewBagInfo = viewBagInfo;
+            @await Html.PartialAsync("_EditModel", oneModel)
+        };
         <hr />
     }
-    else if (Model.DisplayType.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
+    else if (Model != null && Model.DisplayType.IsGenericTypeOf(typeof(CompositeModel<,,,,,>)))
     {
         var connectorProperty = Model.DisplayType.GetProperty("ConnectorModel");
         var connectorModel = connectorProperty?.GetValue(Model.DisplayModel) as IdentityModel;
@@ -78,7 +82,7 @@
         }
         <hr />
     }
-    else
+    else if (Model != null)
     {
         Model.DisplayModel.ViewBagInfo = viewBagInfo;
         @await Html.PartialAsync("_EditModel", Model.DisplayModel)

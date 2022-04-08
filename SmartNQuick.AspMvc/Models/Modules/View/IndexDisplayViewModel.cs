@@ -60,18 +60,18 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
         public virtual object GetValue(PropertyInfo propertyInfo)
         {
             var handled = false;
-            var result = default(object);
+            var value = default(object);
 
-            BeforeGetValue(propertyInfo, ref result, ref handled);
+            BeforeGetValue(propertyInfo, ref value, ref handled);
             if (handled == false)
             {
-                result = GetValue(DisplayModel, propertyInfo);
+                value = GetValue(DisplayModel, propertyInfo);
             }
-            AfterGetValue(result);
-            return result;
+            AfterGetValue(value);
+            return value?.ToString() ?? string.Empty;
         }
-        partial void BeforeGetValue(PropertyInfo propertyInfo, ref object value, ref bool handled);
-        partial void AfterGetValue(Object value);
+        partial void BeforeGetValue(PropertyInfo propertyInfo, ref object? value, ref bool handled);
+        partial void AfterGetValue(object? value);
         public virtual string GetDisplayValue(PropertyInfo propertyInfo)
         {
             var handled = false;

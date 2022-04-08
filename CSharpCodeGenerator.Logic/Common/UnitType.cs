@@ -1,6 +1,5 @@
 ﻿//@BaseCode
 //MdStart
-
 using System;
 
 namespace CSharpCodeGenerator.Logic.Common
@@ -18,14 +17,12 @@ namespace CSharpCodeGenerator.Logic.Common
 
         BaseUnits = Contracts + Logic + Transfer + Adapters + WebApi,
 
-        AspMvc = 2 * WebApi,
-        BlazorApp = 2 * AspMvc,
-        RadzenServerBlazorApp = 2 * BlazorApp,
-        TelerikServerBlazorApp = 4 * BlazorApp,
-        AngularApp = 2 * TelerikServerBlazorApp,
+        AspMvcApp = 2 * WebApi,
+        BlazorServerApp = 2 * AspMvcApp,
+        AngularApp = 2 * BlazorServerApp,
 
         NoneApps = 0,
-        AllApps = AspMvc + BlazorApp + AngularApp,
+        AllApps = AspMvcApp + BlazorServerApp + AngularApp,
     }
 }
 //MdEnd

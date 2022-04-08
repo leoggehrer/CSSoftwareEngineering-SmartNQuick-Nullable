@@ -72,7 +72,7 @@ namespace SmartNQuick.AspMvc.Models
 
             ManyModels.Add(manyModel);
         }
-        public virtual TManyModel GetManyModelById(int id) => ManyModels.FirstOrDefault(x => x.Id == id);
+        public virtual TManyModel? GetManyModelById(int id) => ManyModels.FirstOrDefault(x => x.Id == id);
         public void RemoveManyModel(int id)
         {
             var removeDetail = ManyModels.FirstOrDefault(i => i.Id == id);

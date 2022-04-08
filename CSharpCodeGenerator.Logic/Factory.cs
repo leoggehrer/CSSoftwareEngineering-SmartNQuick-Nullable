@@ -35,11 +35,14 @@ namespace CSharpCodeGenerator.Logic
             return TransferGenerator.Create(SolutionProperties.Create(solutionName, contractsFilePath));
         }
 
-        public static Contracts.IModelGenerator GetAspMvcGenerator(string solutionName, string contractsFilePath)
+        public static Contracts.IModelGenerator GetAspMvcAppGenerator(string solutionName, string contractsFilePath)
         {
             return AspMvcAppGenerator.Create(SolutionProperties.Create(solutionName, contractsFilePath));
         }
-
+        public static Contracts.IModelGenerator GetBlazorServerAppGenerator(string solutionName, string contractsFilePath)
+        {
+            return BlazorServerAppGenerator.Create(SolutionProperties.Create(solutionName, contractsFilePath));
+        }
 
         public static Contracts.IFactoryGenerator GetFactoryGenerator(string solutionName, string contractsFilePath)
         {

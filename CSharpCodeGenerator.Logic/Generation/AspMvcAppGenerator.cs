@@ -14,9 +14,9 @@ namespace CSharpCodeGenerator.Logic.Generation
             return new AspMvcAppGenerator(solutionProperties);
         }
 
-        public override Common.UnitType UnitType => Common.UnitType.AspMvc;
+        public override Common.UnitType UnitType => Common.UnitType.AspMvcApp;
         public override string AppPostfix => SolutionProperties.AspMvcPostfix;
-        public override string AppModelsNameSpace => $"{SolutionProperties.AspMvcProjectName}.{StaticLiterals.ModelsFolder}";
+        public override string AppModelsNameSpace => $"{SolutionProperties.AspMvcAppProjectName}.{StaticLiterals.ModelsFolder}";
         public override string ModelsFolder => StaticLiterals.ModelsFolder;
     }
 }

@@ -7,13 +7,13 @@ namespace SmartNQuick.AspMvc.Modules.Handler
 {
     public static class ErrorHandler
     {
-        private static string lastViewError;
+        private static string? lastViewError;
         private static readonly List<string> viewErrorList = new();
-        private static string lastLogicError;
+        private static string? lastLogicError;
         private static readonly List<string> logicErrorList = new();
 
         public static bool HasViewError => string.IsNullOrEmpty(LastViewError) == false;
-        public static string LastViewError
+        public static string? LastViewError
         {
             get => lastViewError;
             set
@@ -29,7 +29,7 @@ namespace SmartNQuick.AspMvc.Modules.Handler
             }
         }
         public static bool HasLogicError => string.IsNullOrEmpty(lastLogicError) == false;
-        public static string LastLogicError
+        public static string? LastLogicError
         {
             get => lastLogicError;
             set
@@ -51,7 +51,7 @@ namespace SmartNQuick.AspMvc.Modules.Handler
             viewErrorList.Clear();
             logicErrorList.Clear();
         }
-        public static string GetLastViewErrorAndClear()
+        public static string? GetLastViewErrorAndClear()
         {
             var result = LastViewError;
 
@@ -74,7 +74,7 @@ namespace SmartNQuick.AspMvc.Modules.Handler
 
             var tab = string.Empty;
             var errMsg = source.Message;
-            Exception innerException = source.InnerException;
+            Exception? innerException = source.InnerException;
 
             while (innerException != null)
             {

@@ -1,5 +1,6 @@
 //@BaseCode
 //MdStart
+#if ACCOUNT_ON
 namespace SmartNQuick.BlazorServerApp.Models.Modules.Session
 {
     public class AuthorizationSession
@@ -16,4 +17,5 @@ namespace SmartNQuick.BlazorServerApp.Models.Modules.Session
         public DateTime LoginTime { get; set; }
     }
 }
+#endif
 //MdEnd

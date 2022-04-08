@@ -76,17 +76,17 @@ namespace SmartNQuick.AspMvc.Modules.View
         }
 
         public string Title => Translate(Controller);
-        public string Controller
+        public string? Controller
         {
             get => ViewBag.Controller as string;
             set => ViewBag.Controller = value;
         }
-        public string Action
+        public string? Action
         {
             get => ViewBag.Action as string;
             set => ViewBag.Action = value;
         }
-        public string ItemPrefix
+        public string? ItemPrefix
         {
             get => ViewBag.ItemPrefix as string;
             set => ViewBag.ItemPrefix = value;
@@ -227,7 +227,7 @@ namespace SmartNQuick.AspMvc.Modules.View
                MappingNames.Add(key, value);
             }
         }
-        public bool GetMappingProperty(string key, out PropertyInfo propertyInfo)
+        public bool GetMappingProperty(string key, out PropertyInfo? propertyInfo)
         {
             return MappingProperties.TryGetValue(key, out propertyInfo);
         }

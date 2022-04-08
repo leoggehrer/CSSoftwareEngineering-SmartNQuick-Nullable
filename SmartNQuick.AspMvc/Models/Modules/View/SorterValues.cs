@@ -14,7 +14,7 @@ namespace SmartNQuick.AspMvc.Models.Modules.View
             {
                 if (item.Key.EndsWith($"{StaticLiterals.SortOperationPostfix}") == false)
                 {
-                    if (TryGetValue($"{item.Key}", out SorterItem sorterItem))
+                    if (TryGetValue($"{item.Key}", out SorterItem? sorterItem))
                     {
                         if (result.Length > 0)
                         {

@@ -187,72 +187,139 @@ namespace CSharpCodeGenerator.ConApp
             }));
             #endregion WriteWebApi
 
-            #region AspMvc
+            #region WriteAspMvc
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.BusinessModel);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.BusinessModel);
 
-                Console.WriteLine("Write AspMvc-Business-Models...");
+                Console.WriteLine("Write AspMvcApp-Business-Models...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ModuleModel);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.ModuleModel);
 
-                Console.WriteLine("Write AspMvc-Modules-Models...");
+                Console.WriteLine("Write AspMvcApp-Modules-Models...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.PersistenceModel);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.PersistenceModel);
 
-                Console.WriteLine("Write AspMvc-Persistence-Models...");
+                Console.WriteLine("Write AspMvcApp-Persistence-Models...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ShadowModel);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.ShadowModel);
 
-                Console.WriteLine("Write AspMvc-Shadow-Models...");
+                Console.WriteLine("Write AspMvcApp-Shadow-Models...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.ThridPartyModel);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.ThridPartyModel);
 
-                Console.WriteLine("Write AspMvc-ThridParty-Models...");
+                Console.WriteLine("Write AspMvcApp-ThridParty-Models...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcBusinessController);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.AspMvcBusinessController);
 
-                Console.WriteLine("Write AspMvc-Business-Controllers...");
+                Console.WriteLine("Write AspMvcApp-Business-Controllers...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcPersistenceController);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.AspMvcPersistenceController);
 
-                Console.WriteLine("Write AspMvc-Persistence-Controllers...");
+                Console.WriteLine("Write AspMvcApp-Persistence-Controllers...");
                 WriteItems(projectPath, writeItems);
             }));
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcProjectName);
-                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvc && e.ItemType == ItemType.AspMvcShadowController);
+                var projectPath = Path.Combine(solutionPath, solutionProperties.AspMvcAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.AspMvcApp && e.ItemType == ItemType.AspMvcShadowController);
 
-                Console.WriteLine("Write AspMvc-Shadow-Controllers...");
+                Console.WriteLine("Write AspMvcApp-Shadow-Controllers...");
                 WriteItems(projectPath, writeItems);
             }));
-            #endregion AspMvc
+            #endregion WriteAspMvc
+
+            #region WriteBlazorServerApp
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.BusinessModel);
+
+                Console.WriteLine("Write BlazorServerApp-Business-Models...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.ModuleModel);
+
+                Console.WriteLine("Write BlazorServerApp-Modules-Models...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.PersistenceModel);
+
+                Console.WriteLine("Write BlazorServerApp-Persistence-Models...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.ShadowModel);
+
+                Console.WriteLine("Write BlazorServerApp-Shadow-Models...");
+                WriteItems(projectPath, writeItems);
+            }));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+                var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.ThridPartyModel);
+
+                Console.WriteLine("Write BlazorServerApp-ThridParty-Models...");
+                WriteItems(projectPath, writeItems);
+            }));
+            //tasks.Add(Task.Factory.StartNew(() =>
+            //{
+            //    var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+            //    var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.AspMvcBusinessController);
+
+            //    Console.WriteLine("Write BlazorServerApp-Business-Controllers...");
+            //    WriteItems(projectPath, writeItems);
+            //}));
+            //tasks.Add(Task.Factory.StartNew(() =>
+            //{
+            //    var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+            //    var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.AspMvcPersistenceController);
+
+            //    Console.WriteLine("Write BlazorServerApp-Persistence-Controllers...");
+            //    WriteItems(projectPath, writeItems);
+            //}));
+            //tasks.Add(Task.Factory.StartNew(() =>
+            //{
+            //    var projectPath = Path.Combine(solutionPath, solutionProperties.BlazorServerAppProjectName);
+            //    var writeItems = generatedItems.Where(e => e.UnitType == UnitType.BlazorServerApp && e.ItemType == ItemType.AspMvcShadowController);
+
+            //    Console.WriteLine("Write BlazorServerApp-Shadow-Controllers...");
+            //    WriteItems(projectPath, writeItems);
+            //}));
+            #endregion WriteBlazorServerApp
 
             Task.WaitAll(tasks.ToArray());
         }
